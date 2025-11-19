@@ -1,0 +1,711 @@
+{
+  "node_info": {
+    "icon": {
+      "light": "file:circleCi.svg",
+      "dark": "file:circleCi.dark.svg"
+    },
+    "defaults": {
+      "name": "CircleCI"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "circleCiApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "CircleCI",
+    "name": "circleCi",
+    "description": "Consume CircleCI API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.circleCi",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/circleci/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.circleci/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "How to set up a no-code CI/CD pipeline with GitHub and TravisCI",
+          "icon": "\ud83c\udfa1",
+          "url": "https://n8n.io/blog/how-to-set-up-a-ci-cd-pipeline-with-no-code/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "pipeline",
+      "default": "pipeline",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Pipeline",
+          "value": "pipeline",
+          "displayName": "Pipeline"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Get a pipeline",
+      "action": "Get a pipeline",
+      "value": "get",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "description": "Get a pipeline",
+          "action": "Get a pipeline",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many pipelines",
+          "action": "Get many pipelines",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Trigger",
+          "description": "Trigger a pipeline",
+          "action": "Trigger a pipeline",
+          "value": "trigger",
+          "displayName": "Trigger"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "pipeline"
+          ]
+        }
+      },
+      "_source": "Pipeline_pipelineOperations"
+    },
+    {
+      "displayName": "Provider",
+      "name": "vcs",
+      "type": "options",
+      "description": "Source control system",
+      "value": "bitbucket",
+      "default": "",
+      "options": [
+        {
+          "name": "Bitbucket",
+          "value": "bitbucket",
+          "displayName": "Bitbucket"
+        },
+        {
+          "name": "GitHub",
+          "value": "github",
+          "displayName": "Git Hub"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get",
+            "getAll",
+            "trigger"
+          ],
+          "resource": [
+            "pipeline"
+          ]
+        }
+      },
+      "_operation": "get,getAll,trigger",
+      "_source": "Pipeline_pipelineFields"
+    },
+    {
+      "displayName": "Project Slug",
+      "name": "projectSlug",
+      "type": "string",
+      "description": "Project slug in the form org-name/repo-name",
+      "placeholder": "n8n-io/n8n",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get",
+            "getAll",
+            "trigger"
+          ],
+          "resource": [
+            "pipeline"
+          ]
+        }
+      },
+      "_operation": "get,getAll,trigger",
+      "_source": "Pipeline_pipelineFields"
+    },
+    {
+      "displayName": "Pipeline Number",
+      "name": "pipelineNumber",
+      "type": "number",
+      "description": "The number of the pipeline",
+      "default": 1,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "pipeline"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Pipeline_pipelineFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "pipeline"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Pipeline_pipelineFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "pipeline"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Pipeline_pipelineFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "The name of a vcs branch",
+      "placeholder": "Add Filter",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Branch",
+          "name": "branch",
+          "type": "string",
+          "description": "The name of a vcs branch",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "pipeline"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Pipeline_pipelineFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The branch where the pipeline ran. The HEAD commit on this branch was used for the pipeline. Note that branch and tag are mutually exclusive.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Branch",
+          "name": "branch",
+          "type": "string",
+          "description": "The branch where the pipeline ran. The HEAD commit on this branch was used for the pipeline. Note that branch and tag are mutually exclusive.",
+          "default": ""
+        },
+        {
+          "displayName": "Tag",
+          "name": "tag",
+          "type": "string",
+          "description": "The tag used by the pipeline. The commit that this tag points to was used for the pipeline. Note that branch and tag are mutually exclusive",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "pipeline"
+          ],
+          "operation": [
+            "trigger"
+          ]
+        }
+      },
+      "_operation": "trigger",
+      "_source": "Pipeline_pipelineFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Get",
+      "description": "Get a pipeline",
+      "action": "Get a pipeline",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many pipelines",
+      "action": "Get many pipelines",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Trigger",
+      "description": "Trigger a pipeline",
+      "action": "Trigger a pipeline",
+      "value": "trigger",
+      "displayName": "Trigger"
+    }
+  ],
+  "operations_by_resource": {
+    "pipeline": [
+      {
+        "name": "Get",
+        "description": "Get a pipeline",
+        "action": "Get a pipeline",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many pipelines",
+        "action": "Get many pipelines",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Trigger",
+        "description": "Trigger a pipeline",
+        "action": "Trigger a pipeline",
+        "value": "trigger",
+        "displayName": "Trigger"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "circleCiApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "pipeline"
+          ]
+        }
+      }
+    },
+    "vcs": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get",
+            "getAll",
+            "trigger"
+          ],
+          "resource": [
+            "pipeline"
+          ]
+        }
+      }
+    },
+    "projectSlug": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get",
+            "getAll",
+            "trigger"
+          ],
+          "resource": [
+            "pipeline"
+          ]
+        }
+      }
+    },
+    "pipelineNumber": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "pipeline"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "pipeline"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "pipeline"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "pipeline"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "pipeline"
+          ],
+          "operation": [
+            "trigger"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "pipeline",
+          "name": "Pipeline",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a pipeline"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get many pipelines"
+        },
+        {
+          "value": "trigger",
+          "name": "Trigger",
+          "description": "Trigger a pipeline"
+        }
+      ]
+    },
+    "vcs": {
+      "type": "options",
+      "displayName": "Provider",
+      "name": "vcs",
+      "possibleValues": [
+        {
+          "value": "bitbucket",
+          "name": "Bitbucket",
+          "description": ""
+        },
+        {
+          "value": "github",
+          "name": "GitHub",
+          "description": ""
+        }
+      ]
+    },
+    "projectSlug": {
+      "type": "string",
+      "displayName": "Project Slug",
+      "name": "projectSlug"
+    },
+    "pipelineNumber": {
+      "type": "number",
+      "displayName": "Pipeline Number",
+      "name": "pipelineNumber",
+      "typeOptions": {
+        "minValue": 1
+      }
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      }
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "subProperties": [
+        {
+          "displayName": "Branch",
+          "name": "branch",
+          "type": "string",
+          "description": "The name of a vcs branch",
+          "default": ""
+        }
+      ]
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Branch",
+          "name": "branch",
+          "type": "string",
+          "description": "The branch where the pipeline ran. The HEAD commit on this branch was used for the pipeline. Note that branch and tag are mutually exclusive.",
+          "default": ""
+        },
+        {
+          "displayName": "Tag",
+          "name": "tag",
+          "type": "string",
+          "description": "The tag used by the pipeline. The commit that this tag points to was used for the pipeline. Note that branch and tag are mutually exclusive",
+          "default": ""
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Circle-Token"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "projectSlug",
+        "text": "n8n-io/n8n"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

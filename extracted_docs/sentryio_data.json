@@ -1,0 +1,3316 @@
+{
+  "node_info": {
+    "icon": {
+      "light": "file:sentryio.svg",
+      "dark": "file:sentryio.dark.svg"
+    },
+    "defaults": {
+      "name": "Sentry.io"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "sentryIoOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      },
+      {
+        "name": "sentryIoApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "accessToken"
+            ]
+          }
+        }
+      },
+      {
+        "name": "sentryIoServerApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "accessTokenServer"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getOrganizations"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Sentry.io",
+    "name": "sentryIo",
+    "description": "Consume Sentry.io API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.sentryIo",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/sentryio/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.sentryio/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "accessToken",
+      "default": "accessToken",
+      "options": [
+        {
+          "name": "Access Token (Cloud)",
+          "value": "accessToken",
+          "displayName": "Access Token (cloud)"
+        },
+        {
+          "name": "OAuth2 (Cloud)",
+          "value": "oAuth2",
+          "displayName": "Oauth2 (cloud)"
+        },
+        {
+          "name": "Access Token (Self Hosted)",
+          "value": "accessTokenServer",
+          "displayName": "Access Token (self Hosted)"
+        }
+      ]
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "event",
+      "default": "event",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Event",
+          "value": "event",
+          "displayName": "Event"
+        },
+        {
+          "name": "Issue",
+          "value": "issue",
+          "displayName": "Issue"
+        },
+        {
+          "name": "Organization",
+          "value": "organization",
+          "displayName": "Organization"
+        },
+        {
+          "name": "Project",
+          "value": "project",
+          "displayName": "Project"
+        },
+        {
+          "name": "Release",
+          "value": "release",
+          "displayName": "Release"
+        },
+        {
+          "name": "Team",
+          "value": "team",
+          "displayName": "Team"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Get event by ID",
+      "action": "Get an event",
+      "value": "get",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "description": "Get event by ID",
+          "action": "Get an event",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many events",
+          "action": "Get many events",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_source": "Event_eventOperations"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the events belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Project Slug Name or ID",
+      "name": "projectSlug",
+      "type": "options",
+      "description": "The slug of the project the events belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getProjects"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Full",
+      "name": "full",
+      "type": "boolean",
+      "description": "Whether the event payload will include the full event body, including the stack trace",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "event"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the events belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Project Slug Name or ID",
+      "name": "projectSlug",
+      "type": "options",
+      "description": "The slug of the project the events belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getProjects"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Event ID",
+      "name": "eventId",
+      "type": "string",
+      "description": "The ID of the event to retrieve (either the numeric primary-key or the hexadecimal ID as reported by the raven client)",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Delete an issue",
+      "action": "Delete an issue",
+      "value": "delete",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Delete",
+          "description": "Delete an issue",
+          "action": "Delete an issue",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get issue by ID",
+          "action": "Get an issue",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many issues",
+          "action": "Get many issues",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update an issue",
+          "action": "Update an issue",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ]
+        }
+      },
+      "_source": "Issue_issueOperations"
+    },
+    {
+      "displayName": "Issue ID",
+      "name": "issueId",
+      "type": "string",
+      "description": "ID of issue to get",
+      "placeholder": "1234",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "get",
+            "delete"
+          ]
+        }
+      },
+      "_operation": "get,delete",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the issues belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Project Slug Name or ID",
+      "name": "projectSlug",
+      "type": "options",
+      "description": "The slug of the project the issues belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getProjects"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "issue"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "issue"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "An optional Sentry structured search query. If not provided, an implied \"is:unresolved\" is assumed. Info <a href=\"https://docs.sentry.io/product/sentry-basics/search/\">here</a>.",
+      "placeholder": "Add Field",
+      "value": "14d",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "An optional Sentry structured search query. If not provided, an implied \"is:unresolved\" is assumed. Info <a href=\"https://docs.sentry.io/product/sentry-basics/search/\">here</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Stats Period",
+          "name": "statsPeriod",
+          "type": "options",
+          "description": "Time period of stats",
+          "value": "14d",
+          "default": "",
+          "options": [
+            {
+              "name": "14 Days",
+              "value": "14d",
+              "displayName": "14 Days"
+            },
+            {
+              "name": "24 Hours",
+              "value": "24h",
+              "displayName": "24 Hours"
+            }
+          ]
+        },
+        {
+          "displayName": "Short ID Lookup",
+          "name": "shortIdLookUp",
+          "type": "boolean",
+          "description": "Whether short IDs are looked up by this function as well. This can cause the return value of the function to return an event issue of a different project which is why this is an opt-in.",
+          "default": true
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Issue ID",
+      "name": "issueId",
+      "type": "string",
+      "description": "ID of issue to get",
+      "placeholder": "1234",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The actor ID (or username) of the user or team that should be assigned to this issue",
+      "placeholder": "Add Field",
+      "value": "ignored",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Assigned To",
+          "name": "assignedTo",
+          "type": "string",
+          "description": "The actor ID (or username) of the user or team that should be assigned to this issue",
+          "default": ""
+        },
+        {
+          "displayName": "Has Seen",
+          "name": "hasSeen",
+          "type": "boolean",
+          "description": "Whether this API call is invoked with a user context this allows changing of the flag that indicates if the user has seen the event",
+          "default": true
+        },
+        {
+          "displayName": "Is Bookmarked",
+          "name": "isBookmarked",
+          "type": "boolean",
+          "description": "Whether this API call is invoked with a user context this allows changing of the bookmark flag",
+          "default": true
+        },
+        {
+          "displayName": "Is Public",
+          "name": "isPublic",
+          "type": "boolean",
+          "description": "Whether to set the issue to public or private",
+          "default": true
+        },
+        {
+          "displayName": "Is Subscribed",
+          "name": "isSubscribed",
+          "type": "boolean",
+          "default": true
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "The new status for the issue",
+          "value": "ignored",
+          "default": "",
+          "options": [
+            {
+              "name": "Ignored",
+              "value": "ignored",
+              "displayName": "Ignored"
+            },
+            {
+              "name": "Resolved",
+              "value": "resolved",
+              "displayName": "Resolved"
+            },
+            {
+              "name": "Resolved Next Release",
+              "value": "resolvedInNextRelease",
+              "displayName": "Resolved Next Release"
+            },
+            {
+              "name": "Unresolved",
+              "value": "unresolved",
+              "displayName": "Unresolved"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create an organization",
+      "action": "Create an organization",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create an organization",
+          "action": "Create an organization",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Get",
+          "description": "Get organization by slug",
+          "action": "Get an organization",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many organizations",
+          "action": "Get many organizations",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update an organization",
+          "action": "Update an organization",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organization"
+          ]
+        }
+      },
+      "_source": "Organization_organizationOperations"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "organization"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Organization_organizationFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "organization"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Organization_organizationFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether to restrict results to organizations which you have membership",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Member",
+          "name": "member",
+          "type": "boolean",
+          "description": "Whether to restrict results to organizations which you have membership",
+          "default": true
+        },
+        {
+          "displayName": "Owner",
+          "name": "owner",
+          "type": "boolean",
+          "description": "Whether to restrict results to organizations which you are the owner",
+          "default": true
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organization"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Organization_organizationFields"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the team should be created for. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organization"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Organization_organizationFields"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "The slug of the organization the team should be created for",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organization"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Organization_organizationFields"
+    },
+    {
+      "displayName": "Agree to Terms",
+      "name": "agreeTerms",
+      "type": "boolean",
+      "description": "Whether you agree to the applicable terms of service and privacy policy of Sentry.io",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organization"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Organization_organizationFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The unique URL slug for this organization. If this is not provided a slug is automatically generated based on the name.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Slug",
+          "name": "slug",
+          "type": "string",
+          "description": "The unique URL slug for this organization. If this is not provided a slug is automatically generated based on the name.",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organization"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Organization_organizationFields"
+    },
+    {
+      "displayName": "Slug Name or ID",
+      "name": "organization_slug",
+      "type": "options",
+      "description": "The slug of the organization to update. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organization"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Organization_organizationFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "The new name of the organization",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "The new name of the organization",
+          "default": ""
+        },
+        {
+          "displayName": "Slug",
+          "name": "slug",
+          "type": "string",
+          "description": "The new URL slug for this organization",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organization"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Organization_organizationFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new project",
+      "action": "Create a project",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a new project",
+          "action": "Create a project",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a project",
+          "action": "Delete a project",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get project by ID",
+          "action": "Get a project",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many projects",
+          "action": "Get many projects",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update a project",
+          "action": "Update a project",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "project"
+          ]
+        }
+      },
+      "_source": "Project_projectOperations"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the events belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "project"
+          ],
+          "operation": [
+            "create",
+            "get"
+          ]
+        }
+      },
+      "_operation": "create,get",
+      "_source": "Project_projectFields"
+    },
+    {
+      "displayName": "Project Slug Name or ID",
+      "name": "projectSlug",
+      "type": "options",
+      "description": "The slug of the project to retrieve. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getProjects"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "project"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Project_projectFields"
+    },
+    {
+      "displayName": "Team Slug Name or ID",
+      "name": "teamSlug",
+      "type": "options",
+      "description": "The slug of the team to create a new project for. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "project"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Project_projectFields"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "The name for the new project",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "project"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Project_projectFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Optionally a slug for the new project. If it\u2019s not provided a slug is generated from the name.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Slug",
+          "name": "slug",
+          "type": "string",
+          "description": "Optionally a slug for the new project. If it\u2019s not provided a slug is generated from the name.",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "project"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Project_projectFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "project"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Project_projectFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "project"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Project_projectFields"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the project belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "project"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Project_projectFields"
+    },
+    {
+      "displayName": "Project Slug Name or ID",
+      "name": "projectSlug",
+      "type": "options",
+      "description": "The slug of the project to update. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getProjects"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "project"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Project_projectFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "The new platform for the updated project",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Bookmarked",
+          "name": "isBookmarked",
+          "type": "boolean",
+          "description": "The new platform for the updated project",
+          "default": false
+        },
+        {
+          "displayName": "Digests Maximum Delay",
+          "name": "digestsMaxDelay",
+          "type": "number",
+          "description": "Maximum interval to digest alerts",
+          "default": 1800
+        },
+        {
+          "displayName": "Digests Minimun Delay",
+          "name": "digestsMinDelay",
+          "type": "number",
+          "description": "Minium interval to digest alerts",
+          "default": 60
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "The new name for the updated project",
+          "default": ""
+        },
+        {
+          "displayName": "Slug",
+          "name": "slug",
+          "type": "string",
+          "description": "The new slug for the updated project",
+          "default": ""
+        },
+        {
+          "displayName": "Team",
+          "name": "team",
+          "type": "string",
+          "description": "The new team name",
+          "default": ""
+        },
+        {
+          "displayName": "Platform",
+          "name": "platform",
+          "type": "string",
+          "description": "The new platform for the updated project",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "project"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Project_projectFields"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the project belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "project"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Project_projectFields"
+    },
+    {
+      "displayName": "Project Slug Name or ID",
+      "name": "projectSlug",
+      "type": "options",
+      "description": "The slug of the project to delete. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getProjects"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "project"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Project_projectFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a release",
+      "action": "Create a release",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a release",
+          "action": "Create a release",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a release",
+          "action": "Delete a release",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get release by version identifier",
+          "action": "Get a release by version ID",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many releases",
+          "action": "Get many releases",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update a release",
+          "action": "Update a release",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ]
+        }
+      },
+      "_source": "Release_releaseOperations"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the releases belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "release"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "release"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "This parameter can be used to create a \u201cstarts with\u201d filter for the version",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "This parameter can be used to create a \u201cstarts with\u201d filter for the version",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the release belongs to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "get",
+            "delete"
+          ]
+        }
+      },
+      "_operation": "get,delete",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "Version",
+      "name": "version",
+      "type": "string",
+      "description": "The version identifier of the release",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "get",
+            "delete"
+          ]
+        }
+      },
+      "_operation": "get,delete",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the release belongs to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "Version",
+      "name": "version",
+      "type": "string",
+      "description": "A version identifier for this release. Can be a version number, a commit hash etc.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "URL",
+      "name": "url",
+      "type": "string",
+      "description": "A URL that points to the release. This can be the path to an online interface to the sourcecode for instance.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "Project Names or IDs",
+      "name": "projects",
+      "type": "multiOptions",
+      "description": "A list of project slugs that are involved in this release. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": [],
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getProjects"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "An optional date that indicates when the release went live. If not provided the current time is assumed.",
+      "placeholder": "Add Field",
+      "value": "add",
+      "default": {},
+      "required": true,
+      "options": [
+        {
+          "displayName": "Date Released",
+          "name": "dateReleased",
+          "type": "dateTime",
+          "description": "An optional date that indicates when the release went live. If not provided the current time is assumed.",
+          "default": ""
+        },
+        {
+          "displayName": "Commits",
+          "name": "commits",
+          "type": "fixedCollection",
+          "description": "An optional list of commit data to be associated with the release",
+          "value": "add",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "commitProperties",
+              "displayName": "Commit Properties",
+              "values": [
+                {
+                  "displayName": "ID",
+                  "name": "id",
+                  "type": "string",
+                  "description": "The sha of the commit",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Author Email",
+                  "name": "authorEmail",
+                  "type": "string",
+                  "description": "Authors email",
+                  "default": ""
+                },
+                {
+                  "displayName": "Author Name",
+                  "name": "authorName",
+                  "type": "string",
+                  "description": "Name of author",
+                  "default": ""
+                },
+                {
+                  "displayName": "Message",
+                  "name": "message",
+                  "type": "string",
+                  "description": "Message of commit",
+                  "default": ""
+                },
+                {
+                  "displayName": "Patch Set",
+                  "name": "patchSet",
+                  "type": "fixedCollection",
+                  "description": "A list of the files that have been changed in the commit. Specifying the patch_set is necessary to power suspect commits and suggested assignees.",
+                  "value": "add",
+                  "default": {},
+                  "required": true,
+                  "options": [
+                    {
+                      "name": "patchSetProperties",
+                      "displayName": "Patch Set Properties",
+                      "values": [
+                        {
+                          "displayName": "Path",
+                          "name": "path",
+                          "type": "string",
+                          "description": "The path to the file. Both forward and backward slashes are supported.",
+                          "default": "",
+                          "required": true
+                        },
+                        {
+                          "displayName": "Type",
+                          "name": "type",
+                          "type": "options",
+                          "description": "The types of changes that happened in that commit",
+                          "value": "add",
+                          "default": "",
+                          "options": [
+                            {
+                              "name": "Add",
+                              "value": "add",
+                              "displayName": "Add"
+                            },
+                            {
+                              "name": "Modify",
+                              "value": "modify",
+                              "displayName": "Modify"
+                            },
+                            {
+                              "name": "Delete",
+                              "value": "delete",
+                              "displayName": "Delete"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "typeOptions": {
+                    "multipleValues": true
+                  }
+                },
+                {
+                  "displayName": "Repository",
+                  "name": "repository",
+                  "type": "string",
+                  "description": "Repository name",
+                  "default": ""
+                },
+                {
+                  "displayName": "Timestamp",
+                  "name": "timestamp",
+                  "type": "dateTime",
+                  "description": "Timestamp of commit",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Refs",
+          "name": "refs",
+          "type": "fixedCollection",
+          "description": "An optional way to indicate the start and end commits for each repository included in a release",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "refProperties",
+              "displayName": "Ref Properties",
+              "values": [
+                {
+                  "displayName": "Commit",
+                  "name": "commit",
+                  "type": "string",
+                  "description": "The head sha of the commit",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Repository",
+                  "name": "repository",
+                  "type": "string",
+                  "description": "Repository name",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Previous Commit",
+                  "name": "previousCommit",
+                  "type": "string",
+                  "description": "The sha of the HEAD of the previous release",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the release belongs to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "Version",
+      "name": "version",
+      "type": "string",
+      "description": "A version identifier for this release. Can be a version number, a commit hash etc.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "An optional list of commit data to be associated with the release",
+      "placeholder": "Add Field",
+      "value": "add",
+      "default": {},
+      "required": true,
+      "options": [
+        {
+          "displayName": "Commits",
+          "name": "commits",
+          "type": "fixedCollection",
+          "description": "An optional list of commit data to be associated with the release",
+          "value": "add",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "commitProperties",
+              "displayName": "Commit Properties",
+              "values": [
+                {
+                  "displayName": "ID",
+                  "name": "id",
+                  "type": "string",
+                  "description": "The sha of the commit",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Author Email",
+                  "name": "authorEmail",
+                  "type": "string",
+                  "description": "Authors email",
+                  "default": ""
+                },
+                {
+                  "displayName": "Author Name",
+                  "name": "authorName",
+                  "type": "string",
+                  "description": "Name of author",
+                  "default": ""
+                },
+                {
+                  "displayName": "Message",
+                  "name": "message",
+                  "type": "string",
+                  "description": "Message of commit",
+                  "default": ""
+                },
+                {
+                  "displayName": "Patch Set",
+                  "name": "patchSet",
+                  "type": "fixedCollection",
+                  "description": "A list of the files that have been changed in the commit. Specifying the patch_set is necessary to power suspect commits and suggested assignees.",
+                  "value": "add",
+                  "default": {},
+                  "required": true,
+                  "options": [
+                    {
+                      "name": "patchSetProperties",
+                      "displayName": "Patch Set Properties",
+                      "values": [
+                        {
+                          "displayName": "Path",
+                          "name": "path",
+                          "type": "string",
+                          "description": "The path to the file. Both forward and backward slashes are supported.",
+                          "default": "",
+                          "required": true
+                        },
+                        {
+                          "displayName": "Type",
+                          "name": "type",
+                          "type": "options",
+                          "description": "The types of changes that happened in that commit",
+                          "value": "add",
+                          "default": "",
+                          "options": [
+                            {
+                              "name": "Add",
+                              "value": "add",
+                              "displayName": "Add"
+                            },
+                            {
+                              "name": "Modify",
+                              "value": "modify",
+                              "displayName": "Modify"
+                            },
+                            {
+                              "name": "Delete",
+                              "value": "delete",
+                              "displayName": "Delete"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "typeOptions": {
+                    "multipleValues": true
+                  }
+                },
+                {
+                  "displayName": "Repository",
+                  "name": "repository",
+                  "type": "string",
+                  "description": "Repository name",
+                  "default": ""
+                },
+                {
+                  "displayName": "Timestamp",
+                  "name": "timestamp",
+                  "type": "dateTime",
+                  "description": "Timestamp of commit",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Date Released",
+          "name": "dateReleased",
+          "type": "dateTime",
+          "description": "An optional date that indicates when the release went live. If not provided the current time is assumed.",
+          "default": ""
+        },
+        {
+          "displayName": "Ref",
+          "name": "ref",
+          "type": "string",
+          "description": "A URL that points to the release. This can be the path to an online interface to the sourcecode for instance.",
+          "default": ""
+        },
+        {
+          "displayName": "Refs",
+          "name": "refs",
+          "type": "fixedCollection",
+          "description": "An optional way to indicate the start and end commits for each repository included in a release",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "refProperties",
+              "displayName": "Ref Properties",
+              "values": [
+                {
+                  "displayName": "Commit",
+                  "name": "commit",
+                  "type": "string",
+                  "description": "The head sha of the commit",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Repository",
+                  "name": "repository",
+                  "type": "string",
+                  "description": "Repository name",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Previous Commit",
+                  "name": "previousCommit",
+                  "type": "string",
+                  "description": "The sha of the HEAD of the previous release",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "URL",
+          "name": "url",
+          "type": "string",
+          "description": "A URL that points to the release. This can be the path to an online interface to the sourcecode for instance.",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Release_releaseFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new team",
+      "action": "Create a team",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a new team",
+          "action": "Create a team",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a team",
+          "action": "Delete a team",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get team by slug",
+          "action": "Get a team",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many teams",
+          "action": "Get many teams",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update a team",
+          "action": "Update a team",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ]
+        }
+      },
+      "_source": "Team_teamOperations"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization for which the teams should be listed. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Team_teamFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "team"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Team_teamFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "team"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Team_teamFields"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the team belongs to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Team_teamFields"
+    },
+    {
+      "displayName": "Team Slug Name or ID",
+      "name": "teamSlug",
+      "type": "options",
+      "description": "The slug of the team to get. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Team_teamFields"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the team belongs to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Team_teamFields"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "The name of the team",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Team_teamFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The optional slug for this team. If not provided it will be auto generated from the name.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Slug",
+          "name": "slug",
+          "type": "string",
+          "description": "The optional slug for this team. If not provided it will be auto generated from the name.",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Team_teamFields"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the team belongs to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Team_teamFields"
+    },
+    {
+      "displayName": "Team Slug Name or ID",
+      "name": "teamSlug",
+      "type": "options",
+      "description": "The slug of the team to update. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Team_teamFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "The new name of the team",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "The new name of the team",
+          "default": ""
+        },
+        {
+          "displayName": "Slug",
+          "name": "slug",
+          "type": "string",
+          "description": "The new slug of the team. Must be unique and available.",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Team_teamFields"
+    },
+    {
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "type": "options",
+      "description": "The slug of the organization the team belongs to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Team_teamFields"
+    },
+    {
+      "displayName": "Team Slug Name or ID",
+      "name": "teamSlug",
+      "type": "options",
+      "description": "The slug of the team to delete. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Team_teamFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Get",
+      "description": "Get event by ID",
+      "action": "Get an event",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many events",
+      "action": "Get many events",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete an issue",
+      "action": "Delete an issue",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Update",
+      "description": "Update an issue",
+      "action": "Update an issue",
+      "value": "update",
+      "displayName": "Update"
+    },
+    {
+      "name": "Create",
+      "description": "Create an organization",
+      "action": "Create an organization",
+      "value": "create",
+      "displayName": "Create"
+    }
+  ],
+  "operations_by_resource": {
+    "event": [
+      {
+        "name": "Get",
+        "description": "Get event by ID",
+        "action": "Get an event",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many events",
+        "action": "Get many events",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "issue": [
+      {
+        "name": "Delete",
+        "description": "Delete an issue",
+        "action": "Delete an issue",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get issue by ID",
+        "action": "Get an issue",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many issues",
+        "action": "Get many issues",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update an issue",
+        "action": "Update an issue",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "organization": [
+      {
+        "name": "Create",
+        "description": "Create an organization",
+        "action": "Create an organization",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Get",
+        "description": "Get organization by slug",
+        "action": "Get an organization",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many organizations",
+        "action": "Get many organizations",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update an organization",
+        "action": "Update an organization",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "project": [
+      {
+        "name": "Create",
+        "description": "Create a new project",
+        "action": "Create a project",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a project",
+        "action": "Delete a project",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get project by ID",
+        "action": "Get a project",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many projects",
+        "action": "Get many projects",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update a project",
+        "action": "Update a project",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "release": [
+      {
+        "name": "Create",
+        "description": "Create a release",
+        "action": "Create a release",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a release",
+        "action": "Delete a release",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get release by version identifier",
+        "action": "Get a release by version ID",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many releases",
+        "action": "Get many releases",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update a release",
+        "action": "Update a release",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "team": [
+      {
+        "name": "Create",
+        "description": "Create a new team",
+        "action": "Create a team",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a team",
+        "action": "Delete a team",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get team by slug",
+        "action": "Get a team",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many teams",
+        "action": "Get many teams",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update a team",
+        "action": "Update a team",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "sentryIoOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    },
+    {
+      "name": "sentryIoApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "accessToken"
+          ]
+        }
+      }
+    },
+    {
+      "name": "sentryIoServerApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "accessTokenServer"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ]
+        }
+      }
+    },
+    "organizationSlug": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      }
+    },
+    "projectSlug": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "project"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      }
+    },
+    "full": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "team"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "team"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "eventId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "issueId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "name": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "agreeTerms": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organization"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "organization_slug": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organization"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "teamSlug": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "team"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      }
+    },
+    "version": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "url": {
+      "required": true,
+      "format": "url",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "projects": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "release"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "accessToken",
+          "name": "Access Token (Cloud)",
+          "description": ""
+        },
+        {
+          "value": "oAuth2",
+          "name": "OAuth2 (Cloud)",
+          "description": ""
+        },
+        {
+          "value": "accessTokenServer",
+          "name": "Access Token (Self Hosted)",
+          "description": ""
+        }
+      ]
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "event",
+          "name": "Event",
+          "description": ""
+        },
+        {
+          "value": "issue",
+          "name": "Issue",
+          "description": ""
+        },
+        {
+          "value": "organization",
+          "name": "Organization",
+          "description": ""
+        },
+        {
+          "value": "project",
+          "name": "Project",
+          "description": ""
+        },
+        {
+          "value": "release",
+          "name": "Release",
+          "description": ""
+        },
+        {
+          "value": "team",
+          "name": "Team",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a new team"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a team"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get team by slug"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get many teams"
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": "Update a team"
+        }
+      ]
+    },
+    "organizationSlug": {
+      "type": "options",
+      "displayName": "Organization Slug Name or ID",
+      "name": "organizationSlug",
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "possibleValues": []
+    },
+    "projectSlug": {
+      "type": "options",
+      "displayName": "Project Slug Name or ID",
+      "name": "projectSlug",
+      "typeOptions": {
+        "loadOptionsMethod": "getProjects"
+      },
+      "possibleValues": []
+    },
+    "full": {
+      "type": "boolean",
+      "displayName": "Full",
+      "name": "full"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      }
+    },
+    "eventId": {
+      "type": "string",
+      "displayName": "Event ID",
+      "name": "eventId"
+    },
+    "issueId": {
+      "type": "string",
+      "displayName": "Issue ID",
+      "name": "issueId"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Slug",
+          "name": "slug",
+          "type": "string",
+          "description": "The optional slug for this team. If not provided it will be auto generated from the name.",
+          "default": ""
+        }
+      ]
+    },
+    "name": {
+      "type": "string",
+      "displayName": "Name",
+      "name": "name"
+    },
+    "agreeTerms": {
+      "type": "boolean",
+      "displayName": "Agree to Terms",
+      "name": "agreeTerms"
+    },
+    "organization_slug": {
+      "type": "options",
+      "displayName": "Slug Name or ID",
+      "name": "organization_slug",
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "possibleValues": []
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "subProperties": [
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "The new name of the team",
+          "default": ""
+        },
+        {
+          "displayName": "Slug",
+          "name": "slug",
+          "type": "string",
+          "description": "The new slug of the team. Must be unique and available.",
+          "default": ""
+        }
+      ]
+    },
+    "teamSlug": {
+      "type": "options",
+      "displayName": "Team Slug Name or ID",
+      "name": "teamSlug",
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "possibleValues": []
+    },
+    "version": {
+      "type": "string",
+      "displayName": "Version",
+      "name": "version"
+    },
+    "url": {
+      "type": "string",
+      "displayName": "URL",
+      "name": "url"
+    },
+    "projects": {
+      "type": "multiOptions",
+      "displayName": "Project Names or IDs",
+      "name": "projects",
+      "typeOptions": {
+        "loadOptionsMethod": "getProjects"
+      },
+      "possibleValues": []
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "issueId",
+        "text": "1234"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "issueId",
+        "text": "1234"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

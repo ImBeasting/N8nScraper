@@ -1,0 +1,470 @@
+{
+  "node_info": {
+    "icon": "file:telegram.svg",
+    "defaults": {
+      "name": "Telegram Trigger"
+    },
+    "inputs": [],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "trigger"
+    ],
+    "authentication": [
+      {
+        "name": "telegramApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Telegram Trigger",
+    "name": "telegramTrigger",
+    "description": "Starts the workflow on a Telegram update",
+    "subtitle": "=Updates: {{$parameter[\"updates\"].join(\", \")}}",
+    "version": [
+      "1",
+      "1.1",
+      "1.2"
+    ],
+    "node_type": "trigger",
+    "webhooks": [
+      {
+        "name": "default",
+        "httpMethod": "POST",
+        "responseMode": "onReceived",
+        "path": "webhook"
+      }
+    ]
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.telegramTrigger",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/telegram/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.telegramtrigger/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "Create a toxic language detector for Telegram in 4 step",
+          "icon": "\ud83e\udd2c",
+          "url": "https://n8n.io/blog/create-a-toxic-language-detector-for-telegram/"
+        },
+        {
+          "label": "Automatically Adding Expense Receipts to Google Sheets with Telegram, Mindee, Twilio, and n8n",
+          "icon": "\ud83e\uddfe",
+          "url": "https://n8n.io/blog/automatically-adding-expense-receipts-to-google-sheets-with-telegram-mindee-twilio-and-n8n/"
+        },
+        {
+          "label": "How to set up a no-code CI/CD pipeline with GitHub and TravisCI",
+          "icon": "\ud83c\udfa1",
+          "url": "https://n8n.io/blog/how-to-set-up-a-ci-cd-pipeline-with-no-code/"
+        },
+        {
+          "label": "Creating Telegram Bots with n8n, a No-Code Platform",
+          "icon": "\ud83d\udcac",
+          "url": "https://n8n.io/blog/creating-telegram-bots-with-n8n-a-no-code-platform/"
+        },
+        {
+          "label": "7 no-code workflow automations for Amazon Web Services",
+          "url": "https://n8n.io/blog/aws-workflow-automation/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Due to Telegram API limitations, you can use just one Telegram trigger for each bot at a time",
+      "name": "telegramTriggerNotice",
+      "type": "notice",
+      "default": ""
+    },
+    {
+      "displayName": "Trigger On",
+      "name": "updates",
+      "type": "multiOptions",
+      "description": "All updates",
+      "action": "On Poll Change",
+      "value": "*",
+      "default": [],
+      "required": true,
+      "options": [
+        {
+          "name": "*",
+          "description": "All updates",
+          "value": "*",
+          "displayName": "*"
+        },
+        {
+          "name": "Callback Query",
+          "description": "Trigger on new incoming callback query",
+          "value": "callback_query",
+          "displayName": "Callback Query"
+        },
+        {
+          "name": "Channel Post",
+          "description": "Trigger on new incoming channel post of any kind \u2014 text, photo, sticker, etc",
+          "value": "channel_post",
+          "displayName": "Channel Post"
+        },
+        {
+          "name": "Edited Channel Post",
+          "description": "Trigger on new version of a channel post that is known to the bot and was edited",
+          "value": "edited_channel_post",
+          "displayName": "Edited Channel Post"
+        },
+        {
+          "name": "Edited Message",
+          "description": "Trigger on new version of a channel post that is known to the bot and was edited",
+          "value": "edited_message",
+          "displayName": "Edited Message"
+        },
+        {
+          "name": "Inline Query",
+          "description": "Trigger on new incoming inline query",
+          "value": "inline_query",
+          "displayName": "Inline Query"
+        },
+        {
+          "name": "Message",
+          "description": "Trigger on new incoming message of any kind \u2014 text, photo, sticker, etc",
+          "value": "message",
+          "displayName": "Message"
+        },
+        {
+          "name": "Poll",
+          "description": "Trigger on new poll state. Bots receive only updates about stopped polls and polls, which are sent by the bot.",
+          "action": "On Poll Change",
+          "value": "poll",
+          "displayName": "Poll"
+        },
+        {
+          "name": "Pre-Checkout Query",
+          "description": "Trigger on new incoming pre-checkout query. Contains full information about checkout.",
+          "value": "pre_checkout_query",
+          "displayName": "Pre-checkout Query"
+        },
+        {
+          "name": "Shipping Query",
+          "description": "Trigger on new incoming shipping query. Only for invoices with flexible price.",
+          "value": "shipping_query",
+          "displayName": "Shipping Query"
+        }
+      ]
+    },
+    {
+      "displayName": "Every uploaded attachment, even if sent in a group, will trigger a separate event. You can identify that an attachment belongs to a certain group by <code>media_group_id</code> .",
+      "name": "attachmentNotice",
+      "type": "notice",
+      "default": ""
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Telegram delivers the image in multiple sizes. By default, just the large image would be downloaded. If you want to change the size, set the field 'Image Size'.",
+      "placeholder": "Add Field",
+      "value": "small",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Download Images/Files",
+          "name": "download",
+          "type": "boolean",
+          "description": "Telegram delivers the image in multiple sizes. By default, just the large image would be downloaded. If you want to change the size, set the field 'Image Size'.",
+          "default": false
+        },
+        {
+          "displayName": "Image Size",
+          "name": "imageSize",
+          "type": "options",
+          "description": "The size of the image to be downloaded",
+          "value": "small",
+          "default": "large",
+          "options": [
+            {
+              "name": "Small",
+              "value": "small",
+              "displayName": "Small"
+            },
+            {
+              "name": "Medium",
+              "value": "medium",
+              "displayName": "Medium"
+            },
+            {
+              "name": "Large",
+              "value": "large",
+              "displayName": "Large"
+            },
+            {
+              "name": "Extra Large",
+              "value": "extraLarge",
+              "displayName": "Extra Large"
+            }
+          ],
+          "displayOptions": {
+            "show": {
+              "download": [
+                true
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Restrict to Chat IDs",
+          "name": "chatIds",
+          "type": "string",
+          "description": "The chat IDs to restrict the trigger to. Multiple can be defined separated by comma.",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Restrict to User IDs",
+          "name": "userIds",
+          "type": "string",
+          "description": "The user IDs to restrict the trigger to. Multiple can be defined separated by comma.",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "download": [
+            true
+          ]
+        }
+      }
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "telegramApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [],
+  "validation_rules": {
+    "updates": {
+      "required": true
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "download": [
+            true
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "telegramTriggerNotice": {
+      "type": "notice",
+      "displayName": "Due to Telegram API limitations, you can use just one Telegram trigger for each bot at a time",
+      "name": "telegramTriggerNotice"
+    },
+    "updates": {
+      "type": "multiOptions",
+      "displayName": "Trigger On",
+      "name": "updates",
+      "possibleValues": [
+        {
+          "value": "*",
+          "name": "*",
+          "description": "All updates"
+        },
+        {
+          "value": "callback_query",
+          "name": "Callback Query",
+          "description": "Trigger on new incoming callback query"
+        },
+        {
+          "value": "channel_post",
+          "name": "Channel Post",
+          "description": "Trigger on new incoming channel post of any kind \u2014 text, photo, sticker, etc"
+        },
+        {
+          "value": "edited_channel_post",
+          "name": "Edited Channel Post",
+          "description": "Trigger on new version of a channel post that is known to the bot and was edited"
+        },
+        {
+          "value": "edited_message",
+          "name": "Edited Message",
+          "description": "Trigger on new version of a channel post that is known to the bot and was edited"
+        },
+        {
+          "value": "inline_query",
+          "name": "Inline Query",
+          "description": "Trigger on new incoming inline query"
+        },
+        {
+          "value": "message",
+          "name": "Message",
+          "description": "Trigger on new incoming message of any kind \u2014 text, photo, sticker, etc"
+        },
+        {
+          "value": "poll",
+          "name": "Poll",
+          "description": "Trigger on new poll state. Bots receive only updates about stopped polls and polls, which are sent by the bot."
+        },
+        {
+          "value": "pre_checkout_query",
+          "name": "Pre-Checkout Query",
+          "description": "Trigger on new incoming pre-checkout query. Contains full information about checkout."
+        },
+        {
+          "value": "shipping_query",
+          "name": "Shipping Query",
+          "description": "Trigger on new incoming shipping query. Only for invoices with flexible price."
+        }
+      ]
+    },
+    "attachmentNotice": {
+      "type": "notice",
+      "displayName": "Every uploaded attachment, even if sent in a group, will trigger a separate event. You can identify that an attachment belongs to a certain group by <code>media_group_id</code> .",
+      "name": "attachmentNotice"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Download Images/Files",
+          "name": "download",
+          "type": "boolean",
+          "description": "Telegram delivers the image in multiple sizes. By default, just the large image would be downloaded. If you want to change the size, set the field 'Image Size'.",
+          "default": false
+        },
+        {
+          "displayName": "Image Size",
+          "name": "imageSize",
+          "type": "options",
+          "description": "The size of the image to be downloaded",
+          "value": "small",
+          "default": "large",
+          "options": [
+            {
+              "name": "Small",
+              "value": "small",
+              "displayName": "Small"
+            },
+            {
+              "name": "Medium",
+              "value": "medium",
+              "displayName": "Medium"
+            },
+            {
+              "name": "Large",
+              "value": "large",
+              "displayName": "Large"
+            },
+            {
+              "name": "Extra Large",
+              "value": "extraLarge",
+              "displayName": "Extra Large"
+            }
+          ],
+          "displayOptions": {
+            "show": {
+              "download": [
+                true
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Restrict to Chat IDs",
+          "name": "chatIds",
+          "type": "string",
+          "description": "The chat IDs to restrict the trigger to. Multiple can be defined separated by comma.",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Restrict to User IDs",
+          "name": "userIds",
+          "type": "string",
+          "description": "The user IDs to restrict the trigger to. Multiple can be defined separated by comma.",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [
+      {
+        "name": "telegramTriggerNotice",
+        "text": "Due to Telegram API limitations, you can use just one Telegram trigger for each bot at a time",
+        "conditions": null
+      },
+      {
+        "name": "attachmentNotice",
+        "text": "Every uploaded attachment, even if sent in a group, will trigger a separate event. You can identify that an attachment belongs to a certain group by <code>media_group_id</code> .",
+        "conditions": null
+      }
+    ],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

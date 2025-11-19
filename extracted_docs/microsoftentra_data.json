@@ -1,0 +1,1681 @@
+{
+  "node_info": {
+    "icon": {
+      "light": "file:microsoftEntra.svg",
+      "dark": "file:microsoftEntra.dark.svg"
+    },
+    "defaults": {
+      "name": "Microsoft Entra ID"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "microsoftEntraOAuth2Api",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getGroupPropertiesGetAll",
+      "return"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Microsoft Entra ID",
+    "name": "microsoftEntra",
+    "description": "Interact with Microsoft Entra ID API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.microsoftEntra",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development",
+      "Developer Tools"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/microsoft/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.microsoftentra/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "group",
+      "default": "user",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Group",
+          "value": "group",
+          "displayName": "Group"
+        },
+        {
+          "name": "User",
+          "value": "user",
+          "displayName": "User"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Add user to group",
+      "action": "Add user to group",
+      "value": "addGroup",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '=/groups/{{ $parameter[\"group\"] ",
+      "_source": "User_userOperations"
+    },
+    {
+      "displayName": "Group",
+      "name": "group",
+      "type": "list",
+      "placeholder": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "addGroup"
+          ]
+        }
+      },
+      "_operation": "addGroup",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "User to Add",
+      "name": "user",
+      "type": "list",
+      "placeholder": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "addGroup"
+          ]
+        }
+      },
+      "_operation": "addGroup",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: '@odata.id',\n\t\t\t\tpropertyInDotNotation: false,\n\t\t\t\ttype: 'body',\n\t\t\t\tvalue: '=https://graph.microsoft.com/v1.0/directoryObjects/{{ $value ",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Account Enabled",
+      "name": "accountEnabled",
+      "type": "body",
+      "description": "Whether the account is enabled",
+      "validateType": "boolean",
+      "default": true,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: 'accountEnabled',\n\t\t\t\ttype: 'body',\n\t\t\t",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Display Name",
+      "name": "displayName",
+      "type": "body",
+      "description": "The name to display in the address book for the user",
+      "placeholder": "e.g. Nathan Smith",
+      "validateType": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: 'displayName',\n\t\t\t\ttype: 'body',\n\t\t\t",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "User Principal Name",
+      "name": "userPrincipalName",
+      "type": "body",
+      "description": "The user principal name (UPN)",
+      "placeholder": "e.g. NathanSmith@contoso.com",
+      "validateType": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: 'userPrincipalName',\n\t\t\t\ttype: 'body',\n\t\t\t\tpreSend: [\n\t\t\t\t\tasync function (\n\t\t\t\t\t\tthis: IExecuteSingleFunctions,\n\t\t\t\t\t\trequestOptions: IHttpRequestOptions,\n\t\t\t\t\t): Promise<IHttpRequestOptions> {\n\t\t\t\t\t\tconst userPrincipalName = this.getNodeParameter('userPrincipalName') as string;\n\t\t\t\t\t\tif (!/^[A-Za-z0-9'._\\-!#^~@]+$/.test(userPrincipalName)) {\n\t\t\t\t\t\t\tthrow new NodeOperationError(\n\t\t\t\t\t\t\t\tthis.getNode(),\n\t\t\t\t\t\t\t\t\"Only the following characters are allowed for 'User Principal Name': A-Z, a-z, 0-9, ' . - _ ! # ^ ~\",\n\t\t\t\t\t\t\t);\n\t\t\t\t\t\t",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Mail Nickname",
+      "name": "mailNickname",
+      "type": "body",
+      "description": "The mail alias for the user",
+      "placeholder": "e.g. NathanSmith",
+      "validateType": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: 'mailNickname',\n\t\t\t\ttype: 'body',\n\t\t\t",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Password",
+      "name": "password",
+      "type": "body",
+      "description": "The password for the user",
+      "validateType": "string",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "password": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: 'passwordProfile.password',\n\t\t\t\ttype: 'body',\n\t\t\t",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "string",
+      "description": "A freeform text entry field for the user to describe themselves",
+      "placeholder": "e.g. US",
+      "validateType": "string",
+      "value": "Adult",
+      "default": {},
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\tpreSend: [\n\t\t\t\t\t\t\tasync function (\n\t\t\t\t\t\t\t\tthis: IExecuteSingleFunctions,\n\t\t\t\t\t\t\t\trequestOptions: IHttpRequestOptions,\n\t\t\t\t\t\t\t): Promise<IHttpRequestOptions> {\n\t\t\t\t\t\t\t\tconst companyName = this.getNodeParameter('additionalFields.companyName') as string;\n\t\t\t\t\t\t\t\tif (companyName?.length > 64) {\n\t\t\t\t\t\t\t\t\tthrow new NodeOperationError(\n\t\t\t\t\t\t\t\t\t\tthis.getNode(),\n\t\t\t\t\t\t\t\t\t\t\"'Company Name' should have a maximum length of 64\",\n\t\t\t\t\t\t\t\t\t);\n\t\t\t\t\t\t\t\t",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "User to Delete",
+      "name": "user",
+      "type": "list",
+      "placeholder": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "User to Get",
+      "name": "user",
+      "type": "list",
+      "placeholder": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Output",
+      "name": "output",
+      "type": "query",
+      "value": "simple",
+      "default": "simple",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\tproperty: '$select',\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tvalue:\n\t\t\t\t\t\t\t'id,createdDateTime,displayName,userPrincipalName,mail,mailNickname,securityIdentifier',\n\t\t\t\t\t",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Fields",
+      "name": "fields",
+      "type": "query",
+      "description": "The fields to add to the output",
+      "value": "={{ $value.concat(\"id\").join(\",\") }}",
+      "default": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getUserProperties"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "get"
+          ],
+          "output": [
+            "fields"
+          ]
+        }
+      },
+      "_operation": "get",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: '$select',\n\t\t\t\ttype: 'query',\n\t\t\t\tvalue: '={{ $value.concat(\"id\").join(\",\") ",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "generic",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpaginate: '={{ $value ",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "query",
+      "description": "Max number of results to return",
+      "validateType": "number",
+      "value": "={{ $value }}",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: '$top',\n\t\t\t\ttype: 'query',\n\t\t\t\tvalue: '={{ $value ",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Filter",
+      "name": "filter",
+      "type": "query",
+      "description": "<a href=\"https://docs.microsoft.com/en-us/graph/query-parameters#filter-parameter\">Query parameter</a> to filter results by",
+      "placeholder": "e.g. startswith(displayName, 'a')",
+      "validateType": "string",
+      "value": "={{ $value ? $value : undefined }}",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: '$filter',\n\t\t\t\ttype: 'query',\n\t\t\t\tvalue: '={{ $value ? $value : undefined ",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Output",
+      "name": "output",
+      "type": "query",
+      "value": "simple",
+      "default": "simple",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\tproperty: '$select',\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tvalue:\n\t\t\t\t\t\t\t'id,createdDateTime,displayName,userPrincipalName,mail,mailNickname,securityIdentifier',\n\t\t\t\t\t",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Fields",
+      "name": "fields",
+      "type": "query",
+      "description": "The fields to add to the output",
+      "value": "={{ $value.concat(\"id\").join(\",\") }}",
+      "default": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getUserPropertiesGetAll"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "output": [
+            "fields"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: '$select',\n\t\t\t\ttype: 'query',\n\t\t\t\tvalue: '={{ $value.concat(\"id\").join(\",\") ",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Group",
+      "name": "group",
+      "type": "list",
+      "placeholder": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "removeGroup"
+          ]
+        }
+      },
+      "_operation": "removeGroup",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "User to Remove",
+      "name": "user",
+      "type": "list",
+      "placeholder": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "removeGroup"
+          ]
+        }
+      },
+      "_operation": "removeGroup",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "User to Update",
+      "name": "user",
+      "type": "list",
+      "placeholder": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "string",
+      "description": "A freeform text entry field for the user to describe themselves",
+      "placeholder": "e.g. US",
+      "validateType": "string",
+      "value": "Adult",
+      "default": {},
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\tproperty: 'accountEnabled',\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Group Type",
+      "name": "groupType",
+      "type": "options",
+      "value": "Unified",
+      "default": "",
+      "options": [
+        {
+          "name": "Microsoft 365",
+          "value": "Unified",
+          "displayName": "Microsoft 365"
+        },
+        {
+          "name": "Security",
+          "displayName": "Security"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpreSend: [\n\t\t\t\t\tasync function (\n\t\t\t\t\t\tthis: IExecuteSingleFunctions,\n\t\t\t\t\t\trequestOptions: IHttpRequestOptions,\n\t\t\t\t\t): Promise<IHttpRequestOptions> {\n\t\t\t\t\t\tconst groupType = this.getNodeParameter('groupType') as string;\n\t\t\t\t\t\tconst body = requestOptions.body as IDataObject;\n\t\t\t\t\t\tif (groupType) {\n\t\t\t\t\t\t\tbody.groupTypes ??= [] as string[];\n\t\t\t\t\t\t\t(body.groupTypes as string[]).push(groupType);\n\t\t\t\t\t\t",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Group Name",
+      "name": "displayName",
+      "type": "body",
+      "description": "The name to display in the address book for the group",
+      "validateType": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: 'displayName',\n\t\t\t\ttype: 'body',\n\t\t\t\tpreSend: [\n\t\t\t\t\tasync function (\n\t\t\t\t\t\tthis: IExecuteSingleFunctions,\n\t\t\t\t\t\trequestOptions: IHttpRequestOptions,\n\t\t\t\t\t): Promise<IHttpRequestOptions> {\n\t\t\t\t\t\tconst displayName = this.getNodeParameter('displayName') as string;\n\t\t\t\t\t\tif (displayName?.length > 256) {\n\t\t\t\t\t\t\tthrow new NodeOperationError(\n\t\t\t\t\t\t\t\tthis.getNode(),\n\t\t\t\t\t\t\t\t\"'Display Name' should have a maximum length of 256\",\n\t\t\t\t\t\t\t);\n\t\t\t\t\t\t",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Group Email Address",
+      "name": "mailNickname",
+      "type": "body",
+      "description": "The mail alias for the group. Only enter the local-part without the domain.",
+      "placeholder": "e.g. alias",
+      "validateType": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: 'mailNickname',\n\t\t\t\ttype: 'body',\n\t\t\t\tpreSend: [\n\t\t\t\t\tasync function (\n\t\t\t\t\t\tthis: IExecuteSingleFunctions,\n\t\t\t\t\t\trequestOptions: IHttpRequestOptions,\n\t\t\t\t\t): Promise<IHttpRequestOptions> {\n\t\t\t\t\t\tconst mailNickname = this.getNodeParameter('mailNickname') as string;\n\t\t\t\t\t\tif (mailNickname?.includes('@')) {\n\t\t\t\t\t\t\tthrow new NodeOperationError(\n\t\t\t\t\t\t\t\tthis.getNode(),\n\t\t\t\t\t\t\t\t`'Group Email Address' should only include the local-part of the email address, without ${mailNickname.slice(mailNickname.indexOf('@'))",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Mail Enabled",
+      "name": "mailEnabled",
+      "type": "body",
+      "description": "Whether the group is mail-enabled",
+      "validateType": "boolean",
+      "default": false,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ],
+          "groupType": [
+            "Unified"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: 'mailEnabled',\n\t\t\t\ttype: 'body',\n\t\t\t",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Membership Type",
+      "name": "membershipType",
+      "type": "options",
+      "description": "Lets you add specific users as members of a group and have unique permissions",
+      "default": "",
+      "options": [
+        {
+          "name": "Assigned",
+          "description": "Lets you add specific users as members of a group and have unique permissions",
+          "displayName": "Assigned"
+        },
+        {
+          "name": "Dynamic",
+          "description": "Lets you use rules to automatically add and remove users as members",
+          "value": "DynamicMembership",
+          "displayName": "Dynamic"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpreSend: [\n\t\t\t\t\tasync function (\n\t\t\t\t\t\tthis: IExecuteSingleFunctions,\n\t\t\t\t\t\trequestOptions: IHttpRequestOptions,\n\t\t\t\t\t): Promise<IHttpRequestOptions> {\n\t\t\t\t\t\tconst membershipType = this.getNodeParameter('membershipType') as string;\n\t\t\t\t\t\tif (membershipType) {\n\t\t\t\t\t\t\tconst body = requestOptions.body as IDataObject;\n\t\t\t\t\t\t\tbody.groupTypes ??= [] as string[];\n\t\t\t\t\t\t\t(body.groupTypes as string[]).push(membershipType);\n\t\t\t\t\t\t",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Security Enabled",
+      "name": "securityEnabled",
+      "type": "body",
+      "description": "Whether the group is a security group",
+      "validateType": "boolean",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ],
+          "groupType": [
+            "Unified"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: 'securityEnabled',\n\t\t\t\ttype: 'body',\n\t\t\t",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "body",
+      "description": "Whether Microsoft Entra roles can be assigned to the group",
+      "placeholder": "e.g. user.department -eq \"Marketing\"",
+      "validateType": "boolean",
+      "value": "On",
+      "default": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\tproperty: 'isAssignableToRole',\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tpreSend: [\n\t\t\t\t\t\t\tasync function (\n\t\t\t\t\t\t\t\tthis: IExecuteSingleFunctions,\n\t\t\t\t\t\t\t\trequestOptions: IHttpRequestOptions,\n\t\t\t\t\t\t\t): Promise<IHttpRequestOptions> {\n\t\t\t\t\t\t\t\tconst isAssignableToRole = this.getNodeParameter(\n\t\t\t\t\t\t\t\t\t'additionalFields.isAssignableToRole',\n\t\t\t\t\t\t\t\t) as boolean;\n\t\t\t\t\t\t\t\tif (isAssignableToRole) {\n\t\t\t\t\t\t\t\t\tconst securityEnabled = this.getNodeParameter('securityEnabled', true) as boolean;\n\t\t\t\t\t\t\t\t\tconst visibility = this.getNodeParameter(\n\t\t\t\t\t\t\t\t\t\t'additionalFields.visibility',\n\t\t\t\t\t\t\t\t\t\t'',\n\t\t\t\t\t\t\t\t\t) as string;\n\t\t\t\t\t\t\t\t\tconst groupType = this.getNodeParameter('groupType') as string;\n\t\t\t\t\t\t\t\t\tconst mailEnabled = this.getNodeParameter('mailEnabled', false) as boolean;\n\t\t\t\t\t\t\t\t\tif (!securityEnabled) {\n\t\t\t\t\t\t\t\t\t\tthrow new NodeOperationError(\n\t\t\t\t\t\t\t\t\t\t\tthis.getNode(),\n\t\t\t\t\t\t\t\t\t\t\t\"'Security Enabled' must be set to true if 'Assignable to Role' is set\",\n\t\t\t\t\t\t\t\t\t\t);\n\t\t\t\t\t\t\t\t\t",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Group to Delete",
+      "name": "group",
+      "type": "list",
+      "placeholder": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Group to Get",
+      "name": "group",
+      "type": "list",
+      "placeholder": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Output",
+      "name": "output",
+      "type": "query",
+      "value": "simple",
+      "default": "simple",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\tproperty: '$select',\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tvalue:\n\t\t\t\t\t\t\t'id,createdDateTime,description,displayName,mail,mailEnabled,mailNickname,securityEnabled,securityIdentifier,visibility',\n\t\t\t\t\t",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Fields",
+      "name": "fields",
+      "type": "query",
+      "description": "The fields to add to the output",
+      "value": "={{ $value.concat(\"id\").join(\",\") }}",
+      "default": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getGroupProperties"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "get"
+          ],
+          "output": [
+            "fields"
+          ]
+        }
+      },
+      "_operation": "get",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: '$select',\n\t\t\t\ttype: 'query',\n\t\t\t\tvalue: '={{ $value.concat(\"id\").join(\",\") ",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "query",
+      "placeholder": "Add Option",
+      "validateType": "boolean",
+      "value": "={{ $value ? \"members($select=id,accountEnabled,createdDateTime,displayName,employeeId,mail,securityIdentifier,userPrincipalName,userType)\" : undefined }}",
+      "default": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\tproperty: '$expand',\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tvalue:\n\t\t\t\t\t\t\t'={{ $value ? \"members($select=id,accountEnabled,createdDateTime,displayName,employeeId,mail,securityIdentifier,userPrincipalName,userType)\" : undefined ",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "generic",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpaginate: '={{ $value ",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "query",
+      "description": "Max number of results to return",
+      "validateType": "number",
+      "value": "={{ $value }}",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: '$top',\n\t\t\t\ttype: 'query',\n\t\t\t\tvalue: '={{ $value ",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Filter",
+      "name": "filter",
+      "type": "query",
+      "description": "<a href=\"https://docs.microsoft.com/en-us/graph/query-parameters#filter-parameter\">Query parameter</a> to filter results by",
+      "placeholder": "e.g. startswith(displayName, 'a')",
+      "hint": "If empty, all the groups will be returned",
+      "validateType": "string",
+      "value": "={{ $value ? $value : undefined }}",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: '$filter',\n\t\t\t\ttype: 'query',\n\t\t\t\tvalue: '={{ $value ? $value : undefined ",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Output",
+      "name": "output",
+      "type": "query",
+      "value": "simple",
+      "default": "simple",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\tproperty: '$select',\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tvalue:\n\t\t\t\t\t\t\t'id,createdDateTime,description,displayName,mail,mailEnabled,mailNickname,securityEnabled,securityIdentifier,visibility',\n\t\t\t\t\t",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Fields",
+      "name": "fields",
+      "type": "query",
+      "description": "The fields to add to the output",
+      "value": "={{ $value.concat(\"id\").join(\",\") }}",
+      "default": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getGroupPropertiesGetAll"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "output": [
+            "fields"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: '$select',\n\t\t\t\ttype: 'query',\n\t\t\t\tvalue: '={{ $value.concat(\"id\").join(\",\") ",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Group to Update",
+      "name": "group",
+      "type": "list",
+      "placeholder": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "boolean",
+      "description": "Whether people external to the organization can send messages to the group. Wait a few seconds before editing this field in a newly created group.",
+      "placeholder": "e.g. alias",
+      "validateType": "boolean",
+      "value": "On",
+      "default": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\tproperty: 'description',\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a group",
+      "action": "Create group",
+      "value": "create",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tignoreHttpStatusErrors: true,\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/groups',\n\t\t\t\t\t",
+      "_source": "Group_groupOperations"
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {
+    "user": [],
+    "group": []
+  },
+  "credentials": [
+    {
+      "name": "microsoftEntraOAuth2Api",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{ !!$response.body?.[\"@odata.nextLink\"] }}",
+    "={{ $response.body?.[\"@odata.nextLink\"] ?? $request.url }}",
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ]
+        }
+      }
+    },
+    "group": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "user": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "accountEnabled": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "displayName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "userPrincipalName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "mailNickname": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "password": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "output": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "fields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "output": [
+            "fields"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "filter": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "groupType": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "mailEnabled": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ],
+          "groupType": [
+            "Unified"
+          ]
+        }
+      }
+    },
+    "membershipType": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "securityEnabled": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ],
+          "groupType": [
+            "Unified"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "group",
+          "name": "Group",
+          "description": ""
+        },
+        {
+          "value": "user",
+          "name": "User",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": []
+    },
+    "group": {
+      "type": "list",
+      "displayName": "Group to Update",
+      "name": "group"
+    },
+    "user": {
+      "type": "list",
+      "displayName": "User to Update",
+      "name": "user"
+    },
+    "accountEnabled": {
+      "type": "body",
+      "displayName": "Account Enabled",
+      "name": "accountEnabled"
+    },
+    "displayName": {
+      "type": "body",
+      "displayName": "Group Name",
+      "name": "displayName"
+    },
+    "userPrincipalName": {
+      "type": "body",
+      "displayName": "User Principal Name",
+      "name": "userPrincipalName"
+    },
+    "mailNickname": {
+      "type": "body",
+      "displayName": "Group Email Address",
+      "name": "mailNickname"
+    },
+    "password": {
+      "type": "body",
+      "displayName": "Password",
+      "name": "password",
+      "typeOptions": {
+        "password": true
+      }
+    },
+    "additionalFields": {
+      "type": "body",
+      "displayName": "Additional Fields",
+      "name": "additionalFields"
+    },
+    "output": {
+      "type": "query",
+      "displayName": "Output",
+      "name": "output"
+    },
+    "fields": {
+      "type": "query",
+      "displayName": "Fields",
+      "name": "fields",
+      "typeOptions": {
+        "loadOptionsMethod": "getGroupPropertiesGetAll"
+      }
+    },
+    "returnAll": {
+      "type": "generic",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "query",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1
+      }
+    },
+    "filter": {
+      "type": "query",
+      "displayName": "Filter",
+      "name": "filter"
+    },
+    "updateFields": {
+      "type": "boolean",
+      "displayName": "Update Fields",
+      "name": "updateFields"
+    },
+    "groupType": {
+      "type": "options",
+      "displayName": "Group Type",
+      "name": "groupType",
+      "possibleValues": [
+        {
+          "value": "Unified",
+          "name": "Microsoft 365",
+          "description": ""
+        },
+        {
+          "value": "Security",
+          "name": "Security",
+          "description": ""
+        }
+      ]
+    },
+    "mailEnabled": {
+      "type": "body",
+      "displayName": "Mail Enabled",
+      "name": "mailEnabled"
+    },
+    "membershipType": {
+      "type": "options",
+      "displayName": "Membership Type",
+      "name": "membershipType",
+      "possibleValues": [
+        {
+          "value": "Assigned",
+          "name": "Assigned",
+          "description": "Lets you add specific users as members of a group and have unique permissions"
+        },
+        {
+          "value": "DynamicMembership",
+          "name": "Dynamic",
+          "description": "Lets you use rules to automatically add and remove users as members"
+        }
+      ]
+    },
+    "securityEnabled": {
+      "type": "body",
+      "displayName": "Security Enabled",
+      "name": "securityEnabled"
+    },
+    "options": {
+      "type": "query",
+      "displayName": "Options",
+      "name": "options"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [
+      "={{ $response.body?.["
+    ],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "group",
+        "text": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315"
+      },
+      {
+        "field": "user",
+        "text": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315"
+      },
+      {
+        "field": "displayName",
+        "text": "e.g. Nathan Smith"
+      },
+      {
+        "field": "userPrincipalName",
+        "text": "e.g. NathanSmith@contoso.com"
+      },
+      {
+        "field": "mailNickname",
+        "text": "e.g. NathanSmith"
+      },
+      {
+        "field": "additionalFields",
+        "text": "e.g. US"
+      },
+      {
+        "field": "user",
+        "text": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315"
+      },
+      {
+        "field": "user",
+        "text": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315"
+      },
+      {
+        "field": "filter",
+        "text": "e.g. startswith(displayName, 'a')"
+      },
+      {
+        "field": "group",
+        "text": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315"
+      },
+      {
+        "field": "user",
+        "text": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315"
+      },
+      {
+        "field": "user",
+        "text": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315"
+      },
+      {
+        "field": "updateFields",
+        "text": "e.g. US"
+      },
+      {
+        "field": "mailNickname",
+        "text": "e.g. alias"
+      },
+      {
+        "field": "additionalFields",
+        "text": "e.g. user.department -eq \"Marketing\""
+      },
+      {
+        "field": "group",
+        "text": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315"
+      },
+      {
+        "field": "group",
+        "text": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315"
+      },
+      {
+        "field": "options",
+        "text": "Add Option"
+      },
+      {
+        "field": "filter",
+        "text": "e.g. startswith(displayName, 'a')"
+      },
+      {
+        "field": "group",
+        "text": "e.g. 02bd9fd6-8f93-4758-87c3-1fb73740a315"
+      },
+      {
+        "field": "updateFields",
+        "text": "e.g. alias"
+      }
+    ],
+    "hints": [
+      {
+        "field": "filter",
+        "text": "If empty, all the groups will be returned"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

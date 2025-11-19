@@ -1,0 +1,873 @@
+{
+  "node_info": {
+    "icon": "file:rocketchat.svg",
+    "defaults": {
+      "name": "RocketChat"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "rocketchatApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "RocketChat",
+    "name": "rocketchat",
+    "description": "Consume RocketChat API",
+    "subtitle": "={{$parameter[\"resource\"] + \": \" + $parameter[\"operation\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.rocketchat",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/rocketchat/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.rocketchat/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "Automate Designs with Bannerbear and n8n",
+          "icon": "\ud83c\udfa8",
+          "url": "https://n8n.io/blog/automate-designs-with-bannerbear-and-n8n/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "chat",
+      "default": "chat",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Chat",
+          "value": "chat",
+          "displayName": "Chat"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Post a message to a channel or a direct message",
+      "action": "Post a message",
+      "value": "postMessage",
+      "default": "postMessage",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Post Message",
+          "description": "Post a message to a channel or a direct message",
+          "action": "Post a message",
+          "value": "postMessage",
+          "displayName": "Post Message"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Channel",
+      "name": "channel",
+      "type": "string",
+      "description": "The channel name with the prefix in front of it",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ],
+          "operation": [
+            "postMessage"
+          ]
+        }
+      },
+      "_operation": "postMessage"
+    },
+    {
+      "displayName": "Text",
+      "name": "text",
+      "type": "string",
+      "description": "The text of the message to send, is optional because of attachments",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ],
+          "operation": [
+            "postMessage"
+          ]
+        }
+      },
+      "_operation": "postMessage"
+    },
+    {
+      "displayName": "JSON Parameters",
+      "name": "jsonParameters",
+      "type": "boolean",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ],
+          "operation": [
+            "postMessage"
+          ]
+        }
+      },
+      "_operation": "postMessage"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "This will cause the message\u2019s name to appear as the given alias, but your username will still display",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Alias",
+          "name": "alias",
+          "type": "string",
+          "description": "This will cause the message\u2019s name to appear as the given alias, but your username will still display",
+          "default": ""
+        },
+        {
+          "displayName": "Avatar",
+          "name": "avatar",
+          "type": "string",
+          "description": "If provided, this will make the avatar use the provided image URL",
+          "default": ""
+        },
+        {
+          "displayName": "Emoji",
+          "name": "emoji",
+          "type": "string",
+          "description": "This will cause the message\u2019s name to appear as the given alias, but your username will still display",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ],
+          "operation": [
+            "postMessage"
+          ]
+        }
+      },
+      "_operation": "postMessage"
+    },
+    {
+      "displayName": "Attachments",
+      "name": "attachments",
+      "type": "collection",
+      "description": "The color you want the order on the left side to be, any value background-css supports",
+      "placeholder": "Add Attachment Item",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Color",
+          "name": "color",
+          "type": "color",
+          "description": "The color you want the order on the left side to be, any value background-css supports",
+          "default": "#ff0000"
+        },
+        {
+          "displayName": "Text",
+          "name": "text",
+          "type": "string",
+          "description": "The text to display for this attachment, it is different than the message\u2019s text",
+          "default": ""
+        },
+        {
+          "displayName": "Timestamp",
+          "name": "ts",
+          "type": "dateTime",
+          "description": "Displays the time next to the text portion",
+          "default": ""
+        },
+        {
+          "displayName": "Thumb URL",
+          "name": "thumbUrl",
+          "type": "string",
+          "description": "An image that displays to the left of the text, looks better when this is relatively small",
+          "default": ""
+        },
+        {
+          "displayName": "Message Link",
+          "name": "messageLink",
+          "type": "string",
+          "description": "Only applicable if the timestamp is provided, as it makes the time clickable to this link",
+          "default": ""
+        },
+        {
+          "displayName": "Collapsed",
+          "name": "collapsed",
+          "type": "boolean",
+          "description": "Causes the image, audio, and video sections to be hiding when collapsed is true",
+          "default": false
+        },
+        {
+          "displayName": "Author Name",
+          "name": "authorName",
+          "type": "string",
+          "description": "Name of the author",
+          "default": ""
+        },
+        {
+          "displayName": "Author Link",
+          "name": "authorLink",
+          "type": "string",
+          "description": "Providing this makes the author name clickable and points to this link",
+          "default": ""
+        },
+        {
+          "displayName": "Author Icon",
+          "name": "authorIcon",
+          "type": "string",
+          "description": "Displays a tiny icon to the left of the Author\u2019s name",
+          "placeholder": "https://site.com/img.png",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Title to display for this attachment, displays under the author",
+          "default": ""
+        },
+        {
+          "displayName": "Title Link",
+          "name": "titleLink",
+          "type": "string",
+          "description": "Providing this makes the title clickable, pointing to this link",
+          "default": ""
+        },
+        {
+          "displayName": "Title Link Download",
+          "name": "titleLinkDownload",
+          "type": "boolean",
+          "description": "When this is true, a download icon appears and clicking this saves the link to file",
+          "default": false
+        },
+        {
+          "displayName": "Image URL",
+          "name": "imageUrl",
+          "type": "string",
+          "description": "The image to display, will be \u201cbig\u201d and easy to see",
+          "default": ""
+        },
+        {
+          "displayName": "Audio URL",
+          "name": "audioUrl",
+          "type": "string",
+          "description": "Audio file to play, only supports what html audio does",
+          "placeholder": "https://site.com/aud.mp3",
+          "default": ""
+        },
+        {
+          "displayName": "Video URL",
+          "name": "videoUrl",
+          "type": "string",
+          "description": "Video file to play, only supports what html video does",
+          "placeholder": "https://site.com/vid.mp4",
+          "default": ""
+        },
+        {
+          "displayName": "Fields",
+          "name": "fields",
+          "type": "fixedCollection",
+          "description": "Whether this field should be a short field",
+          "placeholder": "Add Field Item",
+          "default": {},
+          "options": [
+            {
+              "name": "fieldsValues",
+              "displayName": "Fields",
+              "values": [
+                {
+                  "displayName": "Short",
+                  "name": "short",
+                  "type": "boolean",
+                  "description": "Whether this field should be a short field",
+                  "default": false
+                },
+                {
+                  "displayName": "Title",
+                  "name": "title",
+                  "type": "string",
+                  "description": "The title of this field",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "The value of this field, displayed underneath the title value",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ],
+          "operation": [
+            "postMessage"
+          ],
+          "jsonParameters": [
+            false
+          ]
+        }
+      },
+      "_operation": "postMessage"
+    },
+    {
+      "displayName": "Attachments",
+      "name": "attachmentsJson",
+      "type": "json",
+      "default": "",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ],
+          "operation": [
+            "postMessage"
+          ],
+          "jsonParameters": [
+            true
+          ]
+        }
+      },
+      "_operation": "postMessage"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Post Message",
+      "description": "Post a message to a channel or a direct message",
+      "action": "Post a message",
+      "value": "postMessage",
+      "displayName": "Post Message"
+    }
+  ],
+  "operations_by_resource": {
+    "chat": [
+      {
+        "name": "Post Message",
+        "description": "Post a message to a channel or a direct message",
+        "action": "Post a message",
+        "value": "postMessage",
+        "displayName": "Post Message"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "rocketchatApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"resource\"] + \": \" + $parameter[\"operation\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ]
+        }
+      }
+    },
+    "channel": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ],
+          "operation": [
+            "postMessage"
+          ]
+        }
+      }
+    },
+    "text": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ],
+          "operation": [
+            "postMessage"
+          ]
+        }
+      }
+    },
+    "jsonParameters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ],
+          "operation": [
+            "postMessage"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ],
+          "operation": [
+            "postMessage"
+          ]
+        }
+      }
+    },
+    "attachments": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ],
+          "operation": [
+            "postMessage"
+          ],
+          "jsonParameters": [
+            false
+          ]
+        }
+      }
+    },
+    "attachmentsJson": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ],
+          "operation": [
+            "postMessage"
+          ],
+          "jsonParameters": [
+            true
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "chat",
+          "name": "Chat",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "postMessage",
+          "name": "Post Message",
+          "description": "Post a message to a channel or a direct message"
+        }
+      ]
+    },
+    "channel": {
+      "type": "string",
+      "displayName": "Channel",
+      "name": "channel"
+    },
+    "text": {
+      "type": "string",
+      "displayName": "Text",
+      "name": "text"
+    },
+    "jsonParameters": {
+      "type": "boolean",
+      "displayName": "JSON Parameters",
+      "name": "jsonParameters"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Alias",
+          "name": "alias",
+          "type": "string",
+          "description": "This will cause the message\u2019s name to appear as the given alias, but your username will still display",
+          "default": ""
+        },
+        {
+          "displayName": "Avatar",
+          "name": "avatar",
+          "type": "string",
+          "description": "If provided, this will make the avatar use the provided image URL",
+          "default": ""
+        },
+        {
+          "displayName": "Emoji",
+          "name": "emoji",
+          "type": "string",
+          "description": "This will cause the message\u2019s name to appear as the given alias, but your username will still display",
+          "default": ""
+        }
+      ]
+    },
+    "attachments": {
+      "type": "collection",
+      "displayName": "Attachments",
+      "name": "attachments",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Color",
+          "name": "color",
+          "type": "color",
+          "description": "The color you want the order on the left side to be, any value background-css supports",
+          "default": "#ff0000"
+        },
+        {
+          "displayName": "Text",
+          "name": "text",
+          "type": "string",
+          "description": "The text to display for this attachment, it is different than the message\u2019s text",
+          "default": ""
+        },
+        {
+          "displayName": "Timestamp",
+          "name": "ts",
+          "type": "dateTime",
+          "description": "Displays the time next to the text portion",
+          "default": ""
+        },
+        {
+          "displayName": "Thumb URL",
+          "name": "thumbUrl",
+          "type": "string",
+          "description": "An image that displays to the left of the text, looks better when this is relatively small",
+          "default": ""
+        },
+        {
+          "displayName": "Message Link",
+          "name": "messageLink",
+          "type": "string",
+          "description": "Only applicable if the timestamp is provided, as it makes the time clickable to this link",
+          "default": ""
+        },
+        {
+          "displayName": "Collapsed",
+          "name": "collapsed",
+          "type": "boolean",
+          "description": "Causes the image, audio, and video sections to be hiding when collapsed is true",
+          "default": false
+        },
+        {
+          "displayName": "Author Name",
+          "name": "authorName",
+          "type": "string",
+          "description": "Name of the author",
+          "default": ""
+        },
+        {
+          "displayName": "Author Link",
+          "name": "authorLink",
+          "type": "string",
+          "description": "Providing this makes the author name clickable and points to this link",
+          "default": ""
+        },
+        {
+          "displayName": "Author Icon",
+          "name": "authorIcon",
+          "type": "string",
+          "description": "Displays a tiny icon to the left of the Author\u2019s name",
+          "placeholder": "https://site.com/img.png",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Title to display for this attachment, displays under the author",
+          "default": ""
+        },
+        {
+          "displayName": "Title Link",
+          "name": "titleLink",
+          "type": "string",
+          "description": "Providing this makes the title clickable, pointing to this link",
+          "default": ""
+        },
+        {
+          "displayName": "Title Link Download",
+          "name": "titleLinkDownload",
+          "type": "boolean",
+          "description": "When this is true, a download icon appears and clicking this saves the link to file",
+          "default": false
+        },
+        {
+          "displayName": "Image URL",
+          "name": "imageUrl",
+          "type": "string",
+          "description": "The image to display, will be \u201cbig\u201d and easy to see",
+          "default": ""
+        },
+        {
+          "displayName": "Audio URL",
+          "name": "audioUrl",
+          "type": "string",
+          "description": "Audio file to play, only supports what html audio does",
+          "placeholder": "https://site.com/aud.mp3",
+          "default": ""
+        },
+        {
+          "displayName": "Video URL",
+          "name": "videoUrl",
+          "type": "string",
+          "description": "Video file to play, only supports what html video does",
+          "placeholder": "https://site.com/vid.mp4",
+          "default": ""
+        },
+        {
+          "displayName": "Fields",
+          "name": "fields",
+          "type": "fixedCollection",
+          "description": "Whether this field should be a short field",
+          "placeholder": "Add Field Item",
+          "default": {},
+          "options": [
+            {
+              "name": "fieldsValues",
+              "displayName": "Fields",
+              "values": [
+                {
+                  "displayName": "Short",
+                  "name": "short",
+                  "type": "boolean",
+                  "description": "Whether this field should be a short field",
+                  "default": false
+                },
+                {
+                  "displayName": "Title",
+                  "name": "title",
+                  "type": "string",
+                  "description": "The title of this field",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "The value of this field, displayed underneath the title value",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        }
+      ]
+    },
+    "attachmentsJson": {
+      "type": "json",
+      "displayName": "Attachments",
+      "name": "attachmentsJson",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      }
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "attachments",
+        "text": "Add Attachment Item"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

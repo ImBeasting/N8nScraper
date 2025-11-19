@@ -1,0 +1,2403 @@
+{
+  "node_info": {
+    "icon": "file:googleCloudStorage.svg",
+    "defaults": {
+      "name": "Google Cloud Storage"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "googleCloudStorageOAuth2Api",
+        "required": true,
+        "testedBy": "request: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/b/',"
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Google Cloud Storage",
+    "name": "googleCloudStorage",
+    "description": "Use the Google Cloud Storage API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.googleCloudStorage",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development",
+      "Data & Storage"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/google/oauth-single-service/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.googlecloudstorage/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "15 Google apps you can combine and automate to increase productivity",
+          "icon": "\ud83d\udca1",
+          "url": "https://n8n.io/blog/automate-google-apps-for-productivity/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "bucket",
+      "default": "bucket",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Bucket",
+          "value": "bucket",
+          "displayName": "Bucket"
+        },
+        {
+          "name": "Object",
+          "value": "object",
+          "displayName": "Object"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new Bucket",
+      "action": "Create a new Bucket",
+      "value": "create",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/b/',\n\t\t\t\t\t\tqs: {",
+      "_source": "Bucket_bucketOperations"
+    },
+    {
+      "displayName": "Project ID",
+      "name": "projectId",
+      "type": "string",
+      "placeholder": "Project ID",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ],
+          "operation": [
+            "create",
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "create,getAll",
+      "routing": "\n\t\t\trequest: {\n\t\t\t\tqs: {\n\t\t\t\t\tproject: '={{$value",
+      "_source": "Bucket_bucketFields"
+    },
+    {
+      "displayName": "Bucket Name",
+      "name": "bucketName",
+      "type": "string",
+      "placeholder": "Bucket Name",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ],
+          "operation": [
+            "create",
+            "get",
+            "update",
+            "delete"
+          ]
+        }
+      },
+      "_operation": "create,get,update,delete",
+      "_source": "Bucket_bucketFields"
+    },
+    {
+      "displayName": "Prefix",
+      "name": "prefix",
+      "type": "string",
+      "placeholder": "Filter for Bucket Names",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\trequest: {\n\t\t\t\tqs: {\n\t\t\t\t\tprefix: '={{$value",
+      "_source": "Bucket_bucketFields"
+    },
+    {
+      "displayName": "Projection",
+      "name": "projection",
+      "type": "options",
+      "value": "full",
+      "default": "noAcl",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "All Properties",
+          "value": "full",
+          "displayName": "All Properties"
+        },
+        {
+          "name": "No ACL",
+          "value": "noAcl",
+          "displayName": "No Acl"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ],
+          "operation": [
+            "create",
+            "get",
+            "getAll",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,get,getAll,update",
+      "routing": "\n\t\t\trequest: {\n\t\t\t\tqs: {\n\t\t\t\t\tprojection: '={{$value",
+      "_source": "Bucket_bucketFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Bucket_bucketFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "getFilters",
+      "type": "collection",
+      "description": "Only return data if the metageneration value of the Bucket matches the sent value",
+      "placeholder": "Add Filter",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Metageneration Match",
+          "name": "ifMetagenerationMatch",
+          "type": "number",
+          "description": "Only return data if the metageneration value of the Bucket matches the sent value",
+          "default": 0,
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tifMetagenerationMatch: '={{$value"
+        },
+        {
+          "displayName": "Metageneration Exclude",
+          "name": "ifMetagenerationNotMatch",
+          "type": "number",
+          "description": "Only return data if the metageneration value of the Bucket does not match the sent value",
+          "default": 0,
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tifMetagenerationNotMatch: '={{$value"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ],
+          "operation": [
+            "delete",
+            "get",
+            "update"
+          ]
+        }
+      },
+      "_operation": "delete,get,update",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tifMetagenerationMatch: '={{$value",
+      "_source": "Bucket_bucketFields"
+    },
+    {
+      "displayName": "Predefined Access Control",
+      "name": "createAcl",
+      "type": "collection",
+      "placeholder": "Add Access Control Parameters",
+      "value": "authenticatedRead",
+      "default": {},
+      "noDataExpression": true,
+      "options": [
+        {
+          "displayName": "Predefined ACL",
+          "name": "predefinedAcl",
+          "type": "options",
+          "placeholder": "Apply a predefined set of access controls to this bucket",
+          "value": "authenticatedRead",
+          "default": "authenticatedRead",
+          "options": [
+            {
+              "name": "Authenticated Read",
+              "value": "authenticatedRead",
+              "displayName": "Authenticated Read"
+            },
+            {
+              "name": "Private",
+              "value": "private",
+              "displayName": "Private"
+            },
+            {
+              "name": "Project Private",
+              "value": "projectPrivate",
+              "displayName": "Project Private"
+            },
+            {
+              "name": "Public Read",
+              "value": "publicRead",
+              "displayName": "Public Read"
+            },
+            {
+              "name": "Public Read/Write",
+              "value": "publicReadWrite",
+              "displayName": "Public Read/write"
+            }
+          ],
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tpredefinedAcl: '={{$value"
+        },
+        {
+          "displayName": "Predefined Default Object ACL",
+          "name": "predefinedDefaultObjectAcl",
+          "type": "options",
+          "placeholder": "Apply a predefined set of default object access controls to this bucket",
+          "value": "authenticatedRead",
+          "default": "authenticatedRead",
+          "options": [
+            {
+              "name": "Authenticated Read",
+              "value": "authenticatedRead",
+              "displayName": "Authenticated Read"
+            },
+            {
+              "name": "Bucket Owner Full Control",
+              "value": "bucketOwnerFullControl",
+              "displayName": "Bucket Owner Full Control"
+            },
+            {
+              "name": "Bucket Owner Read",
+              "value": "bucketOwnerRead",
+              "displayName": "Bucket Owner Read"
+            },
+            {
+              "name": "Private",
+              "value": "private",
+              "displayName": "Private"
+            },
+            {
+              "name": "Project Private",
+              "value": "projectPrivate",
+              "displayName": "Project Private"
+            },
+            {
+              "name": "Public Read",
+              "value": "publicRead",
+              "displayName": "Public Read"
+            }
+          ],
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tpredefinedObjectAcl: '={{$value"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tpredefinedAcl: '={{$value",
+      "_source": "Bucket_bucketFields"
+    },
+    {
+      "displayName": "Additional Parameters",
+      "name": "createBody",
+      "type": "collection",
+      "placeholder": "Add Metadata Parameter",
+      "default": {},
+      "noDataExpression": true,
+      "options": [
+        {
+          "displayName": "Access Control",
+          "name": "acl",
+          "type": "json",
+          "placeholder": "Access controls on the Bucket",
+          "default": "[]"
+        },
+        {
+          "displayName": "Billing",
+          "name": "billing",
+          "type": "json",
+          "placeholder": "The bucket's billing configuration",
+          "default": "{}"
+        },
+        {
+          "displayName": "CORS",
+          "name": "cors",
+          "type": "json",
+          "placeholder": "The bucket's Cross Origin Resource Sharing configuration",
+          "default": "[]"
+        },
+        {
+          "displayName": "Custom Placement Config",
+          "name": "customPlacementConfig",
+          "type": "json",
+          "placeholder": "The configuration for the region(s) for the Bucket",
+          "default": "{}"
+        },
+        {
+          "displayName": "Data Locations",
+          "name": "dataLocations",
+          "type": "json",
+          "placeholder": "The list of individual regions that comprise a dual-region Bucket",
+          "default": "[]"
+        },
+        {
+          "displayName": "Default Event Based Hold",
+          "name": "defaultEventBasedHold",
+          "type": "boolean",
+          "placeholder": "Whether or not to automatically apply an event based hold to new objects",
+          "default": true
+        },
+        {
+          "displayName": "Default Object ACL",
+          "name": "defaultObjectAcl",
+          "type": "json",
+          "placeholder": "Default Access Controls for new objects when no ACL is provided",
+          "default": "[]"
+        },
+        {
+          "displayName": "Encryption",
+          "name": "encryption",
+          "type": "json",
+          "placeholder": "Encryption configuration for a bucket",
+          "default": "{}"
+        },
+        {
+          "displayName": "IAM Configuration",
+          "name": "iamConfiguration",
+          "type": "json",
+          "placeholder": "The bucket's IAM configuration",
+          "default": "{}"
+        },
+        {
+          "displayName": "Labels",
+          "name": "labels",
+          "type": "json",
+          "placeholder": "User provided bucket labels, in key/value pairs",
+          "default": "{}"
+        },
+        {
+          "displayName": "Lifecycle",
+          "name": "lifecycle",
+          "type": "json",
+          "placeholder": "The bucket's lifecycle configuration",
+          "default": "{}"
+        },
+        {
+          "displayName": "Location",
+          "name": "location",
+          "type": "string",
+          "placeholder": "The location of the bucket",
+          "default": "US"
+        },
+        {
+          "displayName": "Logging",
+          "name": "logging",
+          "type": "json",
+          "placeholder": "The bucket's logging configuration",
+          "default": "{}"
+        },
+        {
+          "displayName": "Retention Policy",
+          "name": "retentionPolicy",
+          "type": "json",
+          "placeholder": "The bucket's retention policy",
+          "default": "{}"
+        },
+        {
+          "displayName": "Recovery Point Objective",
+          "name": "rpo",
+          "type": "string",
+          "placeholder": "The recovery point objective for the bucket",
+          "default": "DEFAULT"
+        },
+        {
+          "displayName": "Storage Class",
+          "name": "storageClass",
+          "type": "string",
+          "placeholder": "The bucket's default storage class for objects that don't define one",
+          "default": "STANDARD"
+        },
+        {
+          "displayName": "Versioning",
+          "name": "versioning",
+          "type": "json",
+          "placeholder": "The bucket's versioning configuration",
+          "default": "{}"
+        },
+        {
+          "displayName": "Website",
+          "name": "website",
+          "type": "json",
+          "placeholder": "The bucket's website configuration for when it is used to host a website",
+          "default": "{}"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "_source": "Bucket_bucketFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create an object",
+      "action": "Create an object",
+      "value": "create",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\tbaseURL: 'https://storage.googleapis.com/upload/storage/v1',\n\t\t\t\t\t\turl: '={{\"/b/\" + $parameter[\"bucketName\"] + \"/o/\"",
+      "_source": "Object_objectOperations"
+    },
+    {
+      "displayName": "Bucket Name",
+      "name": "bucketName",
+      "type": "string",
+      "placeholder": "Bucket Name",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ]
+        }
+      },
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Object Name",
+      "name": "objectName",
+      "type": "string",
+      "placeholder": "Object Name",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create",
+            "delete",
+            "get",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,delete,get,update",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Projection",
+      "name": "projection",
+      "type": "options",
+      "value": "full",
+      "default": "noAcl",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "All Properties",
+          "value": "full",
+          "displayName": "All Properties"
+        },
+        {
+          "name": "No ACL",
+          "value": "noAcl",
+          "displayName": "No Acl"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "get",
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "get,getAll",
+      "routing": "\n\t\t\trequest: {\n\t\t\t\tqs: {\n\t\t\t\t\tprojection: '={{$value",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Projection",
+      "name": "updateProjection",
+      "type": "options",
+      "value": "full",
+      "default": "full",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "All Properties",
+          "value": "full",
+          "displayName": "All Properties"
+        },
+        {
+          "name": "No ACL",
+          "value": "noAcl",
+          "displayName": "No Acl"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "routing": "\n\t\t\trequest: {\n\t\t\t\tqs: {\n\t\t\t\t\tprojection: '={{$value",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Return Data",
+      "name": "alt",
+      "type": "options",
+      "placeholder": "The type of data to return from the request",
+      "value": "json",
+      "default": "json",
+      "options": [
+        {
+          "name": "Metadata",
+          "value": "json",
+          "displayName": "Metadata"
+        },
+        {
+          "name": "Object Data",
+          "value": "media",
+          "displayName": "Object Data"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Use Input Binary Field",
+      "name": "createFromBinary",
+      "type": "boolean",
+      "description": "Whether the data for creating a file should come from a binary field",
+      "default": true,
+      "noDataExpression": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Input Binary Field",
+      "name": "createBinaryPropertyName",
+      "type": "string",
+      "hint": "The name of the input binary field containing the file to be written",
+      "default": "data",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create"
+          ],
+          "createFromBinary": [
+            true
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "File Content",
+      "name": "createContent",
+      "type": "string",
+      "description": "Content of the file to be uploaded",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create"
+          ],
+          "createFromBinary": [
+            false
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Put Output File in Field",
+      "name": "binaryPropertyName",
+      "type": "string",
+      "hint": "The name of the output binary field to put the file in",
+      "default": "data",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "get"
+          ],
+          "alt": [
+            "media"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "maxResults",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 1000
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Create Fields",
+      "name": "createData",
+      "type": "collection",
+      "placeholder": "Add Create Body Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Access Control List",
+          "name": "acl",
+          "type": "json",
+          "default": "[]"
+        },
+        {
+          "displayName": "Cache Control",
+          "name": "cacheControl",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Disposition",
+          "name": "contentDisposition",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Encoding",
+          "name": "contentEncoding",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Language",
+          "name": "contentLanguage",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Type",
+          "name": "contentType",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "CRC32c Checksum",
+          "name": "crc32c",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Custom Time",
+          "name": "customTime",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Event Based Hold",
+          "name": "eventBasedHold",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "displayName": "MD5 Hash",
+          "name": "md5Hash",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Metadata",
+          "name": "metadata",
+          "type": "json",
+          "default": "{}"
+        },
+        {
+          "displayName": "Storage Class",
+          "name": "storageClass",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Temporary Hold",
+          "name": "temporaryHold",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateData",
+      "type": "collection",
+      "placeholder": "Add Update Body Field",
+      "default": "[]",
+      "options": [
+        {
+          "displayName": "Access Control",
+          "name": "acl",
+          "type": "json",
+          "default": "[]"
+        },
+        {
+          "displayName": "Cache Control",
+          "name": "cacheControl",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Disposition",
+          "name": "contentDisposition",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Encoding",
+          "name": "contentEncoding",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Language",
+          "name": "contentLanguage",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Type",
+          "name": "contentType",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Custom Time",
+          "name": "customTime",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Event Based Hold",
+          "name": "eventBasedHold",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "displayName": "Metadata",
+          "name": "metadata",
+          "type": "json",
+          "default": "{}"
+        },
+        {
+          "displayName": "Temporary Hold",
+          "name": "temporaryHold",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Additional Parameters",
+      "name": "createQuery",
+      "type": "collection",
+      "placeholder": "Add Additional Parameters",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Content Encoding",
+          "name": "contentEncoding",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "KMS Key Name",
+          "name": "kmsKeyName",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Additional Parameters",
+      "name": "getParameters",
+      "type": "collection",
+      "placeholder": "Add Additional Parameters",
+      "default": {},
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "delete",
+            "get"
+          ]
+        }
+      },
+      "_operation": "delete,get",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Additional Parameters",
+      "name": "metagenAndAclQuery",
+      "type": "collection",
+      "placeholder": "Add Additional Parameters",
+      "default": {},
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Encryption Headers",
+      "name": "encryptionHeaders",
+      "type": "collection",
+      "placeholder": "Add Encryption Headers",
+      "value": "AES256",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Encryption Algorithm",
+          "name": "X-Goog-Encryption-Algorithm",
+          "type": "options",
+          "placeholder": "The encryption algorithm to use, which must be AES256. Use to supply your own key in the request",
+          "value": "AES256",
+          "default": "AES256",
+          "options": [
+            {
+              "name": "AES256",
+              "value": "AES256",
+              "displayName": "Aes256"
+            }
+          ]
+        },
+        {
+          "displayName": "Encryption Key",
+          "name": "X-Goog-Encryption-Key",
+          "type": "string",
+          "placeholder": "Base64 encoded string of your AES256 encryption key",
+          "default": ""
+        },
+        {
+          "displayName": "Encryption Key Hash",
+          "name": "X-Goog-Encryption-Key-Sha256",
+          "type": "string",
+          "placeholder": "Base64 encoded string of the SHA256 hash of your encryption key",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create",
+            "get",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,get,update",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Additional Parameters",
+      "name": "listFilters",
+      "type": "collection",
+      "placeholder": "Add Additional Parameters",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Delimiter",
+          "name": "delimiter",
+          "type": "string",
+          "placeholder": "Returns results in directory-like mode, using this value as the delimiter",
+          "default": "/"
+        },
+        {
+          "displayName": "End Offset",
+          "name": "endOffset",
+          "type": "string",
+          "placeholder": "Filter results to names lexicographically before this value",
+          "default": ""
+        },
+        {
+          "displayName": "Include Trailing Delimiter",
+          "name": "includeTrailingDelimiter",
+          "type": "boolean",
+          "placeholder": "If true, objects will appear with exactly one instance of delimiter at the end of the name",
+          "default": false
+        },
+        {
+          "displayName": "Prefix",
+          "name": "prefix",
+          "type": "string",
+          "placeholder": "Filter results to names that start with this value",
+          "default": ""
+        },
+        {
+          "displayName": "Start Offset",
+          "name": "startOffset",
+          "type": "string",
+          "placeholder": "Filter results to names lexicographically equal or after this value",
+          "default": ""
+        },
+        {
+          "displayName": "Versions",
+          "name": "versions",
+          "type": "boolean",
+          "placeholder": "If true, list all versions of objects as distinct entries",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Generation",
+      "name": "generation",
+      "type": "number",
+      "placeholder": "Select a specific revision of the chosen object",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Generation Match",
+      "name": "ifGenerationMatch",
+      "type": "number",
+      "placeholder": "Make operation conditional of the object generation matching this value",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Generation Exclude",
+      "name": "ifGenerationNotMatch",
+      "type": "number",
+      "placeholder": "Make operation conditional of the object generation not matching this value",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Metageneration Match",
+      "name": "ifMetagenerationMatch",
+      "type": "number",
+      "placeholder": "Make operation conditional of the object's current metageneration matching this value",
+      "_source": "Object_objectFields"
+    },
+    {
+      "displayName": "Metageneration Exclude",
+      "name": "ifMetagenerationNotMatch",
+      "type": "number",
+      "placeholder": "Make operation conditional of the object's current metageneration not matching this value",
+      "_source": "Object_objectFields"
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {
+    "bucket": [],
+    "object": []
+  },
+  "credentials": [
+    {
+      "name": "googleCloudStorageOAuth2Api",
+      "required": true,
+      "testedBy": "request: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/b/',"
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ]
+        }
+      }
+    },
+    "projectId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ],
+          "operation": [
+            "create",
+            "getAll"
+          ]
+        }
+      }
+    },
+    "bucketName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ]
+        }
+      }
+    },
+    "prefix": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "projection": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "get",
+            "getAll"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "getFilters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ],
+          "operation": [
+            "delete",
+            "get",
+            "update"
+          ]
+        }
+      }
+    },
+    "createAcl": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      }
+    },
+    "createBody": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bucket"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      }
+    },
+    "objectName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create",
+            "delete",
+            "get",
+            "update"
+          ]
+        }
+      }
+    },
+    "updateProjection": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      }
+    },
+    "alt": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "createFromBinary": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "createBinaryPropertyName": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create"
+          ],
+          "createFromBinary": [
+            true
+          ]
+        }
+      }
+    },
+    "createContent": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create"
+          ],
+          "createFromBinary": [
+            false
+          ]
+        }
+      }
+    },
+    "binaryPropertyName": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "get"
+          ],
+          "alt": [
+            "media"
+          ]
+        }
+      }
+    },
+    "maxResults": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "createData": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "updateData": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "createQuery": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "getParameters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "delete",
+            "get"
+          ]
+        }
+      }
+    },
+    "metagenAndAclQuery": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "encryptionHeaders": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "create",
+            "get",
+            "update"
+          ]
+        }
+      }
+    },
+    "listFilters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "bucket",
+          "name": "Bucket",
+          "description": ""
+        },
+        {
+          "value": "object",
+          "name": "Object",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": []
+    },
+    "projectId": {
+      "type": "string",
+      "displayName": "Project ID",
+      "name": "projectId"
+    },
+    "bucketName": {
+      "type": "string",
+      "displayName": "Bucket Name",
+      "name": "bucketName"
+    },
+    "prefix": {
+      "type": "string",
+      "displayName": "Prefix",
+      "name": "prefix"
+    },
+    "projection": {
+      "type": "options",
+      "displayName": "Projection",
+      "name": "projection",
+      "possibleValues": [
+        {
+          "value": "full",
+          "name": "All Properties",
+          "description": ""
+        },
+        {
+          "value": "noAcl",
+          "name": "No ACL",
+          "description": ""
+        }
+      ]
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "getFilters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "getFilters",
+      "subProperties": [
+        {
+          "displayName": "Metageneration Match",
+          "name": "ifMetagenerationMatch",
+          "type": "number",
+          "description": "Only return data if the metageneration value of the Bucket matches the sent value",
+          "default": 0,
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tifMetagenerationMatch: '={{$value"
+        },
+        {
+          "displayName": "Metageneration Exclude",
+          "name": "ifMetagenerationNotMatch",
+          "type": "number",
+          "description": "Only return data if the metageneration value of the Bucket does not match the sent value",
+          "default": 0,
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tifMetagenerationNotMatch: '={{$value"
+        }
+      ]
+    },
+    "createAcl": {
+      "type": "collection",
+      "displayName": "Predefined Access Control",
+      "name": "createAcl",
+      "subProperties": [
+        {
+          "displayName": "Predefined ACL",
+          "name": "predefinedAcl",
+          "type": "options",
+          "placeholder": "Apply a predefined set of access controls to this bucket",
+          "value": "authenticatedRead",
+          "default": "authenticatedRead",
+          "options": [
+            {
+              "name": "Authenticated Read",
+              "value": "authenticatedRead",
+              "displayName": "Authenticated Read"
+            },
+            {
+              "name": "Private",
+              "value": "private",
+              "displayName": "Private"
+            },
+            {
+              "name": "Project Private",
+              "value": "projectPrivate",
+              "displayName": "Project Private"
+            },
+            {
+              "name": "Public Read",
+              "value": "publicRead",
+              "displayName": "Public Read"
+            },
+            {
+              "name": "Public Read/Write",
+              "value": "publicReadWrite",
+              "displayName": "Public Read/write"
+            }
+          ],
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tpredefinedAcl: '={{$value"
+        },
+        {
+          "displayName": "Predefined Default Object ACL",
+          "name": "predefinedDefaultObjectAcl",
+          "type": "options",
+          "placeholder": "Apply a predefined set of default object access controls to this bucket",
+          "value": "authenticatedRead",
+          "default": "authenticatedRead",
+          "options": [
+            {
+              "name": "Authenticated Read",
+              "value": "authenticatedRead",
+              "displayName": "Authenticated Read"
+            },
+            {
+              "name": "Bucket Owner Full Control",
+              "value": "bucketOwnerFullControl",
+              "displayName": "Bucket Owner Full Control"
+            },
+            {
+              "name": "Bucket Owner Read",
+              "value": "bucketOwnerRead",
+              "displayName": "Bucket Owner Read"
+            },
+            {
+              "name": "Private",
+              "value": "private",
+              "displayName": "Private"
+            },
+            {
+              "name": "Project Private",
+              "value": "projectPrivate",
+              "displayName": "Project Private"
+            },
+            {
+              "name": "Public Read",
+              "value": "publicRead",
+              "displayName": "Public Read"
+            }
+          ],
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tpredefinedObjectAcl: '={{$value"
+        }
+      ]
+    },
+    "createBody": {
+      "type": "collection",
+      "displayName": "Additional Parameters",
+      "name": "createBody",
+      "subProperties": [
+        {
+          "displayName": "Access Control",
+          "name": "acl",
+          "type": "json",
+          "placeholder": "Access controls on the Bucket",
+          "default": "[]"
+        },
+        {
+          "displayName": "Billing",
+          "name": "billing",
+          "type": "json",
+          "placeholder": "The bucket's billing configuration",
+          "default": "{}"
+        },
+        {
+          "displayName": "CORS",
+          "name": "cors",
+          "type": "json",
+          "placeholder": "The bucket's Cross Origin Resource Sharing configuration",
+          "default": "[]"
+        },
+        {
+          "displayName": "Custom Placement Config",
+          "name": "customPlacementConfig",
+          "type": "json",
+          "placeholder": "The configuration for the region(s) for the Bucket",
+          "default": "{}"
+        },
+        {
+          "displayName": "Data Locations",
+          "name": "dataLocations",
+          "type": "json",
+          "placeholder": "The list of individual regions that comprise a dual-region Bucket",
+          "default": "[]"
+        },
+        {
+          "displayName": "Default Event Based Hold",
+          "name": "defaultEventBasedHold",
+          "type": "boolean",
+          "placeholder": "Whether or not to automatically apply an event based hold to new objects",
+          "default": true
+        },
+        {
+          "displayName": "Default Object ACL",
+          "name": "defaultObjectAcl",
+          "type": "json",
+          "placeholder": "Default Access Controls for new objects when no ACL is provided",
+          "default": "[]"
+        },
+        {
+          "displayName": "Encryption",
+          "name": "encryption",
+          "type": "json",
+          "placeholder": "Encryption configuration for a bucket",
+          "default": "{}"
+        },
+        {
+          "displayName": "IAM Configuration",
+          "name": "iamConfiguration",
+          "type": "json",
+          "placeholder": "The bucket's IAM configuration",
+          "default": "{}"
+        },
+        {
+          "displayName": "Labels",
+          "name": "labels",
+          "type": "json",
+          "placeholder": "User provided bucket labels, in key/value pairs",
+          "default": "{}"
+        },
+        {
+          "displayName": "Lifecycle",
+          "name": "lifecycle",
+          "type": "json",
+          "placeholder": "The bucket's lifecycle configuration",
+          "default": "{}"
+        },
+        {
+          "displayName": "Location",
+          "name": "location",
+          "type": "string",
+          "placeholder": "The location of the bucket",
+          "default": "US"
+        },
+        {
+          "displayName": "Logging",
+          "name": "logging",
+          "type": "json",
+          "placeholder": "The bucket's logging configuration",
+          "default": "{}"
+        },
+        {
+          "displayName": "Retention Policy",
+          "name": "retentionPolicy",
+          "type": "json",
+          "placeholder": "The bucket's retention policy",
+          "default": "{}"
+        },
+        {
+          "displayName": "Recovery Point Objective",
+          "name": "rpo",
+          "type": "string",
+          "placeholder": "The recovery point objective for the bucket",
+          "default": "DEFAULT"
+        },
+        {
+          "displayName": "Storage Class",
+          "name": "storageClass",
+          "type": "string",
+          "placeholder": "The bucket's default storage class for objects that don't define one",
+          "default": "STANDARD"
+        },
+        {
+          "displayName": "Versioning",
+          "name": "versioning",
+          "type": "json",
+          "placeholder": "The bucket's versioning configuration",
+          "default": "{}"
+        },
+        {
+          "displayName": "Website",
+          "name": "website",
+          "type": "json",
+          "placeholder": "The bucket's website configuration for when it is used to host a website",
+          "default": "{}"
+        }
+      ]
+    },
+    "objectName": {
+      "type": "string",
+      "displayName": "Object Name",
+      "name": "objectName"
+    },
+    "updateProjection": {
+      "type": "options",
+      "displayName": "Projection",
+      "name": "updateProjection",
+      "possibleValues": [
+        {
+          "value": "full",
+          "name": "All Properties",
+          "description": ""
+        },
+        {
+          "value": "noAcl",
+          "name": "No ACL",
+          "description": ""
+        }
+      ]
+    },
+    "alt": {
+      "type": "options",
+      "displayName": "Return Data",
+      "name": "alt",
+      "possibleValues": [
+        {
+          "value": "json",
+          "name": "Metadata",
+          "description": ""
+        },
+        {
+          "value": "media",
+          "name": "Object Data",
+          "description": ""
+        }
+      ]
+    },
+    "createFromBinary": {
+      "type": "boolean",
+      "displayName": "Use Input Binary Field",
+      "name": "createFromBinary"
+    },
+    "createBinaryPropertyName": {
+      "type": "string",
+      "displayName": "Input Binary Field",
+      "name": "createBinaryPropertyName"
+    },
+    "createContent": {
+      "type": "string",
+      "displayName": "File Content",
+      "name": "createContent"
+    },
+    "binaryPropertyName": {
+      "type": "string",
+      "displayName": "Put Output File in Field",
+      "name": "binaryPropertyName"
+    },
+    "maxResults": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "maxResults",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 1000
+      }
+    },
+    "createData": {
+      "type": "collection",
+      "displayName": "Create Fields",
+      "name": "createData",
+      "subProperties": [
+        {
+          "displayName": "Access Control List",
+          "name": "acl",
+          "type": "json",
+          "default": "[]"
+        },
+        {
+          "displayName": "Cache Control",
+          "name": "cacheControl",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Disposition",
+          "name": "contentDisposition",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Encoding",
+          "name": "contentEncoding",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Language",
+          "name": "contentLanguage",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Type",
+          "name": "contentType",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "CRC32c Checksum",
+          "name": "crc32c",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Custom Time",
+          "name": "customTime",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Event Based Hold",
+          "name": "eventBasedHold",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "displayName": "MD5 Hash",
+          "name": "md5Hash",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Metadata",
+          "name": "metadata",
+          "type": "json",
+          "default": "{}"
+        },
+        {
+          "displayName": "Storage Class",
+          "name": "storageClass",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Temporary Hold",
+          "name": "temporaryHold",
+          "type": "boolean",
+          "default": false
+        }
+      ]
+    },
+    "updateData": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateData",
+      "subProperties": [
+        {
+          "displayName": "Access Control",
+          "name": "acl",
+          "type": "json",
+          "default": "[]"
+        },
+        {
+          "displayName": "Cache Control",
+          "name": "cacheControl",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Disposition",
+          "name": "contentDisposition",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Encoding",
+          "name": "contentEncoding",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Language",
+          "name": "contentLanguage",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Content Type",
+          "name": "contentType",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Custom Time",
+          "name": "customTime",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Event Based Hold",
+          "name": "eventBasedHold",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "displayName": "Metadata",
+          "name": "metadata",
+          "type": "json",
+          "default": "{}"
+        },
+        {
+          "displayName": "Temporary Hold",
+          "name": "temporaryHold",
+          "type": "boolean",
+          "default": false
+        }
+      ]
+    },
+    "createQuery": {
+      "type": "collection",
+      "displayName": "Additional Parameters",
+      "name": "createQuery",
+      "subProperties": [
+        {
+          "displayName": "Content Encoding",
+          "name": "contentEncoding",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "KMS Key Name",
+          "name": "kmsKeyName",
+          "type": "string",
+          "default": ""
+        }
+      ]
+    },
+    "getParameters": {
+      "type": "collection",
+      "displayName": "Additional Parameters",
+      "name": "getParameters",
+      "subProperties": []
+    },
+    "metagenAndAclQuery": {
+      "type": "collection",
+      "displayName": "Additional Parameters",
+      "name": "metagenAndAclQuery",
+      "subProperties": []
+    },
+    "encryptionHeaders": {
+      "type": "collection",
+      "displayName": "Encryption Headers",
+      "name": "encryptionHeaders",
+      "subProperties": [
+        {
+          "displayName": "Encryption Algorithm",
+          "name": "X-Goog-Encryption-Algorithm",
+          "type": "options",
+          "placeholder": "The encryption algorithm to use, which must be AES256. Use to supply your own key in the request",
+          "value": "AES256",
+          "default": "AES256",
+          "options": [
+            {
+              "name": "AES256",
+              "value": "AES256",
+              "displayName": "Aes256"
+            }
+          ]
+        },
+        {
+          "displayName": "Encryption Key",
+          "name": "X-Goog-Encryption-Key",
+          "type": "string",
+          "placeholder": "Base64 encoded string of your AES256 encryption key",
+          "default": ""
+        },
+        {
+          "displayName": "Encryption Key Hash",
+          "name": "X-Goog-Encryption-Key-Sha256",
+          "type": "string",
+          "placeholder": "Base64 encoded string of the SHA256 hash of your encryption key",
+          "default": ""
+        }
+      ]
+    },
+    "listFilters": {
+      "type": "collection",
+      "displayName": "Additional Parameters",
+      "name": "listFilters",
+      "subProperties": [
+        {
+          "displayName": "Delimiter",
+          "name": "delimiter",
+          "type": "string",
+          "placeholder": "Returns results in directory-like mode, using this value as the delimiter",
+          "default": "/"
+        },
+        {
+          "displayName": "End Offset",
+          "name": "endOffset",
+          "type": "string",
+          "placeholder": "Filter results to names lexicographically before this value",
+          "default": ""
+        },
+        {
+          "displayName": "Include Trailing Delimiter",
+          "name": "includeTrailingDelimiter",
+          "type": "boolean",
+          "placeholder": "If true, objects will appear with exactly one instance of delimiter at the end of the name",
+          "default": false
+        },
+        {
+          "displayName": "Prefix",
+          "name": "prefix",
+          "type": "string",
+          "placeholder": "Filter results to names that start with this value",
+          "default": ""
+        },
+        {
+          "displayName": "Start Offset",
+          "name": "startOffset",
+          "type": "string",
+          "placeholder": "Filter results to names lexicographically equal or after this value",
+          "default": ""
+        },
+        {
+          "displayName": "Versions",
+          "name": "versions",
+          "type": "boolean",
+          "placeholder": "If true, list all versions of objects as distinct entries",
+          "default": false
+        }
+      ]
+    },
+    "generation": {
+      "type": "number",
+      "displayName": "Generation",
+      "name": "generation"
+    },
+    "ifGenerationMatch": {
+      "type": "number",
+      "displayName": "Generation Match",
+      "name": "ifGenerationMatch"
+    },
+    "ifGenerationNotMatch": {
+      "type": "number",
+      "displayName": "Generation Exclude",
+      "name": "ifGenerationNotMatch"
+    },
+    "ifMetagenerationMatch": {
+      "type": "number",
+      "displayName": "Metageneration Match",
+      "name": "ifMetagenerationMatch"
+    },
+    "ifMetagenerationNotMatch": {
+      "type": "number",
+      "displayName": "Metageneration Exclude",
+      "name": "ifMetagenerationNotMatch"
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "projectId",
+        "text": "Project ID"
+      },
+      {
+        "field": "bucketName",
+        "text": "Bucket Name"
+      },
+      {
+        "field": "prefix",
+        "text": "Filter for Bucket Names"
+      },
+      {
+        "field": "getFilters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "createAcl",
+        "text": "Add Access Control Parameters"
+      },
+      {
+        "field": "createBody",
+        "text": "Add Metadata Parameter"
+      },
+      {
+        "field": "bucketName",
+        "text": "Bucket Name"
+      },
+      {
+        "field": "objectName",
+        "text": "Object Name"
+      },
+      {
+        "field": "alt",
+        "text": "The type of data to return from the request"
+      },
+      {
+        "field": "createData",
+        "text": "Add Create Body Field"
+      },
+      {
+        "field": "updateData",
+        "text": "Add Update Body Field"
+      },
+      {
+        "field": "createQuery",
+        "text": "Add Additional Parameters"
+      },
+      {
+        "field": "getParameters",
+        "text": "Add Additional Parameters"
+      },
+      {
+        "field": "metagenAndAclQuery",
+        "text": "Add Additional Parameters"
+      },
+      {
+        "field": "encryptionHeaders",
+        "text": "Add Encryption Headers"
+      },
+      {
+        "field": "listFilters",
+        "text": "Add Additional Parameters"
+      },
+      {
+        "field": "generation",
+        "text": "Select a specific revision of the chosen object"
+      },
+      {
+        "field": "ifGenerationMatch",
+        "text": "Make operation conditional of the object generation matching this value"
+      },
+      {
+        "field": "ifGenerationNotMatch",
+        "text": "Make operation conditional of the object generation not matching this value"
+      },
+      {
+        "field": "ifMetagenerationMatch",
+        "text": "Make operation conditional of the object's current metageneration matching this value"
+      },
+      {
+        "field": "ifMetagenerationNotMatch",
+        "text": "Make operation conditional of the object's current metageneration not matching this value"
+      }
+    ],
+    "hints": [
+      {
+        "field": "createBinaryPropertyName",
+        "text": "The name of the input binary field containing the file to be written"
+      },
+      {
+        "field": "binaryPropertyName",
+        "text": "The name of the output binary field to put the file in"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

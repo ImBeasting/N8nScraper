@@ -1,0 +1,31 @@
+{
+  "issue_id": "_openai_codex_issue_005",
+  "title": "iconColor metadata dropped from node_info",
+  "severity": "low",
+  "status": "new",
+  "priority": 4,
+  "metadata": {
+    "created_at": "2025-11-06T17:12:00Z",
+    "created_by": "openai_codex",
+    "affected_nodes": "If, Switch, Webhook, Execute Command, RSS Feed Read, and other nodes setting description.iconColor"
+  },
+  "description": {
+    "problem": "Nodes that specify `iconColor` in their description lose that information in the extracted metadata.",
+    "impact": "Low – the functional behavior is unaffected, but documentation and AI visual references lose color cues that differentiate triggers vs transforms.",
+    "root_cause": "The extractor’s metadata whitelist omits `iconColor`, so spread assignments from base descriptions (e.g., `iconColor: 'green'`) never reach the JSON output.",
+    "evidence": [
+      "extracted_docs/if_data.json: node_info.iconColor → null",
+      "n8n/packages/nodes-base/nodes/If/If.node.ts:11-19 defines `iconColor: 'green'` in baseDescription",
+      "extracted_docs/switch_data.json: node_info.iconColor → null",
+      "n8n/packages/nodes-base/nodes/Switch/Switch.node.ts:9-18 sets `iconColor: 'light-blue'`"
+    ],
+    "fix_approach": "1. Include `iconColor` in the metadata fields exported by `n8n_node_extractor.py`. 2. Preserve both string and hexadecimal formats. 3. Re-extract representative nodes (If, Switch, Webhook) and confirm `node_info.iconColor` is populated. 4. Re-run validation to ensure no regressions."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

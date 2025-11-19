@@ -1,0 +1,56 @@
+{
+  "issue_id": "_claude_issue_032",
+  "title": "Template literals in API patterns extracted as corrupted strings",
+  "severity": "medium",
+  "status": "new",
+  "priority": 4,
+  "metadata": {
+    "created_at": "2025-11-11T00:00:00Z",
+    "created_by": "claude_code",
+    "affected_nodes": "Elasticsearch (API endpoints corrupted), HTTP Request, potentially 30-50 API integration nodes"
+  },
+  "description": {
+    "problem": "API endpoint patterns containing template literals with complex expressions (like .replace() function calls) are extracted as broken/corrupted strings instead of clean endpoint patterns",
+    "impact": "MEDIUM - API patterns section shows corrupted data instead of useful endpoint information. Affects documentation quality and AI training for API integration understanding. Users see confusing malformed strings like '${baseUrl.replace(/\\\\/$/, ' instead of clean endpoints like '/_bulk' or '/{endpoint}'.",
+    "root_cause": "The APIPatternExtractor uses regex to extract template literals:\n  pattern = r'url:\\s*`([^`]+)`'\n  \nThis captures the entire template string including complex JavaScript expressions. When the template contains:\n  url: `${baseUrl.replace(/\\/$/, '')}/_bulk`\n  \nThe regex captures: ${baseUrl.replace(/\\/$/, '')}/_bulk\nBut the parsing breaks on:\n1. Commas inside function calls (breaks CSV-like parsing)\n2. Escaped regex slashes (\\\\/$/ becomes malformed)\n3. Nested template expressions\n4. String concatenation within templates\n\nThe extractor should extract the STATIC PARTS or PATTERNS, not the dynamic JavaScript code.",
+    "evidence": [
+      "Elasticsearch GenericFunctions.ts source:",
+      "  url: `${baseUrl.replace(/\\/$/, '')}/_bulk`",
+      "  url: `${baseUrl.replace(/\\/$/, '')}${endpoint}`",
+      "",
+      "Elasticsearch extracted api_patterns.endpoints:",
+      "  \"endpoints\": [",
+      "    \"${baseUrl.replace(/\\\\/$/, \",",
+      "    \"${baseUrl.replace(/\\\\/$/, \"",
+      "  ]",
+      "",
+      "Expected clean extraction:",
+      "  \"endpoints\": [",
+      "    \"/_bulk\",",
+      "    \"/{endpoint}\"",
+      "  ]",
+      "",
+      "Or fallback extraction:",
+      "  \"endpoints\": [",
+      "    \"<baseUrl>/_bulk\",",
+      "    \"<baseUrl>/<endpoint>\"",
+      "  ]",
+      "",
+      "Verification:",
+      "  jq '.api_patterns.endpoints' extracted_docs/elasticsearch_data.json",
+      "  Result: Shows corrupted template strings",
+      "",
+      "The validation report shows:",
+      "  cat validation_report.json | jq '.issues.template_variables[0].variables' | head -5",
+      "  Result: Contains the corrupted template strings in markdown output"
+    ],
+    "fix_approach": "1. Enhance APIPatternExtractor.find_api_patterns() to handle template literals intelligently:\n\n   Strategy A: Extract static parts only\n   - Pattern: url: `${baseUrl}/endpoint` → \"/endpoint\"\n   - Pattern: url: `${base}${path}` → \"<baseUrl><path>\"\n   - Remove ${...} expressions, keep literal text\n   \n   Implementation:\n   def extract_static_endpoint(template_string):\n       # Remove ${variable} and ${function()} expressions\n       clean = re.sub(r'\\$\\{[^}]+\\}', '<var>', template_string)\n       # Remove .replace() and other method calls\n       clean = re.sub(r'\\.replace\\([^)]+\\)', '', clean)\n       # Extract just the static path parts\n       parts = re.findall(r'[/\\w-]+', clean)\n       return '/'.join(parts) if parts else None\n\n   Strategy B: Pattern recognition\n   - Recognize common patterns:\n     - `${baseUrl}/_bulk` → \"/_bulk\"\n     - `${baseUrl}${endpoint}` → \"/{endpoint}\"\n     - `${url}/api/v1/users` → \"/api/v1/users\"\n   \n   Implementation:\n   def recognize_endpoint_pattern(template):\n       # Remove baseUrl variable (always at start)\n       if template.startswith('${baseUrl'):\n           template = template.split('}', 1)[1] if '}' in template else template\n       # Keep ${endpoint} or ${path} as placeholders\n       template = re.sub(r'\\$\\{(endpoint|path|resource)\\}', r'{\\1}', template)\n       # Remove other variables\n       template = re.sub(r'\\$\\{[^}]+\\}', '', template)\n       return template\n\n   Strategy C: Fallback to empty if too complex\n   - If template contains .replace(), .split(), or complex logic\n   - Mark as 'dynamic' and don't include corrupted data\n   \n   Implementation:\n   if '.replace(' in template or '.split(' in template:\n       return None  # Skip this endpoint, it's too dynamic\n\n2. Apply fix in APIPatternExtractor lines 280-318:\n   # Replace current naive capture with smart extraction\n   url_matches = re.findall(r\"url:\\s*`([^`]+)`\", content)\n   for url_template in url_matches:\n       clean_endpoint = extract_static_endpoint(url_template)\n       if clean_endpoint and clean_endpoint not in endpoints:\n           endpoints.append(clean_endpoint)\n\n3. Test on:\n   - Elasticsearch (/_bulk, /{endpoint} patterns)\n   - HTTP Request (if uses GenericFunctions)\n   - Other API nodes with template URLs\n\n4. Validation:\n   python3 n8n_node_extractor.py extract Elasticsearch\n   \n   jq '.api_patterns.endpoints' extracted_docs/elasticsearch_data.json\n   Expected: [\"/_bulk\", \"/{endpoint}\"] or similar clean patterns\n   Current: Corrupted template strings\n   \n   Check markdown doesn't have template variables:\n   grep '${baseUrl' extracted_docs/elasticsearch_documentation.md\n   Expected: No results (currently shows corrupted strings)\n\n5. Alternative: Remove api_patterns if unreliable\n   - If fixing is too complex, set api_patterns = {} for nodes with template issues\n   - Better to have no data than corrupted data\n   - Focus extraction effort on more critical fields"
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

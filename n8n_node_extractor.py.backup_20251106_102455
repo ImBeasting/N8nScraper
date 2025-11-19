@@ -1,0 +1,2546 @@
+#!/usr/bin/env python3
+"""
+Ultimate n8n Node Documentation Extractor - Maximum Detail for AI Training
+Extracts every possible detail from n8n nodes for comprehensive LLM training data
+
+Features:
+- Complete TypeScript parsing with import resolution
+- Real-world workflow examples extraction
+- Credential requirements and authentication flows
+- Expression pattern detection and analysis
+- Validation rules and constraints
+- Type information and schemas
+- UI hints, tooltips, and placeholders
+- Conditional field visibility (displayOptions)
+- Multi-resource node support
+- Webhook and trigger configurations
+- API endpoint patterns
+- Error messages and edge cases
+"""
+
+import sys
+import re
+import json
+import yaml
+import copy
+from pathlib import Path
+from typing import Dict, List, Any, Optional, Set, Tuple
+from datetime import date
+from collections import defaultdict
+
+# Configuration
+CURRENT_DIR = Path("/media/tyler/fastraid/Projects/n8n Node Scrapper")
+N8N_REPO = CURRENT_DIR / "n8n"
+OUTPUT_DIR = CURRENT_DIR / "extracted_docs"
+TEMPLATE_PATH = Path("/media/tyler/fastraid/Games/n8n_Node_Default_Settings_Template.md")
+
+# Standard n8n node execution settings (from n8n frontend/workflow interfaces)
+# These are framework-level settings that apply to nodes universally
+
+# Settings for ALL nodes (both executable and trigger nodes)
+COMMON_SETTINGS = {
+    "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+    },
+    "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": False,
+        "description": "If active, the note above will display in the flow as a subtitle"
+    }
+}
+
+# Additional settings for EXECUTABLE nodes only (not trigger nodes)
+EXECUTABLE_SETTINGS = {
+    "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": False,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+    },
+    "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": False,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+    },
+    "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": False,
+        "description": "If active, the node tries to execute again when it fails"
+    },
+    "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+            "show": {
+                "retryOnFail": [True]
+            }
+        }
+    },
+    "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+            "show": {
+                "retryOnFail": [True]
+            }
+        }
+    },
+    "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+            {
+                "name": "Stop Workflow",
+                "value": "stopWorkflow",
+                "description": "Halt execution and fail workflow"
+            },
+            {
+                "name": "Continue",
+                "value": "continueRegularOutput",
+                "description": "Pass error message as item in regular output"
+            },
+            {
+                "name": "Continue (using error output)",
+                "value": "continueErrorOutput",
+                "description": "Pass item to an extra `error` output"
+            }
+        ]
+    }
+}
+
+
+class WorkflowParser:
+    """Parse workflow.json files to extract real-world examples"""
+
+    @staticmethod
+    def find_workflow_files(node_dir: Path) -> List[Path]:
+        """Find all workflow.json files for a node"""
+        workflow_files = []
+
+        # Check test directory
+        test_dir = node_dir / "test"
+        if test_dir.exists():
+            workflow_files.extend(test_dir.glob("**/*.workflow.json"))
+
+        # Check __tests__ directory
+        tests_dir = node_dir / "__tests__"
+        if tests_dir.exists():
+            workflow_files.extend(tests_dir.glob("**/*.workflow.json"))
+
+        # Check __test__ directory
+        test_dir2 = node_dir / "__test__"
+        if test_dir2.exists():
+            workflow_files.extend(test_dir2.glob("**/*.workflow.json"))
+
+        return list(workflow_files)
+
+    @staticmethod
+    def parse_workflow(workflow_path: Path, node_type: str) -> List[Dict[str, Any]]:
+        """Extract example configurations for a specific node from workflow"""
+        try:
+            with open(workflow_path, 'r', encoding='utf-8') as f:
+                workflow = json.load(f)
+
+            examples = []
+            for node in workflow.get('nodes', []):
+                if node_type in node.get('type', ''):
+                    example = {
+                        'name': node.get('name', 'Unnamed'),
+                        'parameters': node.get('parameters', {}),
+                        'credentials': node.get('credentials', {}),
+                        'position': node.get('position', {}),
+                        'workflow_file': workflow_path.name,
+                        'workflow_name': workflow.get('name', 'Unnamed workflow')
+                    }
+                    examples.append(example)
+
+            return examples
+        except Exception as e:
+            return []
+
+
+class CredentialExtractor:
+    """Extract credential requirements from node definitions"""
+
+    @staticmethod
+    def extract_credentials(content: str) -> List[Dict[str, Any]]:
+        """Extract credential definitions from TypeScript"""
+        credentials = []
+
+        array_start_match = re.search(r'credentials:\s*\[', content)
+        if not array_start_match:
+            return credentials
+
+        start_index = array_start_match.end()
+        depth = 1
+        i = start_index
+
+        while i < len(content) and depth > 0:
+            char = content[i]
+            if char == '[':
+                depth += 1
+            elif char == ']':
+                depth -= 1
+            i += 1
+
+        creds_str = content[start_index:i-1] if depth == 0 else ''
+
+        if not creds_str:
+            return credentials
+
+        objects = TypeScriptParser._split_into_objects(creds_str)
+
+        for obj_str in objects:
+            cred: Dict[str, Any] = {}
+
+            name_match = re.search(r"name:\s*['\"]([^'\"]*)['\"]", obj_str)
+            if name_match:
+                cred['name'] = name_match.group(1)
+
+            cred['required'] = bool(re.search(r"required:\s*true", obj_str))
+
+            display_match = re.search(r"displayOptions:\s*\{", obj_str)
+            if display_match:
+                display_start = display_match.end()
+                display_depth = 1
+                j = display_start
+                while j < len(obj_str) and display_depth > 0:
+                    if obj_str[j] == '{':
+                        display_depth += 1
+                    elif obj_str[j] == '}':
+                        display_depth -= 1
+                    j += 1
+                if display_depth == 0:
+                    display_content = obj_str[display_start:j-1]
+                    cred['displayOptions'] = TypeScriptParser._parse_display_options(display_content)
+
+            tested_by_match = re.search(r"testedBy:\s*\{([\s\S]*?)\}", obj_str)
+            if tested_by_match:
+                cred['testedBy'] = tested_by_match.group(1).strip()
+
+            if cred.get('name'):
+                credentials.append(cred)
+
+        return credentials
+
+
+class ExpressionExtractor:
+    """Extract expression examples from code and tests"""
+
+    @staticmethod
+    def find_expressions(content: str) -> List[str]:
+        """Find n8n expression patterns in code"""
+        expressions = set()
+
+        # Common expression patterns
+        patterns = [
+            r'\{\{\s*\$json\.[^}]+\}\}',                      # {{ $json.field }}
+            r'\{\{\s*\$node\[.*?\]\.json\.[^}]+\}\}',         # {{ $node["Name"].json.field }}
+            r'\{\{\s*\$now\.[^}]+\}\}',                       # {{ $now.format(...) }}
+            r'\{\{\s*\$input\.[^}]+\}\}',                     # {{ $input.item.json }}
+            r'\{\{\s*\$item\([^)]+\)[^}]+\}\}',               # {{ $item(0).json }}
+            r'\{\{\s*\$parameter\.[^}]+\}\}',                 # {{ $parameter.field }}
+            r'\{\{\s*\$workflow\.[^}]+\}\}',                  # {{ $workflow.id }}
+            r'\{\{\s*\$execution\.[^}]+\}\}',                 # {{ $execution.id }}
+            r'\{\{\s*\$today\.[^}]+\}\}',                     # {{ $today.format(...) }}
+            r'\{\{\s*\$binary\.[^}]+\}\}',                    # {{ $binary.data }}
+            r'=\s*\{\{.*?\}\}',                                # expression assignments
+        ]
+
+        for pattern in patterns:
+            matches = re.findall(pattern, content)
+            expressions.update(matches)
+
+        return list(expressions)
+
+
+class ValidationExtractor:
+    """Extract validation rules from properties"""
+
+    @staticmethod
+    def extract_validation_rules(prop: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract validation constraints from a property"""
+        rules = {}
+
+        if prop.get('required'):
+            rules['required'] = True
+
+        if prop.get('type') == 'string':
+            if 'validate' in str(prop):
+                rules['format'] = 'validated'
+
+        # URL validation
+        if 'url' in prop.get('name', '').lower():
+            rules['format'] = 'url'
+
+        # Email validation
+        if 'email' in prop.get('name', '').lower():
+            rules['format'] = 'email'
+
+        # Extract display options (conditional display)
+        if prop.get('displayOptions'):
+            rules['displayOptions'] = prop['displayOptions']
+
+        # Extract min/max if present
+        if 'min' in prop:
+            rules['min'] = prop['min']
+        if 'max' in prop:
+            rules['max'] = prop['max']
+
+        return rules
+
+
+class TypeInfoExtractor:
+    """Extract detailed type information"""
+
+    @staticmethod
+    def extract_type_info(prop: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract comprehensive type information"""
+        type_info = {
+            'type': prop.get('type', 'unknown'),
+            'displayName': prop.get('displayName', ''),
+            'name': prop.get('name', '')
+        }
+
+        # Extract typeOptions if present
+        if prop.get('typeOptions'):
+            type_info['typeOptions'] = prop['typeOptions']
+
+        # For options/multiOptions, include all possible values
+        if prop.get('type') in ['options', 'multiOptions']:
+            type_info['possibleValues'] = []
+            for opt in prop.get('options', []):
+                type_info['possibleValues'].append({
+                    'value': opt.get('value', opt.get('name', '')),
+                    'name': opt.get('name', ''),
+                    'description': opt.get('description', '')
+                })
+
+        # For collections, include sub-properties
+        if prop.get('type') in ['collection', 'fixedCollection']:
+            type_info['subProperties'] = prop.get('options', [])
+
+        return type_info
+
+
+class APIPatternExtractor:
+    """Extract API endpoint and HTTP patterns"""
+
+    @staticmethod
+    def find_api_patterns(content: str) -> Dict[str, Any]:
+        """Find API patterns in node code"""
+        patterns = {
+            'http_methods': set(),
+            'endpoints': [],
+            'headers': set(),
+            'query_params': set()
+        }
+
+        # Find HTTP methods
+        methods = re.findall(r'method:\s*[\'"]([A-Z]+)[\'"]', content)
+        patterns['http_methods'].update(methods)
+
+        # Find URL patterns
+        urls = re.findall(r'url:\s*[\'"`]([^\'"`]+)[\'"`]', content)
+        patterns['endpoints'].extend(urls)
+
+        # Find headers
+        headers = re.findall(r'headers:\s*\{([^}]+)\}', content)
+        for header_block in headers:
+            header_names = re.findall(r'[\'"]([A-Za-z-]+)[\'"]', header_block)
+            patterns['headers'].update(header_names)
+
+        # Find query parameters
+        query_params = re.findall(r'qs:\s*\{([^}]+)\}', content)
+        for param_block in query_params:
+            param_names = re.findall(r'[\'"]([A-Za-z_]+)[\'"]', param_block)
+            patterns['query_params'].update(param_names)
+
+        # Convert sets to lists for JSON serialization
+        patterns['http_methods'] = list(patterns['http_methods'])
+        patterns['headers'] = list(patterns['headers'])
+        patterns['query_params'] = list(patterns['query_params'])
+
+        return patterns
+
+
+class TypeScriptParser:
+    """Parse TypeScript code to extract node definitions"""
+
+    @staticmethod
+    def parse_imports(content: str, node_path: Path) -> Dict[str, List[str]]:
+        """
+        Parse import statements to find description files
+        Returns: Dict mapping description file paths to imported variable names
+        Example: {'./AccountDescription': ['accountFields', 'accountOperations']}
+        """
+        imports = {}
+
+        # Pattern to match: import { var1, var2 } from './FileName';
+        import_pattern = r"import\s+\{([^}]+)\}\s+from\s+['\"]([^'\"]+)['\"]"
+
+        for match in re.finditer(import_pattern, content):
+            imported_names = match.group(1)
+            source_file = match.group(2)
+
+            # Only process relative imports that look like description files
+            if source_file.startswith('./') and 'Description' in source_file:
+                # Clean up imported names
+                names = [name.strip() for name in imported_names.split(',')]
+
+                # Resolve the file path
+                node_dir = node_path.parent
+                desc_file_path = node_dir / f"{source_file.replace('./', '')}.ts"
+
+                if desc_file_path.exists():
+                    imports[str(desc_file_path)] = names
+
+        return imports
+
+    @staticmethod
+    def extract_exported_array(content: str, array_name: str, source_path: Optional[Path] = None) -> List[Dict[str, Any]]:
+        """
+        Extract an exported array from TypeScript code, resolving spreads
+        Example: export const accountOperations: INodeProperties[] = [...]
+        Args:
+            content: TypeScript file content
+            array_name: Name of the exported array to extract
+            source_path: Path to the file being parsed (for resolving spreads in nested arrays)
+        """
+        # Pattern to find the exported array
+        pattern = rf"export\s+const\s+{array_name}\s*:\s*INodeProperties\[\]\s*=\s*\["
+        match = re.search(pattern, content)
+
+        if not match:
+            return []
+
+        # Find the full array using bracket counting
+        start_pos = match.end() - 1  # Position of the opening [
+        depth = 1
+        i = start_pos + 1
+
+        while i < len(content) and depth > 0:
+            if content[i] == '[':
+                depth += 1
+            elif content[i] == ']':
+                depth -= 1
+            i += 1
+
+        if depth == 0:
+            array_content = content[start_pos+1:i-1]  # Extract content between [ and ]
+            # Parse the array elements, including spreads
+            props, spreads = TypeScriptParser._parse_property_objects(array_content)
+
+            # Resolve spread operators if source_path provided
+            if spreads and source_path:
+                # Parse imports from this file to resolve spreads
+                imports = TypeScriptParser.parse_imports(content, source_path)
+                resolved_props = TypeScriptParser._resolve_spreads(spreads, imports, source_path, content)
+                props.extend(resolved_props)
+
+            return props
+
+        return []
+
+    @staticmethod
+    def extract_description_object(content: str, const_name: str) -> Dict[str, Any]:
+        """Extract properties and credentials from a description object export."""
+        pattern = rf"export\s+const\s+{const_name}[^=]*=\s*\{{"
+        match = re.search(pattern, content)
+        if not match:
+            return {}
+
+        start_pos = match.end() - 1
+        depth = 1
+        i = start_pos + 1
+
+        while i < len(content) and depth > 0:
+            if content[i] == '{':
+                depth += 1
+            elif content[i] == '}':
+                depth -= 1
+            i += 1
+
+        if depth != 0:
+            return {}
+
+        object_body = content[start_pos + 1: i - 1]
+        result: Dict[str, Any] = {}
+
+        # Extract properties
+        props_match = re.search(r"properties:\s*\[", object_body)
+        if props_match:
+            props_start = props_match.end() - 1
+            depth = 1
+            j = props_start + 1
+            while j < len(object_body) and depth > 0:
+                if object_body[j] == '[':
+                    depth += 1
+                elif object_body[j] == ']':
+                    depth -= 1
+                j += 1
+            if depth == 0:
+                props_content = object_body[props_start + 1: j - 1]
+                # Parse properties (ignore spreads at this level)
+                props, spreads = TypeScriptParser._parse_property_objects(props_content)
+                result['properties'] = props
+
+        # Extract credentials
+        cred_match = re.search(r"credentials:\s*\[", object_body)
+        if cred_match:
+            cred_start = cred_match.end()
+            depth = 1
+            k = cred_start
+            while k < len(object_body) and depth > 0:
+                if object_body[k] == '[':
+                    depth += 1
+                elif object_body[k] == ']':
+                    depth -= 1
+                k += 1
+            if depth == 0:
+                cred_content = object_body[cred_start: k - 1]
+                credentials = []
+                for cred_str in TypeScriptParser._split_into_objects(cred_content):
+                    cred: Dict[str, Any] = {}
+                    name = TypeScriptParser.extract_string_value(cred_str, 'name')
+                    if not name:
+                        continue
+                    cred['name'] = name
+                    cred['required'] = bool(re.search(r"required:\s*true", cred_str))
+
+                    display_match = re.search(r"displayOptions:\s*\{", cred_str)
+                    if display_match:
+                        display_start = display_match.end()
+                        display_depth = 1
+                        m = display_start
+                        while m < len(cred_str) and display_depth > 0:
+                            if cred_str[m] == '{':
+                                display_depth += 1
+                            elif cred_str[m] == '}':
+                                display_depth -= 1
+                            m += 1
+                        if display_depth == 0:
+                            display_content = cred_str[display_start: m - 1]
+                            cred['displayOptions'] = TypeScriptParser._parse_display_options(display_content)
+                    credentials.append(cred)
+
+                result['credentials'] = credentials
+
+        return result
+
+    @staticmethod
+    def extract_string_value(content: str, field: str) -> Optional[str]:
+        """Extract a string field value, handling nested quotes and multi-line strings"""
+        # Look for the field
+        field_match = re.search(rf"{field}:\s*(['\"`])", content)
+        if not field_match:
+            return None
+
+        quote_char = field_match.group(1)
+        start_pos = field_match.end()
+
+        # For template literals, handle differently
+        if quote_char == '`':
+            # Match until closing backtick, handling escaped backticks
+            pattern = rf"{field}:\s*`((?:[^`\\]|\\.)*)`"
+            match = re.search(pattern, content, re.DOTALL)
+            if match:
+                return match.group(1).strip()
+        else:
+            # For regular quotes, manually parse to handle nested quotes
+            result = []
+            i = start_pos
+            escaped = False
+
+            while i < len(content):
+                char = content[i]
+
+                if escaped:
+                    result.append(char)
+                    escaped = False
+                elif char == '\\':
+                    escaped = True
+                elif char == quote_char:
+                    # Found closing quote
+                    return ''.join(result).strip()
+                else:
+                    result.append(char)
+
+                i += 1
+
+        return None
+
+    @staticmethod
+    def extract_properties_array(content: str, node_path: Optional[Path] = None) -> List[Dict[str, Any]]:
+        """Extract and parse the properties array, resolving spread operators"""
+        patterns = [
+            r'export\s+const\s+\w+:\s*INodeProperties\[\]\s*=\s*\[',
+            r'export\s+const\s+properties:\s*INodeProperties\[\]\s*=\s*\[',
+            r'const\s+\w+:\s*INodeProperties\[\]\s*=\s*\[',
+            r'properties:\s*\[',
+        ]
+
+        props_str = ""
+        for pattern in patterns:
+            match = re.search(pattern, content)
+            if match:
+                start_pos = match.end()
+                depth = 1
+                i = start_pos
+
+                while i < len(content) and depth > 0:
+                    char = content[i]
+                    if char == '[':
+                        depth += 1
+                    elif char == ']':
+                        depth -= 1
+                    i += 1
+
+                if depth == 0:
+                    props_str = content[start_pos:i-1]
+                    break
+
+        if not props_str:
+            return []
+
+        properties, spreads = TypeScriptParser._parse_property_objects(props_str)
+
+        # Resolve spread operators if node_path is provided
+        if spreads and node_path:
+            imports = TypeScriptParser.parse_imports(content, node_path)
+            resolved_props = TypeScriptParser._resolve_spreads(spreads, imports, node_path, content)
+            properties.extend(resolved_props)
+
+        return properties
+
+    @staticmethod
+    def _parse_property_objects(props_str: str) -> Tuple[List[Dict[str, Any]], List[str]]:
+        """
+        Parse property objects from properties array string
+        Returns: (properties, spread_variables) tuple
+        """
+        properties = []
+        objects, spreads = TypeScriptParser._split_into_objects(props_str)
+
+        for obj_str in objects:
+            prop = TypeScriptParser._parse_single_property(obj_str)
+            if prop:
+                properties.append(prop)
+
+        return properties, spreads
+
+    @staticmethod
+    def _split_into_objects(text: str) -> Tuple[List[str], List[str]]:
+        """
+        Split a string into individual object strings and spread operators
+        Returns: (objects, spreads) where spreads are variable names like ['arrayName1', 'arrayName2']
+        """
+        objects = []
+        spreads = []
+        depth = 0
+        current = ""
+        i = 0
+
+        while i < len(text):
+            char = text[i]
+
+            # Check for spread operator
+            if char == '.' and i + 2 < len(text) and text[i+1:i+3] == '..':
+                spread_match = re.match(r'\.\.\.(\w+)', text[i:])
+                if spread_match:
+                    spread_var = spread_match.group(1)
+                    spreads.append(spread_var)  # Collect spread variable name
+                    i += len(spread_match.group(0))
+                    while i < len(text) and text[i] in [',', ' ', '\n', '\t']:
+                        i += 1
+                    continue
+
+            if char == '{':
+                depth += 1
+            elif char == '}':
+                depth -= 1
+
+            current += char
+
+            if depth == 0 and current.strip():
+                cleaned = current.strip().rstrip(',').strip()
+                if cleaned and cleaned != ',' and not cleaned.startswith('...'):
+                    objects.append(cleaned)
+                current = ""
+
+            i += 1
+
+        return objects, spreads
+
+    @staticmethod
+    def _resolve_spreads(spread_vars: List[str], imports: Dict[str, List[str]], node_path: Path, current_content: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        Resolve spread operators by loading and parsing the imported or local arrays
+        Args:
+            spread_vars: List of variable names from spread operators (e.g., ['javascriptCodeDescription'])
+            imports: Dict mapping file paths to imported variable names
+            node_path: Path to the current node file (for resolving relative imports)
+            current_content: Content of the current file (to check for local const arrays)
+        Returns:
+            List of resolved property objects
+        """
+        resolved_properties = []
+
+        # Create reverse lookup: variable name -> file path
+        var_to_file = {}
+        for file_path, var_names in imports.items():
+            for var_name in var_names:
+                var_to_file[var_name] = file_path
+
+        for spread_var in spread_vars:
+            # First, check if this is a local const in the current file
+            if current_content:
+                local_props = TypeScriptParser.extract_exported_array(current_content, spread_var, node_path)
+                if not local_props:
+                    # Try without 'export' (local const arrays)
+                    local_pattern = rf"const\s+{spread_var}\s*:\s*INodeProperties\[\]\s*=\s*\["
+                    local_match = re.search(local_pattern, current_content)
+                    if local_match:
+                        # Extract using bracket counting
+                        start_pos = local_match.end() - 1
+                        depth = 1
+                        i = start_pos + 1
+                        while i < len(current_content) and depth > 0:
+                            if current_content[i] == '[':
+                                depth += 1
+                            elif current_content[i] == ']':
+                                depth -= 1
+                            i += 1
+                        if depth == 0:
+                            array_content = current_content[start_pos+1:i-1]
+                            local_props, local_spreads = TypeScriptParser._parse_property_objects(array_content)
+                            # Recursively resolve local spreads
+                            if local_spreads:
+                                local_props.extend(TypeScriptParser._resolve_spreads(local_spreads, imports, node_path, current_content))
+
+                if local_props:
+                    resolved_properties.extend(local_props)
+                    continue
+
+            # Look up which file exports this variable
+            source_file = var_to_file.get(spread_var)
+
+            if not source_file:
+                # Try to find in same directory with common naming patterns
+                node_dir = node_path.parent
+                potential_files = [
+                    node_dir / 'descriptions' / f"{spread_var}.ts",
+                    node_dir / f"{spread_var}.ts",
+                    node_dir / f"descriptions/{spread_var}.ts",
+                ]
+
+                for pf in potential_files:
+                    if pf.exists():
+                        source_file = str(pf)
+                        break
+
+            if not source_file or not Path(source_file).exists():
+                continue
+
+            # Load the file
+            try:
+                source_file_path = Path(source_file)
+                with open(source_file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+
+                # Extract the exported array (pass path for recursive spread resolution)
+                props = TypeScriptParser.extract_exported_array(content, spread_var, source_file_path)
+                resolved_properties.extend(props)
+
+            except Exception as e:
+                # Silently continue if we can't read the file
+                pass
+
+        return resolved_properties
+
+    @staticmethod
+    def _parse_single_property(obj_str: str) -> Optional[Dict[str, Any]]:
+        """Parse a single property object with maximum detail extraction"""
+        prop = {}
+
+        # Extract ALL string fields
+        string_fields = [
+            'displayName', 'name', 'type', 'description',
+            'placeholder', 'hint', 'action', 'tooltip',
+            'extractValue', 'validateType', 'notice'
+        ]
+        for field in string_fields:
+            value = TypeScriptParser.extract_string_value(obj_str, field)
+            if value:
+                prop[field] = value
+
+        # Extract default value
+        default_match = re.search(r"default:\s*(['\"]([^'\"]*)['\"]|`([^`]*)`|(true|false|\d+|''|{}|\[\]))", obj_str)
+        if default_match:
+            if default_match.group(2) is not None:
+                prop['default'] = default_match.group(2)
+            elif default_match.group(3) is not None:
+                prop['default'] = default_match.group(3)
+            elif default_match.group(4):
+                val = default_match.group(4)
+                if val in ['true', 'false']:
+                    prop['default'] = val == 'true'
+                elif val == "''":
+                    prop['default'] = ''
+                elif val in ['{}', '[]']:
+                    prop['default'] = val
+                else:
+                    try:
+                        prop['default'] = int(val)
+                    except ValueError:
+                        prop['default'] = val
+
+        # Check if required
+        if re.search(r"required:\s*true", obj_str):
+            prop['required'] = True
+
+        # Check for noDataExpression
+        if re.search(r"noDataExpression:\s*true", obj_str):
+            prop['noDataExpression'] = True
+
+        # Parse options
+        if prop.get('type') in ['options', 'collection', 'multiOptions']:
+            options_match = re.search(r"options:\s*\[([\s\S]*?)\](?:,|\s*\})", obj_str)
+            if options_match:
+                prop['options'] = TypeScriptParser._parse_options(options_match.group(1))
+
+        # Extract typeOptions (minValue, maxValue, etc.) with full detail
+        type_opts_match = re.search(r"typeOptions:\s*\{", obj_str)
+        if type_opts_match:
+            start_pos = type_opts_match.end()
+            depth = 1
+            i = start_pos
+            while i < len(obj_str) and depth > 0:
+                if obj_str[i] == '{':
+                    depth += 1
+                elif obj_str[i] == '}':
+                    depth -= 1
+                i += 1
+            if depth == 0:
+                type_opts_content = obj_str[start_pos:i-1]
+                prop['typeOptions'] = TypeScriptParser._parse_type_options(type_opts_content)
+
+        # Extract displayOptions using bracket-depth counting
+        display_opts_match = re.search(r"displayOptions:\s*\{", obj_str)
+        if display_opts_match:
+            start_pos = display_opts_match.end()
+            depth = 1
+            i = start_pos
+            while i < len(obj_str) and depth > 0:
+                if obj_str[i] == '{':
+                    depth += 1
+                elif obj_str[i] == '}':
+                    depth -= 1
+                i += 1
+            if depth == 0:
+                display_opts_content = obj_str[start_pos:i-1]
+                prop['displayOptions'] = TypeScriptParser._parse_display_options(display_opts_content)
+
+        # Extract routing information (for API nodes)
+        routing_match = re.search(r"routing:\s*\{([^}]+)\}", obj_str)
+        if routing_match:
+            prop['routing'] = routing_match.group(1)
+
+        return prop if prop.get('name') or prop.get('displayName') else None
+
+    @staticmethod
+    def _parse_options(options_str: str) -> List[Dict[str, Any]]:
+        """Parse options array with maximum detail"""
+        options = []
+        objects, spreads = TypeScriptParser._split_into_objects(options_str)
+
+        for obj_str in objects:
+            opt = {}
+
+            for field in ['name', 'value', 'description', 'action']:
+                value = TypeScriptParser.extract_string_value(obj_str, field)
+                if value:
+                    opt[field] = value
+
+            if 'properties' in obj_str or 'options' in obj_str:
+                props_match = re.search(r"(?:properties|options):\s*\[([\s\S]*?)\](?:,|\s*\})", obj_str)
+                if props_match:
+                    # Parse properties (ignore spreads here)
+                    props, spreads = TypeScriptParser._parse_property_objects(props_match.group(1))
+                    opt['properties'] = props
+
+            if opt:
+                options.append(opt)
+
+        return options
+
+    @staticmethod
+    def _parse_type_options(type_opts_str: str) -> Dict[str, Any]:
+        """Parse typeOptions object with maximum detail"""
+        type_opts = {}
+
+        # Extract numeric values (minValue, maxValue, etc.)
+        numeric_fields = ['minValue', 'maxValue', 'numberStepSize', 'numberPrecision', 'rows']
+        for field in numeric_fields:
+            match = re.search(rf"{field}:\s*(\d+(?:\.\d+)?)", type_opts_str)
+            if match:
+                type_opts[field] = float(match.group(1)) if '.' in match.group(1) else int(match.group(1))
+
+        # Extract boolean values
+        bool_fields = ['alwaysOpenEditWindow', 'multipleValues', 'password', 'editor']
+        for field in bool_fields:
+            match = re.search(rf"{field}:\s*(true|false)", type_opts_str)
+            if match:
+                type_opts[field] = match.group(1) == 'true'
+
+        # Extract string values
+        string_fields = ['loadOptionsMethod', 'filter', 'sortable', 'resizable']
+        for field in string_fields:
+            value = TypeScriptParser.extract_string_value(type_opts_str, field)
+            if value:
+                type_opts[field] = value
+
+        return type_opts
+
+    @staticmethod
+    def _parse_display_options(display_str: str) -> Dict[str, Any]:
+        """Parse displayOptions object with full detail"""
+        display_opts = {}
+
+        # Parse show conditions
+        show_match = re.search(r"show:\s*\{([\s\S]*?)\}", display_str)
+        if show_match:
+            show_content = show_match.group(1)
+            show_opts = {}
+
+            for match in re.finditer(r"(\w+):\s*\[([^\]]+)\]", show_content):
+                key = match.group(1)
+                values_str = match.group(2)
+                values = [v.strip().strip("'\"") for v in values_str.split(',')]
+                show_opts[key] = values
+
+            display_opts['show'] = show_opts
+
+        # Parse hide conditions
+        hide_match = re.search(r"hide:\s*\{([\s\S]*?)\}", display_str)
+        if hide_match:
+            hide_content = hide_match.group(1)
+            hide_opts = {}
+
+            for match in re.finditer(r"(\w+):\s*\[([^\]]+)\]", hide_content):
+                key = match.group(1)
+                values_str = match.group(2)
+                values = [v.strip().strip("'\"") for v in values_str.split(',')]
+                hide_opts[key] = values
+
+            display_opts['hide'] = hide_opts
+
+        return display_opts
+
+
+class NodeExtractor:
+    """Extract comprehensive node information with maximum detail for AI training"""
+
+    def __init__(self, node_name: str):
+        self.node_name = node_name
+        self.node_dir = None
+        self.main_file = None
+        self.files = {}
+        self.versioned_base_file: Optional[Path] = None
+        self.node_info = {
+            'icon': '',
+            'defaults': {},
+            'inputs': [],
+            'outputs': [],
+            'group': '',
+            'authentication': [],
+            'loadOptionsMethods': [],
+            'eventTriggerDescription': '',
+            'activationMessage': '',
+            'triggerPanel': {},
+            'supportsCORS': False,
+        }
+        self.metadata = {}
+        self.properties = []
+        self.operations = []
+        self.operations_by_resource = {}
+        self.credentials = []
+        self.workflow_examples = []
+        self.expressions = []
+        self.validation_rules = {}
+        self.type_info = {}
+        self.api_patterns = {}
+        self.ui_elements = {
+            'notices': [],
+            'tooltips': [],
+            'placeholders': [],
+            'hints': []
+        }
+
+    def set_node_file(self, node_file_path: Path) -> bool:
+        """Set the node file directly from a path"""
+        if not node_file_path.exists():
+            print(f"❌ Error: File does not exist: {node_file_path}")
+            return False
+
+        self.main_file = node_file_path
+        self.node_dir = self.main_file.parent
+        self.node_name = self.main_file.stem.replace('.node', '')
+
+        return True
+
+    def _resolve_versioned_main(self, content: str) -> Optional[Path]:
+        """If node is versioned, resolve the default version file."""
+        if 'VersionedNodeType' not in content:
+            return None
+
+        default_version_match = re.search(r'defaultVersion:\s*(\d+(?:\.\d+)?)', content)
+        if not default_version_match:
+            return None
+
+        default_version = default_version_match.group(1)
+
+        version_map = {}
+        for match in re.finditer(r'(\d+(?:\.\d+)?)\s*:\s*new\s+(\w+)\s*\(', content):
+            version_map[match.group(1)] = match.group(2)
+
+        target_class = version_map.get(default_version)
+        if not target_class:
+            return None
+
+        import_map = {}
+        for match in re.finditer(r"import\s+\{\s*([^}]+)\s*\}\s+from\s+['\"]([^'\"]+)['\"]", content):
+            names = [name.strip() for name in match.group(1).split(',')]
+            source = match.group(2)
+            for name in names:
+                import_map[name] = source
+
+        rel_path = import_map.get(target_class)
+        if not rel_path:
+            return None
+
+        if rel_path.startswith('./'):
+            rel_path = rel_path[2:]
+
+        candidate = (self.main_file.parent / rel_path)
+
+        potential_paths = [candidate]
+        if not candidate.name.endswith('.ts'):
+            potential_paths.append(candidate.parent / f"{candidate.name}.ts")
+        if candidate.suffix and candidate.suffix != '.ts':
+            potential_paths.append(candidate.with_suffix('.ts'))
+
+        for path in potential_paths:
+            if path.exists():
+                return path
+
+        return None
+
+    @staticmethod
+    def _extend_unique_operations(target: List[Dict[str, Any]], operations: List[Dict[str, Any]]):
+        """Append operations ensuring uniqueness by value or name."""
+        seen_keys = set()
+        for existing in target:
+            key = existing.get('value') or existing.get('name')
+            if key:
+                seen_keys.add(key)
+
+        for op in operations:
+            key = op.get('value') or op.get('name')
+            if key and key in seen_keys:
+                continue
+            target.append(op)
+            if key:
+                seen_keys.add(key)
+
+    def _merge_credentials(self, new_credentials: List[Dict[str, Any]]):
+        """Merge credential definitions while preventing duplicates."""
+        existing_names = {cred.get('name') for cred in self.credentials if cred.get('name')}
+        for cred in new_credentials:
+            name = cred.get('name')
+            if not name or name in existing_names:
+                continue
+            self.credentials.append(cred)
+            existing_names.add(name)
+
+    def find_node(self) -> bool:
+        """Find the node directory and files"""
+        nodes_dir = N8N_REPO / "packages" / "nodes-base" / "nodes"
+
+        if not nodes_dir.exists():
+            print(f"❌ Error: Cannot find nodes directory at {nodes_dir}")
+            return False
+
+        matches = list(nodes_dir.glob(f"**/{self.node_name}.node.ts"))
+        if not matches:
+            matches = list(nodes_dir.glob(f"**/*{self.node_name}*.node.ts"))
+
+        if not matches:
+            print(f"❌ Node '{self.node_name}' not found")
+            return False
+
+        return self.set_node_file(matches[0])
+
+    def load_files(self) -> bool:
+        """Load all node-related files"""
+        metadata: Dict[str, Any] = {}
+
+        with open(self.main_file, 'r', encoding='utf-8') as f:
+            main_content = f.read()
+
+        base_metadata_path = self.main_file.with_suffix('.json')
+        if base_metadata_path.exists():
+            try:
+                with open(base_metadata_path, 'r', encoding='utf-8') as meta_file:
+                    metadata.update(json.load(meta_file))
+            except json.JSONDecodeError:
+                pass
+
+        version_file = self._resolve_versioned_main(main_content)
+        if version_file:
+            self.versioned_base_file = self.main_file
+            self.main_file = version_file
+            self.node_dir = version_file.parent
+            with open(version_file, 'r', encoding='utf-8') as version_f:
+                main_content = version_f.read()
+
+            version_metadata_path = version_file.with_suffix('.json')
+            if version_metadata_path.exists():
+                try:
+                    with open(version_metadata_path, 'r', encoding='utf-8') as meta_file:
+                        metadata.update(json.load(meta_file))
+                except json.JSONDecodeError:
+                    pass
+        else:
+            # Ensure node_dir points to main file parent when not versioned
+            self.node_dir = self.main_file.parent
+
+        self.metadata = metadata
+        self.files['main'] = main_content
+
+        # Load .node.json metadata for final main file if not already captured
+        final_metadata_path = self.main_file.with_suffix('.json')
+        if final_metadata_path.exists() and not metadata:
+            try:
+                with open(final_metadata_path, 'r', encoding='utf-8') as meta_file:
+                    self.metadata = json.load(meta_file)
+            except json.JSONDecodeError:
+                pass
+
+        # Check for imported properties
+        properties_import_match = re.search(r"properties:\s*(\w+)", self.files['main'])
+        if properties_import_match:
+            prop_var = properties_import_match.group(1)
+            import_pattern = rf"import\s+\{{\s*{prop_var}\s*\}}\s+from\s+['\"](\.[^'\"]+)['\"]"
+            import_match = re.search(import_pattern, self.files['main'])
+            if import_match:
+                import_path = import_match.group(1)
+                if import_path.startswith('./'):
+                    import_path = import_path[2:]
+
+                for ext in ['.ts', '']:
+                    file_path = self.node_dir / f"{import_path}{ext}"
+                    if file_path.exists():
+                        with open(file_path, 'r', encoding='utf-8') as f:
+                            self.files['properties_file'] = f.read()
+                        break
+
+        # Load operation files
+        import_pattern = r"import\s+\*\s+as\s+(\w+)\s+from\s+['\"](\.[^'\"]+)['\"]"
+        imports = re.findall(import_pattern, self.files['main'])
+
+        for import_name, import_path in imports:
+            if import_path.startswith('./'):
+                import_path = import_path[2:]
+
+            for ext in ['.ts', '']:
+                file_path = self.node_dir / f"{import_path}{ext}"
+                if file_path.exists():
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        self.files[import_name] = f.read()
+                    break
+
+        # Load action files
+        actions_dir = self.node_dir / "actions"
+        if actions_dir.exists():
+            for action_file in actions_dir.rglob("*.ts"):
+                action_key = None
+                if action_file.name.endswith('.operation.ts'):
+                    action_key = action_file.stem.replace('.operation', '')
+                elif action_file.name.endswith('.resource.ts'):
+                    action_key = action_file.stem
+
+                if action_key:
+                    with open(action_file, 'r', encoding='utf-8') as f:
+                        self.files[action_key] = f.read()
+
+        # Load GenericFunctions.ts if exists (contains API patterns)
+        generic_funcs = self.node_dir / "GenericFunctions.ts"
+        if generic_funcs.exists():
+            with open(generic_funcs, 'r', encoding='utf-8') as f:
+                self.files['generic_functions'] = f.read()
+
+        return True
+
+    def extract_info(self):
+        """Extract all node information with maximum detail"""
+        main = self.files['main']
+
+        # Extract icon
+        icon_match = re.search(r"""icon:\s*["']([^"]*?)["']""", main)
+        if icon_match:
+            self.node_info['icon'] = icon_match.group(1)
+
+        # Extract defaults
+        defaults_match = re.search(r"defaults:\s*(\{[\s\S]*?\})", main)
+        if defaults_match:
+            try:
+                self.node_info['defaults'] = json.loads(defaults_match.group(1))
+            except json.JSONDecodeError:
+                # Fallback for non-json defaults
+                self.node_info['defaults'] = defaults_match.group(1)
+
+        # Extract inputs
+        inputs_match = re.search(r"inputs:\s*(\[[\s\S]*?\])", main)
+        if inputs_match:
+            inputs_str = inputs_match.group(1)
+            # Extract values like 'Input', 'Output' from NodeConnectionTypes.Input
+            input_types = re.findall(r"NodeConnectionTypes\.(\w+)", inputs_str)
+            self.node_info['inputs'] = input_types
+
+        # Extract outputs
+        outputs_match = re.search(r"outputs:\s*([^,]+),", main)
+        if outputs_match:
+            self.node_info['outputs'] = outputs_match.group(1).strip()
+
+        group_match = re.search(r"""group:\s*\[\s*["']([^"]*?)["']\s*\]""", main)
+        if group_match:
+            self.node_info['group'] = group_match.group(1)
+
+        # Extract loadOptionsMethods
+        load_options_match = re.findall(r"""loadOptionsMethod:\s*["']([^"]*?)["']""", main)
+        if load_options_match:
+            self.node_info['loadOptionsMethods'] = load_options_match
+
+
+
+        # Basic info
+        self.node_info['displayName'] = TypeScriptParser.extract_string_value(main, 'displayName') or self.node_name
+        self.node_info['name'] = TypeScriptParser.extract_string_value(main, 'name') or self.node_name
+        self.node_info['description'] = TypeScriptParser.extract_string_value(main, 'description') or ''
+        self.node_info['group'] = TypeScriptParser.extract_string_value(main, 'group') or ''
+        self.node_info['subtitle'] = TypeScriptParser.extract_string_value(main, 'subtitle') or ''
+
+        if self.metadata.get('node'):
+            metadata_name = self.metadata['node'].split('.')[-1]
+            if metadata_name and self.node_info['name'] == self.node_name:
+                self.node_info['name'] = metadata_name
+
+        # Version
+        version_match = re.search(r"version:\s*(\d+)", main)
+        if version_match:
+            self.node_info['version'] = version_match.group(1)
+
+        # Detect node type (regular, trigger, webhook)
+        group_match = re.search(r"""group:\s*\[\s*["']([^"]*?)["']\s*\]""", main)
+        if group_match:
+            group = group_match.group(1)
+            if group == 'trigger':
+                if 'webhook' in self.node_name.lower():
+                    self.node_info['node_type'] = 'webhook'
+                else:
+                    self.node_info['node_type'] = 'trigger'
+            else:
+                self.node_info['node_type'] = 'regular'
+        else:
+            self.node_info['node_type'] = 'regular'
+
+        # Extract trigger-specific properties
+        if self.node_info['node_type'] in ['trigger', 'webhook']:
+            event_trigger_match = re.search(r"""eventTriggerDescription:\s*["']([^"]*?)["']""", main)
+            if event_trigger_match:
+                self.node_info['eventTriggerDescription'] = event_trigger_match.group(1)
+
+            activation_message_match = re.search(r"""activationMessage:\s*["']([^"]*?)["']""", main)
+            if activation_message_match:
+                self.node_info['activationMessage'] = activation_message_match.group(1)
+
+            trigger_panel_match = re.search(r"triggerPanel:\s*(\{[\s\S]*?\})", main)
+            if trigger_panel_match:
+                try:
+                    self.node_info['triggerPanel'] = json.loads(trigger_panel_match.group(1))
+                except json.JSONDecodeError:
+                    self.node_info['triggerPanel'] = trigger_panel_match.group(1)
+
+            supports_cors_match = re.search(r"supportsCORS:\s*(true|false)", main)
+            if supports_cors_match:
+                self.node_info['supportsCORS'] = supports_cors_match.group(1) == 'true'
+
+        # Extract properties (pass node path for spread operator resolution)
+        if 'properties_file' in self.files:
+            self.properties = TypeScriptParser.extract_properties_array(self.files['properties_file'], self.main_file)
+        else:
+            self.properties = TypeScriptParser.extract_properties_array(main, self.main_file)
+
+        # Parse imports to find description files (for modular nodes)
+        node_file = self.node_dir / f"{self.node_name}.node.ts"
+        imports = TypeScriptParser.parse_imports(main, node_file)
+
+        description_credentials: List[Dict[str, Any]] = []
+
+        if imports:
+            print(f"  Found {len(imports)} description files")
+
+            for desc_file_path, imported_names in imports.items():
+                try:
+                    with open(desc_file_path, 'r', encoding='utf-8') as f:
+                        desc_content = f.read()
+
+                    for array_name in imported_names:
+                        resource_name = Path(desc_file_path).stem.replace('Description', '')
+                        # Pass file path for spread resolution
+                        array_props = TypeScriptParser.extract_exported_array(desc_content, array_name, Path(desc_file_path))
+                        if array_props:
+                            for prop in array_props:
+                                prop['_source'] = f"{resource_name}_{array_name}"
+                            self.properties.extend(array_props)
+                            print(f"    Loaded {len(array_props)} properties from {array_name}")
+                        else:
+                            desc_data = TypeScriptParser.extract_description_object(desc_content, array_name)
+                            desc_props = desc_data.get('properties', [])
+                            if desc_props:
+                                for prop in desc_props:
+                                    prop['_source'] = f"{resource_name}_{array_name}"
+                                self.properties.extend(desc_props)
+                                print(f"    Loaded {len(desc_props)} properties from {array_name}")
+
+                            if desc_data.get('credentials'):
+                                description_credentials.extend(desc_data['credentials'])
+
+                except Exception as e:
+                    print(f"    Warning: Could not load {desc_file_path}: {e}")
+
+        # Extract from operation files
+        for file_name, content in self.files.items():
+            if file_name not in ['main', 'properties_file', 'generic_functions']:
+                file_props = TypeScriptParser.extract_properties_array(content, self.main_file)
+                if file_props:
+                    for prop in file_props:
+                        prop['_source'] = file_name
+                        display_opts = prop.get('displayOptions', {})
+                        if display_opts and 'show' in display_opts:
+                            operation_vals = display_opts['show'].get('operation', [])
+                            if operation_vals:
+                                prop['_operation'] = operation_vals[0] if operation_vals else None
+                    self.properties.extend(file_props)
+
+        # Extract credentials
+        self.operations_by_resource = {}
+        all_operations: List[Dict[str, Any]] = []
+
+        for prop in self.properties:
+            if prop.get('name') == 'operation' and prop.get('type') == 'options':
+                operations = copy.deepcopy(prop.get('options', []))
+                display_opts = prop.get('displayOptions', {}).get('show', {})
+                resource_values = display_opts.get('resource', [])
+
+                if resource_values:
+                    for resource_val in resource_values:
+                        existing_ops = self.operations_by_resource.setdefault(resource_val, [])
+                        self._extend_unique_operations(existing_ops, copy.deepcopy(operations))
+                else:
+                    self._extend_unique_operations(all_operations, operations)
+
+        if all_operations:
+            self.operations = all_operations
+        elif self.operations_by_resource:
+            aggregated_operations: List[Dict[str, Any]] = []
+            for resource_ops in self.operations_by_resource.values():
+                self._extend_unique_operations(aggregated_operations, copy.deepcopy(resource_ops))
+            self.operations = aggregated_operations
+        else:
+            self.operations = []
+
+        self.credentials = CredentialExtractor.extract_credentials(main)
+        if description_credentials:
+            self._merge_credentials(description_credentials)
+        if self.credentials:
+            self.node_info['authentication'] = copy.deepcopy(self.credentials)
+
+        # Extract workflow examples
+        node_type = f"n8n-nodes-base.{self.node_info['name']}"
+        workflow_files = WorkflowParser.find_workflow_files(self.node_dir)
+        for wf_file in workflow_files:
+            examples = WorkflowParser.parse_workflow(wf_file, node_type)
+            self.workflow_examples.extend(examples)
+
+        # Extract expressions from all files
+        for content in self.files.values():
+            self.expressions.extend(ExpressionExtractor.find_expressions(content))
+
+        # Extract validation rules and type info from properties
+        for prop in self.properties:
+            if prop.get('name'):
+                # Validation rules
+                rules = ValidationExtractor.extract_validation_rules(prop)
+                if rules:
+                    self.validation_rules[prop['name']] = rules
+
+                # Type information
+                type_info = TypeInfoExtractor.extract_type_info(prop)
+                self.type_info[prop['name']] = type_info
+
+                # UI elements
+                if prop.get('type') == 'notice':
+                    self.ui_elements['notices'].append({
+                        'name': prop.get('name'),
+                        'text': prop.get('displayName'),
+                        'conditions': prop.get('displayOptions')
+                    })
+                if prop.get('tooltip'):
+                    self.ui_elements['tooltips'].append({
+                        'field': prop.get('name'),
+                        'text': prop.get('tooltip')
+                    })
+                if prop.get('placeholder'):
+                    self.ui_elements['placeholders'].append({
+                        'field': prop.get('name'),
+                        'text': prop.get('placeholder')
+                    })
+                if prop.get('hint'):
+                    self.ui_elements['hints'].append({
+                        'field': prop.get('name'),
+                        'text': prop.get('hint')
+                    })
+
+        # Extract API patterns if generic functions exist
+        if 'generic_functions' in self.files:
+            self.api_patterns = APIPatternExtractor.find_api_patterns(self.files['generic_functions'])
+
+    def generate_markdown(self) -> str:
+        """Generate comprehensive markdown with maximum detail"""
+        md = []
+
+        # Frontmatter
+        slug = self.node_info['name'].lower().replace(' ', '-')
+        today = date.today().strftime('%Y-%m-%d')
+
+        md.append("---")
+        md.append(f"title: \"Node: {self.node_info['displayName']}\"")
+        md.append(f"slug: \"node-{slug}\"")
+        md.append(f"version: \"{self.node_info.get('version', '1.0')}\"")
+        md.append(f"updated: \"{today}\"")
+        md.append(f"summary: \"{self.node_info['description']}\"")
+        md.append(f"node_type: \"{self.node_info.get('node_type', 'regular')}\"")
+        if self.node_info.get('group'):
+            md.append(f"group: \"{self.node_info['group']}\"")
+        md.append("---")
+        md.append("")
+
+        # Title
+        md.append(f"# Node: {self.node_info['displayName']}")
+        md.append("")
+
+        # Purpose
+        md.append(f"**Purpose.** {self.node_info['description']}")
+        if self.node_info.get('subtitle'):
+            md.append(f"**Subtitle.** {self.node_info['subtitle']}")
+        md.append("")
+
+        md.append("")
+
+        # Node Details
+        md.append("---")
+        md.append("")
+        md.append("## Node Details")
+        md.append("")
+        md.append(f"- **Icon:** `{self.node_info.get('icon')}`")
+        md.append(f"- **Group:** `{self.node_info.get('group')}`")
+        md.append(f"- **Inputs:** `{self.node_info.get('inputs')}`")
+        md.append(f"- **Outputs:** `{self.node_info.get('outputs')}`")
+        md.append("")
+
+        # Authentication
+        if self.node_info.get('authentication'):
+            md.append("---")
+            md.append("")
+            md.append("## Authentication")
+            md.append("")
+            for auth in self.node_info['authentication']:
+                name = auth.get('name', 'N/A')
+                description = auth.get('description', 'N/A')
+                md.append(f"- **{name}**: {description}")
+            md.append("")
+
+        md.append("")
+
+        # Trigger Properties
+        if self.node_info['node_type'] in ['trigger', 'webhook']:
+            md.append("---")
+            md.append("")
+            md.append("## Trigger Properties")
+            md.append("")
+            md.append(f"- **Event Trigger Description:** {self.node_info.get('eventTriggerDescription')}")
+            md.append(f"- **Activation Message:** {self.node_info.get('activationMessage')}")
+            md.append(f"- **Supports CORS:** {self.node_info.get('supportsCORS')}")
+            if self.node_info.get('triggerPanel'):
+                md.append("- **Trigger Panel:**")
+                md.append("```json")
+                md.append(json.dumps(self.node_info['triggerPanel'], indent=2))
+                md.append("```")
+            md.append("")
+        # UI Tips & Notices
+        md.append("---")
+        md.append("")
+        md.append("## UI Tips & Notices")
+        md.append("")
+
+        # Global expression tip
+        md.append("**Expression Mode Tip:** When using expressions (switching from Fixed to Expression mode), n8n displays:")
+        md.append("")
+        md.append("> Anything inside `{{ }}` is JavaScript. [Learn more](https://docs.n8n.io/code-examples/expressions/)")
+        md.append("")
+
+        # Node-specific notices
+        if self.ui_elements['notices']:
+            md.append("**Node-Specific Tips:**")
+            md.append("")
+            for notice in self.ui_elements['notices']:
+                notice_text = notice.get('text', '')
+                notice_name = notice.get('name', '')
+
+                display_opts = notice.get('conditions', {})
+                if display_opts:
+                    show = display_opts.get('show', {})
+                    conditions = []
+                    for key, values in show.items():
+                        if isinstance(values, list):
+                            conditions.append(f"{key}={values}")
+                        else:
+                            conditions.append(f"{key}={values}")
+                    cond_str = " when " + ", ".join(conditions) if conditions else ""
+                else:
+                    cond_str = ""
+
+                md.append(f"- **{notice_name}**{cond_str}: {notice_text}")
+            md.append("")
+
+        # Credentials section
+        if self.credentials:
+            md.append("---")
+            md.append("")
+            md.append("## Required Credentials")
+            md.append("")
+            md.append("| Credential Type | Required | Conditions |")
+            md.append("| --------------- | -------- | ---------- |")
+            for cred in self.credentials:
+                required = "✓" if cred.get('required') else "Optional"
+                conditions = cred.get('displayOptions', '-')
+                md.append(f"| `{cred['name']}` | {required} | {conditions} |")
+            md.append("")
+
+        # API Patterns section (if available)
+        if self.api_patterns and any(self.api_patterns.values()):
+            md.append("---")
+            md.append("")
+            md.append("## API Patterns")
+            md.append("")
+            if self.api_patterns.get('http_methods'):
+                md.append(f"**HTTP Methods:** {', '.join(self.api_patterns['http_methods'])}")
+                md.append("")
+            if self.api_patterns.get('endpoints'):
+                md.append("**Common Endpoints:**")
+                for endpoint in self.api_patterns['endpoints'][:5]:  # Show top 5
+                    md.append(f"- `{endpoint}`")
+                md.append("")
+            if self.api_patterns.get('headers'):
+                md.append(f"**Headers Used:** {', '.join(list(self.api_patterns['headers'])[:10])}")
+                md.append("")
+
+        # Operations
+        if self.operations or self.operations_by_resource:
+            md.append("---")
+            md.append("")
+            md.append("## Operations")
+            md.append("")
+
+            if self.operations_by_resource:
+                for resource_value, operations in self.operations_by_resource.items():
+                    md.append(f"### {resource_value.title()} Resource Operations")
+                    md.append("")
+                    md.append("| Operation | ID | Description |")
+                    md.append("| --------- | -- | ----------- |")
+                    for op in operations:
+                        op_name = op.get('name', '')
+                        op_value = op.get('value', '')
+                        op_desc = op.get('description', '') or op.get('action', '')
+                        md.append(f"| {op_name} | `{op_value}` | {op_desc} |")
+                    md.append("")
+            elif self.operations:
+                md.append("| Operation | ID | Description |")
+                md.append("| --------- | -- | ----------- |")
+                for op in self.operations:
+                    op_name = op.get('name', '')
+                    op_value = op.get('value', '')
+                    op_desc = op.get('description', '')
+                    md.append(f"| {op_name} | `{op_value}` | {op_desc} |")
+                md.append("")
+
+        # Parameters
+        md.append("---")
+        md.append("")
+        md.append("## Parameters")
+        md.append("")
+
+        # Resource selector
+        resource_param = next((p for p in self.properties if p.get('name') == 'resource'), None)
+        if resource_param:
+            md.append("### Resource Selector")
+            md.append("")
+            md.append("| Name | Field ID | Type | Default | Required | Description | Validation |")
+            md.append("| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |")
+
+            name = resource_param.get('displayName', 'Resource')
+            field_id = resource_param.get('name', 'resource')
+            ptype = resource_param.get('type', 'options')
+            default = str(resource_param.get('default', ''))
+            required = '✓' if resource_param.get('required') else '✗'
+            desc = resource_param.get('description', 'Resource to operate on')
+
+            md.append(f"| {name} | `{field_id}` | {ptype} | {default} | {required} | {desc} |  |")
+
+            if resource_param.get('options'):
+                md.append("")
+                md.append(f"**{name} options:**")
+                md.append("")
+                for opt in resource_param.get('options', []):
+                    opt_name = opt.get('name', '')
+                    opt_value = opt.get('value', '')
+                    opt_desc = opt.get('description', '')
+                    opt_action = opt.get('action', '')
+
+                    if opt_desc:
+                        md.append(f"* **{opt_name}** (`{opt_value}`) - {opt_desc}")
+                    elif opt_action:
+                        md.append(f"* **{opt_name}** (`{opt_value}`) - {opt_action}")
+                    else:
+                        md.append(f"* **{opt_name}** (`{opt_value}`)")
+                md.append("")
+
+            md.append("---")
+            md.append("")
+
+        if self.operations:
+            # Operation selector
+            operation_param = next((p for p in self.properties if p.get('name') == 'operation'), None)
+            if operation_param:
+                md.append("### Operation Selector")
+                md.append("")
+                md.append("| Name | Field ID | Type | Default | Required | Description | Validation |")
+                md.append("| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |")
+
+                name = operation_param.get('displayName', 'Operation')
+                field_id = operation_param.get('name', 'operation')
+                ptype = operation_param.get('type', 'options')
+                default = str(operation_param.get('default', ''))
+                required = '✓' if operation_param.get('required') else '✗'
+                desc = operation_param.get('description', 'Operation to perform')
+
+                md.append(f"| {name} | `{field_id}` | {ptype} | {default} | {required} | {desc} |  |")
+
+                if operation_param.get('options'):
+                    md.append("")
+                    md.append(f"**{name} options:**")
+                    md.append("")
+                    for opt in operation_param.get('options', []):
+                        opt_name = opt.get('name', '')
+                        opt_value = opt.get('value', '')
+                        opt_desc = opt.get('description', '')
+                        opt_action = opt.get('action', '')
+
+                        if opt_desc:
+                            md.append(f"* **{opt_name}** (`{opt_value}`) - {opt_desc}")
+                        elif opt_action:
+                            md.append(f"* **{opt_name}** (`{opt_value}`) - {opt_action}")
+                        else:
+                            md.append(f"* **{opt_name}** (`{opt_value}`)")
+                    md.append("")
+
+                md.append("---")
+                md.append("")
+
+            for op in self.operations:
+                op_value = op.get('value', '')
+                op_name = op.get('name', '')
+
+                # Get parameters for this specific operation
+                op_params = []
+                for p in self.properties:
+                    if p.get('name') in ['operation', 'resource']:
+                        continue
+
+                    display_opts = p.get('displayOptions', {}).get('show', {})
+                    op_list = display_opts.get('operation', [])
+
+                    if (p.get('_source') == op_value or
+                        p.get('_operation') == op_value or
+                        op_value in op_list):
+                        op_params.append(p)
+
+                if op_params:
+                    md.append(f"### {op_name} parameters (`{op_value}`)")
+                    md.append("")
+                    md.append("| Name | Field ID | Type | Default | Required | Description | Validation |")
+                    md.append("| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |")
+
+                    for param in op_params:
+                        if param.get('type') == 'notice':
+                            continue
+
+                        name = param.get('displayName', param.get('name', ''))
+                        field_id = param.get('name', '')
+                        ptype = param.get('type', '')
+                        default = str(param.get('default', ''))
+                        required = '✓' if param.get('required') else '✗'
+                        desc = param.get('description', '')
+
+                        # Build comprehensive description
+                        desc_parts = []
+                        if desc:
+                            desc_parts.append(desc)
+
+                        tooltip = param.get('tooltip', '')
+                        if tooltip and tooltip != desc:
+                            desc_parts.append(f"**Tooltip:** {tooltip}")
+
+                        placeholder = param.get('placeholder', '')
+                        hint = param.get('hint', '')
+                        example = placeholder or hint
+                        if example:
+                            desc_parts.append(f"e.g. {example}")
+
+                        desc = ' | '.join(desc_parts)
+
+                        # Add validation info
+                        validation_parts = []
+                        if field_id in self.validation_rules:
+                            rules = self.validation_rules[field_id]
+                            if rules.get('format'):
+                                validation_parts.append(rules['format'])
+                            if rules.get('min') or rules.get('max'):
+                                validation_parts.append(f"range:{rules.get('min', '?')}-{rules.get('max', '?')}")
+
+                        type_opts = param.get('typeOptions', {})
+                        if type_opts.get('minValue') is not None or type_opts.get('maxValue') is not None:
+                            min_val = type_opts.get('minValue', '∞')
+                            max_val = type_opts.get('maxValue', '∞')
+                            validation_parts.append(f"min:{min_val}, max:{max_val}")
+
+                        validation = ', '.join(validation_parts)
+
+                        md.append(f"| {name} | `{field_id}` | {ptype} | {default} | {required} | {desc} | {validation} |")
+
+                        # Show options for dropdown fields
+                        if ptype in ['options', 'multiOptions'] and param.get('options'):
+                            md.append("")
+                            md.append(f"**{name} options:**")
+                            md.append("")
+                            for opt in param.get('options', []):
+                                opt_name = opt.get('name', '')
+                                opt_value = opt.get('value', '')
+                                opt_desc = opt.get('description', '')
+                                opt_action = opt.get('action', '')
+
+                                if opt_desc:
+                                    md.append(f"* **{opt_name}** (`{opt_value}`) - {opt_desc}")
+                                elif opt_action:
+                                    md.append(f"* **{opt_name}** (`{opt_value}`) - {opt_action}")
+                                else:
+                                    md.append(f"* **{opt_name}** (`{opt_value}`)")
+                            md.append("")
+
+                        # Show collection sub-options
+                        if ptype in ['collection', 'fixedCollection'] and param.get('options'):
+                            md.append("")
+                            md.append(f"<details>")
+                            md.append(f"<summary><strong>{name} sub-options</strong></summary>")
+                            md.append("")
+                            md.append("| Sub-Option | Field ID | Type | Default | Description |")
+                            md.append("| ---------- | -------- | ---- | ------- | ----------- |")
+
+                            for opt in param.get('options', []):
+                                opt_name = opt.get('displayName', opt.get('name', ''))
+                                opt_field = opt.get('name', '')
+                                opt_type = opt.get('type', '')
+                                opt_default = str(opt.get('default', ''))
+                                opt_desc = opt.get('description', '')
+                                md.append(f"| {opt_name} | `{opt_field}` | {opt_type} | {opt_default} | {opt_desc} |")
+
+                            md.append("")
+                            md.append("</details>")
+                            md.append("")
+
+                    md.append("")
+        else:
+            # No operations, list all parameters
+            md.append("### Parameters")
+            md.append("")
+            md.append("| Name | Field ID | Type | Default | Required | Description | Validation |")
+            md.append("| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |")
+
+            for param in self.properties:
+                if param.get('type') == 'notice':
+                    continue
+
+                name = param.get('displayName', param.get('name', ''))
+                field_id = param.get('name', '')
+                ptype = param.get('type', '')
+                default = str(param.get('default', ''))
+                required = '✓' if param.get('required') else '✗'
+                desc = param.get('description', '')
+
+                desc_parts = []
+                if desc:
+                    desc_parts.append(desc)
+
+                tooltip = param.get('tooltip', '')
+                if tooltip and tooltip != desc:
+                    desc_parts.append(f"**Tooltip:** {tooltip}")
+
+                placeholder = param.get('placeholder', '')
+                hint = param.get('hint', '')
+                example = placeholder or hint
+                if example:
+                    desc_parts.append(f"e.g. {example}")
+
+                desc = ' | '.join(desc_parts)
+
+                validation_parts = []
+                if field_id in self.validation_rules:
+                    rules = self.validation_rules[field_id]
+                    if rules.get('format'):
+                        validation_parts.append(rules['format'])
+                    if rules.get('min') or rules.get('max'):
+                        validation_parts.append(f"range:{rules.get('min', '?')}-{rules.get('max', '?')}")
+
+                type_opts = param.get('typeOptions', {})
+                if type_opts.get('minValue') is not None or type_opts.get('maxValue') is not None:
+                    min_val = type_opts.get('minValue', '∞')
+                    max_val = type_opts.get('maxValue', '∞')
+                    validation_parts.append(f"min:{min_val}, max:{max_val}")
+
+                validation = ', '.join(validation_parts)
+
+                md.append(f"| {name} | `{field_id}` | {ptype} | {default} | {required} | {desc} | {validation} |")
+
+                if ptype in ['options', 'multiOptions'] and param.get('options'):
+                    md.append("")
+                    md.append(f"**{name} options:**")
+                    md.append("")
+                    for opt in param.get('options', []):
+                        opt_name = opt.get('name', '')
+                        opt_value = opt.get('value', '')
+                        opt_desc = opt.get('description', '')
+                        opt_action = opt.get('action', '')
+
+                        if opt_desc:
+                            md.append(f"* **{opt_name}** (`{opt_value}`) - {opt_desc}")
+                        elif opt_action:
+                            md.append(f"* **{opt_name}** (`{opt_value}`) - {opt_action}")
+                        else:
+                            md.append(f"* **{opt_name}** (`{opt_value}`)")
+                    md.append("")
+
+                if ptype in ['collection', 'fixedCollection'] and param.get('options'):
+                    md.append("")
+                    md.append(f"<details>")
+                    md.append(f"<summary><strong>{name} sub-options</strong></summary>")
+                    md.append("")
+                    md.append("| Sub-Option | Field ID | Type | Default | Description |")
+                    md.append("| ---------- | -------- | ---- | ------- | ----------- |")
+
+                    for opt in param.get('options', []):
+                        opt_name = opt.get('displayName', opt.get('name', ''))
+                        opt_field = opt.get('name', '')
+                        opt_type = opt.get('type', '')
+                        opt_default = str(opt.get('default', ''))
+                        opt_desc = opt.get('description', '')
+                        md.append(f"| {opt_name} | `{opt_field}` | {opt_type} | {opt_default} | {opt_desc} |")
+
+                    md.append("")
+                    md.append("</details>")
+                    md.append("")
+
+            md.append("")
+
+        # Load Options Methods
+        if self.node_info.get('loadOptionsMethods'):
+            md.append("---")
+            md.append("")
+            md.append("## Load Options Methods")
+            md.append("")
+            for method in self.node_info['loadOptionsMethods']:
+                md.append(f"- `{method}`")
+            md.append("")
+
+        # Real-world examples
+        if self.workflow_examples:
+            md.append("---")
+            md.append("")
+            md.append("## Real-World Examples")
+            md.append("")
+            md.append("These examples are extracted from actual n8n workflows:")
+            md.append("")
+
+            for i, example in enumerate(self.workflow_examples[:5], 1):
+                md.append(f"### Example {i}: {example['name']}")
+                md.append("")
+                md.append(f"**From workflow:** {example['workflow_name']}")
+                md.append("")
+                md.append("**Parameters:**")
+                md.append("```json")
+                md.append(json.dumps(example['parameters'], indent=2))
+                md.append("```")
+                md.append("")
+
+                if example.get('credentials'):
+                    md.append("**Credentials:**")
+                    for cred_type, cred_info in example['credentials'].items():
+                        md.append(f"- {cred_type}: `{cred_info.get('name', 'N/A')}`")
+                    md.append("")
+
+            md.append("")
+
+        # Expression patterns
+        if self.expressions:
+            md.append("---")
+            md.append("")
+            md.append("## Common Expression Patterns")
+            md.append("")
+            md.append("These expression patterns are commonly used with this node:")
+            md.append("")
+
+            unique_expressions = list(set(self.expressions))[:10]
+            for expr in unique_expressions:
+                md.append(f"- `{expr}`")
+
+            md.append("")
+
+        # Execution Settings
+        md.append("---")
+        md.append("")
+
+        # Determine which settings to show based on node type
+        is_trigger = self.node_info.get('node_type') in ['trigger', 'webhook']
+
+        if is_trigger:
+            md.append("## Execution Settings")
+            md.append("")
+            md.append("**Note:** Trigger nodes have limited execution settings.")
+        else:
+            md.append("## Execution Settings")
+
+        md.append("")
+        md.append("| Name | Field ID | Type | Default | Description |")
+        md.append("| ---- | -------- | ---- | ------- | ----------- |")
+
+        # Add common settings (for all nodes)
+        for setting_key, setting in COMMON_SETTINGS.items():
+            name = setting['name']
+            field_id = setting['field_id']
+            stype = setting['type']
+            default = str(setting.get('default', ''))
+            desc = setting['description']
+            md.append(f"| {name} | `{field_id}` | {stype} | {default} | {desc} |")
+
+        # Add executable settings (only for non-trigger nodes)
+        if not is_trigger:
+            for setting_key, setting in EXECUTABLE_SETTINGS.items():
+                name = setting['name']
+                field_id = setting['field_id']
+                stype = setting['type']
+                default = str(setting.get('default', ''))
+                desc = setting['description']
+
+                # Add conditional note for maxTries and waitBetweenTries
+                if setting.get('displayOptions'):
+                    desc = f"{desc} *(Only visible when 'Retry On Fail' is enabled)*"
+
+                # Add min/max constraints if present
+                constraints = []
+                if 'min' in setting:
+                    constraints.append(f"min: {setting['min']}")
+                if 'max' in setting:
+                    constraints.append(f"max: {setting['max']}")
+                if constraints:
+                    desc = f"{desc} ({', '.join(constraints)})"
+
+                md.append(f"| {name} | `{field_id}` | {stype} | {default} | {desc} |")
+
+        md.append("")
+
+        # Add On Error options details (only for executable nodes)
+        if not is_trigger:
+            md.append("**On Error Options:**")
+            md.append("")
+            for opt in EXECUTABLE_SETTINGS['onError']['options']:
+                md.append(f"* **{opt['name']}** (`{opt['value']}`) — {opt['description']}")
+            md.append("")
+
+        # Notes & Caveats
+        md.append("---")
+        md.append("")
+        md.append("## Notes & Caveats")
+        md.append("")
+        md.append(f"* This node is part of n8n-nodes-base")
+        if self.metadata:
+            if self.metadata.get('categories'):
+                md.append(f"* Categories: {', '.join(self.metadata['categories'])}")
+            if self.metadata.get('alias'):
+                md.append(f"* Aliases: {', '.join(self.metadata['alias'])}")
+        md.append("")
+
+        # Machine-Readable Spec
+        md.append("---")
+        md.append("")
+        md.append("## Appendix: Machine-Readable Spec (LLM-Friendly)")
+        md.append("")
+
+        # YAML Schema
+        md.append("### YAML Schema")
+        md.append("")
+        md.append("```yaml")
+        md.append(yaml.dump(self._generate_yaml_schema(), default_flow_style=False, sort_keys=False, allow_unicode=True, Dumper=yaml.Dumper))
+        md.append("```")
+        md.append("")
+
+        # JSON Schema
+        md.append("### JSON Schema")
+        md.append("")
+        md.append("```json")
+        md.append(json.dumps(self._generate_json_schema(), indent=2))
+        md.append("```")
+        md.append("")
+
+        # Document Changelog
+        md.append("---")
+        md.append("")
+        md.append("## Document Changelog")
+        md.append("")
+        md.append("| Version | Date | Changes |")
+        md.append("| ------- | ---- | ------- |")
+        md.append(f"| {self.node_info.get('version', '1.0')} | {today} | Ultimate extraction with maximum detail for AI training |")
+        md.append("")
+
+        return '\n'.join(md)
+
+    def _generate_yaml_schema(self) -> Dict[str, Any]:
+        """Generate YAML schema with maximum detail"""
+        schema = {
+            'node': self.node_info['name'],
+            'displayName': self.node_info['displayName'],
+            'description': self.node_info['description'],
+            'version': self.node_info.get('version', '1.0'),
+            'nodeType': self.node_info.get('node_type', 'regular')
+        }
+
+        if self.node_info.get('group'):
+            schema['group'] = self.node_info['group']
+
+        # Add credentials
+        if self.credentials:
+            schema['credentials'] = [
+                {
+                    'name': c['name'],
+                    'required': c.get('required', False)
+                }
+                for c in self.credentials
+            ]
+
+        # Add operations
+        if self.operations:
+            schema['operations'] = []
+            for op in self.operations:
+                op_schema = {
+                    'id': op.get('value', ''),
+                    'name': op.get('name', ''),
+                    'description': op.get('description', '')
+                }
+
+                op_value = op.get('value', '')
+                op_params = []
+                for p in self.properties:
+                    if p.get('name') in ['operation', 'resource']:
+                        continue
+
+                    display_opts = p.get('displayOptions', {}).get('show', {})
+                    op_list = display_opts.get('operation', [])
+
+                    if (p.get('_source') == op_value or
+                        p.get('_operation') == op_value or
+                        op_value in op_list):
+                        op_params.append(p)
+
+                if op_params:
+                    op_schema['params'] = []
+                    for param in op_params:
+                        if param.get('type') not in ['notice', 'collection']:
+                            param_schema = {
+                                'id': param.get('name', ''),
+                                'name': param.get('displayName', ''),
+                                'type': param.get('type', ''),
+                                'default': param.get('default', ''),
+                                'required': param.get('required', False),
+                                'description': param.get('description', '')
+                            }
+                            if param.get('hint'):
+                                param_schema['hint'] = param['hint']
+                            if param.get('placeholder'):
+                                param_schema['placeholder'] = param['placeholder']
+                            if param.get('tooltip'):
+                                param_schema['tooltip'] = param['tooltip']
+
+                            # Add validation info
+                            if param.get('name') in self.validation_rules:
+                                param_schema['validation'] = self.validation_rules[param['name']]
+
+                            # Add type info
+                            if param.get('name') in self.type_info:
+                                param_schema['typeInfo'] = self.type_info[param['name']]
+
+                            op_schema['params'].append(param_schema)
+
+                schema['operations'].append(op_schema)
+        else:
+            schema['params'] = []
+            for param in self.properties:
+                if param.get('type') != 'notice':
+                    param_schema = {
+                        'id': param.get('name', ''),
+                        'name': param.get('displayName', ''),
+                        'type': param.get('type', ''),
+                        'default': param.get('default', ''),
+                        'required': param.get('required', False),
+                        'description': param.get('description', '')
+                    }
+                    if param.get('hint'):
+                        param_schema['hint'] = param['hint']
+                    if param.get('placeholder'):
+                        param_schema['placeholder'] = param['placeholder']
+                    if param.get('tooltip'):
+                        param_schema['tooltip'] = param['tooltip']
+
+                    if param.get('name') in self.validation_rules:
+                        param_schema['validation'] = self.validation_rules[param['name']]
+
+                    if param.get('name') in self.type_info:
+                        param_schema['typeInfo'] = self.type_info[param['name']]
+
+                    schema['params'].append(param_schema)
+
+        # Add examples
+        if self.workflow_examples:
+            schema['examples'] = [
+                {
+                    'name': ex['name'],
+                    'parameters': ex['parameters'],
+                    'workflow': ex['workflow_name']
+                }
+                for ex in self.workflow_examples[:3]
+            ]
+
+        # Add expression patterns
+        if self.expressions:
+            schema['common_expressions'] = list(set(self.expressions))[:10]
+
+        # Add API patterns
+        if self.api_patterns:
+            schema['api_patterns'] = self.api_patterns
+
+        # Add UI elements
+        schema['ui_elements'] = self.ui_elements
+
+        # Add execution settings (based on node type)
+        is_trigger = self.node_info.get('node_type') in ['trigger', 'webhook']
+        if is_trigger:
+            schema['settings'] = {
+                'common': COMMON_SETTINGS,
+                'note': 'Trigger nodes only have common settings (notes, notesInFlow)'
+            }
+        else:
+            schema['settings'] = {
+                'common': COMMON_SETTINGS,
+                'executable': EXECUTABLE_SETTINGS,
+                'note': 'Executable nodes have both common and executable settings'
+            }
+
+        return schema
+
+    def _generate_json_schema(self) -> Dict[str, Any]:
+        """Generate JSON schema with maximum detail"""
+        schema = {
+            "$id": f"https://n8n.io/schemas/nodes/{self.node_info['name']}.json",
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "title": f"{self.node_info['displayName']} Node",
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {},
+            "metadata": {
+                "nodeType": self.node_info.get('node_type', 'regular'),
+                "version": self.node_info.get('version', '1.0')
+            }
+        }
+
+        if self.operations:
+            schema["properties"]["operation"] = {
+                "type": "string",
+                "enum": [op.get('value', '') for op in self.operations],
+                "description": "Operation to perform"
+            }
+
+        schema["properties"]["params"] = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {}
+        }
+
+        # Add parameters with validation rules
+        for param in self.properties:
+            if param.get('type') == 'notice':
+                continue
+
+            param_name = param.get('name', '')
+            param_type = param.get('type', '')
+
+            param_schema = {
+                "description": param.get('description', '')
+            }
+
+            if param_type == 'string':
+                param_schema["type"] = "string"
+            elif param_type == 'boolean':
+                param_schema["type"] = "boolean"
+            elif param_type == 'number':
+                param_schema["type"] = "number"
+            elif param_type == 'options':
+                param_schema["type"] = "string"
+                if param.get('options'):
+                    param_schema["enum"] = [opt.get('value', opt.get('name', '')) for opt in param['options']]
+            else:
+                param_schema["type"] = "string"
+
+            if param.get('default') is not None:
+                param_schema["default"] = param['default']
+
+            # Add validation constraints
+            if param_name in self.validation_rules:
+                rules = self.validation_rules[param_name]
+                if rules.get('format'):
+                    param_schema["format"] = rules['format']
+                if rules.get('min'):
+                    param_schema["minimum"] = rules['min']
+                if rules.get('max'):
+                    param_schema["maximum"] = rules['max']
+
+            # Add UI hints
+            if param.get('placeholder'):
+                param_schema["examples"] = [param['placeholder']]
+            if param.get('tooltip'):
+                param_schema["tooltip"] = param['tooltip']
+
+            schema["properties"]["params"]["properties"][param_name] = param_schema
+
+        # Add credentials to schema
+        if self.credentials:
+            schema["credentials"] = [
+                {
+                    "name": c['name'],
+                    "required": c.get('required', False)
+                }
+                for c in self.credentials
+            ]
+
+        # Add examples
+        if self.workflow_examples:
+            schema["examples"] = [
+                {
+                    "description": ex['name'],
+                    "value": ex['parameters']
+                }
+                for ex in self.workflow_examples[:3]
+            ]
+
+        # Add execution settings schema
+        is_trigger = self.node_info.get('node_type') in ['trigger', 'webhook']
+        settings_properties = {}
+
+        # Add common settings
+        for key, setting in COMMON_SETTINGS.items():
+            settings_properties[key] = {
+                "type": setting['type'],
+                "default": setting.get('default'),
+                "description": setting['description']
+            }
+
+        # Add executable settings (only for non-trigger nodes)
+        if not is_trigger:
+            for key, setting in EXECUTABLE_SETTINGS.items():
+                prop_schema = {
+                    "type": setting['type'],
+                    "default": setting.get('default'),
+                    "description": setting['description']
+                }
+                # Add min/max for number types
+                if setting['type'] == 'number':
+                    if 'min' in setting:
+                        prop_schema["minimum"] = setting['min']
+                    if 'max' in setting:
+                        prop_schema["maximum"] = setting['max']
+                # Add enum for options type
+                if setting['type'] == 'options' and 'options' in setting:
+                    prop_schema["enum"] = [opt['value'] for opt in setting['options']]
+
+                settings_properties[key] = prop_schema
+
+        schema["properties"]["settings"] = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": settings_properties
+        }
+
+        return schema
+
+    @staticmethod
+    def _normalize_filename(name: str) -> str:
+        """
+        Normalize node name for consistent, safe filenames
+        - Convert to lowercase
+        - Remove/replace special characters
+        - Replace spaces with underscores
+        """
+        # Convert to lowercase
+        normalized = name.lower()
+        # Replace spaces and hyphens with underscores
+        normalized = normalized.replace(' ', '_').replace('-', '_')
+        # Remove any characters that aren't alphanumeric or underscore
+        normalized = re.sub(r'[^a-z0-9_]', '', normalized)
+        # Remove duplicate underscores
+        normalized = re.sub(r'_+', '_', normalized)
+        # Remove leading/trailing underscores
+        normalized = normalized.strip('_')
+        return normalized
+
+    def save_output(self, markdown: str):
+        """Save generated documentation with enhanced data"""
+        OUTPUT_DIR.mkdir(exist_ok=True)
+
+        # Use normalized filename for consistency
+        filename_base = self._normalize_filename(self.node_info['name'])
+
+        # Save markdown
+        md_file = OUTPUT_DIR / f"{filename_base}_documentation.md"
+        with open(md_file, 'w', encoding='utf-8') as f:
+            f.write(markdown)
+
+        # Save comprehensive JSON data
+        json_file = OUTPUT_DIR / f"{filename_base}_data.json"
+        with open(json_file, 'w', encoding='utf-8') as f:
+            json.dump({
+                'node_info': self.node_info,
+                'metadata': self.metadata,
+                'properties': self.properties,
+                'operations': self.operations,
+                'operations_by_resource': self.operations_by_resource,
+                'credentials': self.credentials,
+                'workflow_examples': self.workflow_examples,
+                'expressions': list(set(self.expressions)),
+                'validation_rules': self.validation_rules,
+                'type_info': self.type_info,
+                'api_patterns': self.api_patterns,
+                'ui_elements': self.ui_elements,
+                'settings': self._get_node_settings()
+            }, f, indent=2)
+
+        return md_file
+
+    def _get_node_settings(self) -> Dict[str, Any]:
+        """Get appropriate settings based on node type"""
+        is_trigger = self.node_info.get('node_type') in ['trigger', 'webhook']
+        if is_trigger:
+            return {
+                'common': COMMON_SETTINGS,
+                'note': 'Trigger nodes only have common settings (notes, notesInFlow)'
+            }
+        else:
+            return {
+                'common': COMMON_SETTINGS,
+                'executable': EXECUTABLE_SETTINGS,
+                'note': 'Executable nodes have both common and executable settings'
+            }
+
+    def extract(self, node_file_path: Optional[Path] = None) -> bool:
+        """Main extraction method with AI enhancements"""
+        print(f"\n{'='*70}")
+        print(f"Extracting: {self.node_name}")
+        print('='*70 + "\n")
+
+        if node_file_path:
+            if not self.set_node_file(node_file_path):
+                return False
+        else:
+            if not self.find_node():
+                return False
+
+        if not self.load_files():
+            return False
+
+        print()
+        self.extract_info()
+
+        # Print extraction summary
+        print(f"✓ Extracted {len(self.properties)} properties")
+        print(f"✓ Found {len(self.operations)} operations")
+        if self.credentials:
+            print(f"✓ Found {len(self.credentials)} credential types")
+        if self.workflow_examples:
+            print(f"✓ Found {len(self.workflow_examples)} workflow examples")
+        if self.expressions:
+            print(f"✓ Found {len(set(self.expressions))} unique expressions")
+        if self.api_patterns and self.api_patterns.get('endpoints'):
+            print(f"✓ Found {len(self.api_patterns['endpoints'])} API endpoints")
+        if self.ui_elements['notices']:
+            print(f"✓ Found {len(self.ui_elements['notices'])} UI notices")
+
+        markdown = self.generate_markdown()
+        self.save_output(markdown)
+
+        return True
+
+
+def list_all_nodes():
+    """List all available nodes in the repository"""
+    nodes_dir = N8N_REPO / "packages" / "nodes-base" / "nodes"
+
+    if not nodes_dir.exists():
+        print(f"❌ Error: Cannot find nodes directory at {nodes_dir}")
+        return
+
+    node_files = sorted(nodes_dir.glob("**/*.node.ts"))
+
+    print(f"\n{'='*70}")
+    print(f"Available Nodes ({len(node_files)} total)")
+    print('='*70 + "\n")
+
+    for node_file in node_files:
+        node_name = node_file.stem
+        rel_path = node_file.relative_to(nodes_dir)
+        print(f"  • {node_name:40s} ({rel_path.parent})")
+
+    print()
+
+
+def extract_all_nodes():
+    """Extract all nodes with AI training enhancements"""
+    nodes_dir = N8N_REPO / "packages" / "nodes-base" / "nodes"
+
+    if not nodes_dir.exists():
+        print(f"❌ Error: Cannot find nodes directory at {nodes_dir}")
+        return
+
+    node_files = sorted(nodes_dir.glob("**/*.node.ts"))
+
+    print(f"\n{'='*70}")
+    print(f"Ultimate Extraction: All Nodes ({len(node_files)} total)")
+    print('='*70 + "\n")
+
+    successful = 0
+    failed = 0
+
+    for i, node_file in enumerate(node_files, 1):
+        node_name = node_file.stem.replace('.node', '')
+
+        print(f"\n[{i}/{len(node_files)}] {node_name}")
+
+        try:
+            extractor = NodeExtractor(node_name)
+            if extractor.extract(node_file_path=node_file):
+                successful += 1
+            else:
+                failed += 1
+        except Exception as e:
+            print(f"❌ Error: {str(e)[:100]}")
+            failed += 1
+
+    print(f"\n{'='*70}")
+    print(f"Ultimate Extraction Complete!")
+    print('='*70)
+    print(f"\n✓ Successful: {successful}")
+    print(f"✗ Failed: {failed}")
+    print(f"\nTotal: {len(node_files)}")
+    print(f"\nDocumentation saved to: {OUTPUT_DIR}")
+    print()
+
+
+def main():
+    if len(sys.argv) < 2:
+        print("""
+Usage: python3 n8n_node_extractor.py [command] [node_name]
+
+Commands:
+  extract <node_name>  - Extract a specific node with maximum detail
+  list                 - List all available nodes
+  extract-all          - Extract all nodes with full AI training features
+
+Examples:
+  python3 n8n_node_extractor.py extract ReadWriteFile
+  python3 n8n_node_extractor.py list
+  python3 n8n_node_extractor.py extract-all
+        """)
+        return
+
+    command = sys.argv[1]
+
+    if command == "list":
+        list_all_nodes()
+    elif command == "extract-all":
+        extract_all_nodes()
+    elif command == "extract":
+        if len(sys.argv) < 3:
+            print("❌ Error: Please provide a node name")
+            print("\nUsage: python3 n8n_node_extractor.py extract <node_name>")
+            return
+
+        node_name = sys.argv[2]
+        extractor = NodeExtractor(node_name)
+        extractor.extract()
+    else:
+        print(f"❌ Error: Unknown command '{command}'")
+        print("\nUse 'list', 'extract', or 'extract-all'")
+
+
+if __name__ == "__main__":
+    main()

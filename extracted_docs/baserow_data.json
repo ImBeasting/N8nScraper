@@ -1,0 +1,1320 @@
+{
+  "node_info": {
+    "icon": "file:baserow.svg",
+    "defaults": {
+      "name": "Baserow"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "baserowApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getDatabaseIds"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Baserow",
+    "name": "baserow",
+    "description": "Consume the Baserow API",
+    "subtitle": "={{$parameter[\"operation\"] + \":\" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.baserow",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Data & Storage"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/baserow/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.baserow/"
+        }
+      ],
+      "generic": []
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "row",
+      "default": "row",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Row",
+          "value": "row",
+          "displayName": "Row"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a row",
+      "action": "Create a row",
+      "value": "create",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a row",
+          "action": "Create a row",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a row",
+          "action": "Delete a row",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Retrieve a row",
+          "action": "Get a row",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Retrieve many rows",
+          "action": "Get many rows",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update a row",
+          "action": "Update a row",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Database Name or ID",
+      "name": "databaseId",
+      "type": "options",
+      "description": "Database to operate on. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getDatabaseIds"
+      },
+      "_source": "Operation_operationFields"
+    },
+    {
+      "displayName": "Table Name or ID",
+      "name": "tableId",
+      "type": "options",
+      "description": "Table to operate on. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTableIds"
+      },
+      "_source": "Operation_operationFields"
+    },
+    {
+      "displayName": "Row ID",
+      "name": "rowId",
+      "type": "string",
+      "description": "ID of the row to return",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Operation_operationFields"
+    },
+    {
+      "displayName": "Row ID",
+      "name": "rowId",
+      "type": "string",
+      "description": "ID of the row to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Operation_operationFields"
+    },
+    {
+      "displayName": "Data to Send",
+      "name": "dataToSend",
+      "type": "options",
+      "description": "Use when node input properties match destination column names",
+      "value": "autoMapInputData",
+      "default": "defineBelow",
+      "options": [
+        {
+          "name": "Auto-Map Input Data to Columns",
+          "description": "Use when node input properties match destination column names",
+          "value": "autoMapInputData",
+          "displayName": "Auto-map Input Data To Columns"
+        },
+        {
+          "name": "Define Below for Each Column",
+          "description": "Set the value for each destination column",
+          "value": "defineBelow",
+          "displayName": "Define Below For Each Column"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "_source": "Operation_operationFields"
+    },
+    {
+      "displayName": "Inputs to Ignore",
+      "name": "inputsToIgnore",
+      "type": "string",
+      "description": "List of input properties to avoid sending, separated by commas. Leave empty to send all properties.",
+      "placeholder": "Enter properties...",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create",
+            "update"
+          ],
+          "dataToSend": [
+            "autoMapInputData"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "_source": "Operation_operationFields"
+    },
+    {
+      "displayName": "Fields to Send",
+      "name": "fieldsUi",
+      "type": "fixedCollection",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "name": "fieldValues",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Field Name or ID",
+              "name": "fieldId",
+              "type": "options",
+              "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+              "default": "",
+              "typeOptions": {
+                "loadOptionsMethod": "getTableFields"
+              }
+            },
+            {
+              "displayName": "Field Value",
+              "name": "fieldValue",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create",
+            "update"
+          ],
+          "dataToSend": [
+            "defineBelow"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "_source": "Operation_operationFields"
+    },
+    {
+      "displayName": "Row ID",
+      "name": "rowId",
+      "type": "string",
+      "description": "ID of the row to delete",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Operation_operationFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Operation_operationFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Operation_operationFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "additionalOptions",
+      "type": "collection",
+      "description": "Filter rows based on comparison operators",
+      "placeholder": "Add option",
+      "value": "contains",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Filters",
+          "name": "filters",
+          "type": "fixedCollection",
+          "description": "Filter rows based on comparison operators",
+          "placeholder": "Add Filter",
+          "value": "contains",
+          "default": {},
+          "options": [
+            {
+              "name": "fields",
+              "displayName": "Field",
+              "values": [
+                {
+                  "displayName": "Field Name or ID",
+                  "name": "field",
+                  "type": "options",
+                  "description": "Field to compare. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                  "default": "",
+                  "typeOptions": {
+                    "loadOptionsMethod": "getTableFields"
+                  }
+                },
+                {
+                  "displayName": "Filter",
+                  "name": "operator",
+                  "type": "options",
+                  "description": "Operator to compare field and value with",
+                  "value": "contains",
+                  "default": "equal",
+                  "options": [
+                    {
+                      "name": "Contains",
+                      "description": "Field contains value",
+                      "value": "contains",
+                      "displayName": "Contains"
+                    },
+                    {
+                      "name": "Contains Not",
+                      "description": "Field does not contain value",
+                      "value": "contains_not",
+                      "displayName": "Contains Not"
+                    },
+                    {
+                      "name": "Date After Date",
+                      "description": "Field after this date. Format: 'YYYY-MM-DD'.",
+                      "value": "date_after",
+                      "displayName": "Date After Date"
+                    },
+                    {
+                      "name": "Date Before Date",
+                      "description": "Field before this date. Format: 'YYYY-MM-DD'.",
+                      "value": "date_before",
+                      "displayName": "Date Before Date"
+                    },
+                    {
+                      "name": "Date Equal",
+                      "description": "Field is date. Format: 'YYYY-MM-DD'.",
+                      "value": "date_equal",
+                      "displayName": "Date Equal"
+                    },
+                    {
+                      "name": "Date Equals Month",
+                      "description": "Field in this month. Format: string.",
+                      "value": "date_equals_month",
+                      "displayName": "Date Equals Month"
+                    },
+                    {
+                      "name": "Date Equals Today",
+                      "description": "Field is today. Format: string.",
+                      "value": "date_equals_today",
+                      "displayName": "Date Equals Today"
+                    },
+                    {
+                      "name": "Date Equals Year",
+                      "description": "Field in this year. Format: string.",
+                      "value": "date_equals_year",
+                      "displayName": "Date Equals Year"
+                    },
+                    {
+                      "name": "Date Not Equal",
+                      "description": "Field is not date. Format: 'YYYY-MM-DD'.",
+                      "value": "date_not_equal",
+                      "displayName": "Date Not Equal"
+                    },
+                    {
+                      "name": "Equal",
+                      "description": "Field is equal to value",
+                      "value": "equal",
+                      "displayName": "Equal"
+                    },
+                    {
+                      "name": "Filename Contains",
+                      "description": "Field filename contains value",
+                      "value": "filename_contains",
+                      "displayName": "Filename Contains"
+                    },
+                    {
+                      "name": "Higher Than",
+                      "description": "Field is higher than value",
+                      "value": "higher_than",
+                      "displayName": "Higher Than"
+                    },
+                    {
+                      "name": "Is Empty",
+                      "description": "Field is empty",
+                      "value": "empty",
+                      "displayName": "Is Empty"
+                    },
+                    {
+                      "name": "Is Not Empty",
+                      "description": "Field is not empty",
+                      "value": "not_empty",
+                      "displayName": "Is Not Empty"
+                    },
+                    {
+                      "name": "Is True",
+                      "description": "Boolean field is true",
+                      "value": "boolean",
+                      "displayName": "Is True"
+                    },
+                    {
+                      "name": "Link Row Does Not Have",
+                      "description": "Field does not have link ID",
+                      "value": "link_row_has_not",
+                      "displayName": "Link Row Does Not Have"
+                    },
+                    {
+                      "name": "Link Row Has",
+                      "description": "Field has link ID",
+                      "value": "link_row_has",
+                      "displayName": "Link Row Has"
+                    },
+                    {
+                      "name": "Lower Than",
+                      "description": "Field is lower than value",
+                      "value": "lower_than",
+                      "displayName": "Lower Than"
+                    },
+                    {
+                      "name": "Not Equal",
+                      "description": "Field is not equal to value",
+                      "value": "not_equal",
+                      "displayName": "Not Equal"
+                    },
+                    {
+                      "name": "Single Select Equal",
+                      "description": "Field selected option is value",
+                      "value": "single_select_equal",
+                      "displayName": "Single Select Equal"
+                    },
+                    {
+                      "name": "Single Select Not Equal",
+                      "description": "Field selected option is not value",
+                      "value": "single_select_not_equal",
+                      "displayName": "Single Select Not Equal"
+                    }
+                  ]
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "Value to compare to",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Filter Type",
+          "name": "filterType",
+          "type": "options",
+          "description": "Indicates that the rows must match all the provided filters",
+          "value": "AND",
+          "default": "AND",
+          "options": [
+            {
+              "name": "AND",
+              "description": "Indicates that the rows must match all the provided filters",
+              "value": "AND",
+              "displayName": "And"
+            },
+            {
+              "name": "OR",
+              "description": "Indicates that the rows only have to match one of the filters",
+              "value": "OR",
+              "displayName": "Or"
+            }
+          ]
+        },
+        {
+          "displayName": "Search Term",
+          "name": "search",
+          "type": "string",
+          "description": "Text to match (can be in any column)",
+          "default": ""
+        },
+        {
+          "displayName": "Sorting",
+          "name": "order",
+          "type": "fixedCollection",
+          "description": "Set the sort order of the result rows",
+          "placeholder": "Add Sort Order",
+          "default": {},
+          "options": [
+            {
+              "name": "fields",
+              "displayName": "Field",
+              "values": [
+                {
+                  "displayName": "Field Name or ID",
+                  "name": "field",
+                  "type": "options",
+                  "description": "Field name to sort by. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                  "default": "",
+                  "typeOptions": {
+                    "loadOptionsMethod": "getTableFields"
+                  }
+                },
+                {
+                  "displayName": "Direction",
+                  "name": "direction",
+                  "type": "options",
+                  "description": "Sort in ascending order",
+                  "default": "",
+                  "options": [
+                    {
+                      "name": "ASC",
+                      "description": "Sort in ascending order",
+                      "displayName": "Asc"
+                    },
+                    {
+                      "name": "DESC",
+                      "description": "Sort in descending order",
+                      "value": "-",
+                      "displayName": "Desc"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Operation_operationFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a row",
+      "action": "Create a row",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a row",
+      "action": "Delete a row",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Retrieve a row",
+      "action": "Get a row",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Retrieve many rows",
+      "action": "Get many rows",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "description": "Update a row",
+      "action": "Update a row",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "row": [
+      {
+        "name": "Create",
+        "description": "Create a row",
+        "action": "Create a row",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a row",
+        "action": "Delete a row",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Retrieve a row",
+        "action": "Get a row",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Retrieve many rows",
+        "action": "Get many rows",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update a row",
+        "action": "Update a row",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "baserowApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \":\" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ]
+        }
+      }
+    },
+    "databaseId": {
+      "required": true
+    },
+    "tableId": {
+      "required": true
+    },
+    "rowId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ]
+        }
+      }
+    },
+    "dataToSend": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      }
+    },
+    "inputsToIgnore": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create",
+            "update"
+          ],
+          "dataToSend": [
+            "autoMapInputData"
+          ]
+        }
+      }
+    },
+    "fieldsUi": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create",
+            "update"
+          ],
+          "dataToSend": [
+            "defineBelow"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "additionalOptions": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "row",
+          "name": "Row",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a row"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a row"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Retrieve a row"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Retrieve many rows"
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": "Update a row"
+        }
+      ]
+    },
+    "databaseId": {
+      "type": "options",
+      "displayName": "Database Name or ID",
+      "name": "databaseId",
+      "typeOptions": {
+        "loadOptionsMethod": "getDatabaseIds"
+      },
+      "possibleValues": []
+    },
+    "tableId": {
+      "type": "options",
+      "displayName": "Table Name or ID",
+      "name": "tableId",
+      "typeOptions": {
+        "loadOptionsMethod": "getTableIds"
+      },
+      "possibleValues": []
+    },
+    "rowId": {
+      "type": "string",
+      "displayName": "Row ID",
+      "name": "rowId"
+    },
+    "dataToSend": {
+      "type": "options",
+      "displayName": "Data to Send",
+      "name": "dataToSend",
+      "possibleValues": [
+        {
+          "value": "autoMapInputData",
+          "name": "Auto-Map Input Data to Columns",
+          "description": "Use when node input properties match destination column names"
+        },
+        {
+          "value": "defineBelow",
+          "name": "Define Below for Each Column",
+          "description": "Set the value for each destination column"
+        }
+      ]
+    },
+    "inputsToIgnore": {
+      "type": "string",
+      "displayName": "Inputs to Ignore",
+      "name": "inputsToIgnore"
+    },
+    "fieldsUi": {
+      "type": "fixedCollection",
+      "displayName": "Fields to Send",
+      "name": "fieldsUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "fieldValues",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Field Name or ID",
+              "name": "fieldId",
+              "type": "options",
+              "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+              "default": "",
+              "typeOptions": {
+                "loadOptionsMethod": "getTableFields"
+              }
+            },
+            {
+              "displayName": "Field Value",
+              "name": "fieldValue",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      }
+    },
+    "additionalOptions": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "additionalOptions",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Filters",
+          "name": "filters",
+          "type": "fixedCollection",
+          "description": "Filter rows based on comparison operators",
+          "placeholder": "Add Filter",
+          "value": "contains",
+          "default": {},
+          "options": [
+            {
+              "name": "fields",
+              "displayName": "Field",
+              "values": [
+                {
+                  "displayName": "Field Name or ID",
+                  "name": "field",
+                  "type": "options",
+                  "description": "Field to compare. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                  "default": "",
+                  "typeOptions": {
+                    "loadOptionsMethod": "getTableFields"
+                  }
+                },
+                {
+                  "displayName": "Filter",
+                  "name": "operator",
+                  "type": "options",
+                  "description": "Operator to compare field and value with",
+                  "value": "contains",
+                  "default": "equal",
+                  "options": [
+                    {
+                      "name": "Contains",
+                      "description": "Field contains value",
+                      "value": "contains",
+                      "displayName": "Contains"
+                    },
+                    {
+                      "name": "Contains Not",
+                      "description": "Field does not contain value",
+                      "value": "contains_not",
+                      "displayName": "Contains Not"
+                    },
+                    {
+                      "name": "Date After Date",
+                      "description": "Field after this date. Format: 'YYYY-MM-DD'.",
+                      "value": "date_after",
+                      "displayName": "Date After Date"
+                    },
+                    {
+                      "name": "Date Before Date",
+                      "description": "Field before this date. Format: 'YYYY-MM-DD'.",
+                      "value": "date_before",
+                      "displayName": "Date Before Date"
+                    },
+                    {
+                      "name": "Date Equal",
+                      "description": "Field is date. Format: 'YYYY-MM-DD'.",
+                      "value": "date_equal",
+                      "displayName": "Date Equal"
+                    },
+                    {
+                      "name": "Date Equals Month",
+                      "description": "Field in this month. Format: string.",
+                      "value": "date_equals_month",
+                      "displayName": "Date Equals Month"
+                    },
+                    {
+                      "name": "Date Equals Today",
+                      "description": "Field is today. Format: string.",
+                      "value": "date_equals_today",
+                      "displayName": "Date Equals Today"
+                    },
+                    {
+                      "name": "Date Equals Year",
+                      "description": "Field in this year. Format: string.",
+                      "value": "date_equals_year",
+                      "displayName": "Date Equals Year"
+                    },
+                    {
+                      "name": "Date Not Equal",
+                      "description": "Field is not date. Format: 'YYYY-MM-DD'.",
+                      "value": "date_not_equal",
+                      "displayName": "Date Not Equal"
+                    },
+                    {
+                      "name": "Equal",
+                      "description": "Field is equal to value",
+                      "value": "equal",
+                      "displayName": "Equal"
+                    },
+                    {
+                      "name": "Filename Contains",
+                      "description": "Field filename contains value",
+                      "value": "filename_contains",
+                      "displayName": "Filename Contains"
+                    },
+                    {
+                      "name": "Higher Than",
+                      "description": "Field is higher than value",
+                      "value": "higher_than",
+                      "displayName": "Higher Than"
+                    },
+                    {
+                      "name": "Is Empty",
+                      "description": "Field is empty",
+                      "value": "empty",
+                      "displayName": "Is Empty"
+                    },
+                    {
+                      "name": "Is Not Empty",
+                      "description": "Field is not empty",
+                      "value": "not_empty",
+                      "displayName": "Is Not Empty"
+                    },
+                    {
+                      "name": "Is True",
+                      "description": "Boolean field is true",
+                      "value": "boolean",
+                      "displayName": "Is True"
+                    },
+                    {
+                      "name": "Link Row Does Not Have",
+                      "description": "Field does not have link ID",
+                      "value": "link_row_has_not",
+                      "displayName": "Link Row Does Not Have"
+                    },
+                    {
+                      "name": "Link Row Has",
+                      "description": "Field has link ID",
+                      "value": "link_row_has",
+                      "displayName": "Link Row Has"
+                    },
+                    {
+                      "name": "Lower Than",
+                      "description": "Field is lower than value",
+                      "value": "lower_than",
+                      "displayName": "Lower Than"
+                    },
+                    {
+                      "name": "Not Equal",
+                      "description": "Field is not equal to value",
+                      "value": "not_equal",
+                      "displayName": "Not Equal"
+                    },
+                    {
+                      "name": "Single Select Equal",
+                      "description": "Field selected option is value",
+                      "value": "single_select_equal",
+                      "displayName": "Single Select Equal"
+                    },
+                    {
+                      "name": "Single Select Not Equal",
+                      "description": "Field selected option is not value",
+                      "value": "single_select_not_equal",
+                      "displayName": "Single Select Not Equal"
+                    }
+                  ]
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "Value to compare to",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Filter Type",
+          "name": "filterType",
+          "type": "options",
+          "description": "Indicates that the rows must match all the provided filters",
+          "value": "AND",
+          "default": "AND",
+          "options": [
+            {
+              "name": "AND",
+              "description": "Indicates that the rows must match all the provided filters",
+              "value": "AND",
+              "displayName": "And"
+            },
+            {
+              "name": "OR",
+              "description": "Indicates that the rows only have to match one of the filters",
+              "value": "OR",
+              "displayName": "Or"
+            }
+          ]
+        },
+        {
+          "displayName": "Search Term",
+          "name": "search",
+          "type": "string",
+          "description": "Text to match (can be in any column)",
+          "default": ""
+        },
+        {
+          "displayName": "Sorting",
+          "name": "order",
+          "type": "fixedCollection",
+          "description": "Set the sort order of the result rows",
+          "placeholder": "Add Sort Order",
+          "default": {},
+          "options": [
+            {
+              "name": "fields",
+              "displayName": "Field",
+              "values": [
+                {
+                  "displayName": "Field Name or ID",
+                  "name": "field",
+                  "type": "options",
+                  "description": "Field name to sort by. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                  "default": "",
+                  "typeOptions": {
+                    "loadOptionsMethod": "getTableFields"
+                  }
+                },
+                {
+                  "displayName": "Direction",
+                  "name": "direction",
+                  "type": "options",
+                  "description": "Sort in ascending order",
+                  "default": "",
+                  "options": [
+                    {
+                      "name": "ASC",
+                      "description": "Sort in ascending order",
+                      "displayName": "Asc"
+                    },
+                    {
+                      "name": "DESC",
+                      "description": "Sort in descending order",
+                      "value": "-",
+                      "displayName": "Desc"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [
+      "POST"
+    ],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "inputsToIgnore",
+        "text": "Enter properties..."
+      },
+      {
+        "field": "fieldsUi",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalOptions",
+        "text": "Add option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

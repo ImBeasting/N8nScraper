@@ -1,0 +1,60 @@
+{
+  "issue_id": "_claude_code_issue_003",
+  "title": "HttpRequest extracting from V2 (45 properties) instead of V3 (89 properties) - missing latest version features",
+  "severity": "medium",
+  "status": "new",
+  "priority": 3,
+  "metadata": {
+    "created_at": "2025-11-13T17:08:49Z",
+    "created_by": "claude_code",
+    "affected_nodes": "HttpRequest (and potentially other versioned nodes with V3/V4 versions)",
+    "validation_session": "comprehensive_audit_2025-11-13",
+    "related_issues": "Related to issue #001 - versioned node extraction problems"
+  },
+  "description": {
+    "problem": "HttpRequest node extraction appears to be using V2 source (45 properties) instead of the latest V3 source (89 properties), missing nearly 50% of the node's current capabilities",
+    "impact": "MEDIUM - HttpRequest is one of the most commonly used n8n nodes. The extracted documentation shows versions [3, 4, 4.1, 4.2, 4.3] but only has 42 properties. Source analysis shows V2 has ~45 properties while V3 has 89 properties. This means AI training is missing critical V3/V4 features like enhanced authentication, new parameter options, and modern HTTP capabilities. Users learning from this documentation will have incomplete information about 47 properties (53% of V3 capabilities).",
+    "root_cause": "The version resolution logic in the extractor may be defaulting to V2 when multiple versions exist, or the V3/Description.ts file structure is not being properly parsed. The extractor successfully identifies that versions 3-4.3 exist (shown in node_info.version array) but the property extraction appears to come from an earlier version source file.",
+    "evidence": [
+      "Extracted data shows versions but limited properties:",
+      "  Command: jq '.node_info.version' extracted_docs/httprequest_data.json",
+      "  Result: ['3', '4', '4.1', '4.2', '4.3']",
+      "  Command: jq '.properties | length' extracted_docs/httprequest_data.json",
+      "  Result: 42",
+      "",
+      "Source file analysis shows version discrepancy:",
+      "  V2 source: n8n/packages/nodes-base/nodes/HttpRequest/V2/HttpRequestV2.node.ts",
+      "  Command: grep -r 'displayName:' n8n/packages/nodes-base/nodes/HttpRequest/V2 --include='*.ts' | wc -l",
+      "  Result: 45 (matches extracted count ~42)",
+      "",
+      "  V3 source: n8n/packages/nodes-base/nodes/HttpRequest/V3/Description.ts",
+      "  Command: grep -c 'displayName:' n8n/packages/nodes-base/nodes/HttpRequest/V3/Description.ts",
+      "  Result: 89 (47 more properties than extracted)",
+      "",
+      "Missing properties analysis:",
+      "  Expected from V3: 89 properties",
+      "  Currently extracted: 42 properties",
+      "  Missing: 47 properties (53% loss)",
+      "",
+      "Source file structure:",
+      "  V1: HttpRequest/V1/HttpRequestV1.node.ts (legacy)",
+      "  V2: HttpRequest/V2/HttpRequestV2.node.ts (45 properties)",
+      "  V3: HttpRequest/V3/Description.ts (89 properties) ← Should extract from here",
+      "  Base: HttpRequest/HttpRequest.node.ts (wrapper/router)",
+      "",
+      "_source field analysis:",
+      "  Command: jq '._source' extracted_docs/httprequest_data.json",
+      "  Result: null",
+      "  Expected: Should show which source file was used for extraction",
+      "  Issue: _source field not being populated, making debugging difficult"
+    ],
+    "fix_approach": "1. Enhance version resolution in n8n_node_extractor.py:\n   - When multiple versions exist (V1, V2, V3), default to HIGHEST version\n   - Currently appears to default to V2 or earlier version\n   - Implement version comparison: V3 > V2 > V1\n   - For numeric versions: 4 > 3 > 2 > 1\n\n2. Add V3/Description.ts pattern recognition:\n   - V3 nodes may use Description.ts instead of <NodeName>V3.node.ts\n   - Check for V3/Description.ts when V3 directory exists\n   - This pattern may be used by other nodes as well\n\n3. Populate _source field for debugging:\n   - Always record which source file was used for extraction\n   - Format: { 'file': 'path/to/source.ts', 'version': '3', 'timestamp': '...' }\n   - This makes debugging version issues much easier\n\n4. Version precedence logic:\n   - If V4 exists, use V4\n   - Else if V3 exists, use V3\n   - Else if V2 exists, use V2\n   - Else use V1 or base\n   - Handle both uppercase (V3) and lowercase (v3) patterns\n\n5. Testing HttpRequest fix:\n   - Delete extracted_docs/httprequest_data.json\n   - Re-run: python3 n8n_node_extractor.py extract HttpRequest\n   - Verify property count: jq '.properties | length' extracted_docs/httprequest_data.json\n   - Expected: ~89 properties (not 42)\n   - Verify _source: jq '._source' extracted_docs/httprequest_data.json\n   - Expected: Shows V3/Description.ts\n\n6. Test other potentially affected nodes:\n   - Check all nodes with V3 or V4 directories\n   - Verify they're extracting from latest version\n   - Document any that are using older versions\n\n7. Validation commands:\n   find n8n/packages/nodes-base/nodes -type d -name 'V3' -o -name 'v3' | wc -l\n   # For each V3 node, verify extraction is from V3 not V2"
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

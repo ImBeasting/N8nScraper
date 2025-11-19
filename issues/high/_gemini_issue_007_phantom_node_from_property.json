@@ -1,0 +1,34 @@
+{
+  "issue_id": "_gemini_issue_007",
+  "title": "Phantom node `setInputsNotice` created from a property in the `Evaluation` node",
+  "severity": "high",
+  "status": "resolved",
+  "priority": 5,
+  "metadata": {
+    "created_at": "2025-11-11T12:00:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "Evaluation, setInputsNotice (phantom)"
+  },
+  "description": {
+    "problem": "The extractor incorrectly identifies a `notice` property within the `Evaluation` node as a new, separate node. This results in the creation of a 'phantom' `setinputsnotice_data.json` file which is incomplete and should not exist.",
+    "impact": "HIGH - This bug pollutes the dataset with a non-existent node and hides the `setInputsNotice` property from its actual parent, the `Evaluation` node. It points to a critical flaw in the node discovery logic that could be creating other phantom nodes. This was the root cause for the 'missing group' and 'missing icon' issues in the validation report.",
+    "root_cause": "The node discovery mechanism in `n8n_node_extractor.py` is too simplistic. It appears to be identifying any object with a `name` property within a `properties` array as a new node definition. It fails to distinguish between a top-level node class and a simple property that happens to have a `name` field (like a notice).",
+    "evidence": [
+      "A phantom file `extracted_docs/setinputsnotice_data.json` was created.",
+      "The `grep` command confirmed the origin: `grep -r \"setInputsNotice\" n8n/packages/nodes-base/nodes/ --include=\"*.ts\"` returned `n8n/packages/nodes-base/nodes/Evaluation/Evaluation/Description.node.ts`.",
+      "The source file shows `setInputsNotice` is merely one property among many in the `Evaluation` node's description, not a separate node class."
+    ],
+    "fix_approach": "The node discovery logic in `n8n_node_extractor.py` must be fundamentally improved.\n1. The script should only consider TypeScript classes that `implements INodeType` or extend `VersionedNodeType` as the starting point for a new node extraction.\n2. The parser should be restricted to the scope of that class definition when extracting properties.\n3. It must not recursively interpret objects inside the main `properties` array as new, independent nodes."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  },
+  "resolved_by": "claude_code",
+  "resolved_at": "2025-11-13T19:25:00Z",
+  "resolved_with_fix": "fix_024",
+  "resolution_note": "Duplicate of _gemini_cli_issue_004. Manually removed spurious setinputsnotice files. Verified files no longer exist."
+}

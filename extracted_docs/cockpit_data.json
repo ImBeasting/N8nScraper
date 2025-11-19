@@ -1,0 +1,1096 @@
+{
+  "node_info": {
+    "icon": {
+      "light": "file:cockpit.svg",
+      "dark": "file:cockpit.dark.svg"
+    },
+    "defaults": {
+      "name": "Cockpit"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "cockpitApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getCollections",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Cockpit",
+    "name": "cockpit",
+    "description": "Consume Cockpit API",
+    "subtitle": "={{ $parameter[\"operation\"] + \": \" + $parameter[\"resource\"] }}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.cockpit",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Marketing",
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/cockpit/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.cockpit/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "collection",
+      "default": "collection",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Collection",
+          "value": "collection",
+          "displayName": "Collection"
+        },
+        {
+          "name": "Form",
+          "value": "form",
+          "displayName": "Form"
+        },
+        {
+          "name": "Singleton",
+          "value": "singleton",
+          "displayName": "Singleton"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a collection entry",
+      "action": "Create a collection entry",
+      "value": "create",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create an Entry",
+          "description": "Create a collection entry",
+          "action": "Create a collection entry",
+          "value": "create",
+          "displayName": "Create An Entry"
+        },
+        {
+          "name": "Get Many Entries",
+          "description": "Get many collection entries",
+          "action": "Get many collection entries",
+          "value": "getAll",
+          "displayName": "Get Many Entries"
+        },
+        {
+          "name": "Update an Entry",
+          "description": "Update a collection entry",
+          "action": "Update a collection entry",
+          "value": "update",
+          "displayName": "Update An Entry"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ]
+        }
+      },
+      "_source": "Collection_collectionOperations"
+    },
+    {
+      "displayName": "Collection Name or ID",
+      "name": "collection",
+      "type": "options",
+      "description": "Name of the collection to operate on. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getCollections"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ]
+        }
+      },
+      "_source": "Collection_collectionFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "collection"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Collection_collectionFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "collection"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Collection_collectionFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Comma-separated list of fields to get",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Fields",
+          "name": "fields",
+          "type": "string",
+          "description": "Comma-separated list of fields to get",
+          "placeholder": "_id,name",
+          "default": ""
+        },
+        {
+          "displayName": "Filter Query",
+          "name": "filter",
+          "type": "json",
+          "description": "Filter query in <a href=\"https://jeroen.github.io/mongolite/query-data.html\">Mongolite format</a>",
+          "placeholder": "{\"name\": \"Jim\"}",
+          "default": "",
+          "typeOptions": {
+            "alwaysOpenEditWindow": true
+          }
+        },
+        {
+          "displayName": "Language",
+          "name": "language",
+          "type": "string",
+          "description": "Return normalized language fields",
+          "default": ""
+        },
+        {
+          "displayName": "Populate",
+          "name": "populate",
+          "type": "boolean",
+          "description": "Whether to resolve linked collection items",
+          "default": true
+        },
+        {
+          "displayName": "RAW Data",
+          "name": "rawData",
+          "type": "boolean",
+          "description": "Whether to return the data exactly in the way it got received from the API",
+          "default": false
+        },
+        {
+          "displayName": "Skip",
+          "name": "skip",
+          "type": "number",
+          "description": "Skip number of entries",
+          "default": ""
+        },
+        {
+          "displayName": "Sort Query",
+          "name": "sort",
+          "type": "json",
+          "description": "Sort query in <a href=\"https://jeroen.github.io/mongolite/query-data.html\">Mongolite format</a>",
+          "placeholder": "{\"price\": -1}",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Collection_collectionFields"
+    },
+    {
+      "displayName": "Entry ID",
+      "name": "id",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Collection_collectionFields"
+    },
+    {
+      "displayName": "JSON Data Fields",
+      "name": "jsonDataFields",
+      "type": "boolean",
+      "description": "Whether new entry fields should be set via the value-key pair UI or JSON",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "_source": "Collection_collectionFields"
+    },
+    {
+      "displayName": "Entry Data",
+      "name": "dataFieldsJson",
+      "type": "json",
+      "description": "Entry data to send as JSON",
+      "default": "",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "jsonDataFields": [
+            true
+          ],
+          "resource": [
+            "collection"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "_source": "Collection_collectionFields"
+    },
+    {
+      "displayName": "Entry Data",
+      "name": "dataFieldsUi",
+      "type": "fixedCollection",
+      "description": "Name of the field",
+      "default": {},
+      "options": [
+        {
+          "name": "field",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "description": "Name of the field",
+              "default": ""
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "description": "Value of the field",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "jsonDataFields": [
+            false
+          ],
+          "resource": [
+            "collection"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "_source": "Collection_collectionFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Store data from a form submission",
+      "action": "Submit a form",
+      "value": "submit",
+      "default": "submit",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Submit a Form",
+          "description": "Store data from a form submission",
+          "action": "Submit a form",
+          "value": "submit",
+          "displayName": "Submit A Form"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "form"
+          ]
+        }
+      },
+      "_source": "Form_formOperations"
+    },
+    {
+      "displayName": "Form",
+      "name": "form",
+      "type": "string",
+      "description": "Name of the form to operate on",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "form"
+          ]
+        }
+      },
+      "_source": "Form_formFields"
+    },
+    {
+      "displayName": "JSON Data Fields",
+      "name": "jsonDataFields",
+      "type": "boolean",
+      "description": "Whether form fields should be set via the value-key pair UI or JSON",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "form"
+          ],
+          "operation": [
+            "submit"
+          ]
+        }
+      },
+      "_operation": "submit",
+      "_source": "Form_formFields"
+    },
+    {
+      "displayName": "Form Data",
+      "name": "dataFieldsJson",
+      "type": "json",
+      "description": "Form data to send as JSON",
+      "default": "",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "jsonDataFields": [
+            true
+          ],
+          "resource": [
+            "form"
+          ],
+          "operation": [
+            "submit"
+          ]
+        }
+      },
+      "_operation": "submit",
+      "_source": "Form_formFields"
+    },
+    {
+      "displayName": "Form Data",
+      "name": "dataFieldsUi",
+      "type": "fixedCollection",
+      "description": "Name of the field",
+      "default": {},
+      "options": [
+        {
+          "name": "field",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "description": "Name of the field",
+              "default": ""
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "description": "Value of the field",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "jsonDataFields": [
+            false
+          ],
+          "resource": [
+            "form"
+          ],
+          "operation": [
+            "submit"
+          ]
+        }
+      },
+      "_operation": "submit",
+      "_source": "Form_formFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Get a singleton",
+      "action": "Get a singleton",
+      "value": "get",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "description": "Get a singleton",
+          "action": "Get a singleton",
+          "value": "get",
+          "displayName": "Get"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "singleton"
+          ]
+        }
+      },
+      "_source": "Singleton_singletonOperations"
+    },
+    {
+      "displayName": "Singleton Name or ID",
+      "name": "singleton",
+      "type": "options",
+      "description": "Name of the singleton to operate on. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getSingletons"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "singleton"
+          ]
+        }
+      },
+      "_source": "Singleton_singletonFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create an Entry",
+      "description": "Create a collection entry",
+      "action": "Create a collection entry",
+      "value": "create",
+      "displayName": "Create An Entry"
+    },
+    {
+      "name": "Get Many Entries",
+      "description": "Get many collection entries",
+      "action": "Get many collection entries",
+      "value": "getAll",
+      "displayName": "Get Many Entries"
+    },
+    {
+      "name": "Update an Entry",
+      "description": "Update a collection entry",
+      "action": "Update a collection entry",
+      "value": "update",
+      "displayName": "Update An Entry"
+    },
+    {
+      "name": "Submit a Form",
+      "description": "Store data from a form submission",
+      "action": "Submit a form",
+      "value": "submit",
+      "displayName": "Submit A Form"
+    },
+    {
+      "name": "Get",
+      "description": "Get a singleton",
+      "action": "Get a singleton",
+      "value": "get",
+      "displayName": "Get"
+    }
+  ],
+  "operations_by_resource": {
+    "collection": [
+      {
+        "name": "Create an Entry",
+        "description": "Create a collection entry",
+        "action": "Create a collection entry",
+        "value": "create",
+        "displayName": "Create An Entry"
+      },
+      {
+        "name": "Get Many Entries",
+        "description": "Get many collection entries",
+        "action": "Get many collection entries",
+        "value": "getAll",
+        "displayName": "Get Many Entries"
+      },
+      {
+        "name": "Update an Entry",
+        "description": "Update a collection entry",
+        "action": "Update a collection entry",
+        "value": "update",
+        "displayName": "Update An Entry"
+      }
+    ],
+    "form": [
+      {
+        "name": "Submit a Form",
+        "description": "Store data from a form submission",
+        "action": "Submit a form",
+        "value": "submit",
+        "displayName": "Submit A Form"
+      }
+    ],
+    "singleton": [
+      {
+        "name": "Get",
+        "description": "Get a singleton",
+        "action": "Get a singleton",
+        "value": "get",
+        "displayName": "Get"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "cockpitApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{ $parameter[\"operation\"] + \": \" + $parameter[\"resource\"] }}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "singleton"
+          ]
+        }
+      }
+    },
+    "collection": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "collection"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "collection"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "id": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "jsonDataFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "form"
+          ],
+          "operation": [
+            "submit"
+          ]
+        }
+      }
+    },
+    "dataFieldsJson": {
+      "displayOptions": {
+        "show": {
+          "jsonDataFields": [
+            true
+          ],
+          "resource": [
+            "form"
+          ],
+          "operation": [
+            "submit"
+          ]
+        }
+      }
+    },
+    "dataFieldsUi": {
+      "displayOptions": {
+        "show": {
+          "jsonDataFields": [
+            false
+          ],
+          "resource": [
+            "form"
+          ],
+          "operation": [
+            "submit"
+          ]
+        }
+      }
+    },
+    "form": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "form"
+          ]
+        }
+      }
+    },
+    "singleton": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "singleton"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "collection",
+          "name": "Collection",
+          "description": ""
+        },
+        {
+          "value": "form",
+          "name": "Form",
+          "description": ""
+        },
+        {
+          "value": "singleton",
+          "name": "Singleton",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a singleton"
+        }
+      ]
+    },
+    "collection": {
+      "type": "options",
+      "displayName": "Collection Name or ID",
+      "name": "collection",
+      "typeOptions": {
+        "loadOptionsMethod": "getCollections"
+      },
+      "possibleValues": []
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      }
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Fields",
+          "name": "fields",
+          "type": "string",
+          "description": "Comma-separated list of fields to get",
+          "placeholder": "_id,name",
+          "default": ""
+        },
+        {
+          "displayName": "Filter Query",
+          "name": "filter",
+          "type": "json",
+          "description": "Filter query in <a href=\"https://jeroen.github.io/mongolite/query-data.html\">Mongolite format</a>",
+          "placeholder": "{\"name\": \"Jim\"}",
+          "default": "",
+          "typeOptions": {
+            "alwaysOpenEditWindow": true
+          }
+        },
+        {
+          "displayName": "Language",
+          "name": "language",
+          "type": "string",
+          "description": "Return normalized language fields",
+          "default": ""
+        },
+        {
+          "displayName": "Populate",
+          "name": "populate",
+          "type": "boolean",
+          "description": "Whether to resolve linked collection items",
+          "default": true
+        },
+        {
+          "displayName": "RAW Data",
+          "name": "rawData",
+          "type": "boolean",
+          "description": "Whether to return the data exactly in the way it got received from the API",
+          "default": false
+        },
+        {
+          "displayName": "Skip",
+          "name": "skip",
+          "type": "number",
+          "description": "Skip number of entries",
+          "default": ""
+        },
+        {
+          "displayName": "Sort Query",
+          "name": "sort",
+          "type": "json",
+          "description": "Sort query in <a href=\"https://jeroen.github.io/mongolite/query-data.html\">Mongolite format</a>",
+          "placeholder": "{\"price\": -1}",
+          "default": ""
+        }
+      ]
+    },
+    "id": {
+      "type": "string",
+      "displayName": "Entry ID",
+      "name": "id"
+    },
+    "jsonDataFields": {
+      "type": "boolean",
+      "displayName": "JSON Data Fields",
+      "name": "jsonDataFields"
+    },
+    "dataFieldsJson": {
+      "type": "json",
+      "displayName": "Form Data",
+      "name": "dataFieldsJson",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      }
+    },
+    "dataFieldsUi": {
+      "type": "fixedCollection",
+      "displayName": "Form Data",
+      "name": "dataFieldsUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "field",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "description": "Name of the field",
+              "default": ""
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "description": "Value of the field",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "form": {
+      "type": "string",
+      "displayName": "Form",
+      "name": "form"
+    },
+    "singleton": {
+      "type": "options",
+      "displayName": "Singleton Name or ID",
+      "name": "singleton",
+      "typeOptions": {
+        "loadOptionsMethod": "getSingletons"
+      },
+      "possibleValues": []
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

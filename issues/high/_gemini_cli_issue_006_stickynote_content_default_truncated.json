@@ -1,0 +1,33 @@
+{
+  "issue_id": "_gemini_cli_issue_006",
+  "title": "StickyNote node: 'content' property default value truncated",
+  "severity": "high",
+  "status": "new",
+  "priority": 2,
+  "metadata": {
+    "created_at": "2025-11-13T17:20:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "StickyNote (potentially other nodes with long string default values in properties)",
+    "validation_session": "comprehensive_audit_2025-11-13"
+  },
+  "description": {
+    "problem": "The 'default' value for the 'content' property in the StickyNote node is truncated in the extracted JSON, leading to loss of information.",
+    "impact": "HIGH - Significant information loss for the 'default' value of a key property. Users relying on the extracted documentation would not see the full default content or the helpful guide link.",
+    "root_cause": "The extraction logic for string default values in properties might have a character limit or an issue with parsing multi-line strings or strings containing special characters (like newlines or markdown formatting).",
+    "evidence": [
+      "Source file: n8n/packages/nodes-base/nodes/StickyNote/StickyNote.node.ts",
+      "Source snippet: default: \"## I'm a note \\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/sticky-notes/)"",
+      "Extracted file: extracted_docs/stickynote_data.json",
+      "Extracted property 'content' default: \"## I\"",
+      "Command used to verify: jq '.properties[] | select(.name == \"content\") | .default' extracted_docs/stickynote_data.json and manual comparison with source."
+    ],
+    "fix_approach": "1. Review the extraction logic for string default values within properties. \n2. Ensure that the full string content, including special characters and multi-line text, is captured without truncation. \n3. Test with: StickyNote node. \n4. Expected result: The 'default' value for 'content' in 'stickynote_data.json' should match the source exactly. \n5. Validation command: jq '.properties[] | select(.name == \"content\") | .default' extracted_docs/stickynote_data.json should return the full string."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

@@ -1,0 +1,610 @@
+{
+  "node_info": {
+    "icon": "file:npm.svg",
+    "defaults": {
+      "name": "npm"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "npmApi",
+        "required": false
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Npm",
+    "name": "npm",
+    "description": "Consume NPM registry API",
+    "subtitle": "={{ $parameter[\"operation\"] + \": \" + $parameter[\"resource\"] }}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.npm",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/npm/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.npm/"
+        }
+      ],
+      "generic": []
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "package",
+      "default": "package",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Package",
+          "value": "package",
+          "displayName": "Package"
+        },
+        {
+          "name": "Distribution Tag",
+          "value": "distTag",
+          "displayName": "Distribution Tag"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Returns all the metadata for a package at a specific version",
+      "action": "Returns all the metadata for a package at a specific version",
+      "value": "getMetadata",
+      "default": "getMetadata",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get Metadata",
+          "description": "Returns all the metadata for a package at a specific version",
+          "action": "Returns all the metadata for a package at a specific version",
+          "value": "getMetadata",
+          "displayName": "Get Metadata",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/{{ encodeURIComponent($parameter.packageName) "
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "package"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/{{ encodeURIComponent($parameter.packageName) ",
+      "_source": "Package_packageOperations"
+    },
+    {
+      "displayName": "Package Name",
+      "name": "packageName",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "package"
+          ],
+          "operation": [
+            "getMetadata",
+            "getVersions"
+          ]
+        }
+      },
+      "_operation": "getMetadata,getVersions",
+      "_source": "Package_packageFields"
+    },
+    {
+      "displayName": "Package Version",
+      "name": "packageVersion",
+      "type": "string",
+      "default": "latest",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "package"
+          ],
+          "operation": [
+            "getMetadata"
+          ]
+        }
+      },
+      "_operation": "getMetadata",
+      "_source": "Package_packageFields"
+    },
+    {
+      "displayName": "Query",
+      "name": "query",
+      "type": "string",
+      "description": "The query text used to search for packages",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "package"
+          ],
+          "operation": [
+            "search"
+          ]
+        }
+      },
+      "_operation": "search",
+      "_source": "Package_packageFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 10,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "package"
+          ],
+          "operation": [
+            "search"
+          ]
+        }
+      },
+      "_operation": "search",
+      "_source": "Package_packageFields"
+    },
+    {
+      "displayName": "Offset",
+      "name": "offset",
+      "type": "number",
+      "description": "Offset to return results from",
+      "default": 0,
+      "typeOptions": {
+        "minValue": 0
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "package"
+          ],
+          "operation": [
+            "search"
+          ]
+        }
+      },
+      "_operation": "search",
+      "_source": "Package_packageFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Returns all the dist-tags for a package",
+      "action": "Returns all the dist-tags for a package",
+      "value": "getMany",
+      "default": "getMany",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get All",
+          "description": "Returns all the dist-tags for a package",
+          "action": "Returns all the dist-tags for a package",
+          "value": "getMany",
+          "displayName": "Get All",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/-/package/{{ encodeURIComponent($parameter.packageName) "
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "distTag"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/-/package/{{ encodeURIComponent($parameter.packageName) ",
+      "_source": "DistTag_distTagOperations"
+    },
+    {
+      "displayName": "Package Name",
+      "name": "packageName",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "distTag"
+          ],
+          "operation": [
+            "getMany",
+            "update"
+          ]
+        }
+      },
+      "_operation": "getMany,update",
+      "_source": "DistTag_distTagFields"
+    },
+    {
+      "displayName": "Package Version",
+      "name": "packageVersion",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "distTag"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "DistTag_distTagFields"
+    },
+    {
+      "displayName": "Distribution Tag Name",
+      "name": "distTagName",
+      "type": "string",
+      "default": "latest",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "distTag"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "DistTag_distTagFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Get Metadata",
+      "description": "Returns all the metadata for a package at a specific version",
+      "action": "Returns all the metadata for a package at a specific version",
+      "value": "getMetadata",
+      "displayName": "Get Metadata",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/{{ encodeURIComponent($parameter.packageName) "
+    },
+    {
+      "name": "Get All",
+      "description": "Returns all the dist-tags for a package",
+      "action": "Returns all the dist-tags for a package",
+      "value": "getMany",
+      "displayName": "Get All",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/-/package/{{ encodeURIComponent($parameter.packageName) "
+    }
+  ],
+  "operations_by_resource": {
+    "package": [
+      {
+        "name": "Get Metadata",
+        "description": "Returns all the metadata for a package at a specific version",
+        "action": "Returns all the metadata for a package at a specific version",
+        "value": "getMetadata",
+        "displayName": "Get Metadata",
+        "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/{{ encodeURIComponent($parameter.packageName) "
+      }
+    ],
+    "distTag": [
+      {
+        "name": "Get All",
+        "description": "Returns all the dist-tags for a package",
+        "action": "Returns all the dist-tags for a package",
+        "value": "getMany",
+        "displayName": "Get All",
+        "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/-/package/{{ encodeURIComponent($parameter.packageName) "
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "npmApi",
+      "required": false
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{ $credentials.registryUrl }}",
+    "={{ $parameter[\"operation\"] + \": \" + $parameter[\"resource\"] }}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "distTag"
+          ]
+        }
+      }
+    },
+    "packageName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "distTag"
+          ],
+          "operation": [
+            "getMany",
+            "update"
+          ]
+        }
+      }
+    },
+    "packageVersion": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "distTag"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "query": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "package"
+          ],
+          "operation": [
+            "search"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "package"
+          ],
+          "operation": [
+            "search"
+          ]
+        }
+      }
+    },
+    "offset": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "package"
+          ],
+          "operation": [
+            "search"
+          ]
+        }
+      }
+    },
+    "distTagName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "distTag"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "package",
+          "name": "Package",
+          "description": ""
+        },
+        {
+          "value": "distTag",
+          "name": "Distribution Tag",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "getMany",
+          "name": "Get All",
+          "description": "Returns all the dist-tags for a package"
+        }
+      ]
+    },
+    "packageName": {
+      "type": "string",
+      "displayName": "Package Name",
+      "name": "packageName"
+    },
+    "packageVersion": {
+      "type": "string",
+      "displayName": "Package Version",
+      "name": "packageVersion"
+    },
+    "query": {
+      "type": "string",
+      "displayName": "Query",
+      "name": "query"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      }
+    },
+    "offset": {
+      "type": "number",
+      "displayName": "Offset",
+      "name": "offset",
+      "typeOptions": {
+        "minValue": 0
+      }
+    },
+    "distTagName": {
+      "type": "string",
+      "displayName": "Distribution Tag Name",
+      "name": "distTagName"
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

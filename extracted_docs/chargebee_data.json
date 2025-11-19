@@ -1,0 +1,1049 @@
+{
+  "node_info": {
+    "icon": "file:chargebee.png",
+    "defaults": {
+      "name": "Chargebee"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "chargebeeApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Chargebee",
+    "name": "chargebee",
+    "description": "Retrieve data from Chargebee API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.chargebee",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Finance & Accounting"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/chargebee/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.chargebee/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "customer",
+      "default": "invoice",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Customer",
+          "value": "customer",
+          "displayName": "Customer"
+        },
+        {
+          "name": "Invoice",
+          "value": "invoice",
+          "displayName": "Invoice"
+        },
+        {
+          "name": "Subscription",
+          "value": "subscription",
+          "displayName": "Subscription"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a customer",
+      "action": "Create a customer",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a customer",
+          "action": "Create a customer",
+          "value": "create",
+          "displayName": "Create"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "customer"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Properties",
+      "name": "properties",
+      "type": "collection",
+      "description": "Properties to set on the new user",
+      "placeholder": "Add Property",
+      "default": {},
+      "options": [
+        {
+          "displayName": "User ID",
+          "name": "id",
+          "type": "string",
+          "description": "ID for the new customer. If not given, this will be auto-generated.",
+          "default": ""
+        },
+        {
+          "displayName": "First Name",
+          "name": "first_name",
+          "type": "string",
+          "description": "The first name of the customer",
+          "default": ""
+        },
+        {
+          "displayName": "Last Name",
+          "name": "last_name",
+          "type": "string",
+          "description": "The last name of the customer",
+          "default": ""
+        },
+        {
+          "displayName": "Email",
+          "name": "email",
+          "type": "string",
+          "description": "The email address of the customer",
+          "placeholder": "name@email.com",
+          "default": ""
+        },
+        {
+          "displayName": "Phone",
+          "name": "phone",
+          "type": "string",
+          "description": "The phone number of the customer",
+          "default": ""
+        },
+        {
+          "displayName": "Company",
+          "name": "company",
+          "type": "string",
+          "description": "The company of the customer",
+          "default": ""
+        },
+        {
+          "displayName": "Custom Properties",
+          "name": "customProperties",
+          "type": "fixedCollection",
+          "description": "Adds a custom property to set also values which have not been predefined",
+          "placeholder": "Add Custom Property",
+          "default": {},
+          "options": [
+            {
+              "name": "property",
+              "displayName": "Property",
+              "values": [
+                {
+                  "displayName": "Property Name",
+                  "name": "name",
+                  "type": "string",
+                  "description": "Name of the property to set",
+                  "default": ""
+                },
+                {
+                  "displayName": "Property Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "Value of the property to set",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "customer"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Return the invoices",
+      "action": "List an invoice",
+      "value": "list",
+      "default": "list",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "List",
+          "description": "Return the invoices",
+          "action": "List an invoice",
+          "value": "list",
+          "displayName": "List"
+        },
+        {
+          "name": "PDF Invoice URL",
+          "description": "Get URL for the invoice PDF",
+          "action": "Get URL for the invoice PDF",
+          "value": "pdfUrl",
+          "displayName": "Pdf Invoice Url"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Max Results",
+      "name": "maxResults",
+      "type": "number",
+      "description": "Max. amount of results to return(< 100).",
+      "default": 10,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "list"
+          ],
+          "resource": [
+            "invoice"
+          ]
+        }
+      },
+      "_operation": "list"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "fixedCollection",
+      "description": "Filter for invoices",
+      "placeholder": "Add Filter",
+      "value": "is",
+      "default": {},
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "date",
+          "displayName": "Invoice Date",
+          "values": [
+            {
+              "displayName": "Operation",
+              "name": "operation",
+              "type": "options",
+              "description": "Operation to decide where the data should be mapped to",
+              "value": "is",
+              "default": "after",
+              "noDataExpression": true,
+              "options": [
+                {
+                  "name": "Is",
+                  "value": "is",
+                  "displayName": "Is"
+                },
+                {
+                  "name": "Is Not",
+                  "value": "is_not",
+                  "displayName": "Is Not"
+                },
+                {
+                  "name": "After",
+                  "value": "after",
+                  "displayName": "After"
+                },
+                {
+                  "name": "Before",
+                  "value": "before",
+                  "displayName": "Before"
+                }
+              ]
+            },
+            {
+              "displayName": "Date",
+              "name": "value",
+              "type": "dateTime",
+              "description": "Query date",
+              "default": ""
+            }
+          ]
+        },
+        {
+          "name": "total",
+          "displayName": "Invoice Amount",
+          "values": [
+            {
+              "displayName": "Operation",
+              "name": "operation",
+              "type": "options",
+              "description": "Operation to decide where the data should be mapped to",
+              "value": "gte",
+              "default": "gt",
+              "noDataExpression": true,
+              "options": [
+                {
+                  "name": "Greater Equal Than",
+                  "value": "gte",
+                  "displayName": "Greater Equal Than"
+                },
+                {
+                  "name": "Greater Than",
+                  "value": "gt",
+                  "displayName": "Greater Than"
+                },
+                {
+                  "name": "Is",
+                  "value": "is",
+                  "displayName": "Is"
+                },
+                {
+                  "name": "Is Not",
+                  "value": "is_not",
+                  "displayName": "Is Not"
+                },
+                {
+                  "name": "Less Equal Than",
+                  "value": "lte",
+                  "displayName": "Less Equal Than"
+                },
+                {
+                  "name": "Less Than",
+                  "value": "lt",
+                  "displayName": "Less Than"
+                }
+              ]
+            },
+            {
+              "displayName": "Amount",
+              "name": "value",
+              "type": "number",
+              "description": "Query amount",
+              "default": 0,
+              "typeOptions": {
+                "numberPrecision": 2
+              }
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "list"
+          ],
+          "resource": [
+            "invoice"
+          ]
+        }
+      },
+      "_operation": "list"
+    },
+    {
+      "displayName": "Invoice ID",
+      "name": "invoiceId",
+      "type": "string",
+      "description": "The ID of the invoice to get",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "pdfUrl"
+          ],
+          "resource": [
+            "invoice"
+          ]
+        }
+      },
+      "_operation": "pdfUrl"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Cancel a subscription",
+      "action": "Cancel a subscription",
+      "value": "cancel",
+      "default": "delete",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Cancel",
+          "description": "Cancel a subscription",
+          "action": "Cancel a subscription",
+          "value": "cancel",
+          "displayName": "Cancel"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a subscription",
+          "action": "Delete a subscription",
+          "value": "delete",
+          "displayName": "Delete"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "subscription"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Subscription ID",
+      "name": "subscriptionId",
+      "type": "string",
+      "description": "The ID of the subscription to cancel",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "cancel"
+          ],
+          "resource": [
+            "subscription"
+          ]
+        }
+      },
+      "_operation": "cancel"
+    },
+    {
+      "displayName": "Schedule End of Term",
+      "name": "endOfTerm",
+      "type": "boolean",
+      "description": "Whether it will not cancel it directly in will instead schedule the cancelation for the end of the term",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "cancel"
+          ],
+          "resource": [
+            "subscription"
+          ]
+        }
+      },
+      "_operation": "cancel"
+    },
+    {
+      "displayName": "Subscription ID",
+      "name": "subscriptionId",
+      "type": "string",
+      "description": "The ID of the subscription to delete",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ],
+          "resource": [
+            "subscription"
+          ]
+        }
+      },
+      "_operation": "delete"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a customer",
+      "action": "Create a customer",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "List",
+      "description": "Return the invoices",
+      "action": "List an invoice",
+      "value": "list",
+      "displayName": "List"
+    },
+    {
+      "name": "PDF Invoice URL",
+      "description": "Get URL for the invoice PDF",
+      "action": "Get URL for the invoice PDF",
+      "value": "pdfUrl",
+      "displayName": "Pdf Invoice Url"
+    },
+    {
+      "name": "Cancel",
+      "description": "Cancel a subscription",
+      "action": "Cancel a subscription",
+      "value": "cancel",
+      "displayName": "Cancel"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a subscription",
+      "action": "Delete a subscription",
+      "value": "delete",
+      "displayName": "Delete"
+    }
+  ],
+  "operations_by_resource": {
+    "customer": [
+      {
+        "name": "Create",
+        "description": "Create a customer",
+        "action": "Create a customer",
+        "value": "create",
+        "displayName": "Create"
+      }
+    ],
+    "invoice": [
+      {
+        "name": "List",
+        "description": "Return the invoices",
+        "action": "List an invoice",
+        "value": "list",
+        "displayName": "List"
+      },
+      {
+        "name": "PDF Invoice URL",
+        "description": "Get URL for the invoice PDF",
+        "action": "Get URL for the invoice PDF",
+        "value": "pdfUrl",
+        "displayName": "Pdf Invoice Url"
+      }
+    ],
+    "subscription": [
+      {
+        "name": "Cancel",
+        "description": "Cancel a subscription",
+        "action": "Cancel a subscription",
+        "value": "cancel",
+        "displayName": "Cancel"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a subscription",
+        "action": "Delete a subscription",
+        "value": "delete",
+        "displayName": "Delete"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "chargebeeApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "subscription"
+          ]
+        }
+      }
+    },
+    "properties": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "customer"
+          ]
+        }
+      }
+    },
+    "maxResults": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "list"
+          ],
+          "resource": [
+            "invoice"
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "list"
+          ],
+          "resource": [
+            "invoice"
+          ]
+        }
+      }
+    },
+    "invoiceId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "pdfUrl"
+          ],
+          "resource": [
+            "invoice"
+          ]
+        }
+      }
+    },
+    "subscriptionId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ],
+          "resource": [
+            "subscription"
+          ]
+        }
+      }
+    },
+    "endOfTerm": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "cancel"
+          ],
+          "resource": [
+            "subscription"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "customer",
+          "name": "Customer",
+          "description": ""
+        },
+        {
+          "value": "invoice",
+          "name": "Invoice",
+          "description": ""
+        },
+        {
+          "value": "subscription",
+          "name": "Subscription",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "cancel",
+          "name": "Cancel",
+          "description": "Cancel a subscription"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a subscription"
+        }
+      ]
+    },
+    "properties": {
+      "type": "collection",
+      "displayName": "Properties",
+      "name": "properties",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "User ID",
+          "name": "id",
+          "type": "string",
+          "description": "ID for the new customer. If not given, this will be auto-generated.",
+          "default": ""
+        },
+        {
+          "displayName": "First Name",
+          "name": "first_name",
+          "type": "string",
+          "description": "The first name of the customer",
+          "default": ""
+        },
+        {
+          "displayName": "Last Name",
+          "name": "last_name",
+          "type": "string",
+          "description": "The last name of the customer",
+          "default": ""
+        },
+        {
+          "displayName": "Email",
+          "name": "email",
+          "type": "string",
+          "description": "The email address of the customer",
+          "placeholder": "name@email.com",
+          "default": ""
+        },
+        {
+          "displayName": "Phone",
+          "name": "phone",
+          "type": "string",
+          "description": "The phone number of the customer",
+          "default": ""
+        },
+        {
+          "displayName": "Company",
+          "name": "company",
+          "type": "string",
+          "description": "The company of the customer",
+          "default": ""
+        },
+        {
+          "displayName": "Custom Properties",
+          "name": "customProperties",
+          "type": "fixedCollection",
+          "description": "Adds a custom property to set also values which have not been predefined",
+          "placeholder": "Add Custom Property",
+          "default": {},
+          "options": [
+            {
+              "name": "property",
+              "displayName": "Property",
+              "values": [
+                {
+                  "displayName": "Property Name",
+                  "name": "name",
+                  "type": "string",
+                  "description": "Name of the property to set",
+                  "default": ""
+                },
+                {
+                  "displayName": "Property Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "Value of the property to set",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        }
+      ]
+    },
+    "maxResults": {
+      "type": "number",
+      "displayName": "Max Results",
+      "name": "maxResults",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      }
+    },
+    "filters": {
+      "type": "fixedCollection",
+      "displayName": "Filters",
+      "name": "filters",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "date",
+          "displayName": "Invoice Date",
+          "values": [
+            {
+              "displayName": "Operation",
+              "name": "operation",
+              "type": "options",
+              "description": "Operation to decide where the data should be mapped to",
+              "value": "is",
+              "default": "after",
+              "noDataExpression": true,
+              "options": [
+                {
+                  "name": "Is",
+                  "value": "is",
+                  "displayName": "Is"
+                },
+                {
+                  "name": "Is Not",
+                  "value": "is_not",
+                  "displayName": "Is Not"
+                },
+                {
+                  "name": "After",
+                  "value": "after",
+                  "displayName": "After"
+                },
+                {
+                  "name": "Before",
+                  "value": "before",
+                  "displayName": "Before"
+                }
+              ]
+            },
+            {
+              "displayName": "Date",
+              "name": "value",
+              "type": "dateTime",
+              "description": "Query date",
+              "default": ""
+            }
+          ]
+        },
+        {
+          "name": "total",
+          "displayName": "Invoice Amount",
+          "values": [
+            {
+              "displayName": "Operation",
+              "name": "operation",
+              "type": "options",
+              "description": "Operation to decide where the data should be mapped to",
+              "value": "gte",
+              "default": "gt",
+              "noDataExpression": true,
+              "options": [
+                {
+                  "name": "Greater Equal Than",
+                  "value": "gte",
+                  "displayName": "Greater Equal Than"
+                },
+                {
+                  "name": "Greater Than",
+                  "value": "gt",
+                  "displayName": "Greater Than"
+                },
+                {
+                  "name": "Is",
+                  "value": "is",
+                  "displayName": "Is"
+                },
+                {
+                  "name": "Is Not",
+                  "value": "is_not",
+                  "displayName": "Is Not"
+                },
+                {
+                  "name": "Less Equal Than",
+                  "value": "lte",
+                  "displayName": "Less Equal Than"
+                },
+                {
+                  "name": "Less Than",
+                  "value": "lt",
+                  "displayName": "Less Than"
+                }
+              ]
+            },
+            {
+              "displayName": "Amount",
+              "name": "value",
+              "type": "number",
+              "description": "Query amount",
+              "default": 0,
+              "typeOptions": {
+                "numberPrecision": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "invoiceId": {
+      "type": "string",
+      "displayName": "Invoice ID",
+      "name": "invoiceId"
+    },
+    "subscriptionId": {
+      "type": "string",
+      "displayName": "Subscription ID",
+      "name": "subscriptionId"
+    },
+    "endOfTerm": {
+      "type": "boolean",
+      "displayName": "Schedule End of Term",
+      "name": "endOfTerm"
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "properties",
+        "text": "Add Property"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

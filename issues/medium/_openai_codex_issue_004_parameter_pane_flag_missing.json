@@ -1,0 +1,31 @@
+{
+  "issue_id": "_openai_codex_issue_004",
+  "title": "parameterPane setting not captured for wide-layout nodes",
+  "severity": "medium",
+  "status": "new",
+  "priority": 3,
+  "metadata": {
+    "created_at": "2025-11-06T17:11:00Z",
+    "created_by": "openai_codex",
+    "affected_nodes": "MySQL, Postgres, If V2, Filter V2, QuestDB, Snowflake"
+  },
+  "description": {
+    "problem": "`node_info` never includes the optional `parameterPane` property, even when nodes request a wide parameter pane.",
+    "impact": "Medium – losing this flag breaks UI layout hints and causes wide-schema nodes (SQL, filters) to render in the cramped default pane for documentation and tooling.",
+    "root_cause": "The metadata extraction step reads a fixed whitelist of description keys and ignores `parameterPane`. Versioned nodes spread a base description that contains `parameterPane: 'wide'`, but the extractor discards it.",
+    "evidence": [
+      "extracted_docs/mysql_data.json: node_info.parameterPane → null",
+      "n8n/packages/nodes-base/nodes/MySql/MySql.node.ts:11-24 sets `parameterPane: 'wide'` in baseDescription",
+      "extracted_docs/if_data.json: node_info.parameterPane → null",
+      "n8n/packages/nodes-base/nodes/If/V2/IfV2.node.ts:24-33 includes `parameterPane: 'wide'`"
+    ],
+    "fix_approach": "1. Add `parameterPane` to the metadata fields copied in `n8n_node_extractor.py`. 2. Preserve both string and boolean values. 3. Re-extract MySQL and If nodes to confirm the field appears. 4. Run `python3 validate_extraction.py` and spot-check other wide-pane nodes (Postgres, QuestDB) for the new metadata."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

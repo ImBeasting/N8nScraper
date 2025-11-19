@@ -1,0 +1,59 @@
+{
+  "issue_id": "_claude_issue_028",
+  "title": "Dynamic outputs (expression-based) not detected, showing empty array",
+  "severity": "high",
+  "status": "resolved",
+  "priority": 2,
+  "metadata": {
+    "created_at": "2025-11-11T00:00:00Z",
+    "created_by": "claude_code",
+    "affected_nodes": "Switch, Merge, ExecuteWorkflow, ExecuteWorkflowTrigger, QuickChart, ExecutionData (6 nodes confirmed)"
+  },
+  "description": {
+    "problem": "Nodes with dynamic outputs defined as template literal expressions show 'outputs': [] (empty array) instead of detecting and documenting the dynamic nature",
+    "impact": "HIGH - Branching and routing nodes (Switch, Merge) show no outputs in documentation, breaking workflow understanding. AI models cannot learn branching logic. Users cannot understand output structure. Affects 6+ nodes (1.3% of total), including core workflow functionality nodes.",
+    "root_cause": "The outputs extraction regex pattern 'outputs:\\s*\\[([^\\]]+)\\]' only matches static array patterns like:\n  outputs: [NodeConnectionTypes.Main, NodeConnectionTypes.Main]\n\nIt CANNOT match:\n1. Template literal expressions: outputs: `={{...}}`\n2. Function calls: outputs: functionName()\n3. Multi-line complex expressions\n\nNodes with dynamic outputs in V2+ use expression syntax that calculates outputs at runtime based on node configuration.",
+    "evidence": [
+      "Switch V1 source (lines 24-30) - SHOULD BE EXTRACTABLE:",
+      "  outputs: [",
+      "    NodeConnectionTypes.Main,",
+      "    NodeConnectionTypes.Main,",
+      "    NodeConnectionTypes.Main,",
+      "    NodeConnectionTypes.Main,",
+      "  ],",
+      "  outputNames: ['0', '1', '2', '3'],",
+      "",
+      "Switch V3 source (line 61) - DYNAMIC:",
+      "  outputs: `={{(${configuredOutputs})($parameter)}}`,",
+      "",
+      "Switch extracted result:",
+      "  \"outputs\": []",
+      "",
+      "If node V2 source (lines 29-30) - STATIC (works correctly):",
+      "  outputs: [NodeConnectionTypes.Main, NodeConnectionTypes.Main],",
+      "  outputNames: ['true', 'false'],",
+      "",
+      "If extracted result:",
+      "  \"outputs\": [\"Main\", \"Main\"]  \u2713 SUCCESS",
+      "",
+      "Validation report shows 6 nodes with missing outputs:",
+      "  cat validation_report.json | jq '.issues.missing_outputs'",
+      "  Result: [\"switch_data.json\", \"setinputsnotice_data.json\", \"webhook_data.json\",",
+      "           \"stickynote_data.json\", \"stopanderror_data.json\", \"respondtowebhook_data.json\"]",
+      "",
+      "Switch source has outputs defined but not extracted:",
+      "  grep -A 5 'outputs:' n8n/packages/nodes-base/nodes/Switch/V3/SwitchV3.node.ts",
+      "  Result: Shows template expression pattern"
+    ],
+    "fix_approach": "1. Add detection for expression-based outputs in n8n_node_extractor.py line ~2089:\n   # After existing static array detection fails...\n   if not self.node_info.get('outputs'):\n       # Check for template literal expression: outputs: `={{...}}`\n       outputs_expr_match = re.search(r\"outputs:\\s*`=\\{\\{([^`]+)\\}\\}`\", main)\n       if outputs_expr_match:\n           self.node_info['outputs'] = 'dynamic'\n           self.node_info['outputs_note'] = 'Dynamic outputs based on node configuration'\n\n2. For versioned nodes, add fallback to V1 (simplest version):\n   if self.versioned_base_file and not self.node_info.get('outputs'):\n       v1_path = self.node_dir / \"V1\" / f\"{self.node_name}V1.node.ts\"\n       if v1_path.exists():\n           # Extract static outputs from V1\n\n3. Extract outputNames separately even when outputs are dynamic:\n   if self._version_desc_content and not self.node_info.get('outputNames'):\n       output_names_match = re.search(r\"outputNames:\\s*\\[([^\\]]+)\\]\", self._version_desc_content)\n       if output_names_match:\n           output_names = re.findall(r\"['\\\"](.*)['\\\"]\", output_names_str)\n           self.node_info['outputNames'] = output_names\n\n4. Update markdown generation to show dynamic outputs properly\n\n5. Test on:\n   - Switch (should show 'dynamic' or V1 static outputs + outputNames)\n   - If (regression test - should still work)\n   - Merge, ExecuteWorkflow (should extract outputs)\n   - Filter (should extract outputs)\n\n6. Validation:\n   python3 validate_extraction.py\n   jq '.issues.missing_outputs | length' validation_report.json\n   Expected: 0-1 (down from 6)"
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  },
+  "resolved_by": "claude_code",
+  "resolved_at": "2025-11-12T01:42:13.592256Z"
+}

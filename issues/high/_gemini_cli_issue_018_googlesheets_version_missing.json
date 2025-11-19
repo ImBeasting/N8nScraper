@@ -1,0 +1,33 @@
+{
+  "issue_id": "_gemini_cli_issue_018",
+  "title": "Google Sheets node: 'version' field missing from extracted node_info",
+  "severity": "high",
+  "status": "new",
+  "priority": 2,
+  "metadata": {
+    "created_at": "2025-11-13T20:15:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "Google Sheets (potentially other versioned nodes)",
+    "validation_session": "comprehensive_audit_2025-11-13"
+  },
+  "description": {
+    "problem": "The 'version' field is entirely missing from the extracted 'googlesheets_data.json'. The source 'GoogleSheets.node.ts' defines multiple versions [1, 2, 3, 4, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7].",
+    "impact": "HIGH - Critical information loss. Without version information, it's impossible to track the node's evolution, compatibility, or to correctly identify which version of the node is being used. This severely impacts maintainability and usability.",
+    "root_cause": "The extractor's logic for parsing version information from a VersionedNodeType might be completely failing for Google Sheets, or it might be an edge case where the version array is not being correctly initialized or populated.",
+    "evidence": [
+      "Source file: n8n/packages/nodes-base/nodes/Google/Sheet/GoogleSheets.node.ts",
+      "Source snippet: nodeVersions: { 1: new GoogleSheetsV1(baseDescription), 2: new GoogleSheetsV1(baseDescription), 3: new GoogleSheetsV2(baseDescription), ... }",
+      "Extracted file: extracted_docs/googlesheets_data.json",
+      "Extracted node_info.version: (missing)",
+      "Command used to verify: jq '.node_info.version' extracted_docs/googlesheets_data.json returns null or is not found, and manual comparison with source."
+    ],
+    "fix_approach": "1. Review the extraction logic for the 'version' field in VersionedNodeType nodes, specifically for cases where the version array might be empty or not correctly populated. \n2. Ensure that all versions defined in 'nodeVersions' are correctly extracted and included in the 'version' array. \n3. Test with: Google Sheets node. \n4. Expected result: 'googlesheets_data.json' should have 'version: [\"1\", \"2\", \"3\", \"4\", \"4.1\", \"4.2\", \"4.3\", \"4.4\", \"4.5\", \"4.6\", \"4.7\"]'. \n5. Validation command: jq '.node_info.version' extracted_docs/googlesheets_data.json should return all versions. "
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

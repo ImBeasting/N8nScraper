@@ -1,0 +1,672 @@
+{
+  "node_info": {
+    "icon": "file:humanticai.svg",
+    "defaults": {
+      "name": "Humantic AI"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "humanticAiApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Humantic AI",
+    "name": "humanticAi",
+    "description": "Consume Humantic AI API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.humanticAi",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Analytics"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/humanticai/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.humanticai/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "5 tasks you can automate with the new Notion API ",
+          "icon": "\u26a1\ufe0f",
+          "url": "https://n8n.io/blog/5-tasks-you-can-automate-with-notion-api/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "profile",
+      "default": "profile",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Profile",
+          "value": "profile",
+          "displayName": "Profile"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a profile",
+      "action": "Create a profile",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a profile",
+          "action": "Create a profile",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Get",
+          "description": "Retrieve a profile",
+          "action": "Get a profile",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Update",
+          "description": "Update a profile",
+          "action": "Update a profile",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "profile"
+          ]
+        }
+      },
+      "_source": "Profile_profileOperations"
+    },
+    {
+      "displayName": "User ID",
+      "name": "userId",
+      "type": "string",
+      "description": "The LinkedIn profile URL or email ID for creating a Humantic profile. If you are sending the resume, this should be a unique string.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "profile"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Profile_profileFields"
+    },
+    {
+      "displayName": "Send Resume",
+      "name": "sendResume",
+      "type": "boolean",
+      "description": "Whether to send a resume for a resume based analysis",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "profile"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Profile_profileFields"
+    },
+    {
+      "displayName": "Input Binary Field",
+      "name": "binaryPropertyName",
+      "type": "string",
+      "hint": "The name of the input binary field containing the resume in PDF or DOCX format",
+      "default": "data",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "profile"
+          ],
+          "sendResume": [
+            true
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Profile_profileFields"
+    },
+    {
+      "displayName": "User ID",
+      "name": "userId",
+      "type": "string",
+      "description": "This value is the same as the User ID that was provided when the analysis was created. This could be a LinkedIn URL, email ID, or a unique string in case of resume based analysis.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "profile"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Profile_profileFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Fetch the Humantic profile of the user for a particular persona type. Multiple persona values can be supported using comma as a delimiter.",
+      "placeholder": "Add option",
+      "value": "sales",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Persona",
+          "name": "persona",
+          "type": "multiOptions",
+          "description": "Fetch the Humantic profile of the user for a particular persona type. Multiple persona values can be supported using comma as a delimiter.",
+          "value": "sales",
+          "default": [],
+          "options": [
+            {
+              "name": "Sales",
+              "value": "sales",
+              "displayName": "Sales"
+            },
+            {
+              "name": "Hiring",
+              "value": "hiring",
+              "displayName": "Hiring"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "profile"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Profile_profileFields"
+    },
+    {
+      "displayName": "User ID",
+      "name": "userId",
+      "type": "string",
+      "description": "This value is the same as the User ID that was provided when the analysis was created. Currently only supported for profiles created using LinkedIn URL.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "profile"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Profile_profileFields"
+    },
+    {
+      "displayName": "Send Resume",
+      "name": "sendResume",
+      "type": "boolean",
+      "description": "Whether to send a resume for a resume of the user",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "profile"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Profile_profileFields"
+    },
+    {
+      "displayName": "Text",
+      "name": "text",
+      "type": "string",
+      "description": "Additional text written by the user",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "profile"
+          ],
+          "sendResume": [
+            false
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Profile_profileFields"
+    },
+    {
+      "displayName": "Input Binary Field",
+      "name": "binaryPropertyName",
+      "type": "string",
+      "hint": "The name of the input binary field containing the resume in PDF or DOCX format",
+      "default": "data",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "profile"
+          ],
+          "sendResume": [
+            true
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Profile_profileFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a profile",
+      "action": "Create a profile",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Get",
+      "description": "Retrieve a profile",
+      "action": "Get a profile",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Update",
+      "description": "Update a profile",
+      "action": "Update a profile",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "profile": [
+      {
+        "name": "Create",
+        "description": "Create a profile",
+        "action": "Create a profile",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Get",
+        "description": "Retrieve a profile",
+        "action": "Get a profile",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Update",
+        "description": "Update a profile",
+        "action": "Update a profile",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "humanticAiApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "profile"
+          ]
+        }
+      }
+    },
+    "userId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "profile"
+          ]
+        }
+      }
+    },
+    "sendResume": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "profile"
+          ]
+        }
+      }
+    },
+    "binaryPropertyName": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "profile"
+          ],
+          "sendResume": [
+            true
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "profile"
+          ]
+        }
+      }
+    },
+    "text": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "profile"
+          ],
+          "sendResume": [
+            false
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "profile",
+          "name": "Profile",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a profile"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Retrieve a profile"
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": "Update a profile"
+        }
+      ]
+    },
+    "userId": {
+      "type": "string",
+      "displayName": "User ID",
+      "name": "userId"
+    },
+    "sendResume": {
+      "type": "boolean",
+      "displayName": "Send Resume",
+      "name": "sendResume"
+    },
+    "binaryPropertyName": {
+      "type": "string",
+      "displayName": "Input Binary Field",
+      "name": "binaryPropertyName"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Persona",
+          "name": "persona",
+          "type": "multiOptions",
+          "description": "Fetch the Humantic profile of the user for a particular persona type. Multiple persona values can be supported using comma as a delimiter.",
+          "value": "sales",
+          "default": [],
+          "options": [
+            {
+              "name": "Sales",
+              "value": "sales",
+              "displayName": "Sales"
+            },
+            {
+              "name": "Hiring",
+              "value": "hiring",
+              "displayName": "Hiring"
+            }
+          ]
+        }
+      ]
+    },
+    "text": {
+      "type": "string",
+      "displayName": "Text",
+      "name": "text"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": [
+      {
+        "field": "binaryPropertyName",
+        "text": "The name of the input binary field containing the resume in PDF or DOCX format"
+      },
+      {
+        "field": "binaryPropertyName",
+        "text": "The name of the input binary field containing the resume in PDF or DOCX format"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

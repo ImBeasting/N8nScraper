@@ -1,0 +1,791 @@
+{
+  "node_info": {
+    "icon": "file:contentful.png",
+    "defaults": {
+      "name": "Contentful"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "contentfulApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Contentful",
+    "name": "contentful",
+    "description": "Consume Contentful API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.contentful",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Marketing",
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/contentful/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.contentful/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Source",
+      "name": "source",
+      "type": "options",
+      "description": "Pick where your data comes from, delivery or preview API",
+      "value": "deliveryApi",
+      "default": "deliveryApi",
+      "options": [
+        {
+          "name": "Delivery API",
+          "value": "deliveryApi",
+          "displayName": "Delivery Api"
+        },
+        {
+          "name": "Preview API",
+          "value": "previewApi",
+          "displayName": "Preview Api"
+        }
+      ]
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "default": "entry",
+      "noDataExpression": true,
+      "options": []
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "value": "get",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ]
+        }
+      },
+      "_source": "AssetDescription"
+    },
+    {
+      "displayName": "Environment ID",
+      "name": "environmentId",
+      "type": "string",
+      "description": "The ID for the Contentful environment (e.g. master, staging, etc.). Depending on your plan, you might not have environments. In that case use \"master\".",
+      "default": "master",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get"
+    },
+    {
+      "displayName": "Content Type ID",
+      "name": "contentTypeId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether the data should be returned RAW instead of parsed",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "RAW Data",
+          "name": "rawData",
+          "type": "boolean",
+          "description": "Whether the data should be returned RAW instead of parsed",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get"
+    },
+    {
+      "displayName": "Environment ID",
+      "name": "environmentId",
+      "type": "string",
+      "description": "The ID for the Contentful environment (e.g. master, staging, etc.). Depending on your plan, you might not have environments. In that case use \"master\".",
+      "default": "master",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ],
+          "operation": [
+            "get",
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "get,getAll"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "resource.value"
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "resource.value"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "To search for entries with a specific content type",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Content Type ID",
+          "name": "content_type",
+          "type": "string",
+          "description": "To search for entries with a specific content type",
+          "default": ""
+        },
+        {
+          "displayName": "Equal",
+          "name": "equal",
+          "type": "string",
+          "description": "Search for all data that matches the condition: {attribute}={value}. Attribute can use dot notation.",
+          "placeholder": "fields.title=n8n",
+          "default": ""
+        },
+        {
+          "displayName": "Exclude",
+          "name": "exclude",
+          "type": "string",
+          "description": "Search for all data that matches the condition: {attribute}[nin]={value}. Attribute can use dot notation.",
+          "placeholder": "fields.tags[nin]=accessories,flowers",
+          "default": ""
+        },
+        {
+          "displayName": "Exist",
+          "name": "exist",
+          "type": "string",
+          "description": "Search for all data that matches the condition: {attribute}[exists]={value}. Attribute can use dot notation.",
+          "placeholder": "fields.tags[exists]=true",
+          "default": ""
+        },
+        {
+          "displayName": "Fields",
+          "name": "select",
+          "type": "string",
+          "description": "The select operator allows you to choose what fields to return from an entity. You can choose multiple values by combining comma-separated operators.",
+          "placeholder": "fields.title",
+          "default": ""
+        },
+        {
+          "displayName": "Include",
+          "name": "include",
+          "type": "string",
+          "description": "Search for all data that matches the condition: {attribute}[in]={value}. Attribute can use dot notation.",
+          "placeholder": "fields.tags[in]=accessories,flowers",
+          "default": ""
+        },
+        {
+          "displayName": "Not Equal",
+          "name": "notEqual",
+          "type": "string",
+          "description": "Search for all data that matches the condition: {attribute}[ne]={value}. Attribute can use dot notation.",
+          "placeholder": "fields.title[ne]=n8n",
+          "default": ""
+        },
+        {
+          "displayName": "Order",
+          "name": "order",
+          "type": "string",
+          "description": "You can order items in the response by specifying the order search parameter. You can use sys properties (such as sys.createdAt) or field values (such as fields.myCustomDateField) for ordering.",
+          "placeholder": "sys.createdAt",
+          "default": ""
+        },
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "Full-text search is case insensitive and might return more results than expected. A query will only take values with more than 1 character.",
+          "default": ""
+        },
+        {
+          "displayName": "RAW Data",
+          "name": "rawData",
+          "type": "boolean",
+          "description": "Whether the data should be returned RAW instead of parsed",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Entry ID",
+      "name": "entryId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get"
+    },
+    {
+      "displayName": "Asset ID",
+      "name": "assetId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Get",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "value": "getAll",
+      "displayName": "Get Many"
+    }
+  ],
+  "operations_by_resource": {
+    "resource.value": [
+      {
+        "name": "Get",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "contentfulApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ]
+        }
+      }
+    },
+    "environmentId": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ],
+          "operation": [
+            "get",
+            "getAll"
+          ]
+        }
+      }
+    },
+    "contentTypeId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "resource.value"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "resource.value"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "entryId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "assetId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "resource.value"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "source": {
+      "type": "options",
+      "displayName": "Source",
+      "name": "source",
+      "possibleValues": [
+        {
+          "value": "deliveryApi",
+          "name": "Delivery API",
+          "description": ""
+        },
+        {
+          "value": "previewApi",
+          "name": "Preview API",
+          "description": ""
+        }
+      ]
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": []
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "get",
+          "name": "Get",
+          "description": ""
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": ""
+        }
+      ]
+    },
+    "environmentId": {
+      "type": "string",
+      "displayName": "Environment ID",
+      "name": "environmentId"
+    },
+    "contentTypeId": {
+      "type": "string",
+      "displayName": "Content Type ID",
+      "name": "contentTypeId"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Content Type ID",
+          "name": "content_type",
+          "type": "string",
+          "description": "To search for entries with a specific content type",
+          "default": ""
+        },
+        {
+          "displayName": "Equal",
+          "name": "equal",
+          "type": "string",
+          "description": "Search for all data that matches the condition: {attribute}={value}. Attribute can use dot notation.",
+          "placeholder": "fields.title=n8n",
+          "default": ""
+        },
+        {
+          "displayName": "Exclude",
+          "name": "exclude",
+          "type": "string",
+          "description": "Search for all data that matches the condition: {attribute}[nin]={value}. Attribute can use dot notation.",
+          "placeholder": "fields.tags[nin]=accessories,flowers",
+          "default": ""
+        },
+        {
+          "displayName": "Exist",
+          "name": "exist",
+          "type": "string",
+          "description": "Search for all data that matches the condition: {attribute}[exists]={value}. Attribute can use dot notation.",
+          "placeholder": "fields.tags[exists]=true",
+          "default": ""
+        },
+        {
+          "displayName": "Fields",
+          "name": "select",
+          "type": "string",
+          "description": "The select operator allows you to choose what fields to return from an entity. You can choose multiple values by combining comma-separated operators.",
+          "placeholder": "fields.title",
+          "default": ""
+        },
+        {
+          "displayName": "Include",
+          "name": "include",
+          "type": "string",
+          "description": "Search for all data that matches the condition: {attribute}[in]={value}. Attribute can use dot notation.",
+          "placeholder": "fields.tags[in]=accessories,flowers",
+          "default": ""
+        },
+        {
+          "displayName": "Not Equal",
+          "name": "notEqual",
+          "type": "string",
+          "description": "Search for all data that matches the condition: {attribute}[ne]={value}. Attribute can use dot notation.",
+          "placeholder": "fields.title[ne]=n8n",
+          "default": ""
+        },
+        {
+          "displayName": "Order",
+          "name": "order",
+          "type": "string",
+          "description": "You can order items in the response by specifying the order search parameter. You can use sys properties (such as sys.createdAt) or field values (such as fields.myCustomDateField) for ordering.",
+          "placeholder": "sys.createdAt",
+          "default": ""
+        },
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "Full-text search is case insensitive and might return more results than expected. A query will only take values with more than 1 character.",
+          "default": ""
+        },
+        {
+          "displayName": "RAW Data",
+          "name": "rawData",
+          "type": "boolean",
+          "description": "Whether the data should be returned RAW instead of parsed",
+          "default": false
+        }
+      ]
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      }
+    },
+    "entryId": {
+      "type": "string",
+      "displayName": "Entry ID",
+      "name": "entryId"
+    },
+    "assetId": {
+      "type": "string",
+      "displayName": "Asset ID",
+      "name": "assetId"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

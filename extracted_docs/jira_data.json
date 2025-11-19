@@ -1,0 +1,3729 @@
+{
+  "node_info": {
+    "icon": "file:jira.svg",
+    "defaults": {
+      "name": "Jira Software"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "jiraSoftwareCloudApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "jiraVersion": [
+              "cloud"
+            ]
+          }
+        }
+      },
+      {
+        "name": "jiraSoftwareServerApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "jiraVersion": [
+              "server"
+            ]
+          }
+        }
+      },
+      {
+        "name": "jiraSoftwareServerPatApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "jiraVersion": [
+              "serverPat"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getLabels",
+      "for",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Jira Software",
+    "name": "jira",
+    "description": "Consume Jira Software API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "listSearchMethods": [
+      "getProjects",
+      "this",
+      "if"
+    ],
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.jira",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development",
+      "Productivity"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/jira/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.jira/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "5 workflow automations for Mattermost that we love at n8n",
+          "icon": "\ud83e\udd16",
+          "url": "https://n8n.io/blog/5-workflow-automations-for-mattermost-that-we-love-at-n8n/"
+        },
+        {
+          "label": "How to automate every step of an incident response workflow",
+          "url": "https://n8n.io/blog/creating-custom-incident-response-workflows-with-n8n/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Jira Version",
+      "name": "jiraVersion",
+      "type": "options",
+      "value": "cloud",
+      "default": "cloud",
+      "options": [
+        {
+          "name": "Cloud",
+          "value": "cloud",
+          "displayName": "Cloud"
+        },
+        {
+          "name": "Server (Self Hosted)",
+          "value": "server",
+          "displayName": "Server (self Hosted)"
+        },
+        {
+          "name": "Server Pat (Self Hosted)",
+          "value": "serverPat",
+          "displayName": "Server Pat (self Hosted)"
+        }
+      ]
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "description": "Creates an issue or, where the option to create subtasks is enabled in Jira, a subtask",
+      "value": "issue",
+      "default": "issue",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Issue",
+          "description": "Creates an issue or, where the option to create subtasks is enabled in Jira, a subtask",
+          "value": "issue",
+          "displayName": "Issue"
+        },
+        {
+          "name": "Issue Attachment",
+          "description": "Add, remove, and get an attachment from an issue",
+          "value": "issueAttachment",
+          "displayName": "Issue Attachment"
+        },
+        {
+          "name": "Issue Comment",
+          "description": "Get, create, update, and delete a comment from an issue",
+          "value": "issueComment",
+          "displayName": "Issue Comment"
+        },
+        {
+          "name": "User",
+          "description": "Get, create and delete a user",
+          "value": "user",
+          "displayName": "User"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Get issue changelog",
+      "action": "Get an issue changelog",
+      "value": "changelog",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Changelog",
+          "description": "Get issue changelog",
+          "action": "Get an issue changelog",
+          "value": "changelog",
+          "displayName": "Changelog"
+        },
+        {
+          "name": "Create",
+          "description": "Create a new issue",
+          "action": "Create an issue",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete an issue",
+          "action": "Delete an issue",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get an issue",
+          "action": "Get an issue",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many issues",
+          "action": "Get many issues",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Notify",
+          "description": "Create an email notification for an issue and add it to the mail queue",
+          "action": "Create an email notification for an issue",
+          "value": "notify",
+          "displayName": "Notify"
+        },
+        {
+          "name": "Status",
+          "description": "Return either all transitions or a transition that can be performed by the user on an issue, based on the issue's status",
+          "action": "Get the status of an issue",
+          "value": "transitions",
+          "displayName": "Status"
+        },
+        {
+          "name": "Update",
+          "description": "Update an issue",
+          "action": "Update an issue",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ]
+        }
+      },
+      "_source": "Issue_issueOperations"
+    },
+    {
+      "displayName": "Project",
+      "name": "project",
+      "type": "resourceLocator",
+      "placeholder": "Select a Project...",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Issue Type",
+      "name": "issueType",
+      "type": "resourceLocator",
+      "placeholder": "Select an Issue Type...",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Summary",
+      "name": "summary",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Assignee",
+          "name": "assignee",
+          "type": "resourceLocator",
+          "placeholder": "Select an Assignee...",
+          "modes": [
+            {
+              "displayName": "Assignee",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select an Assignee...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Component Names or IDs",
+          "name": "componentIds",
+          "type": "multiOptions",
+          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getProjectComponents"
+          }
+        },
+        {
+          "displayName": "Custom Fields",
+          "name": "customFieldsUi",
+          "type": "fixedCollection",
+          "description": "Value of the field to set",
+          "placeholder": "Add Custom Field",
+          "default": {},
+          "options": [
+            {
+              "name": "customFieldsValues",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Field",
+                  "name": "fieldId",
+                  "type": "resourceLocator",
+                  "placeholder": "Select a Field...",
+                  "typeOptions": {}
+                },
+                {
+                  "displayName": "Field Value",
+                  "name": "fieldValue",
+                  "type": "string",
+                  "description": "Value of the field to set",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Label Names or IDs",
+          "name": "labels",
+          "type": "multiOptions",
+          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Labels",
+          "name": "serverLabels",
+          "type": "string",
+          "default": [],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Parent Issue Key",
+          "name": "parentIssueKey",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Priority",
+          "name": "priority",
+          "type": "resourceLocator",
+          "placeholder": "Select a Priority...",
+          "modes": [
+            {
+              "displayName": "Priority",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select a Priority...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        },
+        {
+          "displayName": "Reporter",
+          "name": "reporter",
+          "type": "resourceLocator",
+          "placeholder": "Select a Reporter...",
+          "modes": [
+            {
+              "displayName": "Reporter",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select a Reporter...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        },
+        {
+          "displayName": "Update History",
+          "name": "updateHistory",
+          "type": "boolean",
+          "description": "Whether the project in which the issue is created is added to the user's Recently viewed project list, as shown under Projects in Jira",
+          "default": false
+        }
+      ],
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Issue Key",
+      "name": "issueKey",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Value of the field to set",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Assignee",
+          "name": "assignee",
+          "type": "resourceLocator",
+          "placeholder": "Select an Assignee...",
+          "modes": [
+            {
+              "displayName": "Assignee",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select an Assignee...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Custom Fields",
+          "name": "customFieldsUi",
+          "type": "fixedCollection",
+          "description": "Value of the field to set",
+          "placeholder": "Add Custom Field",
+          "default": {},
+          "options": [
+            {
+              "name": "customFieldsValues",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Field",
+                  "name": "fieldId",
+                  "type": "resourceLocator",
+                  "placeholder": "Select a Field...",
+                  "typeOptions": {}
+                },
+                {
+                  "displayName": "Field Value",
+                  "name": "fieldValue",
+                  "type": "string",
+                  "description": "Value of the field to set",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Issue Type",
+          "name": "issueType",
+          "type": "string",
+          "description": "Issue Types",
+          "default": ""
+        },
+        {
+          "displayName": "Label Names or IDs",
+          "name": "labels",
+          "type": "multiOptions",
+          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Labels",
+          "name": "serverLabels",
+          "type": "string",
+          "default": [],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Parent Issue Key",
+          "name": "parentIssueKey",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Priority",
+          "name": "priority",
+          "type": "resourceLocator",
+          "placeholder": "Select a Priority...",
+          "modes": [
+            {
+              "displayName": "Priority",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select a Priority...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        },
+        {
+          "displayName": "Reporter",
+          "name": "reporter",
+          "type": "resourceLocator",
+          "placeholder": "Select a Reporter...",
+          "modes": [
+            {
+              "displayName": "Reporter",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select a Reporter...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        },
+        {
+          "displayName": "Summary",
+          "name": "summary",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "statusId",
+          "type": "resourceLocator",
+          "placeholder": "Select a Status...",
+          "modes": [
+            {
+              "displayName": "Status",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select a Status...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        }
+      ],
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Issue Key",
+      "name": "issueKey",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Delete Subtasks",
+      "name": "deleteSubtasks",
+      "type": "boolean",
+      "default": false,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Issue Key",
+      "name": "issueKey",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simplifyOutput",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "<p>Use expand to include additional information about the issues in the response. This parameter accepts a comma-separated list. Expand options include:\n\t\t\t\t<ul>\n\t\t\t\t\t<li><code>renderedFields</code> Returns field values rendered in HTML format.</li>\n\t\t\t\t\t<li><code>names</code> Returns the display name of each field.</li>\n\t\t\t\t\t<li><code>schema</code> Returns the schema describing a field type.</li>\n\t\t\t\t\t<li><code>transitions</code> Returns all possible transitions for the issue.</li>\n\t\t\t\t\t<li><code>editmeta</code> Returns information about how each field can be edited.</li>\n\t\t\t\t\t<li><code>changelog</code> Returns a list of recent updates to an issue, sorted by date, starting from the most recent.</li>\n\t\t\t\t\t<li><code>versionedRepresentations</code> Returns a JSON array for each version of a field's value, with the highest number representing the most recent version. Note: When included in the request, the fields parameter is ignored.</li>\n\t\t\t\t</ul>",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Expand",
+          "name": "expand",
+          "type": "string",
+          "description": "<p>Use expand to include additional information about the issues in the response. This parameter accepts a comma-separated list. Expand options include:\n\t\t\t\t<ul>\n\t\t\t\t\t<li><code>renderedFields</code> Returns field values rendered in HTML format.</li>\n\t\t\t\t\t<li><code>names</code> Returns the display name of each field.</li>\n\t\t\t\t\t<li><code>schema</code> Returns the schema describing a field type.</li>\n\t\t\t\t\t<li><code>transitions</code> Returns all possible transitions for the issue.</li>\n\t\t\t\t\t<li><code>editmeta</code> Returns information about how each field can be edited.</li>\n\t\t\t\t\t<li><code>changelog</code> Returns a list of recent updates to an issue, sorted by date, starting from the most recent.</li>\n\t\t\t\t\t<li><code>versionedRepresentations</code> Returns a JSON array for each version of a field's value, with the highest number representing the most recent version. Note: When included in the request, the fields parameter is ignored.</li>\n\t\t\t\t</ul>",
+          "default": ""
+        },
+        {
+          "displayName": "Fields",
+          "name": "fields",
+          "type": "string",
+          "description": "A list of fields to return for the issue. This parameter accepts a comma-separated list. Use it to retrieve a subset of fields. Allowed values: <code>*all</code> Returns all fields. <code>*navigable</code> Returns navigable fields. Any issue field, prefixed with a minus to exclude.",
+          "default": ""
+        },
+        {
+          "displayName": "Fields By Key",
+          "name": "fieldsByKey",
+          "type": "boolean",
+          "description": "Whether fields in fields are referenced by keys rather than IDs. This parameter is useful where fields have been added by a connect app and a field's key may differ from its ID.",
+          "default": false
+        },
+        {
+          "displayName": "Properties",
+          "name": "properties",
+          "type": "string",
+          "description": "A list of issue properties to return for the issue. This parameter accepts a comma-separated list. Allowed values: <code>*all</code> Returns all issue properties. Any issue property key, prefixed with a minus to exclude. Examples: <code>*all</code> Returns all properties. <code>*all</code>,-prop1 Returns all properties except prop1. <code>prop1,prop2</code> Returns prop1 and prop2 properties. This parameter may be specified multiple times. For example, properties=prop1,prop2& properties=prop3.",
+          "default": ""
+        },
+        {
+          "displayName": "Update History",
+          "name": "updateHistory",
+          "type": "boolean",
+          "description": "Whether the project in which the issue is created is added to the user's Recently viewed project list, as shown under Projects in Jira. This also populates the JQL issues search lastViewed field.",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Returns a list of recent updates to an issue, sorted by date, starting from the most recent",
+      "placeholder": "Add option",
+      "value": "changelog",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Expand",
+          "name": "expand",
+          "type": "multiOptions",
+          "description": "Returns a list of recent updates to an issue, sorted by date, starting from the most recent",
+          "value": "changelog",
+          "default": [],
+          "options": [
+            {
+              "name": "Changelog",
+              "description": "Returns a list of recent updates to an issue, sorted by date, starting from the most recent",
+              "value": "changelog",
+              "displayName": "Changelog"
+            },
+            {
+              "name": "Editmeta",
+              "description": "Returns information about how each field can be edited",
+              "value": "editmeta",
+              "displayName": "Editmeta"
+            },
+            {
+              "name": "Names",
+              "description": "Returns the display name of each field",
+              "value": "names",
+              "displayName": "Names"
+            },
+            {
+              "name": "Operations",
+              "description": "Returns all possible operations for the issue",
+              "value": "operations",
+              "displayName": "Operations"
+            },
+            {
+              "name": "Rendered Fields",
+              "description": "Returns field values rendered in HTML format",
+              "value": "renderedFields",
+              "displayName": "Rendered Fields"
+            },
+            {
+              "name": "Schema",
+              "description": "Returns the schema describing a field type",
+              "value": "schema",
+              "displayName": "Schema"
+            },
+            {
+              "name": "Transitions",
+              "description": "Returns all possible transitions for the issue",
+              "value": "transitions",
+              "displayName": "Transitions"
+            },
+            {
+              "name": "Versioned Representations",
+              "description": "JSON array containing each version of a field's value",
+              "value": "versionedRepresentations",
+              "displayName": "Versioned Representations"
+            }
+          ]
+        },
+        {
+          "displayName": "Fields",
+          "name": "fields",
+          "type": "string",
+          "description": "A list of fields to return for each issue, use it to retrieve a subset of fields. This parameter accepts a comma-separated list. Expand options include: <code>*all</code> Returns all fields. <code>*navigable</code> Returns navigable fields. Any issue field, prefixed with a minus to exclude.",
+          "default": "*navigable"
+        },
+        {
+          "displayName": "Fields By Key",
+          "name": "fieldsByKey",
+          "type": "boolean",
+          "description": "Whether fields in fields are referenced by keys rather than IDs. This parameter is useful where fields have been added by a connect app and a field's key may differ from its ID.",
+          "default": false
+        },
+        {
+          "displayName": "JQL",
+          "name": "jql",
+          "type": "string",
+          "description": "A JQL expression",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "issue"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Issue Key",
+      "name": "issueKey",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "changelog"
+          ]
+        }
+      },
+      "_operation": "changelog",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "changelog"
+          ]
+        }
+      },
+      "_operation": "changelog",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "changelog"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "changelog",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Issue Key",
+      "name": "issueKey",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "notify"
+          ]
+        }
+      },
+      "_operation": "notify",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "JSON Parameters",
+      "name": "jsonParameters",
+      "type": "boolean",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "notify"
+          ]
+        }
+      },
+      "_operation": "notify",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The HTML body of the email notification for the issue",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "HTML Body",
+          "name": "htmlBody",
+          "type": "string",
+          "description": "The HTML body of the email notification for the issue",
+          "default": ""
+        },
+        {
+          "displayName": "Subject",
+          "name": "subject",
+          "type": "string",
+          "description": "The subject of the email notification for the issue. If this is not specified, then the subject is set to the issue key and summary.",
+          "default": ""
+        },
+        {
+          "displayName": "Text Body",
+          "name": "textBody",
+          "type": "string",
+          "description": "The subject of the email notification for the issue. If this is not specified, then the subject is set to the issue key and summary.",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "notify"
+          ]
+        }
+      },
+      "_operation": "notify",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Notification Recipients",
+      "name": "notificationRecipientsUi",
+      "type": "fixedCollection",
+      "description": "The recipients of the email notification for the issue",
+      "placeholder": "Add Recipients",
+      "default": {},
+      "options": [
+        {
+          "name": "notificationRecipientsValues",
+          "displayName": "Recipients",
+          "values": [
+            {
+              "displayName": "Reporter",
+              "name": "reporter",
+              "type": "boolean",
+              "description": "Whether the notification should be sent to the issue's reporter",
+              "default": false
+            },
+            {
+              "displayName": "Assignee",
+              "name": "assignee",
+              "type": "boolean",
+              "description": "Whether the notification should be sent to the issue's assignees",
+              "default": false
+            },
+            {
+              "displayName": "Watchers",
+              "name": "watchers",
+              "type": "boolean",
+              "description": "Whether the notification should be sent to the issue's assignees",
+              "default": false
+            },
+            {
+              "displayName": "Voters",
+              "name": "voters",
+              "type": "boolean",
+              "description": "Whether the notification should be sent to the issue's voters",
+              "default": false
+            },
+            {
+              "displayName": "User Names or IDs",
+              "name": "users",
+              "type": "multiOptions",
+              "description": "List of users to receive the notification. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getUsers"
+              }
+            },
+            {
+              "displayName": "Group Names or IDs",
+              "name": "groups",
+              "type": "multiOptions",
+              "description": "List of groups to receive the notification. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getGroups"
+              }
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "notify"
+          ],
+          "jsonParameters": [
+            false
+          ]
+        }
+      },
+      "_operation": "notify",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Notification Recipients",
+      "name": "notificationRecipientsJson",
+      "type": "json",
+      "description": "The recipients of the email notification for the issue",
+      "default": "",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "notify"
+          ],
+          "jsonParameters": [
+            true
+          ]
+        }
+      },
+      "_operation": "notify",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Notification Recipients Restrictions",
+      "name": "notificationRecipientsRestrictionsUi",
+      "type": "fixedCollection",
+      "description": "Restricts the notifications to users with the specified permissions",
+      "placeholder": "Add Recipients Restriction",
+      "default": {},
+      "options": [
+        {
+          "name": "notificationRecipientsRestrictionsValues",
+          "displayName": "Recipients Restrictions",
+          "values": [
+            {
+              "displayName": "User Names or IDs",
+              "name": "users",
+              "type": "multiOptions",
+              "description": "List of users to receive the notification. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getUsers"
+              }
+            },
+            {
+              "displayName": "Group Names or IDs",
+              "name": "groups",
+              "type": "multiOptions",
+              "description": "List of groups to receive the notification. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getGroups"
+              }
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "notify"
+          ],
+          "jsonParameters": [
+            false
+          ]
+        }
+      },
+      "_operation": "notify",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Notification Recipients Restrictions",
+      "name": "notificationRecipientsRestrictionsJson",
+      "type": "json",
+      "description": "Restricts the notifications to users with the specified permissions",
+      "default": "",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "notify"
+          ],
+          "jsonParameters": [
+            true
+          ]
+        }
+      },
+      "_operation": "notify",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Issue Key",
+      "name": "issueKey",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "transitions"
+          ]
+        }
+      },
+      "_operation": "transitions",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Use expand to include additional information about transitions in the response. This parameter accepts transitions.fields, which returns information about the fields in the transition screen for each transition. Fields hidden from the screen are not returned. Use this information to populate the fields and update fields in Transition issue.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Expand",
+          "name": "expand",
+          "type": "string",
+          "description": "Use expand to include additional information about transitions in the response. This parameter accepts transitions.fields, which returns information about the fields in the transition screen for each transition. Fields hidden from the screen are not returned. Use this information to populate the fields and update fields in Transition issue.",
+          "default": ""
+        },
+        {
+          "displayName": "Transition ID",
+          "name": "transitionId",
+          "type": "string",
+          "description": "The ID of the transition",
+          "default": ""
+        },
+        {
+          "displayName": "Skip Remote Only Condition",
+          "name": "skipRemoteOnlyCondition",
+          "type": "boolean",
+          "description": "Whether transitions with the condition Hide From User Condition are included in the response",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "transitions"
+          ]
+        }
+      },
+      "_operation": "transitions",
+      "_source": "Issue_issueFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Add attachment to issue",
+      "action": "Add an attachment to an issue",
+      "value": "add",
+      "default": "add",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Add",
+          "description": "Add attachment to issue",
+          "action": "Add an attachment to an issue",
+          "value": "add",
+          "displayName": "Add"
+        },
+        {
+          "name": "Get",
+          "description": "Get an attachment",
+          "action": "Get an attachment from an issue",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many attachments",
+          "action": "Get many issue attachments",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Remove",
+          "description": "Remove an attachment",
+          "action": "Remove an attachment from an issue",
+          "value": "remove",
+          "displayName": "Remove"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ]
+        }
+      },
+      "_source": "IssueAttachment_issueAttachmentOperations"
+    },
+    {
+      "displayName": "Issue Key",
+      "name": "issueKey",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "IssueAttachment_issueAttachmentFields"
+    },
+    {
+      "displayName": "Input Binary Field",
+      "name": "binaryPropertyName",
+      "type": "string",
+      "hint": "The name of the input binary field containing the file to be written",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "IssueAttachment_issueAttachmentFields"
+    },
+    {
+      "displayName": "Attachment ID",
+      "name": "attachmentId",
+      "type": "string",
+      "description": "The ID of the attachment",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "IssueAttachment_issueAttachmentFields"
+    },
+    {
+      "displayName": "Download",
+      "name": "download",
+      "type": "boolean",
+      "default": false,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "IssueAttachment_issueAttachmentFields"
+    },
+    {
+      "displayName": "Put Output File in Field",
+      "name": "binaryProperty",
+      "type": "string",
+      "hint": "The name of the output binary field to put the file in",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "get"
+          ],
+          "download": [
+            true
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "IssueAttachment_issueAttachmentFields"
+    },
+    {
+      "displayName": "Issue Key",
+      "name": "issueKey",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "IssueAttachment_issueAttachmentFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "IssueAttachment_issueAttachmentFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "IssueAttachment_issueAttachmentFields"
+    },
+    {
+      "displayName": "Download",
+      "name": "download",
+      "type": "boolean",
+      "default": false,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "IssueAttachment_issueAttachmentFields"
+    },
+    {
+      "displayName": "Put Output File in Field",
+      "name": "binaryProperty",
+      "type": "string",
+      "hint": "The name of the output binary field to put the file in",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "download": [
+            true
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "IssueAttachment_issueAttachmentFields"
+    },
+    {
+      "displayName": "Attachment ID",
+      "name": "attachmentId",
+      "type": "string",
+      "description": "The ID of the attachment",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "remove"
+          ]
+        }
+      },
+      "_operation": "remove",
+      "_source": "IssueAttachment_issueAttachmentFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Add comment to issue",
+      "action": "Add a comment",
+      "value": "add",
+      "default": "add",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Add",
+          "description": "Add comment to issue",
+          "action": "Add a comment",
+          "value": "add",
+          "displayName": "Add"
+        },
+        {
+          "name": "Get",
+          "description": "Get a comment",
+          "action": "Get a comment",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many comments",
+          "action": "Get many comments",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Remove",
+          "description": "Remove a comment",
+          "action": "Remove a comment",
+          "value": "remove",
+          "displayName": "Remove"
+        },
+        {
+          "name": "Update",
+          "description": "Update a comment",
+          "action": "Update a comment",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ]
+        }
+      },
+      "_source": "IssueComment_issueCommentOperations"
+    },
+    {
+      "displayName": "Issue Key",
+      "name": "issueKey",
+      "type": "string",
+      "description": "issueComment Key",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "JSON Parameters",
+      "name": "jsonParameters",
+      "type": "boolean",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Comment",
+      "name": "comment",
+      "type": "string",
+      "description": "Comment's text",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "add"
+          ],
+          "jsonParameters": [
+            false
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Document Format (JSON)",
+      "name": "commentJson",
+      "type": "json",
+      "description": "The Atlassian Document Format (ADF). Online builder can be found <a href=\"https://developer.atlassian.com/cloud/jira/platform/apis/document/playground/\">here</a>.",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "add"
+          ],
+          "jsonParameters": [
+            true
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Use expand to include additional information about comments in the response. This parameter accepts Rendered Body, which returns the comment body rendered in HTML.",
+      "placeholder": "Add option",
+      "value": "renderedBody",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Expand",
+          "name": "expand",
+          "type": "options",
+          "description": "Use expand to include additional information about comments in the response. This parameter accepts Rendered Body, which returns the comment body rendered in HTML.",
+          "value": "renderedBody",
+          "default": [],
+          "options": [
+            {
+              "name": "Rendered Body",
+              "value": "renderedBody",
+              "displayName": "Rendered Body"
+            }
+          ]
+        },
+        {
+          "displayName": "Use Wiki Markup",
+          "name": "wikiMarkup",
+          "type": "boolean",
+          "description": "Whether to enable parsing of wikiformatting for this comment. Default is false.",
+          "default": false,
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Issue Key",
+      "name": "issueKey",
+      "type": "string",
+      "description": "The ID or key of the issue",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Comment ID",
+      "name": "commentId",
+      "type": "string",
+      "description": "The ID of the comment",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Use expand to include additional information about comments in the response. This parameter accepts Rendered Body, which returns the comment body rendered in HTML.",
+      "placeholder": "Add Field",
+      "value": "renderedBody",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Expand",
+          "name": "expand",
+          "type": "options",
+          "description": "Use expand to include additional information about comments in the response. This parameter accepts Rendered Body, which returns the comment body rendered in HTML.",
+          "value": "renderedBody",
+          "default": "",
+          "options": [
+            {
+              "name": "Rendered Body",
+              "value": "renderedBody",
+              "displayName": "Rendered Body"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Issue Key",
+      "name": "issueKey",
+      "type": "string",
+      "description": "The ID or key of the issue",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Use expand to include additional information about comments in the response. This parameter accepts Rendered Body, which returns the comment body rendered in HTML.",
+      "placeholder": "Add Field",
+      "value": "renderedBody",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Expand",
+          "name": "expand",
+          "type": "options",
+          "description": "Use expand to include additional information about comments in the response. This parameter accepts Rendered Body, which returns the comment body rendered in HTML.",
+          "value": "renderedBody",
+          "default": "renderedBody",
+          "options": [
+            {
+              "name": "Rendered Body",
+              "value": "renderedBody",
+              "displayName": "Rendered Body"
+            }
+          ]
+        },
+        {
+          "displayName": "Order By",
+          "name": "orderBy",
+          "type": "options",
+          "description": "Order comments by the created date",
+          "value": "+created",
+          "default": "+created",
+          "options": [
+            {
+              "name": "Created Ascending",
+              "value": "+created",
+              "displayName": "Created Ascending"
+            },
+            {
+              "name": "Created Descending",
+              "value": "-created",
+              "displayName": "Created Descending"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Issue Key",
+      "name": "issueKey",
+      "type": "string",
+      "description": "The ID or key of the issue",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "remove"
+          ]
+        }
+      },
+      "_operation": "remove",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Comment ID",
+      "name": "commentId",
+      "type": "string",
+      "description": "The ID of the comment",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "remove"
+          ]
+        }
+      },
+      "_operation": "remove",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Issue Key",
+      "name": "issueKey",
+      "type": "string",
+      "description": "The Issue Comment key",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Comment ID",
+      "name": "commentId",
+      "type": "string",
+      "description": "The ID of the comment",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "JSON Parameters",
+      "name": "jsonParameters",
+      "type": "boolean",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Comment",
+      "name": "comment",
+      "type": "string",
+      "description": "Comment's text",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "update"
+          ],
+          "jsonParameters": [
+            false
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Document Format (JSON)",
+      "name": "commentJson",
+      "type": "json",
+      "description": "The Atlassian Document Format (ADF). Online builder can be found <a href=\"https://developer.atlassian.com/cloud/jira/platform/apis/document/playground/\">here</a>.",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "update"
+          ],
+          "jsonParameters": [
+            true
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Use expand to include additional information about comments in the response. This parameter accepts Rendered Body, which returns the comment body rendered in HTML.",
+      "placeholder": "Add option",
+      "value": "renderedBody",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Expand",
+          "name": "expand",
+          "type": "options",
+          "description": "Use expand to include additional information about comments in the response. This parameter accepts Rendered Body, which returns the comment body rendered in HTML.",
+          "value": "renderedBody",
+          "default": "renderedBody",
+          "options": [
+            {
+              "name": "Rendered Body",
+              "value": "renderedBody",
+              "displayName": "Rendered Body"
+            }
+          ]
+        },
+        {
+          "displayName": "Use Wiki Markup",
+          "name": "wikiMarkup",
+          "type": "boolean",
+          "description": "Whether to enable parsing of wikiformatting for this comment. Default is false.",
+          "default": false,
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "IssueComment_issueCommentFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new user",
+      "action": "Create a user",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a new user",
+          "action": "Create a user",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a user",
+          "action": "Delete a user",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Retrieve a user",
+          "action": "Get a user",
+          "value": "get",
+          "displayName": "Get"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ]
+        }
+      },
+      "_source": "User_userOperations"
+    },
+    {
+      "displayName": "Username",
+      "name": "username",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Email Address",
+      "name": "emailAddress",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Display Name",
+      "name": "displayName",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Password for the user. If a password is not set, a random password is generated.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Password",
+          "name": "password",
+          "type": "string",
+          "description": "Password for the user. If a password is not set, a random password is generated.",
+          "default": "",
+          "typeOptions": {
+            "password": true
+          }
+        },
+        {
+          "displayName": "Notification",
+          "name": "notification",
+          "type": "boolean",
+          "description": "Whether to send the user an email confirmation that they have been added to Jira",
+          "default": false
+        }
+      ],
+      "typeOptions": {
+        "password": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Account ID",
+      "name": "accountId",
+      "type": "string",
+      "description": "Account ID of the user to delete",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Account ID",
+      "name": "accountId",
+      "type": "string",
+      "description": "Account ID of the user to retrieve",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Include more information about the user",
+      "placeholder": "Add Field",
+      "value": "groups",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Expand",
+          "name": "expand",
+          "type": "multiOptions",
+          "description": "Include more information about the user",
+          "value": "groups",
+          "default": [],
+          "options": [
+            {
+              "name": "Groups",
+              "description": "Include all groups to which the user belongs",
+              "value": "groups",
+              "displayName": "Groups"
+            },
+            {
+              "name": "Application Roles",
+              "description": "Include details of all the applications the user can access",
+              "value": "applicationRoles",
+              "displayName": "Application Roles"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "User_userFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Changelog",
+      "description": "Get issue changelog",
+      "action": "Get an issue changelog",
+      "value": "changelog",
+      "displayName": "Changelog"
+    },
+    {
+      "name": "Create",
+      "description": "Create a new issue",
+      "action": "Create an issue",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete an issue",
+      "action": "Delete an issue",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Get an issue",
+      "action": "Get an issue",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many issues",
+      "action": "Get many issues",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Notify",
+      "description": "Create an email notification for an issue and add it to the mail queue",
+      "action": "Create an email notification for an issue",
+      "value": "notify",
+      "displayName": "Notify"
+    },
+    {
+      "name": "Status",
+      "description": "Return either all transitions or a transition that can be performed by the user on an issue, based on the issue's status",
+      "action": "Get the status of an issue",
+      "value": "transitions",
+      "displayName": "Status"
+    },
+    {
+      "name": "Update",
+      "description": "Update an issue",
+      "action": "Update an issue",
+      "value": "update",
+      "displayName": "Update"
+    },
+    {
+      "name": "Add",
+      "description": "Add attachment to issue",
+      "action": "Add an attachment to an issue",
+      "value": "add",
+      "displayName": "Add"
+    },
+    {
+      "name": "Remove",
+      "description": "Remove an attachment",
+      "action": "Remove an attachment from an issue",
+      "value": "remove",
+      "displayName": "Remove"
+    }
+  ],
+  "operations_by_resource": {
+    "issue": [
+      {
+        "name": "Changelog",
+        "description": "Get issue changelog",
+        "action": "Get an issue changelog",
+        "value": "changelog",
+        "displayName": "Changelog"
+      },
+      {
+        "name": "Create",
+        "description": "Create a new issue",
+        "action": "Create an issue",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete an issue",
+        "action": "Delete an issue",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get an issue",
+        "action": "Get an issue",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many issues",
+        "action": "Get many issues",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Notify",
+        "description": "Create an email notification for an issue and add it to the mail queue",
+        "action": "Create an email notification for an issue",
+        "value": "notify",
+        "displayName": "Notify"
+      },
+      {
+        "name": "Status",
+        "description": "Return either all transitions or a transition that can be performed by the user on an issue, based on the issue's status",
+        "action": "Get the status of an issue",
+        "value": "transitions",
+        "displayName": "Status"
+      },
+      {
+        "name": "Update",
+        "description": "Update an issue",
+        "action": "Update an issue",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "issueAttachment": [
+      {
+        "name": "Add",
+        "description": "Add attachment to issue",
+        "action": "Add an attachment to an issue",
+        "value": "add",
+        "displayName": "Add"
+      },
+      {
+        "name": "Get",
+        "description": "Get an attachment",
+        "action": "Get an attachment from an issue",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many attachments",
+        "action": "Get many issue attachments",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Remove",
+        "description": "Remove an attachment",
+        "action": "Remove an attachment from an issue",
+        "value": "remove",
+        "displayName": "Remove"
+      }
+    ],
+    "issueComment": [
+      {
+        "name": "Add",
+        "description": "Add comment to issue",
+        "action": "Add a comment",
+        "value": "add",
+        "displayName": "Add"
+      },
+      {
+        "name": "Get",
+        "description": "Get a comment",
+        "action": "Get a comment",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many comments",
+        "action": "Get many comments",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Remove",
+        "description": "Remove a comment",
+        "action": "Remove a comment",
+        "value": "remove",
+        "displayName": "Remove"
+      },
+      {
+        "name": "Update",
+        "description": "Update a comment",
+        "action": "Update a comment",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "user": [
+      {
+        "name": "Create",
+        "description": "Create a new user",
+        "action": "Create a user",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a user",
+        "action": "Delete a user",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Retrieve a user",
+        "action": "Get a user",
+        "value": "get",
+        "displayName": "Get"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "jiraSoftwareCloudApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "jiraVersion": [
+            "cloud"
+          ]
+        }
+      }
+    },
+    {
+      "name": "jiraSoftwareServerApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "jiraVersion": [
+            "server"
+          ]
+        }
+      }
+    },
+    {
+      "name": "jiraSoftwareServerPatApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "jiraVersion": [
+            "serverPat"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ]
+        }
+      }
+    },
+    "project": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "issueType": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "summary": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "issueKey": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "deleteSubtasks": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      }
+    },
+    "simplifyOutput": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "jsonParameters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "notificationRecipientsUi": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "notify"
+          ],
+          "jsonParameters": [
+            false
+          ]
+        }
+      }
+    },
+    "notificationRecipientsJson": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "notify"
+          ],
+          "jsonParameters": [
+            true
+          ]
+        }
+      }
+    },
+    "notificationRecipientsRestrictionsUi": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "notify"
+          ],
+          "jsonParameters": [
+            false
+          ]
+        }
+      }
+    },
+    "notificationRecipientsRestrictionsJson": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issue"
+          ],
+          "operation": [
+            "notify"
+          ],
+          "jsonParameters": [
+            true
+          ]
+        }
+      }
+    },
+    "binaryPropertyName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      }
+    },
+    "attachmentId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "remove"
+          ]
+        }
+      }
+    },
+    "download": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "binaryProperty": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueAttachment"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "download": [
+            true
+          ]
+        }
+      }
+    },
+    "comment": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "update"
+          ],
+          "jsonParameters": [
+            false
+          ]
+        }
+      }
+    },
+    "commentJson": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "update"
+          ],
+          "jsonParameters": [
+            true
+          ]
+        }
+      }
+    },
+    "commentId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "issueComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "username": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "emailAddress": {
+      "required": true,
+      "format": "email",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "displayName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "accountId": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "jiraVersion": {
+      "type": "options",
+      "displayName": "Jira Version",
+      "name": "jiraVersion",
+      "possibleValues": [
+        {
+          "value": "cloud",
+          "name": "Cloud",
+          "description": ""
+        },
+        {
+          "value": "server",
+          "name": "Server (Self Hosted)",
+          "description": ""
+        },
+        {
+          "value": "serverPat",
+          "name": "Server Pat (Self Hosted)",
+          "description": ""
+        }
+      ]
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "issue",
+          "name": "Issue",
+          "description": "Creates an issue or, where the option to create subtasks is enabled in Jira, a subtask"
+        },
+        {
+          "value": "issueAttachment",
+          "name": "Issue Attachment",
+          "description": "Add, remove, and get an attachment from an issue"
+        },
+        {
+          "value": "issueComment",
+          "name": "Issue Comment",
+          "description": "Get, create, update, and delete a comment from an issue"
+        },
+        {
+          "value": "user",
+          "name": "User",
+          "description": "Get, create and delete a user"
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a new user"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a user"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Retrieve a user"
+        }
+      ]
+    },
+    "project": {
+      "type": "resourceLocator",
+      "displayName": "Project",
+      "name": "project"
+    },
+    "issueType": {
+      "type": "resourceLocator",
+      "displayName": "Issue Type",
+      "name": "issueType"
+    },
+    "summary": {
+      "type": "string",
+      "displayName": "Summary",
+      "name": "summary"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Expand",
+          "name": "expand",
+          "type": "multiOptions",
+          "description": "Include more information about the user",
+          "value": "groups",
+          "default": [],
+          "options": [
+            {
+              "name": "Groups",
+              "description": "Include all groups to which the user belongs",
+              "value": "groups",
+              "displayName": "Groups"
+            },
+            {
+              "name": "Application Roles",
+              "description": "Include details of all the applications the user can access",
+              "value": "applicationRoles",
+              "displayName": "Application Roles"
+            }
+          ]
+        }
+      ]
+    },
+    "issueKey": {
+      "type": "string",
+      "displayName": "Issue Key",
+      "name": "issueKey"
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "subProperties": [
+        {
+          "displayName": "Assignee",
+          "name": "assignee",
+          "type": "resourceLocator",
+          "placeholder": "Select an Assignee...",
+          "modes": [
+            {
+              "displayName": "Assignee",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select an Assignee...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Custom Fields",
+          "name": "customFieldsUi",
+          "type": "fixedCollection",
+          "description": "Value of the field to set",
+          "placeholder": "Add Custom Field",
+          "default": {},
+          "options": [
+            {
+              "name": "customFieldsValues",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Field",
+                  "name": "fieldId",
+                  "type": "resourceLocator",
+                  "placeholder": "Select a Field...",
+                  "typeOptions": {}
+                },
+                {
+                  "displayName": "Field Value",
+                  "name": "fieldValue",
+                  "type": "string",
+                  "description": "Value of the field to set",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Issue Type",
+          "name": "issueType",
+          "type": "string",
+          "description": "Issue Types",
+          "default": ""
+        },
+        {
+          "displayName": "Label Names or IDs",
+          "name": "labels",
+          "type": "multiOptions",
+          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Labels",
+          "name": "serverLabels",
+          "type": "string",
+          "default": [],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Parent Issue Key",
+          "name": "parentIssueKey",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Priority",
+          "name": "priority",
+          "type": "resourceLocator",
+          "placeholder": "Select a Priority...",
+          "modes": [
+            {
+              "displayName": "Priority",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select a Priority...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        },
+        {
+          "displayName": "Reporter",
+          "name": "reporter",
+          "type": "resourceLocator",
+          "placeholder": "Select a Reporter...",
+          "modes": [
+            {
+              "displayName": "Reporter",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select a Reporter...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        },
+        {
+          "displayName": "Summary",
+          "name": "summary",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "statusId",
+          "type": "resourceLocator",
+          "placeholder": "Select a Status...",
+          "modes": [
+            {
+              "displayName": "Status",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select a Status...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        }
+      ]
+    },
+    "deleteSubtasks": {
+      "type": "boolean",
+      "displayName": "Delete Subtasks",
+      "name": "deleteSubtasks"
+    },
+    "simplifyOutput": {
+      "type": "boolean",
+      "displayName": "Simplify",
+      "name": "simplifyOutput"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      }
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Expand",
+          "name": "expand",
+          "type": "options",
+          "description": "Use expand to include additional information about comments in the response. This parameter accepts Rendered Body, which returns the comment body rendered in HTML.",
+          "value": "renderedBody",
+          "default": "renderedBody",
+          "options": [
+            {
+              "name": "Rendered Body",
+              "value": "renderedBody",
+              "displayName": "Rendered Body"
+            }
+          ]
+        },
+        {
+          "displayName": "Use Wiki Markup",
+          "name": "wikiMarkup",
+          "type": "boolean",
+          "description": "Whether to enable parsing of wikiformatting for this comment. Default is false.",
+          "default": false,
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ]
+    },
+    "jsonParameters": {
+      "type": "boolean",
+      "displayName": "JSON Parameters",
+      "name": "jsonParameters"
+    },
+    "notificationRecipientsUi": {
+      "type": "fixedCollection",
+      "displayName": "Notification Recipients",
+      "name": "notificationRecipientsUi",
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "subProperties": [
+        {
+          "name": "notificationRecipientsValues",
+          "displayName": "Recipients",
+          "values": [
+            {
+              "displayName": "Reporter",
+              "name": "reporter",
+              "type": "boolean",
+              "description": "Whether the notification should be sent to the issue's reporter",
+              "default": false
+            },
+            {
+              "displayName": "Assignee",
+              "name": "assignee",
+              "type": "boolean",
+              "description": "Whether the notification should be sent to the issue's assignees",
+              "default": false
+            },
+            {
+              "displayName": "Watchers",
+              "name": "watchers",
+              "type": "boolean",
+              "description": "Whether the notification should be sent to the issue's assignees",
+              "default": false
+            },
+            {
+              "displayName": "Voters",
+              "name": "voters",
+              "type": "boolean",
+              "description": "Whether the notification should be sent to the issue's voters",
+              "default": false
+            },
+            {
+              "displayName": "User Names or IDs",
+              "name": "users",
+              "type": "multiOptions",
+              "description": "List of users to receive the notification. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getUsers"
+              }
+            },
+            {
+              "displayName": "Group Names or IDs",
+              "name": "groups",
+              "type": "multiOptions",
+              "description": "List of groups to receive the notification. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getGroups"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "notificationRecipientsJson": {
+      "type": "json",
+      "displayName": "Notification Recipients",
+      "name": "notificationRecipientsJson",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      }
+    },
+    "notificationRecipientsRestrictionsUi": {
+      "type": "fixedCollection",
+      "displayName": "Notification Recipients Restrictions",
+      "name": "notificationRecipientsRestrictionsUi",
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "subProperties": [
+        {
+          "name": "notificationRecipientsRestrictionsValues",
+          "displayName": "Recipients Restrictions",
+          "values": [
+            {
+              "displayName": "User Names or IDs",
+              "name": "users",
+              "type": "multiOptions",
+              "description": "List of users to receive the notification. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getUsers"
+              }
+            },
+            {
+              "displayName": "Group Names or IDs",
+              "name": "groups",
+              "type": "multiOptions",
+              "description": "List of groups to receive the notification. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getGroups"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "notificationRecipientsRestrictionsJson": {
+      "type": "json",
+      "displayName": "Notification Recipients Restrictions",
+      "name": "notificationRecipientsRestrictionsJson",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      }
+    },
+    "binaryPropertyName": {
+      "type": "string",
+      "displayName": "Input Binary Field",
+      "name": "binaryPropertyName"
+    },
+    "attachmentId": {
+      "type": "string",
+      "displayName": "Attachment ID",
+      "name": "attachmentId"
+    },
+    "download": {
+      "type": "boolean",
+      "displayName": "Download",
+      "name": "download"
+    },
+    "binaryProperty": {
+      "type": "string",
+      "displayName": "Put Output File in Field",
+      "name": "binaryProperty"
+    },
+    "comment": {
+      "type": "string",
+      "displayName": "Comment",
+      "name": "comment"
+    },
+    "commentJson": {
+      "type": "json",
+      "displayName": "Document Format (JSON)",
+      "name": "commentJson"
+    },
+    "commentId": {
+      "type": "string",
+      "displayName": "Comment ID",
+      "name": "commentId"
+    },
+    "username": {
+      "type": "string",
+      "displayName": "Username",
+      "name": "username"
+    },
+    "emailAddress": {
+      "type": "string",
+      "displayName": "Email Address",
+      "name": "emailAddress"
+    },
+    "displayName": {
+      "type": "string",
+      "displayName": "Display Name",
+      "name": "displayName"
+    },
+    "accountId": {
+      "type": "string",
+      "displayName": "Account ID",
+      "name": "accountId"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type",
+      "no-check",
+      "X-Atlassian-Token"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "project",
+        "text": "Select a Project..."
+      },
+      {
+        "field": "issueType",
+        "text": "Select an Issue Type..."
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "notificationRecipientsUi",
+        "text": "Add Recipients"
+      },
+      {
+        "field": "notificationRecipientsRestrictionsUi",
+        "text": "Add Recipients Restriction"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "options",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": [
+      {
+        "field": "binaryPropertyName",
+        "text": "The name of the input binary field containing the file to be written"
+      },
+      {
+        "field": "binaryProperty",
+        "text": "The name of the output binary field to put the file in"
+      },
+      {
+        "field": "binaryProperty",
+        "text": "The name of the output binary field to put the file in"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

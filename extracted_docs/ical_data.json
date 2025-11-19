@@ -1,0 +1,757 @@
+{
+  "node_info": {
+    "icon": "fa:calendar",
+    "defaults": {
+      "name": "iCalendar"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "iCalendar",
+    "name": "iCal",
+    "description": "Create iCalendar file",
+    "subtitle": "={{$parameter[\"operation\"]}}",
+    "version": "1",
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.iCal",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Core Nodes",
+      "Productivity"
+    ],
+    "resources": {
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.converttofile/"
+        }
+      ]
+    },
+    "alias": [
+      "ics",
+      ".ics"
+    ],
+    "subcategories": {
+      "Core Nodes": [
+        "Files"
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "value": "createEventFile",
+      "default": "createEventFile",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create Event File",
+          "value": "createEventFile",
+          "displayName": "Create Event File"
+        }
+      ]
+    },
+    {
+      "displayName": "Event Title",
+      "name": "title",
+      "type": "string",
+      "placeholder": "e.g. New Event",
+      "default": "",
+      "_source": "createEvent"
+    },
+    {
+      "displayName": "Start",
+      "name": "start",
+      "type": "dateTime",
+      "description": "Date and time at which the event begins. (For all-day events, the time will be ignored.).",
+      "default": "",
+      "required": true,
+      "_source": "createEvent"
+    },
+    {
+      "displayName": "End",
+      "name": "end",
+      "type": "dateTime",
+      "description": "Date and time at which the event ends. (For all-day events, the time will be ignored.).",
+      "hint": "If not set, will be equal to the start date",
+      "default": "",
+      "required": true,
+      "_source": "createEvent"
+    },
+    {
+      "displayName": "All Day",
+      "name": "allDay",
+      "type": "boolean",
+      "description": "Whether the event lasts all day or not",
+      "default": false,
+      "_source": "createEvent"
+    },
+    {
+      "displayName": "Put Output File in Field",
+      "name": "binaryPropertyName",
+      "type": "string",
+      "description": "The field that your iCalendar file will be available under in the output",
+      "hint": "The name of the output binary field to put the file in",
+      "default": "data",
+      "required": true,
+      "_source": "createEvent"
+    },
+    {
+      "displayName": "Options",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether the attendee has to confirm attendance or not",
+      "placeholder": "Add option",
+      "value": "BUSY",
+      "default": {},
+      "required": true,
+      "options": [
+        {
+          "displayName": "Attendees",
+          "name": "attendeesUi",
+          "type": "fixedCollection",
+          "description": "Whether the attendee has to confirm attendance or not",
+          "placeholder": "Add Attendee",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "attendeeValues",
+              "displayName": "Attendees",
+              "values": [
+                {
+                  "displayName": "Name",
+                  "name": "name",
+                  "type": "string",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Email",
+                  "name": "email",
+                  "type": "string",
+                  "placeholder": "e.g. name@email.com",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "RSVP",
+                  "name": "rsvp",
+                  "type": "boolean",
+                  "description": "Whether the attendee has to confirm attendance or not",
+                  "default": false
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Busy Status",
+          "name": "busyStatus",
+          "type": "options",
+          "description": "Used to specify busy status for Microsoft applications, like Outlook",
+          "value": "BUSY",
+          "default": "",
+          "options": [
+            {
+              "name": "Busy",
+              "value": "BUSY",
+              "displayName": "Busy"
+            },
+            {
+              "name": "Tentative",
+              "value": "TENTATIVE",
+              "displayName": "Tentative"
+            }
+          ]
+        },
+        {
+          "displayName": "Calendar Name",
+          "name": "calName",
+          "type": "string",
+          "description": "Specifies the calendar (not event) name. Used by Apple iCal and Microsoft Outlook. <a href=\"https://docs.microsoft.com/en-us/openspecs/exchange_server_protocols/ms-oxcical/1da58449-b97e-46bd-b018-a1ce576f3e6d\">More info</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "File Name",
+          "name": "fileName",
+          "type": "string",
+          "description": "The name of the file to be generated. Default name is event.ics.",
+          "placeholder": "e.g. event.ics",
+          "default": ""
+        },
+        {
+          "displayName": "Geolocation",
+          "name": "geolocationUi",
+          "type": "fixedCollection",
+          "placeholder": "Add Geolocation",
+          "default": {},
+          "options": [
+            {
+              "name": "geolocationValues",
+              "displayName": "Geolocation",
+              "values": [
+                {
+                  "displayName": "Latitude",
+                  "name": "lat",
+                  "type": "string",
+                  "default": ""
+                },
+                {
+                  "displayName": "Longitude",
+                  "name": "lon",
+                  "type": "string",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": false
+          }
+        },
+        {
+          "displayName": "Location",
+          "name": "location",
+          "type": "string",
+          "description": "The intended venue",
+          "default": ""
+        },
+        {
+          "displayName": "Recurrence Rule",
+          "name": "recurrenceRule",
+          "type": "string",
+          "description": "A rule to define the repeat pattern of the event (RRULE). (<a href=\"https://icalendar.org/rrule-tool.html\">Rule generator</a>).",
+          "default": ""
+        },
+        {
+          "displayName": "Organizer",
+          "name": "organizerUi",
+          "type": "fixedCollection",
+          "placeholder": "Add Organizer",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "organizerValues",
+              "displayName": "Organizer",
+              "values": [
+                {
+                  "displayName": "Name",
+                  "name": "name",
+                  "type": "string",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Email",
+                  "name": "email",
+                  "type": "string",
+                  "placeholder": "e.g. name@email.com",
+                  "default": "",
+                  "required": true
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": false
+          }
+        },
+        {
+          "displayName": "Sequence",
+          "name": "sequence",
+          "type": "number",
+          "description": "When sending an update for an event (with the same uid), defines the revision sequence number",
+          "default": 0
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "value": "CONFIRMED",
+          "default": "CONFIRMED",
+          "options": [
+            {
+              "name": "Confirmed",
+              "value": "CONFIRMED",
+              "displayName": "Confirmed"
+            },
+            {
+              "name": "Cancelled",
+              "value": "CANCELLED",
+              "displayName": "Cancelled"
+            },
+            {
+              "name": "Tentative",
+              "value": "TENTATIVE",
+              "displayName": "Tentative"
+            }
+          ]
+        },
+        {
+          "displayName": "UID",
+          "name": "uid",
+          "type": "string",
+          "description": "Universally unique ID for the event (will be auto-generated if not specified here). Should be globally unique.",
+          "default": ""
+        },
+        {
+          "displayName": "URL",
+          "name": "url",
+          "type": "string",
+          "description": "URL associated with event",
+          "default": ""
+        },
+        {
+          "displayName": "Use Workflow Timezone",
+          "name": "useWorkflowTimezone",
+          "type": "boolean",
+          "description": "Whether to use the workflow timezone set in node's settings rather than UTC",
+          "default": false
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "_source": "createEvent"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create Event File",
+      "value": "createEventFile",
+      "displayName": "Create Event File"
+    }
+  ],
+  "operations_by_resource": {},
+  "credentials": [],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"]}}"
+  ],
+  "validation_rules": {
+    "start": {
+      "required": true
+    },
+    "end": {
+      "required": true
+    },
+    "binaryPropertyName": {
+      "required": true
+    },
+    "additionalFields": {
+      "required": true
+    }
+  },
+  "type_info": {
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "createEventFile",
+          "name": "Create Event File",
+          "description": ""
+        }
+      ]
+    },
+    "title": {
+      "type": "string",
+      "displayName": "Event Title",
+      "name": "title"
+    },
+    "start": {
+      "type": "dateTime",
+      "displayName": "Start",
+      "name": "start"
+    },
+    "end": {
+      "type": "dateTime",
+      "displayName": "End",
+      "name": "end"
+    },
+    "allDay": {
+      "type": "boolean",
+      "displayName": "All Day",
+      "name": "allDay"
+    },
+    "binaryPropertyName": {
+      "type": "string",
+      "displayName": "Put Output File in Field",
+      "name": "binaryPropertyName"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "additionalFields",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Attendees",
+          "name": "attendeesUi",
+          "type": "fixedCollection",
+          "description": "Whether the attendee has to confirm attendance or not",
+          "placeholder": "Add Attendee",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "attendeeValues",
+              "displayName": "Attendees",
+              "values": [
+                {
+                  "displayName": "Name",
+                  "name": "name",
+                  "type": "string",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Email",
+                  "name": "email",
+                  "type": "string",
+                  "placeholder": "e.g. name@email.com",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "RSVP",
+                  "name": "rsvp",
+                  "type": "boolean",
+                  "description": "Whether the attendee has to confirm attendance or not",
+                  "default": false
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Busy Status",
+          "name": "busyStatus",
+          "type": "options",
+          "description": "Used to specify busy status for Microsoft applications, like Outlook",
+          "value": "BUSY",
+          "default": "",
+          "options": [
+            {
+              "name": "Busy",
+              "value": "BUSY",
+              "displayName": "Busy"
+            },
+            {
+              "name": "Tentative",
+              "value": "TENTATIVE",
+              "displayName": "Tentative"
+            }
+          ]
+        },
+        {
+          "displayName": "Calendar Name",
+          "name": "calName",
+          "type": "string",
+          "description": "Specifies the calendar (not event) name. Used by Apple iCal and Microsoft Outlook. <a href=\"https://docs.microsoft.com/en-us/openspecs/exchange_server_protocols/ms-oxcical/1da58449-b97e-46bd-b018-a1ce576f3e6d\">More info</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "File Name",
+          "name": "fileName",
+          "type": "string",
+          "description": "The name of the file to be generated. Default name is event.ics.",
+          "placeholder": "e.g. event.ics",
+          "default": ""
+        },
+        {
+          "displayName": "Geolocation",
+          "name": "geolocationUi",
+          "type": "fixedCollection",
+          "placeholder": "Add Geolocation",
+          "default": {},
+          "options": [
+            {
+              "name": "geolocationValues",
+              "displayName": "Geolocation",
+              "values": [
+                {
+                  "displayName": "Latitude",
+                  "name": "lat",
+                  "type": "string",
+                  "default": ""
+                },
+                {
+                  "displayName": "Longitude",
+                  "name": "lon",
+                  "type": "string",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": false
+          }
+        },
+        {
+          "displayName": "Location",
+          "name": "location",
+          "type": "string",
+          "description": "The intended venue",
+          "default": ""
+        },
+        {
+          "displayName": "Recurrence Rule",
+          "name": "recurrenceRule",
+          "type": "string",
+          "description": "A rule to define the repeat pattern of the event (RRULE). (<a href=\"https://icalendar.org/rrule-tool.html\">Rule generator</a>).",
+          "default": ""
+        },
+        {
+          "displayName": "Organizer",
+          "name": "organizerUi",
+          "type": "fixedCollection",
+          "placeholder": "Add Organizer",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "organizerValues",
+              "displayName": "Organizer",
+              "values": [
+                {
+                  "displayName": "Name",
+                  "name": "name",
+                  "type": "string",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Email",
+                  "name": "email",
+                  "type": "string",
+                  "placeholder": "e.g. name@email.com",
+                  "default": "",
+                  "required": true
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": false
+          }
+        },
+        {
+          "displayName": "Sequence",
+          "name": "sequence",
+          "type": "number",
+          "description": "When sending an update for an event (with the same uid), defines the revision sequence number",
+          "default": 0
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "value": "CONFIRMED",
+          "default": "CONFIRMED",
+          "options": [
+            {
+              "name": "Confirmed",
+              "value": "CONFIRMED",
+              "displayName": "Confirmed"
+            },
+            {
+              "name": "Cancelled",
+              "value": "CANCELLED",
+              "displayName": "Cancelled"
+            },
+            {
+              "name": "Tentative",
+              "value": "TENTATIVE",
+              "displayName": "Tentative"
+            }
+          ]
+        },
+        {
+          "displayName": "UID",
+          "name": "uid",
+          "type": "string",
+          "description": "Universally unique ID for the event (will be auto-generated if not specified here). Should be globally unique.",
+          "default": ""
+        },
+        {
+          "displayName": "URL",
+          "name": "url",
+          "type": "string",
+          "description": "URL associated with event",
+          "default": ""
+        },
+        {
+          "displayName": "Use Workflow Timezone",
+          "name": "useWorkflowTimezone",
+          "type": "boolean",
+          "description": "Whether to use the workflow timezone set in node's settings rather than UTC",
+          "default": false
+        }
+      ]
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "title",
+        "text": "e.g. New Event"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add option"
+      }
+    ],
+    "hints": [
+      {
+        "field": "end",
+        "text": "If not set, will be equal to the start date"
+      },
+      {
+        "field": "binaryPropertyName",
+        "text": "The name of the output binary field to put the file in"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

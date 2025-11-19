@@ -1,0 +1,33 @@
+{
+  "issue_id": "_gemini_cli_issue_017",
+  "title": "Google Sheets node: 'icon' field mismatch in extracted node_info",
+  "severity": "high",
+  "status": "new",
+  "priority": 2,
+  "metadata": {
+    "created_at": "2025-11-13T20:10:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "Google Sheets (potentially other nodes with custom icon definitions)",
+    "validation_session": "comprehensive_audit_2025-11-13"
+  },
+  "description": {
+    "problem": "The 'icon' field in the extracted 'googlesheets_data.json' is 'bot', but the source 'GoogleSheets.node.ts' defines it as 'file:googleSheets.svg'.",
+    "impact": "HIGH - Incorrect visual representation of the node. Users will see a generic 'bot' icon instead of the intended Google Sheets icon, leading to confusion and a degraded user experience.",
+    "root_cause": "The extractor's logic for parsing icon definitions, especially those using the 'file:' prefix, might be flawed. It might be defaulting to a generic icon or misinterpreting the icon path.",
+    "evidence": [
+      "Source file: n8n/packages/nodes-base/nodes/Google/Sheet/GoogleSheets.node.ts",
+      "Source snippet: icon: 'file:googleSheets.svg'",
+      "Extracted file: extracted_docs/googlesheets_data.json",
+      "Extracted node_info.icon: 'bot'",
+      "Command used to verify: jq '.node_info.icon' extracted_docs/googlesheets_data.json and manual comparison with source."
+    ],
+    "fix_approach": "1. Review the extraction logic for the 'icon' field to ensure it correctly parses and extracts icon paths, including those with the 'file:' prefix. \n2. Ensure no unintended default icon is applied when a specific icon is defined. \n3. Test with: Google Sheets node. \n4. Expected result: 'googlesheets_data.json' should have 'icon: 'file:googleSheets.svg''. \n5. Validation command: jq '.node_info.icon' extracted_docs/googlesheets_data.json should return 'file:googleSheets.svg'."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

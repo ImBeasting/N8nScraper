@@ -1,0 +1,31 @@
+{
+  "issue_id": "_openai_codex_issue_008",
+  "title": "Subtitle expressions truncated at `={{$parameter[` for 292 nodes",
+  "severity": "medium",
+  "status": "new",
+  "priority": 2,
+  "metadata": {
+    "created_at": "2025-11-12T01:38:00Z",
+    "created_by": "openai_codex",
+    "affected_nodes": "292 nodes reporting `\"subtitle\": \"={{$parameter[` in extracted_docs/*_data.json"
+  },
+  "description": {
+    "problem": "Any node whose subtitle expression contains quoted parameters (e.g., `$parameter[\"operation\"]`) is truncated right after the first `\"`, leaving the string as `={{$parameter[` instead of the full expression.",
+    "impact": "MEDIUM – The subtitle is what renders in the editor under each node, summarising the selected resource/operation. Losing the expression on 292 nodes means users (and AI tooling) cannot see quick context such as \"Update: record\" for Slack, HubSpot, Notion, etc.",
+    "root_cause": "The metadata parser copies the raw text between the first pair of double quotes, which fails as soon as the expression itself contains escaped quotes. Example (`Slack/Slack.node.ts`): `subtitle: '={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}'`. The extractor stops at the first `\"` instead of parsing the whole string literal.",
+    "evidence": [
+      "Scope: `rg -l '\"subtitle\": \"=\\\\{\\\\{\\\\$parameter\\[' extracted_docs/*_data.json | wc -l` → **292** affected data files.",
+      "Slack node:\n  - Source: n8n/packages/nodes-base/nodes/Slack/Slack.node.ts lines 8-16 (`subtitle: '={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}'`).\n  - Extracted: `jq '.node_info.subtitle' extracted_docs/slack_data.json` → `\"={{$parameter[\"`.",
+      "Notion node:\n  - Source: n8n/packages/nodes-base/nodes/Notion/v2/VersionDescription.ts line 18 has the same subtitle expression.\n  - Extracted: `jq '.node_info.subtitle' extracted_docs/notion_data.json` → `\"={{$parameter[\"`.",
+      "Even Slack Trigger files (`slacktrigger_data.json`) show the truncated literal, confirming the issue is systemic rather than node-specific."
+    ],
+    "fix_approach": "When parsing string literals from TypeScript, either (a) use a proper TS/JS parser or (b) expand the current regex so it respects escaped quotes. Specifically: strip wrapping quotes, then unescape `\\\"` and `\\'` instead of trimming at the first occurrence. Add a regression test that reads the Slack subtitle and verifies it still contains `operation` and `resource` after extraction. After patching, re-run the extractor for a handful of nodes (Slack, Notion, HubSpot) plus `python3 validate_extraction.py` to ensure no `\"={{$parameter[` substrings remain."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

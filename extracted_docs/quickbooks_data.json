@@ -1,0 +1,4317 @@
+{
+  "node_info": {
+    "icon": "file:quickbooks.svg",
+    "defaults": {
+      "name": "QuickBooks Online"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "quickBooksOAuth2Api",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getCustomers"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "QuickBooks Online",
+    "name": "quickbooks",
+    "description": "Consume the QuickBooks Online API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.quickbooks",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Finance & Accounting"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/quickbooks/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.quickbooks/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "bill",
+      "default": "customer",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Bill",
+          "value": "bill",
+          "displayName": "Bill"
+        },
+        {
+          "name": "Customer",
+          "value": "customer",
+          "displayName": "Customer"
+        },
+        {
+          "name": "Employee",
+          "value": "employee",
+          "displayName": "Employee"
+        },
+        {
+          "name": "Estimate",
+          "value": "estimate",
+          "displayName": "Estimate"
+        },
+        {
+          "name": "Invoice",
+          "value": "invoice",
+          "displayName": "Invoice"
+        },
+        {
+          "name": "Item",
+          "value": "item",
+          "displayName": "Item"
+        },
+        {
+          "name": "Payment",
+          "value": "payment",
+          "displayName": "Payment"
+        },
+        {
+          "name": "Purchase",
+          "value": "purchase",
+          "displayName": "Purchase"
+        },
+        {
+          "name": "Transaction",
+          "value": "transaction",
+          "displayName": "Transaction"
+        },
+        {
+          "name": "Vendor",
+          "value": "vendor",
+          "displayName": "Vendor"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Get a report",
+      "value": "getReport",
+      "default": "getReport",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get Report",
+          "action": "Get a report",
+          "value": "getReport",
+          "displayName": "Get Report"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transaction"
+          ]
+        }
+      },
+      "_source": "Transaction_transactionOperations"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transaction"
+          ],
+          "operation": [
+            "getReport"
+          ]
+        }
+      },
+      "_operation": "getReport",
+      "_source": "Transaction_transactionFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Columns to return",
+      "placeholder": "Add Field",
+      "value": "Printed",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Accounts Payable Paid",
+          "name": "appaid",
+          "type": "options",
+          "default": "All"
+        },
+        {
+          "displayName": "Accounts Receivable Paid",
+          "name": "arpaid",
+          "type": "options",
+          "default": "All"
+        },
+        {
+          "displayName": "Cleared Status",
+          "name": "cleared",
+          "type": "options",
+          "default": "Reconciled"
+        },
+        {
+          "displayName": "Columns",
+          "name": "columns",
+          "type": "multiOptions",
+          "description": "Columns to return",
+          "default": []
+        },
+        {
+          "displayName": "Customer Names or IDs",
+          "name": "customer",
+          "type": "multiOptions",
+          "description": "Customer to filter results by. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getCustomers"
+          }
+        },
+        {
+          "displayName": "Date Range (Custom)",
+          "name": "dateRangeCustom",
+          "type": "fixedCollection",
+          "description": "Start date of the date range to filter results by",
+          "placeholder": "Add Date Range",
+          "default": {},
+          "options": [
+            {
+              "name": "dateRangeCustomProperties",
+              "displayName": "Date Range Properties",
+              "values": [
+                {
+                  "displayName": "Start Date",
+                  "name": "start_date",
+                  "type": "dateTime",
+                  "description": "Start date of the date range to filter results by",
+                  "default": ""
+                },
+                {
+                  "displayName": "End Date",
+                  "name": "end_date",
+                  "type": "dateTime",
+                  "description": "End date of the date range to filter results by",
+                  "default": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "displayName": "Date Range (Predefined)",
+          "name": "date_macro",
+          "type": "options",
+          "description": "Predefined date range to filter results by",
+          "default": "This Month"
+        },
+        {
+          "displayName": "Date Range for Creation Date (Custom)",
+          "name": "dateRangeCreationCustom",
+          "type": "fixedCollection",
+          "description": "Start date of the account creation date range to filter results by",
+          "placeholder": "Add Creation Date Range",
+          "default": {},
+          "options": [
+            {
+              "name": "dateRangeCreationCustomProperties",
+              "displayName": "Creation Date Range Properties",
+              "values": [
+                {
+                  "displayName": "Start Creation Date",
+                  "name": "start_createdate",
+                  "type": "dateTime",
+                  "description": "Start date of the account creation date range to filter results by",
+                  "default": ""
+                },
+                {
+                  "displayName": "End Creation Date",
+                  "name": "end_createdate",
+                  "type": "dateTime",
+                  "description": "End date of the account creation date range to filter results by",
+                  "default": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "displayName": "Date Range for Creation Date (Predefined)",
+          "name": "createdate_macro",
+          "type": "options",
+          "description": "Predefined report account creation date range",
+          "default": "This Month"
+        },
+        {
+          "displayName": "Date Range for Due Date (Custom)",
+          "name": "dateRangeDueCustom",
+          "type": "fixedCollection",
+          "description": "Start date of the due date range to filter results by",
+          "placeholder": "Add Due Date Range",
+          "default": {},
+          "options": [
+            {
+              "name": "dateRangeDueCustomProperties",
+              "displayName": "Due Date Range Properties",
+              "values": [
+                {
+                  "displayName": "Start Due Date",
+                  "name": "start_duedate",
+                  "type": "dateTime",
+                  "description": "Start date of the due date range to filter results by",
+                  "default": ""
+                },
+                {
+                  "displayName": "End Due Date",
+                  "name": "end_duedate",
+                  "type": "dateTime",
+                  "description": "End date of the due date range to filter results by",
+                  "default": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "displayName": "Date Range for Due Date (Predefined)",
+          "name": "duedate_macro",
+          "type": "options",
+          "description": "Predefined due date range to filter results by",
+          "default": "This Month"
+        },
+        {
+          "displayName": "Date Range for Modification Date (Custom)",
+          "name": "dateRangeModificationCustom",
+          "type": "fixedCollection",
+          "description": "Start date of the account modification date range to filter results by",
+          "placeholder": "Add Modification Date Range",
+          "default": {},
+          "options": [
+            {
+              "name": "dateRangeModificationCustomProperties",
+              "displayName": "Modification Date Range Properties",
+              "values": [
+                {
+                  "displayName": "Start Modification Date",
+                  "name": "start_moddate",
+                  "type": "dateTime",
+                  "description": "Start date of the account modification date range to filter results by",
+                  "default": ""
+                },
+                {
+                  "displayName": "End Modification Date",
+                  "name": "end_moddate",
+                  "type": "dateTime",
+                  "description": "End date of the account modification date range to filter results by",
+                  "default": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "displayName": "Date Range for Modification Date (Predefined)",
+          "name": "moddate_macro",
+          "type": "options",
+          "description": "Predefined account modifiction date range to filter results by",
+          "default": "This Month"
+        },
+        {
+          "displayName": "Department Names or IDs",
+          "name": "department",
+          "type": "multiOptions",
+          "description": "Department to filter results by. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getDepartments"
+          }
+        },
+        {
+          "displayName": "Document Number",
+          "name": "docnum",
+          "type": "string",
+          "description": "Transaction document number to filter results by",
+          "default": ""
+        },
+        {
+          "displayName": "Group By",
+          "name": "group_by",
+          "type": "options",
+          "description": "Transaction field to group results by",
+          "default": "Account"
+        },
+        {
+          "displayName": "Memo Names or IDs",
+          "name": "memo",
+          "type": "multiOptions",
+          "description": "Memo to filter results by. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getMemos"
+          }
+        },
+        {
+          "displayName": "Payment Method",
+          "name": "payment_Method",
+          "type": "options",
+          "description": "Payment method to filter results by",
+          "default": "Cash"
+        },
+        {
+          "displayName": "Printed Status",
+          "name": "printed",
+          "type": "options",
+          "description": "Printed state to filter results by",
+          "value": "Printed",
+          "default": "Printed",
+          "options": [
+            {
+              "name": "Printed",
+              "value": "Printed",
+              "displayName": "Printed"
+            },
+            {
+              "name": "To Be Printed",
+              "value": "To_be_printed",
+              "displayName": "To Be Printed"
+            }
+          ]
+        },
+        {
+          "displayName": "Quick Zoom URL",
+          "name": "qzurl",
+          "type": "boolean",
+          "description": "Whether Quick Zoom URL information should be generated",
+          "default": true
+        },
+        {
+          "displayName": "Sort By",
+          "name": "sort_by",
+          "type": "options",
+          "description": "Column to sort results by",
+          "default": "account_name"
+        },
+        {
+          "displayName": "Sort Order",
+          "name": "sort_order",
+          "type": "options",
+          "default": "Ascend"
+        },
+        {
+          "displayName": "Source Account Type",
+          "name": "source_account_type",
+          "type": "options",
+          "description": "Account type to filter results by",
+          "default": "Bank"
+        },
+        {
+          "displayName": "Term Names or IDs",
+          "name": "term",
+          "type": "multiOptions",
+          "description": "Term to filter results by. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getTerms"
+          }
+        },
+        {
+          "displayName": "Transaction Amount",
+          "name": "bothamount",
+          "type": "number",
+          "description": "Monetary amount to filter results by",
+          "default": 0,
+          "typeOptions": {
+            "numberPrecision": 2
+          }
+        },
+        {
+          "displayName": "Transaction Type",
+          "name": "transaction_type",
+          "type": "options",
+          "description": "Transaction type to filter results by",
+          "default": "CreditCardCharge"
+        },
+        {
+          "displayName": "Vendor Names or IDs",
+          "name": "vendor",
+          "type": "multiOptions",
+          "description": "Vendor to filter results by. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getVendors"
+          }
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getCustomers"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transaction"
+          ],
+          "operation": [
+            "getReport"
+          ]
+        }
+      },
+      "_operation": "getReport",
+      "_source": "Transaction_transactionFields"
+    },
+    {
+      "displayName": "For Vendor Name or ID",
+      "name": "VendorRef",
+      "type": "options",
+      "description": "The ID of the vendor who the bill is for. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": [],
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getVendors"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bill"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Bill_billFields"
+    },
+    {
+      "displayName": "Line",
+      "name": "Line",
+      "type": "collection",
+      "description": "Individual line item of a transaction",
+      "placeholder": "Add Line Item Property",
+      "value": "AccountBasedExpenseLineDetail",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Account ID",
+          "name": "accountId",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Amount",
+          "name": "Amount",
+          "type": "number",
+          "description": "Monetary amount of the line item",
+          "default": 0
+        },
+        {
+          "displayName": "Description",
+          "name": "Description",
+          "type": "string",
+          "description": "Textual description of the line item",
+          "default": ""
+        },
+        {
+          "displayName": "Detail Type",
+          "name": "DetailType",
+          "type": "options",
+          "value": "AccountBasedExpenseLineDetail",
+          "default": "ItemBasedExpenseLineDetail",
+          "options": [
+            {
+              "name": "Account-Based Expense Line Detail",
+              "value": "AccountBasedExpenseLineDetail",
+              "displayName": "Account-based Expense Line Detail"
+            },
+            {
+              "name": "Item-Based Expense Line Detail",
+              "value": "ItemBasedExpenseLineDetail",
+              "displayName": "Item-based Expense Line Detail"
+            }
+          ]
+        },
+        {
+          "displayName": "Item Name or ID",
+          "name": "itemId",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getItems"
+          }
+        },
+        {
+          "displayName": "Position",
+          "name": "LineNum",
+          "type": "number",
+          "description": "Position of the line item relative to others",
+          "default": 1
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bill"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Bill_billFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bill"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Bill_billFields"
+    },
+    {
+      "displayName": "Bill ID",
+      "name": "billId",
+      "type": "string",
+      "description": "The ID of the bill to delete",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bill"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Bill_billFields"
+    },
+    {
+      "displayName": "Bill ID",
+      "name": "billId",
+      "type": "string",
+      "description": "The ID of the bill to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bill"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Bill_billFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bill"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Bill_billFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 1000
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bill"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Bill_billFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "The condition for selecting bills. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "The condition for selecting bills. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+          "placeholder": "WHERE Metadata.LastUpdatedTime > '2021-01-01'",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bill"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Bill_billFields"
+    },
+    {
+      "displayName": "Bill ID",
+      "name": "billId",
+      "type": "string",
+      "description": "The ID of the bill to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bill"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Bill_billFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "required": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bill"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Bill_billFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a bill",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a bill",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a bill",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a bill",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many bills",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update a bill",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bill"
+          ]
+        }
+      },
+      "_source": "Bill_billOperations"
+    },
+    {
+      "displayName": "Display Name",
+      "name": "displayName",
+      "type": "string",
+      "description": "The display name of the customer to create",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "customer"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Customer_customerFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "customer"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Customer_customerFields"
+    },
+    {
+      "displayName": "Customer ID",
+      "name": "customerId",
+      "type": "string",
+      "description": "The ID of the customer to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "customer"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Customer_customerFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "customer"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Customer_customerFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 1000
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "customer"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Customer_customerFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "The condition for selecting customers. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "The condition for selecting customers. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+          "placeholder": "WHERE Metadata.LastUpdatedTime > '2021-01-01'",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "customer"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Customer_customerFields"
+    },
+    {
+      "displayName": "Customer ID",
+      "name": "customerId",
+      "type": "string",
+      "description": "The ID of the customer to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "customer"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Customer_customerFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "required": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "customer"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Customer_customerFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a customer",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a customer",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Get",
+          "action": "Get a customer",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many customers",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update a customer",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "customer"
+          ]
+        }
+      },
+      "_source": "Customer_customerOperations"
+    },
+    {
+      "displayName": "Family Name",
+      "name": "FamilyName",
+      "type": "string",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "employee"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Employee_employeeFields"
+    },
+    {
+      "displayName": "Given Name",
+      "name": "GivenName",
+      "type": "string",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "employee"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Employee_employeeFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "employee"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Employee_employeeFields"
+    },
+    {
+      "displayName": "Employee ID",
+      "name": "employeeId",
+      "type": "string",
+      "description": "The ID of the employee to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "employee"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Employee_employeeFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "employee"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Employee_employeeFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 1000
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "employee"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Employee_employeeFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "The condition for selecting employees. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "The condition for selecting employees. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+          "placeholder": "WHERE Metadata.LastUpdatedTime > '2021-01-01'",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "employee"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Employee_employeeFields"
+    },
+    {
+      "displayName": "Employee ID",
+      "name": "employeeId",
+      "type": "string",
+      "description": "The ID of the employee to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "employee"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Employee_employeeFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "required": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "employee"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Employee_employeeFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create an employee",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create an employee",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Get",
+          "action": "Get an employee",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many employees",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update an employee",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "employee"
+          ]
+        }
+      },
+      "_source": "Employee_employeeOperations"
+    },
+    {
+      "displayName": "For Customer Name or ID",
+      "name": "CustomerRef",
+      "type": "options",
+      "description": "The ID of the customer who the estimate is for. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": [],
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getCustomers"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Line",
+      "name": "Line",
+      "type": "collection",
+      "description": "Individual line item of a transaction",
+      "placeholder": "Add Line Item Property",
+      "value": "SalesItemLineDetail",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Amount",
+          "name": "Amount",
+          "type": "number",
+          "description": "Monetary amount of the line item",
+          "default": 0
+        },
+        {
+          "displayName": "Description",
+          "name": "Description",
+          "type": "string",
+          "description": "Textual description of the line item",
+          "default": ""
+        },
+        {
+          "displayName": "Detail Type",
+          "name": "DetailType",
+          "type": "options",
+          "value": "SalesItemLineDetail",
+          "default": "SalesItemLineDetail",
+          "options": [
+            {
+              "name": "Sales Item Line Detail",
+              "value": "SalesItemLineDetail",
+              "displayName": "Sales Item Line Detail"
+            }
+          ]
+        },
+        {
+          "displayName": "Item Name or ID",
+          "name": "itemId",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getItems"
+          }
+        },
+        {
+          "displayName": "Position",
+          "name": "LineNum",
+          "type": "number",
+          "description": "Position of the line item relative to others",
+          "default": 1
+        },
+        {
+          "displayName": "Tax Code Ref Name or ID",
+          "name": "TaxCodeRef",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getTaxCodeRefs"
+          }
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Estimate ID",
+      "name": "estimateId",
+      "type": "string",
+      "description": "The ID of the estimate to delete",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Estimate ID",
+      "name": "estimateId",
+      "type": "string",
+      "description": "The ID of the estimate to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Download",
+      "name": "download",
+      "type": "boolean",
+      "description": "Whether to download the estimate as a PDF file",
+      "default": false,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Put Output File in Field",
+      "name": "binaryProperty",
+      "type": "string",
+      "hint": "The name of the output binary field to put the file in",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "get"
+          ],
+          "download": [
+            true
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "File Name",
+      "name": "fileName",
+      "type": "string",
+      "description": "Name of the file that will be downloaded",
+      "placeholder": "data.pdf",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "get"
+          ],
+          "download": [
+            true
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 1000
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "The condition for selecting estimates. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "The condition for selecting estimates. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+          "placeholder": "WHERE Metadata.LastUpdatedTime > '2021-01-01'",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Estimate ID",
+      "name": "estimateId",
+      "type": "string",
+      "description": "The ID of the estimate to send",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "send"
+          ]
+        }
+      },
+      "_operation": "send",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Email",
+      "name": "email",
+      "type": "string",
+      "description": "The email of the recipient of the estimate",
+      "placeholder": "name@email.com",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "send"
+          ]
+        }
+      },
+      "_operation": "send",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Estimate ID",
+      "name": "estimateId",
+      "type": "string",
+      "description": "The ID of the estimate to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "required": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Estimate_estimateFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create an estimate",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create an estimate",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete an estimate",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get an estimate",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many estimates",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Send",
+          "action": "Send an estimate",
+          "value": "send",
+          "displayName": "Send"
+        },
+        {
+          "name": "Update",
+          "action": "Update an estimate",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ]
+        }
+      },
+      "_source": "Estimate_estimateOperations"
+    },
+    {
+      "displayName": "For Customer Name or ID",
+      "name": "CustomerRef",
+      "type": "options",
+      "description": "The ID of the customer who the invoice is for. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": [],
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getCustomers"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Line",
+      "name": "Line",
+      "type": "collection",
+      "description": "Individual line item of a transaction",
+      "placeholder": "Add Line Item Property",
+      "value": "SalesItemLineDetail",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Amount",
+          "name": "Amount",
+          "type": "number",
+          "description": "Monetary amount of the line item",
+          "default": 0
+        },
+        {
+          "displayName": "Description",
+          "name": "Description",
+          "type": "string",
+          "description": "Textual description of the line item",
+          "default": ""
+        },
+        {
+          "displayName": "Detail Type",
+          "name": "DetailType",
+          "type": "options",
+          "value": "SalesItemLineDetail",
+          "default": "SalesItemLineDetail",
+          "options": [
+            {
+              "name": "Sales Item Line Detail",
+              "value": "SalesItemLineDetail",
+              "displayName": "Sales Item Line Detail"
+            }
+          ]
+        },
+        {
+          "displayName": "Item Name or ID",
+          "name": "itemId",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getItems"
+          }
+        },
+        {
+          "displayName": "Position",
+          "name": "LineNum",
+          "type": "number",
+          "description": "Position of the line item relative to others",
+          "default": 1
+        },
+        {
+          "displayName": "Tax Code Ref Name or ID",
+          "name": "TaxCodeRef",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getTaxCodeRefs"
+          }
+        },
+        {
+          "displayName": "Quantity",
+          "name": "Qty",
+          "type": "number",
+          "description": "Number of units of the line item",
+          "default": 0
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Invoice ID",
+      "name": "invoiceId",
+      "type": "string",
+      "description": "The ID of the invoice to delete",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Invoice ID",
+      "name": "invoiceId",
+      "type": "string",
+      "description": "The ID of the invoice to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Download",
+      "name": "download",
+      "type": "boolean",
+      "description": "Whether to download the invoice as a PDF file",
+      "default": false,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Put Output File in Field",
+      "name": "binaryProperty",
+      "type": "string",
+      "hint": "The name of the output binary field to put the file in",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "get"
+          ],
+          "download": [
+            true
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "File Name",
+      "name": "fileName",
+      "type": "string",
+      "description": "Name of the file that will be downloaded",
+      "placeholder": "data.pdf",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "get"
+          ],
+          "download": [
+            true
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 1000
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "The condition for selecting invoices. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "The condition for selecting invoices. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+          "placeholder": "WHERE Metadata.LastUpdatedTime > '2021-01-01'",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Invoice ID",
+      "name": "invoiceId",
+      "type": "string",
+      "description": "The ID of the invoice to send",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "send"
+          ]
+        }
+      },
+      "_operation": "send",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Email",
+      "name": "email",
+      "type": "string",
+      "description": "The email of the recipient of the invoice",
+      "placeholder": "name@email.com",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "send"
+          ]
+        }
+      },
+      "_operation": "send",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Invoice ID",
+      "name": "invoiceId",
+      "type": "string",
+      "description": "The ID of the invoice to void",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "void"
+          ]
+        }
+      },
+      "_operation": "void",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Invoice ID",
+      "name": "invoiceId",
+      "type": "string",
+      "description": "The ID of the invoice to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "required": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Invoice_invoiceFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create an invoice",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create an invoice",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete an invoice",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get an invoice",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many invoices",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Send",
+          "action": "Send an invoice",
+          "value": "send",
+          "displayName": "Send"
+        },
+        {
+          "name": "Update",
+          "action": "Update an invoice",
+          "value": "update",
+          "displayName": "Update"
+        },
+        {
+          "name": "Void",
+          "action": "Void an invoice",
+          "value": "void",
+          "displayName": "Void"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ]
+        }
+      },
+      "_source": "Invoice_invoiceOperations"
+    },
+    {
+      "displayName": "Item ID",
+      "name": "itemId",
+      "type": "string",
+      "description": "The ID of the item to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 1000
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "The condition for selecting items. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "The condition for selecting items. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+          "placeholder": "WHERE Metadata.LastUpdatedTime > '2021-01-01'",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Get an item",
+      "value": "get",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "action": "Get an item",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many items",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ]
+        }
+      },
+      "_source": "Item_itemOperations"
+    },
+    {
+      "displayName": "For Customer Name or ID",
+      "name": "CustomerRef",
+      "type": "options",
+      "description": "The ID of the customer who the payment is for. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": [],
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getCustomers"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Total Amount",
+      "name": "TotalAmt",
+      "type": "number",
+      "description": "Total amount of the transaction",
+      "default": 0,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Payment ID",
+      "name": "paymentId",
+      "type": "string",
+      "description": "The ID of the payment to delete",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Payment ID",
+      "name": "paymentId",
+      "type": "string",
+      "description": "The ID of the payment to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Download",
+      "name": "download",
+      "type": "boolean",
+      "description": "Whether to download estimate as PDF file",
+      "default": false,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Put Output File in Field",
+      "name": "binaryProperty",
+      "type": "string",
+      "hint": "The name of the output binary field to put the file in",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "get"
+          ],
+          "download": [
+            true
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "File Name",
+      "name": "fileName",
+      "type": "string",
+      "description": "Name of the file that will be downloaded",
+      "placeholder": "data.pdf",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "get"
+          ],
+          "download": [
+            true
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 1000
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "The condition for selecting payments. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "The condition for selecting payments. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+          "placeholder": "WHERE Metadata.LastUpdatedTime > '2021-01-01'",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Payment ID",
+      "name": "paymentId",
+      "type": "string",
+      "description": "The ID of the payment to send",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "send"
+          ]
+        }
+      },
+      "_operation": "send",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Email",
+      "name": "email",
+      "type": "string",
+      "description": "The email of the recipient of the payment",
+      "placeholder": "name@email.com",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "send"
+          ]
+        }
+      },
+      "_operation": "send",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Payment ID",
+      "name": "paymentId",
+      "type": "string",
+      "description": "The ID of the payment to void",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "void"
+          ]
+        }
+      },
+      "_operation": "void",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Payment ID",
+      "name": "paymentId",
+      "type": "string",
+      "description": "The ID of the payment to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "required": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Payment_paymentFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a payment",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a payment",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a payment",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a payment",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many payments",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Send",
+          "action": "Send a payment",
+          "value": "send",
+          "displayName": "Send"
+        },
+        {
+          "name": "Update",
+          "action": "Update a payment",
+          "value": "update",
+          "displayName": "Update"
+        },
+        {
+          "name": "Void",
+          "action": "Void a payment",
+          "value": "void",
+          "displayName": "Void"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ]
+        }
+      },
+      "_source": "Payment_paymentOperations"
+    },
+    {
+      "displayName": "Display Name",
+      "name": "displayName",
+      "type": "string",
+      "description": "The display name of the vendor to create",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "vendor"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Vendor_vendorFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "vendor"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Vendor_vendorFields"
+    },
+    {
+      "displayName": "Vendor ID",
+      "name": "vendorId",
+      "type": "string",
+      "description": "The ID of the vendor to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "vendor"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Vendor_vendorFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "vendor"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Vendor_vendorFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 1000
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "vendor"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Vendor_vendorFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "The condition for selecting vendors. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "The condition for selecting vendors. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+          "placeholder": "WHERE Metadata.LastUpdatedTime > '2021-01-01'",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "vendor"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Vendor_vendorFields"
+    },
+    {
+      "displayName": "Vendor ID",
+      "name": "vendorId",
+      "type": "string",
+      "description": "The ID of the vendor to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "vendor"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Vendor_vendorFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "required": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "vendor"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Vendor_vendorFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a vendor",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a vendor",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Get",
+          "action": "Get a vendor",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many vendors",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update a vendor",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "vendor"
+          ]
+        }
+      },
+      "_source": "Vendor_vendorOperations"
+    },
+    {
+      "displayName": "Purchase ID",
+      "name": "purchaseId",
+      "type": "string",
+      "description": "The ID of the purchase to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "purchase"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Purchase_purchaseFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "purchase"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Purchase_purchaseFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 1000
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "purchase"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Purchase_purchaseFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "The condition for selecting purchases. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "The condition for selecting purchases. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+          "placeholder": "WHERE Metadata.LastUpdatedTime > '2021-01-01'",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "purchase"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Purchase_purchaseFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Get a purchase",
+      "value": "get",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "action": "Get a purchase",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many purchases",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "purchase"
+          ]
+        }
+      },
+      "_source": "Purchase_purchaseOperations"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Get Report",
+      "action": "Get a report",
+      "value": "getReport",
+      "displayName": "Get Report"
+    },
+    {
+      "name": "Create",
+      "action": "Create a bill",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "action": "Delete a bill",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "action": "Get a bill",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "action": "Get many bills",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "action": "Update a bill",
+      "value": "update",
+      "displayName": "Update"
+    },
+    {
+      "name": "Send",
+      "action": "Send an estimate",
+      "value": "send",
+      "displayName": "Send"
+    },
+    {
+      "name": "Void",
+      "action": "Void an invoice",
+      "value": "void",
+      "displayName": "Void"
+    }
+  ],
+  "operations_by_resource": {
+    "transaction": [
+      {
+        "name": "Get Report",
+        "action": "Get a report",
+        "value": "getReport",
+        "displayName": "Get Report"
+      }
+    ],
+    "bill": [
+      {
+        "name": "Create",
+        "action": "Create a bill",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a bill",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a bill",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many bills",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update a bill",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "customer": [
+      {
+        "name": "Create",
+        "action": "Create a customer",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Get",
+        "action": "Get a customer",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many customers",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update a customer",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "employee": [
+      {
+        "name": "Create",
+        "action": "Create an employee",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Get",
+        "action": "Get an employee",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many employees",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update an employee",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "estimate": [
+      {
+        "name": "Create",
+        "action": "Create an estimate",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete an estimate",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get an estimate",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many estimates",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Send",
+        "action": "Send an estimate",
+        "value": "send",
+        "displayName": "Send"
+      },
+      {
+        "name": "Update",
+        "action": "Update an estimate",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "invoice": [
+      {
+        "name": "Create",
+        "action": "Create an invoice",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete an invoice",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get an invoice",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many invoices",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Send",
+        "action": "Send an invoice",
+        "value": "send",
+        "displayName": "Send"
+      },
+      {
+        "name": "Update",
+        "action": "Update an invoice",
+        "value": "update",
+        "displayName": "Update"
+      },
+      {
+        "name": "Void",
+        "action": "Void an invoice",
+        "value": "void",
+        "displayName": "Void"
+      }
+    ],
+    "item": [
+      {
+        "name": "Get",
+        "action": "Get an item",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many items",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "payment": [
+      {
+        "name": "Create",
+        "action": "Create a payment",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a payment",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a payment",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many payments",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Send",
+        "action": "Send a payment",
+        "value": "send",
+        "displayName": "Send"
+      },
+      {
+        "name": "Update",
+        "action": "Update a payment",
+        "value": "update",
+        "displayName": "Update"
+      },
+      {
+        "name": "Void",
+        "action": "Void a payment",
+        "value": "void",
+        "displayName": "Void"
+      }
+    ],
+    "vendor": [
+      {
+        "name": "Create",
+        "action": "Create a vendor",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Get",
+        "action": "Get a vendor",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many vendors",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update a vendor",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "purchase": [
+      {
+        "name": "Get",
+        "action": "Get a purchase",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many purchases",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "quickBooksOAuth2Api",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "purchase"
+          ]
+        }
+      }
+    },
+    "simple": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transaction"
+          ],
+          "operation": [
+            "getReport"
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "purchase"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "VendorRef": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bill"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "Line": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "vendor"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "billId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "bill"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "purchase"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "purchase"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "vendor"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "displayName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "vendor"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "customerId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "customer"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "FamilyName": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "employee"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "GivenName": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "employee"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "employeeId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "employee"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "CustomerRef": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "estimateId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "estimate"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "download": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "binaryProperty": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "get"
+          ],
+          "download": [
+            true
+          ]
+        }
+      }
+    },
+    "fileName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "get"
+          ],
+          "download": [
+            true
+          ]
+        }
+      }
+    },
+    "email": {
+      "required": true,
+      "format": "email",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "send"
+          ]
+        }
+      }
+    },
+    "invoiceId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "invoice"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "itemId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "TotalAmt": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "paymentId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "payment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "vendorId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "vendor"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "purchaseId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "purchase"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "bill",
+          "name": "Bill",
+          "description": ""
+        },
+        {
+          "value": "customer",
+          "name": "Customer",
+          "description": ""
+        },
+        {
+          "value": "employee",
+          "name": "Employee",
+          "description": ""
+        },
+        {
+          "value": "estimate",
+          "name": "Estimate",
+          "description": ""
+        },
+        {
+          "value": "invoice",
+          "name": "Invoice",
+          "description": ""
+        },
+        {
+          "value": "item",
+          "name": "Item",
+          "description": ""
+        },
+        {
+          "value": "payment",
+          "name": "Payment",
+          "description": ""
+        },
+        {
+          "value": "purchase",
+          "name": "Purchase",
+          "description": ""
+        },
+        {
+          "value": "transaction",
+          "name": "Transaction",
+          "description": ""
+        },
+        {
+          "value": "vendor",
+          "name": "Vendor",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "get",
+          "name": "Get",
+          "description": ""
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": ""
+        }
+      ]
+    },
+    "simple": {
+      "type": "boolean",
+      "displayName": "Simplify",
+      "name": "simple"
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "subProperties": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "The condition for selecting purchases. See the <a href=\"https://developer.intuit.com/app/developer/qbo/docs/develop/explore-the-quickbooks-online-api/data-queries\">guide</a> for supported syntax.",
+          "placeholder": "WHERE Metadata.LastUpdatedTime > '2021-01-01'",
+          "default": ""
+        }
+      ]
+    },
+    "VendorRef": {
+      "type": "options",
+      "displayName": "For Vendor Name or ID",
+      "name": "VendorRef",
+      "typeOptions": {
+        "loadOptionsMethod": "getVendors"
+      },
+      "possibleValues": []
+    },
+    "Line": {
+      "type": "collection",
+      "displayName": "Line",
+      "name": "Line",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Amount",
+          "name": "Amount",
+          "type": "number",
+          "description": "Monetary amount of the line item",
+          "default": 0
+        },
+        {
+          "displayName": "Description",
+          "name": "Description",
+          "type": "string",
+          "description": "Textual description of the line item",
+          "default": ""
+        },
+        {
+          "displayName": "Detail Type",
+          "name": "DetailType",
+          "type": "options",
+          "value": "SalesItemLineDetail",
+          "default": "SalesItemLineDetail",
+          "options": [
+            {
+              "name": "Sales Item Line Detail",
+              "value": "SalesItemLineDetail",
+              "displayName": "Sales Item Line Detail"
+            }
+          ]
+        },
+        {
+          "displayName": "Item Name or ID",
+          "name": "itemId",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getItems"
+          }
+        },
+        {
+          "displayName": "Position",
+          "name": "LineNum",
+          "type": "number",
+          "description": "Position of the line item relative to others",
+          "default": 1
+        },
+        {
+          "displayName": "Tax Code Ref Name or ID",
+          "name": "TaxCodeRef",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getTaxCodeRefs"
+          }
+        },
+        {
+          "displayName": "Quantity",
+          "name": "Qty",
+          "type": "number",
+          "description": "Number of units of the line item",
+          "default": 0
+        }
+      ]
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": []
+    },
+    "billId": {
+      "type": "string",
+      "displayName": "Bill ID",
+      "name": "billId"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 1000
+      }
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "subProperties": []
+    },
+    "displayName": {
+      "type": "string",
+      "displayName": "Display Name",
+      "name": "displayName"
+    },
+    "customerId": {
+      "type": "string",
+      "displayName": "Customer ID",
+      "name": "customerId"
+    },
+    "FamilyName": {
+      "type": "string",
+      "displayName": "Family Name",
+      "name": "FamilyName"
+    },
+    "GivenName": {
+      "type": "string",
+      "displayName": "Given Name",
+      "name": "GivenName"
+    },
+    "employeeId": {
+      "type": "string",
+      "displayName": "Employee ID",
+      "name": "employeeId"
+    },
+    "CustomerRef": {
+      "type": "options",
+      "displayName": "For Customer Name or ID",
+      "name": "CustomerRef",
+      "typeOptions": {
+        "loadOptionsMethod": "getCustomers"
+      },
+      "possibleValues": []
+    },
+    "estimateId": {
+      "type": "string",
+      "displayName": "Estimate ID",
+      "name": "estimateId"
+    },
+    "download": {
+      "type": "boolean",
+      "displayName": "Download",
+      "name": "download"
+    },
+    "binaryProperty": {
+      "type": "string",
+      "displayName": "Put Output File in Field",
+      "name": "binaryProperty"
+    },
+    "fileName": {
+      "type": "string",
+      "displayName": "File Name",
+      "name": "fileName"
+    },
+    "email": {
+      "type": "string",
+      "displayName": "Email",
+      "name": "email"
+    },
+    "invoiceId": {
+      "type": "string",
+      "displayName": "Invoice ID",
+      "name": "invoiceId"
+    },
+    "itemId": {
+      "type": "string",
+      "displayName": "Item ID",
+      "name": "itemId"
+    },
+    "TotalAmt": {
+      "type": "number",
+      "displayName": "Total Amount",
+      "name": "TotalAmt"
+    },
+    "paymentId": {
+      "type": "string",
+      "displayName": "Payment ID",
+      "name": "paymentId"
+    },
+    "vendorId": {
+      "type": "string",
+      "displayName": "Vendor ID",
+      "name": "vendorId"
+    },
+    "purchaseId": {
+      "type": "string",
+      "displayName": "Purchase ID",
+      "name": "purchaseId"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "user-agent"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "filters",
+        "text": "Add Field"
+      },
+      {
+        "field": "Line",
+        "text": "Add Line Item Property"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "Line",
+        "text": "Add Line Item Property"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "fileName",
+        "text": "data.pdf"
+      },
+      {
+        "field": "filters",
+        "text": "Add Field"
+      },
+      {
+        "field": "email",
+        "text": "name@email.com"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "Line",
+        "text": "Add Line Item Property"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "fileName",
+        "text": "data.pdf"
+      },
+      {
+        "field": "filters",
+        "text": "Add Field"
+      },
+      {
+        "field": "email",
+        "text": "name@email.com"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "fileName",
+        "text": "data.pdf"
+      },
+      {
+        "field": "filters",
+        "text": "Add Field"
+      },
+      {
+        "field": "email",
+        "text": "name@email.com"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Field"
+      }
+    ],
+    "hints": [
+      {
+        "field": "binaryProperty",
+        "text": "The name of the output binary field to put the file in"
+      },
+      {
+        "field": "binaryProperty",
+        "text": "The name of the output binary field to put the file in"
+      },
+      {
+        "field": "binaryProperty",
+        "text": "The name of the output binary field to put the file in"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

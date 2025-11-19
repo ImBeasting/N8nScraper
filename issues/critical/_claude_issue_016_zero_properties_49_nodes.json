@@ -1,0 +1,46 @@
+{
+  "issue_id": "_claude_issue_016",
+  "title": "PATTERN: Zero properties extracted for 49 critical nodes including PostgresV2, httpRequest, NotionV2",
+  "severity": "critical",
+  "status": "resolved",
+  "priority": 1,
+  "metadata": {
+    "created_at": "2025-11-06T21:51:54Z",
+    "created_by": "claude_code",
+    "affected_nodes": "49 nodes (6% of all nodes) including PostgresV2, httpRequest, MicrosoftTeamsV2, MicrosoftOutlookV2, GoogleSheetsV1, NotionV2, GoogleDriveV2, SpreadsheetFile, MattermostV1"
+  },
+  "description": {
+    "problem": "49 nodes have completely failed property extraction (0 properties extracted), rendering their documentation useless. This includes critical, high-value nodes like httpRequest, PostgresV2, and NotionV2.",
+    "impact": "CRITICAL - 49/775 = 6% of all extracted nodes have ZERO properties, making their documentation completely non-functional. Users cannot understand what parameters these nodes accept. This affects popular nodes that are essential to n8n workflows (Postgres, HTTP Request, Notion, Google Sheets, Microsoft Teams).",
+    "root_cause": "Multiple root causes identified:\n\n1. VERSIONED NODES: Nodes with v1/v2/V1/V2 subdirectories store properties in versionDescription.ts files, not the main .node.ts file. The extractor doesn't follow these imports correctly.\n   - Affected: PostgresV2, MicrosoftTeamsV2, MicrosoftOutlookV2, GoogleSheetsV1, NotionV2, GoogleDriveV2, MattermostV1, SyncroMspV1\n\n2. VERSION DESCRIPTION PATTERN: Some nodes import properties from './versionDescription' or './actions/versionDescription'.\n   - Example: httpRequest likely uses this pattern\n\n3. NON-STANDARD STRUCTURE: Some nodes may have properties in unexpected locations or use different export patterns.",
+    "evidence": [
+      "validation_report.json: 'zero_properties': 49",
+      "List of affected nodes (first 10):",
+      "  1. PostgresV2_data.json (0 properties) - versioned node",
+      "  2. httpRequest_data.json (0 properties) - likely versionDescription",
+      "  3. MicrosoftTeamsV2_data.json (0 properties) - versioned node",
+      "  4. MicrosoftOutlookV2_data.json (0 properties) - versioned node",
+      "  5. GoogleSheetsV1_data.json (0 properties) - versioned node",
+      "  6. SyncroMspV1_data.json (0 properties) - versioned node",
+      "  7. GoogleDriveV2_data.json (0 properties) - versioned node",
+      "  8. notionv2_data.json (0 properties) - versioned node",
+      "  9. spreadsheetFile_data.json (0 properties) - unknown cause",
+      "  10. mattermostv1_data.json (0 properties) - versioned node",
+      "",
+      "Verification command: cat validation_report.json | jq '.issues.zero_properties[:10]'",
+      "",
+      "Pattern observed: 8/10 of these are versioned nodes (V1, V2, v1, v2 in path or name)"
+    ],
+    "fix_approach": "Multi-step fix required:\n\nStep 1 - Investigate File Structure (5 sample nodes):\n1. For PostgresV2: find n8n/packages/nodes-base/nodes/Postgres -name '*.ts'\n2. For httpRequest: find n8n/packages/nodes-base/nodes/HttpRequest -name '*.ts'\n3. For NotionV2: find n8n/packages/nodes-base/nodes/Notion -name '*.ts'\n4. Check for versionDescription.ts files in v2/ or V2/ subdirectories\n5. Examine import statements in main .node.ts files\n\nStep 2 - Enhance TypeScriptParser (n8n_node_extractor.py):\n1. Improve parse_imports() to detect versionDescription imports:\n   - Pattern: import { ... } from './versionDescription'\n   - Pattern: import { ... } from './v2/versionDescription'\n   - Pattern: import { ... } from './actions/versionDescription'\n2. Add resolve_version_description() method:\n   - Follow version-specific paths (v1/, v2/, V1/, V2/)\n   - Load versionDescription.ts content\n   - Extract properties from version-specific description\n3. Update extract_properties_array() to:\n   - Check for versionDescription import first\n   - Fall back to standard properties: [...] extraction\n\nStep 3 - Test Fix:\n1. Re-extract PostgresV2: python3 n8n_node_extractor.py extract PostgresV2\n2. Verify: jq '.properties | length' extracted_docs/postgresv2_data.json\n3. Should show 50+ properties instead of 0\n4. Repeat for httpRequest, NotionV2, GoogleSheetsV1\n\nStep 4 - Bulk Re-extraction:\n1. Re-extract all 49 affected nodes\n2. Validate: python3 validate_extraction.py\n3. Verify zero_properties count drops from 49 to 0 (or near 0)\n\nStep 5 - Documentation:\n1. Add to FIXES_SUMMARY.md\n2. Update CLAUDE.md with versioned node handling\n3. Document the versionDescription pattern"
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  },
+  "resolved_by": "claude_code",
+  "resolved_at": "2025-11-12T07:23:01.203681Z",
+  "audit_note": "Status updated from \"new\" to \"resolved\" after 2025-11-12 audit confirmed 98% improvement (49 \u2192 1 node, NoOp correct by design)"
+}

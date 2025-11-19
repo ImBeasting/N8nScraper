@@ -1,0 +1,60 @@
+{
+  "issue_id": "_claude_issue_031",
+  "title": "Property _operation field always null instead of tagging operation-specific properties",
+  "severity": "medium",
+  "status": "resolved",
+  "priority": 3,
+  "metadata": {
+    "created_at": "2025-11-11T00:00:00Z",
+    "created_by": "claude_code",
+    "affected_nodes": "All multi-resource/multi-operation nodes: Slack (110 properties untagged), HTTP Request, Elasticsearch, Salesforce, etc. - estimated 150+ nodes affected"
+  },
+  "description": {
+    "problem": "The _operation field exists in extracted properties but is always null, failing to tag operation-specific properties with their associated operations",
+    "impact": "MEDIUM - Cannot easily filter properties by specific operation. Documentation generation cannot organize properties by operation. AI models cannot learn which parameters belong to which operation. Makes it harder to understand node configuration requirements for specific operations. Affects user experience when reading documentation and building workflows.",
+    "root_cause": "The _operation field is initialized to null during property extraction but never populated. The code that should parse displayOptions.show.operation and populate _operation is either missing or not functioning.\n\nExpected behavior:\nif 'displayOptions' in property and 'show' in property['displayOptions']:\n    if 'operation' in property['displayOptions']['show']:\n        operations = property['displayOptions']['show']['operation']\n        property['_operation'] = operations[0] if len(operations) == 1 else ','.join(operations)\n\nCurrent behavior:\nproperty['_operation'] = None  # Always null",
+    "evidence": [
+      "Slack extracted property example:",
+      "  {",
+      "    \"displayName\": \"Channel\",",
+      "    \"name\": \"channelId\",",
+      "    \"_source\": \"Channel_channelFields\",",
+      "    \"_operation\": null,  // \u274c Should be \"archive\"",
+      "    \"displayOptions\": {",
+      "      \"show\": {",
+      "        \"resource\": [\"channel\"],",
+      "        \"operation\": [\"archive\"]  // This should populate _operation",
+      "      }",
+      "    }",
+      "  }",
+      "",
+      "Verification - all properties have null _operation:",
+      "  jq '[.properties[] | select(._operation != null)] | length' extracted_docs/slack_data.json",
+      "  Result: 0 (Expected: 50-80 properties with operation tags)",
+      "",
+      "Properties with operation displayOptions:",
+      "  jq '[.properties[] | select(.displayOptions.show.operation != null)] | length' extracted_docs/slack_data.json",
+      "  Result: ~60 (all have operation in displayOptions but _operation is null)",
+      "",
+      "HTTP Request similar issue:",
+      "  jq '[.properties[] | select(._operation != null)] | length' extracted_docs/http_request_data.json",
+      "  Result: 0",
+      "",
+      "Elasticsearch similar issue:",
+      "  jq '[.properties[] | select(._operation != null)] | length' extracted_docs/elasticsearch_data.json",
+      "  Result: 0",
+      "",
+      "This is a systemic issue affecting all multi-operation nodes"
+    ],
+    "fix_approach": "1. Locate the property extraction code where _operation is set (likely in n8n_node_extractor.py around lines 854-878 or in _extract_field_info())\n\n2. Add operation tagging logic after displayOptions extraction:\n\n   # In property extraction loop (after displayOptions is parsed)\n   if 'displayOptions' in prop and isinstance(prop['displayOptions'], dict):\n       show_conditions = prop['displayOptions'].get('show', {})\n       if 'operation' in show_conditions:\n           operations = show_conditions['operation']\n           if isinstance(operations, list) and len(operations) > 0:\n               if len(operations) == 1:\n                   prop['_operation'] = operations[0]\n               else:\n                   # Multiple operations - store as comma-separated or array\n                   prop['_operation'] = ','.join(operations)\n           elif isinstance(operations, str):\n               prop['_operation'] = operations\n\n3. Handle edge cases:\n   - Properties with multiple operations: store as comma-separated string\n   - Properties without operation conditions: leave as null (correct)\n   - Properties with complex nested displayOptions: extract first-level operation\n\n4. Update documentation generation to use _operation:\n   - Group properties by _operation in markdown\n   - Create operation-specific parameter tables\n   - Show \"Applies to operations: X, Y, Z\" for multi-operation properties\n\n5. Test on:\n   - Slack: Verify Channel.archive properties have _operation='archive'\n   - HTTP Request: Verify method-specific properties tagged correctly\n   - Elasticsearch: Verify document.getAll options have _operation='getAll'\n   - Multi-operation properties: Verify comma-separated values\n\n6. Validation:\n   python3 n8n_node_extractor.py extract Slack\n   \n   jq '[.properties[] | select(._operation != null)] | length' extracted_docs/slack_data.json\n   Expected: 50-80 (currently 0)\n   \n   jq '.properties[] | select(.name == \"channelId\" and ._source == \"Channel_channelFields\") | ._operation' extracted_docs/slack_data.json\n   Expected: \"archive\" or comma-separated operations (currently null)\n\n7. Impact measurement:\n   - Before: 0 properties with _operation tags\n   - After: 50-80 properties per multi-operation node\n   - Estimated total: 5000-10000 properties tagged across all nodes"
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  },
+  "resolved_by": "claude_code",
+  "resolved_at": "2025-11-12T01:42:13.664130Z"
+}

@@ -1,0 +1,438 @@
+{
+  "node_info": {
+    "icon": "file:pushcut.png",
+    "defaults": {
+      "name": "Pushcut"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "pushcutApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getDevices",
+      "for",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Pushcut",
+    "name": "pushcut",
+    "description": "Consume Pushcut API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.pushcut",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication",
+      "Productivity"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/pushcut/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.pushcut/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "notification",
+      "default": "notification",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Notification",
+          "value": "notification",
+          "displayName": "Notification"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Send a notification",
+      "action": "Send a notification",
+      "value": "send",
+      "default": "send",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Send",
+          "description": "Send a notification",
+          "action": "Send a notification",
+          "value": "send",
+          "displayName": "Send"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "notification"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Notification Name or ID",
+      "name": "notificationName",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "typeOptions": {
+        "loadOptionsMethod": "getNotifications"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "notification"
+          ],
+          "operation": [
+            "send"
+          ]
+        }
+      },
+      "_operation": "send"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "List of devices this notification is sent to. (default is all devices). Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Device Names or IDs",
+          "name": "devices",
+          "type": "multiOptions",
+          "description": "List of devices this notification is sent to. (default is all devices). Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getDevices"
+          }
+        },
+        {
+          "displayName": "Input",
+          "name": "input",
+          "type": "string",
+          "description": "Value that is passed as input to the notification action",
+          "default": ""
+        },
+        {
+          "displayName": "Text",
+          "name": "text",
+          "type": "string",
+          "description": "Text that is used instead of the one defined in the app",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Title that is used instead of the one defined in the app",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getDevices"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "notification"
+          ]
+        }
+      },
+      "_operation": "send"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Send",
+      "description": "Send a notification",
+      "action": "Send a notification",
+      "value": "send",
+      "displayName": "Send"
+    }
+  ],
+  "operations_by_resource": {
+    "notification": [
+      {
+        "name": "Send",
+        "description": "Send a notification",
+        "action": "Send a notification",
+        "value": "send",
+        "displayName": "Send"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "pushcutApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "notification"
+          ]
+        }
+      }
+    },
+    "notificationName": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "notification"
+          ],
+          "operation": [
+            "send"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "notification"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "notification",
+          "name": "Notification",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "send",
+          "name": "Send",
+          "description": "Send a notification"
+        }
+      ]
+    },
+    "notificationName": {
+      "type": "options",
+      "displayName": "Notification Name or ID",
+      "name": "notificationName",
+      "typeOptions": {
+        "loadOptionsMethod": "getNotifications"
+      },
+      "possibleValues": []
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "typeOptions": {
+        "loadOptionsMethod": "getDevices"
+      },
+      "subProperties": [
+        {
+          "displayName": "Device Names or IDs",
+          "name": "devices",
+          "type": "multiOptions",
+          "description": "List of devices this notification is sent to. (default is all devices). Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getDevices"
+          }
+        },
+        {
+          "displayName": "Input",
+          "name": "input",
+          "type": "string",
+          "description": "Value that is passed as input to the notification action",
+          "default": ""
+        },
+        {
+          "displayName": "Text",
+          "name": "text",
+          "type": "string",
+          "description": "Text that is used instead of the one defined in the app",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Title that is used instead of the one defined in the app",
+          "default": ""
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "API-Key"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

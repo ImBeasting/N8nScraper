@@ -1,0 +1,364 @@
+# CLAUDE.md
+
+**Project:** n8n Node Documentation Extractor for AI Training
+**Status:** ✅ Production Ready (96%+ quality)
+**Last Updated:** 2025-11-11
+
+---
+
+## Project Overview
+
+Python-based tool that extracts comprehensive documentation from n8n TypeScript node definitions, generating markdown docs and machine-readable schemas (YAML/JSON) optimized for AI training.
+
+**Current Quality:** 96%+ extraction accuracy across 450 nodes
+
+---
+
+## Quick Start
+
+### Essential Commands
+
+```bash
+# Extract single node
+python3 n8n_node_extractor.py extract <NodeName>
+
+# Extract all nodes
+python3 n8n_node_extractor.py extract-all
+
+# List available nodes
+python3 n8n_node_extractor.py list
+
+# Validate extraction quality
+python3 validate_extraction.py
+
+# Multi-agent collaboration
+python3 agent_start.py --agent claude_code
+python3 claim_issue.py --agent claude_code --issue <issue_id>
+python3 propose_fix.py --agent claude_code --fix <fix_id> --issue <issue_id> --title "..." --tested
+python3 apply_fix.py --agent claude_code --fix <fix_id>
+python3 generate_reports.py
+```
+
+---
+
+## Repository Structure
+
+```
+/media/tyler/fastraid/Projects/n8n Node Scrapper/
+├── n8n/                              # n8n source (530+ node definitions)
+├── extracted_docs/                   # Output (900 files: 450 JSON + 450 MD)
+├── n8n_node_extractor.py             # Main extractor (2700+ lines)
+├── validate_extraction.py            # Quality validation
+├── ai_review_prompt.md               # AI audit protocol (use this!)
+├── collaboration/                    # Multi-agent coordination
+│   ├── coordination.json             # Agent registry
+│   ├── agent_heartbeats.json         # Status tracking
+│   └── audit_log.jsonl               # Action history
+├── issues/                           # Issue tracking by severity
+│   ├── critical/, high/, medium/, low/
+│   └── index.json
+├── fixes/                            # Fix tracking
+│   ├── applied/, proposed/
+│   └── index.json
+├── reports/                          # Auto-generated reports
+│   ├── EXTRACTION_ERRORS_REPORT.md
+│   ├── FIXES_APPLIED_REPORT.md
+│   └── AGENT_ACTIVITY_REPORT.md
+├── validation_summaries/             # Agent validation reports
+│   ├── VALIDATION_SUMMARY_<date>_<agent>.md
+│   └── VERSIONED_NODE_FIXES_SUMMARY.md
+├── coordination_lib.py               # Multi-agent library
+├── agent_start.py, claim_issue.py, propose_fix.py, apply_fix.py
+└── Documentation (see below)
+```
+
+---
+
+## Issue Naming Convention
+
+**Format:** `_<agent>_issue_<nnn>_<description>.json`
+
+**Current Agents:**
+- `claude_code` - Analysis, documentation, code review, bug fixing
+- `gemini_cli` - Testing, validation, performance optimization
+- `openai_codex` - Code generation, pattern recognition, error detection
+
+**Examples:**
+```bash
+python3 claim_issue.py --agent claude_code --issue _claude_issue_032
+python3 propose_fix.py --agent claude_code --fix fix_022 --issue _claude_issue_032 --title "..." --tested
+python3 apply_fix.py --agent claude_code --fix fix_022
+```
+
+---
+
+## Main Extractor Features
+
+### What It Extracts
+
+- **Complete node properties** with types, defaults, validation rules
+- **Multi-resource node support** (Slack, Salesforce, etc.)
+- **Versioned node handling** (v1, v2, v3, etc.)
+- **Namespace spread resolution** (`import * as`, `...module.property`)
+- **Collection/FixedCollection recursion** (nested options)
+- **Operation tagging** (`_operation` field for filtering)
+- **Dynamic outputs detection** (branching nodes)
+- **Constant resolution** (n8n-workflow imports)
+- **Credentials, operations, UI elements, validation rules**
+- **Real-world workflow examples**
+
+### Recent Major Fixes (2025-11-11)
+
+✅ **Namespace Spreads** - GoogleSheets: 5→42 properties (740% increase)
+✅ **Collection Recursion** - HTTP Request nested options extracted
+✅ **Spread with .map()** - Transformation detection added
+✅ **Dynamic Outputs** - Switch node documented correctly
+✅ **Constants** - SEND_AND_WAIT_OPERATION resolved
+✅ **Operation Tagging** - 5000+ properties tagged
+
+**Result:** Zero-property nodes reduced from 49 to 1 (98% improvement)
+
+---
+
+## Multi-Agent Collaboration
+
+### Quick Workflow
+
+1. **Start session:** `python3 agent_start.py --agent <agent_name>`
+2. **Claim issue:** `python3 claim_issue.py --agent <agent_name> --issue <issue_id>`
+3. **Work on fix:** Make code changes, test thoroughly
+4. **Propose fix:** `python3 propose_fix.py --agent <agent_name> --fix <fix_id> --issue <issue_id> --title "..." --approach "..." --files "..." --tested`
+5. **Apply fix:** `python3 apply_fix.py --agent <agent_name> --fix <fix_id>`
+6. **Regenerate reports:** `python3 generate_reports.py`
+
+### Key Features
+
+- **Atomic file-based locks** - No race conditions
+- **Issue-based ownership** - Clear assignments
+- **Auto-generated reports** - Never manually edit
+- **Complete audit trail** - JSONL logging
+- **Peer review workflow** - Propose → Review → Apply
+
+---
+
+## Output Format
+
+### Markdown Documentation
+- Frontmatter (YAML metadata)
+- Node type badges
+- Credentials & operations
+- Parameters (grouped by operation)
+- Real-world examples
+- Expression patterns
+- Machine-readable schemas (YAML + JSON)
+
+### JSON Data
+- `node_info` - displayName, version, type, group
+- `properties` - All parameters with full details
+- `operations` / `operations_by_resource`
+- `credentials` - Auth requirements
+- `workflow_examples` - Real usage
+- `validation_rules`, `type_info`, `ui_elements`
+- `_source`, `_operation` tags for filtering
+
+---
+
+## Configuration
+
+**Hardcoded paths** (update for your system):
+```python
+CURRENT_DIR = Path("/media/tyler/fastraid/Projects/n8n Node Scrapper")
+N8N_REPO = CURRENT_DIR / "n8n"
+OUTPUT_DIR = CURRENT_DIR / "extracted_docs"
+```
+
+---
+
+## Quality Metrics
+
+### Current State (2025-11-11)
+- **Total nodes:** 450 (84.9% of 530 available)
+- **Files generated:** 900 (450 JSON + 450 MD)
+- **Duplicate groups:** 0 ✅
+- **Zero properties:** 1 (NoOp - correct by design) ✅
+- **Null displayNames:** 0 ✅
+- **Template variables:** 1 file (cosmetic only) ✅
+- **Missing outputs:** 5 files (edge cases)
+- **Overall quality:** 96%+
+
+### Quality by Node Type
+- **Simple nodes (60%):** 95-100% ✅
+- **Moderate nodes (20%):** 90-95% ✅
+- **Complex nodes (20%):** 85-95% ✅
+
+---
+
+## Known Limitations
+
+### Minor Issues Remaining (2 high-priority)
+1. **Collection deep nesting** - 3-4 level recursion needs enhancement
+2. **Utility function spreads** - `...getSendAndWaitProperties([...])` detection added, resolution pending
+
+### Medium Priority (5 issues)
+3. Template literal API patterns (cosmetic)
+4. Historical version extraction (V1/V2)
+5. Remaining missing outputs (5 edge case nodes)
+
+**Status:** Production-ready for 96%+ of nodes. Remaining issues affect <5% of nodes.
+
+---
+
+## Troubleshooting
+
+### Empty Properties Extracted
+**Rare** - Only 1 node affected (NoOp, correct by design)
+- Run: `python3 validate_extraction.py`
+- Check: `validation_report.json`
+
+### Node Not Found
+```bash
+python3 n8n_node_extractor.py list  # See available nodes (case-sensitive)
+```
+
+### Duplicate Files
+```bash
+python3 cleanup_duplicates.py  # Remove duplicates, keep best version
+```
+
+---
+
+## Essential Documentation
+
+### Current System Docs
+- **ai_review_prompt.md** - ⭐ AI quality audit protocol (START HERE for validation)
+- **FIXES_APPLIED_2025-11-11_COMPREHENSIVE.md** - Latest fixes and improvements
+- **QUICK_START.md** - Quick reference for all agents
+- **AGENT_COLLABORATION_GUIDE.md** - Complete multi-agent workflow
+- **validation_report.json** - Latest quality metrics
+- **validation_summaries/** - All agent validation reports organized here
+
+### Reports (Auto-Generated - DO NOT EDIT)
+- `reports/EXTRACTION_ERRORS_REPORT.md` - Current issues
+- `reports/FIXES_APPLIED_REPORT.md` - Applied fixes
+- `reports/AGENT_ACTIVITY_REPORT.md` - Audit log
+
+### Obsolete Docs (Historical Reference Only)
+- VALIDATION_SUMMARY_2025-11-06_*.md (superseded by 2025-11-11)
+- FIXES_APPLIED_2025-11-06.md (superseded by 2025-11-11)
+- PHASE_4_*.md, FINAL_SESSION_SUMMARY.md (completed phases)
+
+---
+
+## Testing
+
+### Quick Test
+```bash
+python3 n8n_node_extractor.py extract GoogleSheets
+jq '.properties | length' extracted_docs/googlesheets_data.json  # Should be ~42
+python3 validate_extraction.py
+```
+
+### Regression Test Nodes
+```bash
+python3 n8n_node_extractor.py extract Slack         # Multi-resource
+python3 n8n_node_extractor.py extract HttpRequest   # Complex collections
+python3 n8n_node_extractor.py extract Switch        # Dynamic outputs
+python3 n8n_node_extractor.py extract Elasticsearch # Spread operators
+```
+
+---
+
+## Dependencies
+
+```bash
+pip install pyyaml  # Required
+python3 --version   # Needs 3.6+
+```
+
+---
+
+## System Health
+
+```bash
+./health_check.sh        # Check for stale locks, validate heartbeats
+./cleanup.sh             # Remove stale locks, archive old logs
+python3 generate_reports.py  # Regenerate all reports
+```
+
+---
+
+## Performance Notes
+
+- **Single node extraction:** <1 second
+- **Bulk extraction (530 nodes):** ~7-10 seconds
+- **Memory usage:** <500MB typical
+- **Output size:** ~27MB total (JSON + MD)
+
+---
+
+## Statistics
+
+### Extractor Code
+- **Lines:** 2700+ (single file)
+- **Classes:** 8 specialized extractors
+- **Expression patterns:** 11
+- **Field types:** 20+
+- **Documentation sections:** 11 per node
+
+### Multi-Agent System
+- **Agents registered:** 3
+- **Issues tracked:** 40
+- **Fixes applied:** 21
+- **Audit entries:** Complete history
+- **System health:** ✅ All checks passing
+
+---
+
+## Success Metrics - ACHIEVED ✅
+
+- ✅ Zero-property nodes: 49 → 1 (target: <5)
+- ✅ GoogleSheets: 5 → 42 properties (target: 40+)
+- ✅ Elasticsearch: 1 → 35 properties (target: 30+)
+- ✅ Dynamic outputs: Working (target: 6 nodes)
+- ✅ Constants: Resolved (target: 10-20 nodes)
+- ✅ Operation tagging: 90%+ (target: 80%+)
+- ✅ Overall quality: 96%+ (target: 92-95%)
+
+---
+
+## Quick Reference
+
+### View Status
+```bash
+cat validation_report.json | jq '.stats'
+ls -1 issues/*/*.json | wc -l
+ls -1 fixes/applied/*.json | wc -l
+```
+
+### Common Patterns
+```bash
+# Test single node
+python3 n8n_node_extractor.py extract <NodeName>
+
+# Check property count
+jq '.properties | length' extracted_docs/<nodename>_data.json
+
+# Validate quality
+python3 validate_extraction.py
+
+# Multi-agent workflow
+python3 agent_start.py --agent claude_code
+# Follow prompts for issue claiming and fixing
+```
+
+---
+
+**Version:** 3.0 (Production Ready)
+**Quality:** 96%+ across 450 nodes
+**Status:** ✅ Active development
+**Last Major Update:** 2025-11-11 (6 critical fixes applied)
+
+For detailed technical documentation, see:
+- FIXES_APPLIED_2025-11-11_COMPREHENSIVE.md (latest fixes)
+- AGENT_COLLABORATION_GUIDE.md (complete workflow)
+- QUICK_START.md (quick reference)

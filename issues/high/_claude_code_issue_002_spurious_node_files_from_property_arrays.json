@@ -1,0 +1,59 @@
+{
+  "issue_id": "_claude_code_issue_002",
+  "title": "Spurious node files created from exported property arrays that are not standalone nodes",
+  "severity": "high",
+  "status": "resolved",
+  "priority": 2,
+  "metadata": {
+    "created_at": "2025-11-13T17:08:49Z",
+    "created_by": "claude_code",
+    "affected_nodes": "setinputsnotice (and potentially others) - spurious files that should not exist",
+    "validation_session": "comprehensive_audit_2025-11-13",
+    "related_issues": "May cause confusion in AI training as these appear to be valid nodes but are not"
+  },
+  "description": {
+    "problem": "The extractor is creating standalone node documentation files for exported property arrays that are NOT actual nodes, but are instead sub-components or helper property definitions used by real nodes",
+    "impact": "HIGH - Creates false node documentation that pollutes the training dataset. setinputsnotice_data.json exists but there is no SetInputsNotice node - it's actually just a property array (setInputsProperties) within the Evaluation/Description node. This causes: (1) Missing metadata (icon='', group=[], outputs=[], inputs=[]), (2) Incomplete properties (only 2 properties when it's part of a larger node), (3) Confusion for AI systems that will learn about nodes that don't exist, (4) The actual Evaluation node is NOT extracted despite existing in source.",
+    "root_cause": "The extractor's node detection logic incorrectly identifies exported const arrays of INodeProperties[] as standalone nodes. In the source, 'export const setInputsProperties: INodeProperties[] = [...]' is exported from Description.node.ts for use within the Evaluation node, but the extractor treats this as if it were a complete node definition.",
+    "evidence": [
+      "File created: extracted_docs/setinputsnotice_data.json",
+      "Source: n8n/packages/nodes-base/nodes/Evaluation/Evaluation/Description.node.ts",
+      "Source line 12: export const setInputsProperties: INodeProperties[] = [...]",
+      "This is NOT a node file (*.node.ts) but a property definition file",
+      "",
+      "Extracted data shows indicators of spurious file:",
+      "  icon: '' (empty string)",
+      "  group: [] (empty array)",
+      "  inputs: [] (empty array)",
+      "  outputs: [] (empty array)",
+      "  properties: 2 (incomplete - just the property array itself)",
+      "",
+      "The actual Evaluation node exists in source:",
+      "  Command: find n8n/packages/nodes-base/nodes/Evaluation -name '*.node.ts'",
+      "  Result: n8n/packages/nodes-base/nodes/Evaluation/Evaluation/Description.node.ts",
+      "",
+      "But the Evaluation node was NOT extracted:",
+      "  Command: ls -1 extracted_docs/ | grep -i evaluation",
+      "  Result: (empty - no evaluation node files)",
+      "",
+      "The node is available in the extractor's list:",
+      "  Command: python3 n8n_node_extractor.py list | grep -i evaluation",
+      "  Result: \u2022 Description.node (Evaluation/Evaluation)",
+      "",
+      "Pattern: Property arrays with specific naming patterns may be misidentified:",
+      "  - setInputsProperties",
+      "  - setOutputProperties (also in same file)",
+      "  - Other exported property arrays in non-standard node files"
+    ],
+    "fix_approach": "1. Enhance node detection in n8n_node_extractor.py:\n   - ONLY treat files ending in .node.ts as actual nodes\n   - IGNORE exported const property arrays from non-node files\n   - Verify that extracted nodes have a class definition implementing INode interface\n\n2. Add validation checks:\n   - Before creating output files, verify node has required fields:\n     * displayName is not null\n     * icon is not empty string (or has valid default)\n     * group is non-empty array\n     * For regular nodes: outputs should not be empty (unless terminal node)\n   - If validation fails, log warning and skip extraction\n\n3. Implement node vs. property-array differentiation:\n   - Check for presence of 'execute()' method or node class structure\n   - Property arrays alone are not nodes\n   - Must have INodeType or INodeVersionedType implementation\n\n4. Fix the actual Evaluation node extraction:\n   - Investigate why Description.node.ts is not being extracted\n   - The node appears in the list but wasn't extracted\n   - May be a naming issue (Description.node vs. expected pattern)\n\n5. Testing:\n   - Delete extracted_docs/setinputsnotice_data.json and setinputsnotice_documentation.md\n   - Re-run extraction\n   - Verify setinputsnotice is NOT created\n   - Verify Evaluation node IS extracted with complete properties including setInputsProperties\n   - Command: python3 n8n_node_extractor.py extract Description\n   - Expected: evaluation_data.json created with 50+ properties\n\n6. Validation commands:\n   ls extracted_docs/ | grep setinputsnotice # Should be empty\n   ls extracted_docs/ | grep evaluation # Should show evaluation_data.json\n   jq '.properties | length' extracted_docs/evaluation_data.json # Should be 50+\n\n7. Scan for other spurious files:\n   - Check all extracted nodes for empty icon, group, or suspicious patterns\n   - Cross-reference with actual .node.ts files in source\n   - Remove any other spurious files found"
+  },
+  "ownership": {
+    "assigned_to": "claude_code",
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": "2025-11-13T17:25:35.845301Z"
+  },
+  "resolved_by": "claude_code",
+  "resolved_at": "2025-11-13T17:27:47.943484Z"
+}

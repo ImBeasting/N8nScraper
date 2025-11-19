@@ -1,0 +1,733 @@
+{
+  "node_info": {
+    "icon": "file:googleAds.svg",
+    "defaults": {
+      "name": "Google Ads"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "googleAdsOAuth2Api",
+        "required": true,
+        "testedBy": "request: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/v20/customers:listAccessibleCustomers',"
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Google Ads",
+    "name": "googleAds",
+    "description": "Use the Google Ads API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.googleAds",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Analytics"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/google/oauth-single-service/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.googleads/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "15 Google apps you can combine and automate to increase productivity",
+          "icon": "\ud83d\udca1",
+          "url": "https://n8n.io/blog/automate-google-apps-for-productivity/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "campaign",
+      "default": "campaign",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Campaign",
+          "value": "campaign",
+          "displayName": "Campaign"
+        }
+      ]
+    },
+    {
+      "displayName": "Divide field names expressed with <i>micros</i> by 1,000,000 to get the actual value",
+      "name": "campaigsNotice",
+      "type": "notice",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Get many campaigns linked to the specified account",
+      "action": "Get many campaigns",
+      "value": "getAll",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '={{\"/v20/customers/\" + $parameter[\"clientCustomerId\"].toString().replace(/-/g, \"\")  + \"/googleAds:search\"",
+      "_source": "Campaign_campaignOperations"
+    },
+    {
+      "displayName": "Manager Customer ID",
+      "name": "managerCustomerId",
+      "type": "string",
+      "placeholder": "9998887777",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ]
+        }
+      },
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Client Customer ID",
+      "name": "clientCustomerId",
+      "type": "string",
+      "placeholder": "6665554444",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ]
+        }
+      },
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Campaign ID",
+      "name": "campaignId",
+      "type": "string",
+      "description": "ID of the campaign",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "campaign"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Additional Options",
+      "name": "additionalOptions",
+      "type": "collection",
+      "description": "Additional options for fetching campaigns",
+      "placeholder": "Add option",
+      "value": "allTime",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Date Range",
+          "name": "dateRange",
+          "type": "options",
+          "description": "Filters statistics by period",
+          "value": "allTime",
+          "default": "allTime",
+          "options": [
+            {
+              "name": "All Time",
+              "description": "Fetch statistics for all period",
+              "value": "allTime",
+              "displayName": "All Time"
+            },
+            {
+              "name": "Today",
+              "description": "Today only",
+              "value": "TODAY",
+              "displayName": "Today"
+            },
+            {
+              "name": "Yesterday",
+              "description": "Yesterday only",
+              "value": "YESTERDAY",
+              "displayName": "Yesterday"
+            },
+            {
+              "name": "Last 7 Days",
+              "description": "Last 7 days, not including today",
+              "value": "LAST_7_DAYS",
+              "displayName": "Last 7 Days"
+            },
+            {
+              "name": "Last Business Week",
+              "description": "The 5 day business week, Monday through Friday, of the previous business week",
+              "value": "LAST_BUSINESS_WEEK",
+              "displayName": "Last Business Week"
+            },
+            {
+              "name": "This Month",
+              "description": "All days in the current month",
+              "value": "THIS_MONTH",
+              "displayName": "This Month"
+            },
+            {
+              "name": "Last Month",
+              "description": "All days in the previous month",
+              "value": "LAST_MONTH",
+              "displayName": "Last Month"
+            },
+            {
+              "name": "Last 14 Days",
+              "description": "The last 14 days not including today",
+              "value": "LAST_14_DAYS",
+              "displayName": "Last 14 Days"
+            },
+            {
+              "name": "Last 30 Days",
+              "description": "The last 30 days not including today",
+              "value": "LAST_30_DAYS",
+              "displayName": "Last 30 Days"
+            }
+          ]
+        },
+        {
+          "displayName": "Show Campaigns by Status",
+          "name": "campaignStatus",
+          "type": "options",
+          "description": "Filters campaigns by status",
+          "value": "all",
+          "default": "all",
+          "options": [
+            {
+              "name": "All",
+              "description": "Fetch all campaigns regardless of status",
+              "value": "all",
+              "displayName": "All"
+            },
+            {
+              "name": "Enabled",
+              "description": "Filter only active campaigns",
+              "value": "ENABLED",
+              "displayName": "Enabled"
+            },
+            {
+              "name": "Paused",
+              "description": "Filter only paused campaigns",
+              "value": "PAUSED",
+              "displayName": "Paused"
+            },
+            {
+              "name": "Removed",
+              "description": "Filter only removed campaigns",
+              "value": "REMOVED",
+              "displayName": "Removed"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Campaign_campaignFields"
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {
+    "campaign": []
+  },
+  "credentials": [
+    {
+      "name": "googleAdsOAuth2Api",
+      "required": true,
+      "testedBy": "request: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/v20/customers:listAccessibleCustomers',"
+    }
+  ],
+  "workflow_examples": [
+    {
+      "name": "Get",
+      "parameters": {
+        "operation": "get",
+        "managerCustomerId": "111-222-3333",
+        "clientCustomerId": "444-555-6666",
+        "campaignId": "12345678901",
+        "requestOptions": {}
+      },
+      "credentials": {
+        "googleAdsOAuth2Api": {
+          "id": "VFEJAm9y8GDEsnS4",
+          "name": "Google Ads account"
+        }
+      },
+      "position": [
+        220,
+        -160
+      ],
+      "workflow_file": "get.workflow.json",
+      "workflow_name": "Google Ads Get"
+    },
+    {
+      "name": "Get Many",
+      "parameters": {
+        "managerCustomerId": "111-222-3333",
+        "clientCustomerId": "444-555-6666",
+        "additionalOptions": {},
+        "requestOptions": {}
+      },
+      "credentials": {
+        "googleAdsOAuth2Api": {
+          "id": "VFEJAm9y8GDEsnS4",
+          "name": "Google Ads account"
+        }
+      },
+      "position": [
+        220,
+        -160
+      ],
+      "workflow_file": "getMany.workflow.json",
+      "workflow_name": "Google Ads Get Many"
+    },
+    {
+      "name": "With Options",
+      "parameters": {
+        "managerCustomerId": "111-222-3333",
+        "clientCustomerId": "444-555-6666",
+        "additionalOptions": {
+          "dateRange": "LAST_7_DAYS",
+          "campaignStatus": "ENABLED"
+        },
+        "requestOptions": {}
+      },
+      "credentials": {
+        "googleAdsOAuth2Api": {
+          "id": "VFEJAm9y8GDEsnS4",
+          "name": "Google Ads account"
+        }
+      },
+      "position": [
+        220,
+        40
+      ],
+      "workflow_file": "getMany.workflow.json",
+      "workflow_name": "Google Ads Get Many"
+    },
+    {
+      "name": "No Results",
+      "parameters": {
+        "managerCustomerId": "111-222-3333",
+        "clientCustomerId": "444-555-6666",
+        "additionalOptions": {
+          "campaignStatus": "REMOVED"
+        },
+        "requestOptions": {}
+      },
+      "credentials": {
+        "googleAdsOAuth2Api": {
+          "id": "VFEJAm9y8GDEsnS4",
+          "name": "Google Ads account"
+        }
+      },
+      "position": [
+        220,
+        240
+      ],
+      "workflow_file": "getMany.workflow.json",
+      "workflow_name": "Google Ads Get Many"
+    }
+  ],
+  "expressions": [
+    "={{$credentials.developerToken}}",
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "campaigsNotice": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ]
+        }
+      }
+    },
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ]
+        }
+      }
+    },
+    "managerCustomerId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ]
+        }
+      }
+    },
+    "clientCustomerId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ]
+        }
+      }
+    },
+    "campaignId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "campaign"
+          ]
+        }
+      }
+    },
+    "additionalOptions": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "campaign",
+          "name": "Campaign",
+          "description": ""
+        }
+      ]
+    },
+    "campaigsNotice": {
+      "type": "notice",
+      "displayName": "Divide field names expressed with <i>micros</i> by 1,000,000 to get the actual value",
+      "name": "campaigsNotice"
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": []
+    },
+    "managerCustomerId": {
+      "type": "string",
+      "displayName": "Manager Customer ID",
+      "name": "managerCustomerId"
+    },
+    "clientCustomerId": {
+      "type": "string",
+      "displayName": "Client Customer ID",
+      "name": "clientCustomerId"
+    },
+    "campaignId": {
+      "type": "string",
+      "displayName": "Campaign ID",
+      "name": "campaignId"
+    },
+    "additionalOptions": {
+      "type": "collection",
+      "displayName": "Additional Options",
+      "name": "additionalOptions",
+      "subProperties": [
+        {
+          "displayName": "Date Range",
+          "name": "dateRange",
+          "type": "options",
+          "description": "Filters statistics by period",
+          "value": "allTime",
+          "default": "allTime",
+          "options": [
+            {
+              "name": "All Time",
+              "description": "Fetch statistics for all period",
+              "value": "allTime",
+              "displayName": "All Time"
+            },
+            {
+              "name": "Today",
+              "description": "Today only",
+              "value": "TODAY",
+              "displayName": "Today"
+            },
+            {
+              "name": "Yesterday",
+              "description": "Yesterday only",
+              "value": "YESTERDAY",
+              "displayName": "Yesterday"
+            },
+            {
+              "name": "Last 7 Days",
+              "description": "Last 7 days, not including today",
+              "value": "LAST_7_DAYS",
+              "displayName": "Last 7 Days"
+            },
+            {
+              "name": "Last Business Week",
+              "description": "The 5 day business week, Monday through Friday, of the previous business week",
+              "value": "LAST_BUSINESS_WEEK",
+              "displayName": "Last Business Week"
+            },
+            {
+              "name": "This Month",
+              "description": "All days in the current month",
+              "value": "THIS_MONTH",
+              "displayName": "This Month"
+            },
+            {
+              "name": "Last Month",
+              "description": "All days in the previous month",
+              "value": "LAST_MONTH",
+              "displayName": "Last Month"
+            },
+            {
+              "name": "Last 14 Days",
+              "description": "The last 14 days not including today",
+              "value": "LAST_14_DAYS",
+              "displayName": "Last 14 Days"
+            },
+            {
+              "name": "Last 30 Days",
+              "description": "The last 30 days not including today",
+              "value": "LAST_30_DAYS",
+              "displayName": "Last 30 Days"
+            }
+          ]
+        },
+        {
+          "displayName": "Show Campaigns by Status",
+          "name": "campaignStatus",
+          "type": "options",
+          "description": "Filters campaigns by status",
+          "value": "all",
+          "default": "all",
+          "options": [
+            {
+              "name": "All",
+              "description": "Fetch all campaigns regardless of status",
+              "value": "all",
+              "displayName": "All"
+            },
+            {
+              "name": "Enabled",
+              "description": "Filter only active campaigns",
+              "value": "ENABLED",
+              "displayName": "Enabled"
+            },
+            {
+              "name": "Paused",
+              "description": "Filter only paused campaigns",
+              "value": "PAUSED",
+              "displayName": "Paused"
+            },
+            {
+              "name": "Removed",
+              "description": "Filter only removed campaigns",
+              "value": "REMOVED",
+              "displayName": "Removed"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [
+      {
+        "name": "campaigsNotice",
+        "text": "Divide field names expressed with <i>micros</i> by 1,000,000 to get the actual value",
+        "conditions": {
+          "show": {
+            "resource": [
+              "campaign"
+            ]
+          }
+        }
+      }
+    ],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "managerCustomerId",
+        "text": "9998887777"
+      },
+      {
+        "field": "clientCustomerId",
+        "text": "6665554444"
+      },
+      {
+        "field": "additionalOptions",
+        "text": "Add option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

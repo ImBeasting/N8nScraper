@@ -1,0 +1,3749 @@
+{
+  "node_info": {
+    "icon": "file:misp.svg",
+    "defaults": {
+      "name": "MISP"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "mispApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getOrgs",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "MISP",
+    "name": "misp",
+    "description": "Consume the MISP API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.misp",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/misp/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.misp/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "attribute",
+      "default": "attribute",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Attribute",
+          "value": "attribute",
+          "displayName": "Attribute"
+        },
+        {
+          "name": "Event",
+          "value": "event",
+          "displayName": "Event"
+        },
+        {
+          "name": "Event Tag",
+          "value": "eventTag",
+          "displayName": "Event Tag"
+        },
+        {
+          "name": "Feed",
+          "value": "feed",
+          "displayName": "Feed"
+        },
+        {
+          "name": "Galaxy",
+          "value": "galaxy",
+          "displayName": "Galaxy"
+        },
+        {
+          "name": "Noticelist",
+          "value": "noticelist",
+          "displayName": "Noticelist"
+        },
+        {
+          "name": "Object",
+          "value": "object",
+          "displayName": "Object"
+        },
+        {
+          "name": "Organisation",
+          "value": "organisation",
+          "displayName": "Organisation"
+        },
+        {
+          "name": "Tag",
+          "value": "tag",
+          "displayName": "Tag"
+        },
+        {
+          "name": "User",
+          "value": "user",
+          "displayName": "User"
+        },
+        {
+          "name": "Warninglist",
+          "value": "warninglist",
+          "displayName": "Warninglist"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Get a warninglist",
+      "value": "get",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "action": "Get a warninglist",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many warninglists",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "warninglist"
+          ]
+        }
+      },
+      "_source": "Warninglist_warninglistOperations"
+    },
+    {
+      "displayName": "Warninglist ID",
+      "name": "warninglistId",
+      "type": "string",
+      "description": "Numeric ID of the warninglist",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "warninglist"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Warninglist_warninglistFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "warninglist"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Warninglist_warninglistFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "warninglist"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Warninglist_warninglistFields"
+    },
+    {
+      "displayName": "Event UUID",
+      "name": "eventId",
+      "type": "string",
+      "description": "UUID of the event to attach the attribute to",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Attribute_attributeFields"
+    },
+    {
+      "displayName": "Type",
+      "name": "type",
+      "type": "options",
+      "value": "text",
+      "default": "text",
+      "required": true,
+      "options": [
+        {
+          "name": "Text",
+          "value": "text",
+          "displayName": "Text"
+        },
+        {
+          "name": "URL",
+          "value": "url",
+          "displayName": "Url"
+        },
+        {
+          "name": "Comment",
+          "value": "comment",
+          "displayName": "Comment"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Attribute_attributeFields"
+    },
+    {
+      "displayName": "Value",
+      "name": "value",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Attribute_attributeFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Who will be able to see this event once published",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Distribution",
+          "name": "distribution",
+          "type": "options",
+          "description": "Who will be able to see this event once published",
+          "default": 0,
+          "options": [
+            {
+              "name": "All Communities",
+              "displayName": "All Communities"
+            },
+            {
+              "name": "Connected Communities",
+              "displayName": "Connected Communities"
+            },
+            {
+              "name": "Inherit Event",
+              "displayName": "Inherit Event"
+            },
+            {
+              "name": "Sharing Group",
+              "displayName": "Sharing Group"
+            },
+            {
+              "name": "This Community Only",
+              "displayName": "This Community Only"
+            },
+            {
+              "name": "Your Organization Only",
+              "displayName": "Your Organization Only"
+            }
+          ]
+        },
+        {
+          "displayName": "Sharing Group Name or ID",
+          "name": "sharing_group_id",
+          "type": "options",
+          "description": "Use only for when <code>Sharing Group</code> is selected in <code>Distribution</code>. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSharingGroups"
+          }
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getSharingGroups"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Attribute_attributeFields"
+    },
+    {
+      "displayName": "Attribute ID",
+      "name": "attributeId",
+      "type": "string",
+      "description": "UUID or numeric ID of the attribute",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Attribute_attributeFields"
+    },
+    {
+      "displayName": "Attribute ID",
+      "name": "attributeId",
+      "type": "string",
+      "description": "UUID or numeric ID of the attribute",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Attribute_attributeFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Attribute_attributeFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Attribute_attributeFields"
+    },
+    {
+      "displayName": "Attribute ID",
+      "name": "attributeId",
+      "type": "string",
+      "description": "ID of the attribute to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Attribute_attributeFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Who will be able to see this event once published",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Distribution",
+          "name": "distribution",
+          "type": "options",
+          "description": "Who will be able to see this event once published",
+          "default": 0,
+          "options": [
+            {
+              "name": "All Communities",
+              "displayName": "All Communities"
+            },
+            {
+              "name": "Connected Communities",
+              "displayName": "Connected Communities"
+            },
+            {
+              "name": "Inherit Event",
+              "displayName": "Inherit Event"
+            },
+            {
+              "name": "Sharing Group",
+              "displayName": "Sharing Group"
+            },
+            {
+              "name": "This Community Only",
+              "displayName": "This Community Only"
+            },
+            {
+              "name": "Your Organization Only",
+              "displayName": "Your Organization Only"
+            }
+          ]
+        },
+        {
+          "displayName": "Sharing Group Name or ID",
+          "name": "sharing_group_id",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>. Use only for when <code>Sharing Group</code> is selected in <code>Distribution</code>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSharingGroups"
+          }
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getSharingGroups"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Attribute_attributeFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create an attribute",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create an attribute",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete an attribute",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get an attribute",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many attributes",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Search",
+          "action": "Get a filtered list of attributes",
+          "value": "search",
+          "displayName": "Search"
+        },
+        {
+          "name": "Update",
+          "action": "Update an attribute",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ]
+        }
+      },
+      "_source": "Attribute_attributeOperations"
+    },
+    {
+      "displayName": "Organization Name or ID",
+      "name": "org_id",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrgs"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Information",
+      "name": "information",
+      "type": "string",
+      "description": "Information on the event - max 65535 characters",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Analysis maturity level of the event",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Analysis",
+          "name": "analysis",
+          "type": "options",
+          "description": "Analysis maturity level of the event",
+          "default": 0,
+          "options": [
+            {
+              "name": "Initial",
+              "displayName": "Initial"
+            },
+            {
+              "name": "Ongoing",
+              "displayName": "Ongoing"
+            },
+            {
+              "name": "Complete",
+              "displayName": "Complete"
+            }
+          ]
+        },
+        {
+          "displayName": "Distribution",
+          "name": "distribution",
+          "type": "options",
+          "description": "Who will be able to see this event once published",
+          "default": 0,
+          "options": [
+            {
+              "name": "All Communities",
+              "displayName": "All Communities"
+            },
+            {
+              "name": "Connected Communities",
+              "displayName": "Connected Communities"
+            },
+            {
+              "name": "Inherit Event",
+              "displayName": "Inherit Event"
+            },
+            {
+              "name": "Sharing Group",
+              "displayName": "Sharing Group"
+            },
+            {
+              "name": "This Community Only",
+              "displayName": "This Community Only"
+            },
+            {
+              "name": "Your Organization Only",
+              "displayName": "Your Organization Only"
+            }
+          ]
+        },
+        {
+          "displayName": "Sharing Group Name or ID",
+          "name": "sharing_group_id",
+          "type": "options",
+          "description": "Use only for when <code>Sharing Group</code> is selected in <code>Distribution</code>. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSharingGroups"
+          }
+        },
+        {
+          "displayName": "Threat Level ID",
+          "name": "threat_level_id",
+          "type": "options",
+          "default": 1,
+          "options": [
+            {
+              "name": "High",
+              "displayName": "High"
+            },
+            {
+              "name": "Medium",
+              "displayName": "Medium"
+            },
+            {
+              "name": "Low",
+              "displayName": "Low"
+            },
+            {
+              "name": "Undefined",
+              "displayName": "Undefined"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getSharingGroups"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Event ID",
+      "name": "eventId",
+      "type": "string",
+      "description": "UUID or numeric ID of the event",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Event ID",
+      "name": "eventId",
+      "type": "string",
+      "description": "UUID or numeric ID of the event",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Event ID",
+      "name": "eventId",
+      "type": "string",
+      "description": "UUID or numeric ID of the event",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "publish"
+          ]
+        }
+      },
+      "_operation": "publish",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Event ID",
+      "name": "eventId",
+      "type": "string",
+      "description": "UUID or numeric ID of the event",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "unpublish"
+          ]
+        }
+      },
+      "_operation": "unpublish",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Event ID",
+      "name": "eventId",
+      "type": "string",
+      "description": "UUID or numeric ID of the event",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Analysis maturity level of the event",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Analysis",
+          "name": "analysis",
+          "type": "options",
+          "description": "Analysis maturity level of the event",
+          "default": 0,
+          "options": [
+            {
+              "name": "Initial",
+              "displayName": "Initial"
+            },
+            {
+              "name": "Ongoing",
+              "displayName": "Ongoing"
+            },
+            {
+              "name": "Complete",
+              "displayName": "Complete"
+            }
+          ]
+        },
+        {
+          "displayName": "Distribution",
+          "name": "distribution",
+          "type": "options",
+          "description": "Who will be able to see this event once published",
+          "default": 0,
+          "options": [
+            {
+              "name": "All Communities",
+              "displayName": "All Communities"
+            },
+            {
+              "name": "Connected Communities",
+              "displayName": "Connected Communities"
+            },
+            {
+              "name": "Inherit Event",
+              "displayName": "Inherit Event"
+            },
+            {
+              "name": "Sharing Group",
+              "displayName": "Sharing Group"
+            },
+            {
+              "name": "This Community Only",
+              "displayName": "This Community Only"
+            },
+            {
+              "name": "Your Organization Only",
+              "displayName": "Your Organization Only"
+            }
+          ]
+        },
+        {
+          "displayName": "Information",
+          "name": "information",
+          "type": "string",
+          "description": "Information on the event - max 65535 characters",
+          "default": ""
+        },
+        {
+          "displayName": "Sharing Group Name or ID",
+          "name": "sharing_group_id",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>. Use only for when <code>Sharing Group</code> is selected in <code>Distribution</code>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSharingGroups"
+          }
+        },
+        {
+          "displayName": "Threat Level ID",
+          "name": "threat_level_id",
+          "type": "options",
+          "default": 1,
+          "options": [
+            {
+              "name": "High",
+              "displayName": "High"
+            },
+            {
+              "name": "Medium",
+              "displayName": "Medium"
+            },
+            {
+              "name": "Low",
+              "displayName": "Low"
+            },
+            {
+              "name": "Undefined",
+              "displayName": "Undefined"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getSharingGroups"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create an event",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create an event",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete an event",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get an event",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many events",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Publish",
+          "action": "Publish an event",
+          "value": "publish",
+          "displayName": "Publish"
+        },
+        {
+          "name": "Search",
+          "action": "Get a filtered list of events",
+          "value": "search",
+          "displayName": "Search"
+        },
+        {
+          "name": "Unpublish",
+          "action": "Unpublish an event",
+          "value": "unpublish",
+          "displayName": "Unpublish"
+        },
+        {
+          "name": "Update",
+          "action": "Update an event",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_source": "Event_eventOperations"
+    },
+    {
+      "displayName": "Event ID",
+      "name": "eventId",
+      "type": "string",
+      "description": "UUID or numeric ID of the event",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "eventTag"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "EventTag_eventTagFields"
+    },
+    {
+      "displayName": "Tag Name or ID",
+      "name": "tagId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTags"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "eventTag"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "EventTag_eventTagFields"
+    },
+    {
+      "displayName": "Event ID",
+      "name": "eventId",
+      "type": "string",
+      "description": "UUID or numeric ID of the event",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "eventTag"
+          ],
+          "operation": [
+            "remove"
+          ]
+        }
+      },
+      "_operation": "remove",
+      "_source": "EventTag_eventTagFields"
+    },
+    {
+      "displayName": "Tag Name or ID",
+      "name": "tagId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTags"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "eventTag"
+          ],
+          "operation": [
+            "remove"
+          ]
+        }
+      },
+      "_operation": "remove",
+      "_source": "EventTag_eventTagFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Add a tag to an event",
+      "value": "add",
+      "default": "add",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Add",
+          "action": "Add a tag to an event",
+          "value": "add",
+          "displayName": "Add"
+        },
+        {
+          "name": "Remove",
+          "action": "Remove a tag from an event",
+          "value": "remove",
+          "displayName": "Remove"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "eventTag"
+          ]
+        }
+      },
+      "_source": "EventTag_eventTagOperations"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Feed_feedFields"
+    },
+    {
+      "displayName": "Provider",
+      "name": "provider",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Feed_feedFields"
+    },
+    {
+      "displayName": "URL",
+      "name": "url",
+      "type": "string",
+      "placeholder": "https://example.com",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Feed_feedFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Who will be able to see this event once published",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Distribution",
+          "name": "distribution",
+          "type": "options",
+          "description": "Who will be able to see this event once published",
+          "default": 0,
+          "options": [
+            {
+              "name": "All Communities",
+              "displayName": "All Communities"
+            },
+            {
+              "name": "Connected Communities",
+              "displayName": "Connected Communities"
+            },
+            {
+              "name": "Inherit Event",
+              "displayName": "Inherit Event"
+            },
+            {
+              "name": "Sharing Group",
+              "displayName": "Sharing Group"
+            },
+            {
+              "name": "This Community Only",
+              "displayName": "This Community Only"
+            },
+            {
+              "name": "Your Organization Only",
+              "displayName": "Your Organization Only"
+            }
+          ]
+        },
+        {
+          "displayName": "Rules",
+          "name": "json",
+          "type": "string",
+          "description": "Filter rules for the feed",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Feed_feedFields"
+    },
+    {
+      "displayName": "Feed ID",
+      "name": "feedId",
+      "type": "string",
+      "description": "UUID or numeric ID of the feed",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "disable"
+          ]
+        }
+      },
+      "_operation": "disable",
+      "_source": "Feed_feedFields"
+    },
+    {
+      "displayName": "Feed ID",
+      "name": "feedId",
+      "type": "string",
+      "description": "UUID or numeric ID of the feed",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "enable"
+          ]
+        }
+      },
+      "_operation": "enable",
+      "_source": "Feed_feedFields"
+    },
+    {
+      "displayName": "Feed ID",
+      "name": "feedId",
+      "type": "string",
+      "description": "UUID or numeric ID of the feed",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Feed_feedFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Feed_feedFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Feed_feedFields"
+    },
+    {
+      "displayName": "Feed ID",
+      "name": "feedId",
+      "type": "string",
+      "description": "ID of the feed to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Feed_feedFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Who will be able to see this event once published",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Distribution",
+          "name": "distribution",
+          "type": "options",
+          "description": "Who will be able to see this event once published",
+          "default": 0,
+          "options": [
+            {
+              "name": "All Communities",
+              "displayName": "All Communities"
+            },
+            {
+              "name": "Connected Communities",
+              "displayName": "Connected Communities"
+            },
+            {
+              "name": "Inherit Event",
+              "displayName": "Inherit Event"
+            },
+            {
+              "name": "Sharing Group",
+              "displayName": "Sharing Group"
+            },
+            {
+              "name": "This Community Only",
+              "displayName": "This Community Only"
+            },
+            {
+              "name": "Your Organization Only",
+              "displayName": "Your Organization Only"
+            }
+          ]
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Provider",
+          "name": "provider",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Rules",
+          "name": "rules",
+          "type": "json",
+          "description": "Filter rules for the feed",
+          "default": ""
+        },
+        {
+          "displayName": "URL",
+          "name": "url",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Feed_feedFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a feed",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a feed",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Disable",
+          "action": "Disable a feed",
+          "value": "disable",
+          "displayName": "Disable"
+        },
+        {
+          "name": "Enable",
+          "action": "Enable a feed",
+          "value": "enable",
+          "displayName": "Enable"
+        },
+        {
+          "name": "Get",
+          "action": "Get a feed",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many feeds",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update a feed",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ]
+        }
+      },
+      "_source": "Feed_feedOperations"
+    },
+    {
+      "displayName": "Galaxy ID",
+      "name": "galaxyId",
+      "type": "string",
+      "description": "UUID or numeric ID of the galaxy",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "galaxy"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Galaxy_galaxyFields"
+    },
+    {
+      "displayName": "Galaxy ID",
+      "name": "galaxyId",
+      "type": "string",
+      "description": "UUID or numeric ID of the galaxy",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "galaxy"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Galaxy_galaxyFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "galaxy"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Galaxy_galaxyFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "galaxy"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Galaxy_galaxyFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Delete a galaxy",
+      "value": "delete",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Delete",
+          "action": "Delete a galaxy",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a galaxy",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many galaxies",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "galaxy"
+          ]
+        }
+      },
+      "_source": "Galaxy_galaxyOperations"
+    },
+    {
+      "displayName": "Noticelist ID",
+      "name": "noticelistId",
+      "type": "string",
+      "description": "Numeric ID of the noticelist",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "noticelist"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Noticelist_noticelistFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "noticelist"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Noticelist_noticelistFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "noticelist"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Noticelist_noticelistFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Get a noticelist",
+      "value": "get",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "action": "Get a noticelist",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many noticelists",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "noticelist"
+          ]
+        }
+      },
+      "_source": "Noticelist_noticelistOperations"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Get a filtered list of objects",
+      "value": "search",
+      "default": "search",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Search",
+          "action": "Get a filtered list of objects",
+          "value": "search",
+          "displayName": "Search"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "object"
+          ]
+        }
+      },
+      "_source": "Object_objectOperations"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organisation"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Organisation_organisationFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Created by Email",
+          "name": "created_by_email",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Nationality",
+          "name": "nationality",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Sector",
+          "name": "sector",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "User Count",
+          "name": "usercount",
+          "type": "number",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0
+          }
+        }
+      ],
+      "typeOptions": {
+        "minValue": 0
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organisation"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Organisation_organisationFields"
+    },
+    {
+      "displayName": "Organisation ID",
+      "name": "organisationId",
+      "type": "string",
+      "description": "UUID or numeric ID of the organisation",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organisation"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Organisation_organisationFields"
+    },
+    {
+      "displayName": "Organisation ID",
+      "name": "organisationId",
+      "type": "string",
+      "description": "UUID or numeric ID of the organisation",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organisation"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Organisation_organisationFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organisation"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Organisation_organisationFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organisation"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Organisation_organisationFields"
+    },
+    {
+      "displayName": "Organisation ID",
+      "name": "organisationId",
+      "type": "string",
+      "description": "ID of the organisation to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organisation"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Organisation_organisationFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Nationality",
+          "name": "nationality",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Sector",
+          "name": "sector",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organisation"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Organisation_organisationFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create an organization",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create an organization",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete an organization",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get an organization",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many organizations",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update an organization",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organisation"
+          ]
+        }
+      },
+      "_source": "Organisation_organisationOperations"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "tag"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Tag_tagFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Hex color code for the tag",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Color",
+          "name": "colour",
+          "type": "color",
+          "description": "Hex color code for the tag",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "tag"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Tag_tagFields"
+    },
+    {
+      "displayName": "Tag ID",
+      "name": "tagId",
+      "type": "string",
+      "description": "Numeric ID of the attribute",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "tag"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Tag_tagFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "tag"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Tag_tagFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "tag"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Tag_tagFields"
+    },
+    {
+      "displayName": "Tag ID",
+      "name": "tagId",
+      "type": "string",
+      "description": "ID of the tag to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "tag"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Tag_tagFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Hex color code for the tag",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Color",
+          "name": "colour",
+          "type": "color",
+          "description": "Hex color code for the tag",
+          "default": ""
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "tag"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Tag_tagFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a tag",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a tag",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a tag",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many tags",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update a tag",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "tag"
+          ]
+        }
+      },
+      "_source": "Tag_tagOperations"
+    },
+    {
+      "displayName": "Email",
+      "name": "email",
+      "type": "string",
+      "placeholder": "name@email.com",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Role ID",
+      "name": "role_id",
+      "type": "string",
+      "description": "Role IDs are available in the MISP dashboard at /roles/index",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "GPG Key",
+          "name": "gpgkey",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Inviter Email or ID",
+          "name": "invited_by",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getUsers"
+          }
+        },
+        {
+          "displayName": "Organization Name or ID",
+          "name": "org_id",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getOrgs"
+          }
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getUsers"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "User ID",
+      "name": "userId",
+      "type": "string",
+      "description": "Numeric ID of the user",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "User ID",
+      "name": "userId",
+      "type": "string",
+      "description": "Numeric ID of the user",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "User ID",
+      "name": "userId",
+      "type": "string",
+      "description": "ID of the user to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Email",
+          "name": "email",
+          "type": "string",
+          "placeholder": "name@email.com",
+          "default": ""
+        },
+        {
+          "displayName": "GPG Key",
+          "name": "gpgkey",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Inviter Name or ID",
+          "name": "invited_by",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getUsers"
+          }
+        },
+        {
+          "displayName": "Organization Name or ID",
+          "name": "org_id",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getOrgs"
+          }
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getUsers"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a user",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a user",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a user",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a user",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many users",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update a user",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ]
+        }
+      },
+      "_source": "User_userOperations"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Get",
+      "action": "Get a warninglist",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "action": "Get many warninglists",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Create",
+      "action": "Create an attribute",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "action": "Delete an attribute",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Search",
+      "action": "Get a filtered list of attributes",
+      "value": "search",
+      "displayName": "Search"
+    },
+    {
+      "name": "Update",
+      "action": "Update an attribute",
+      "value": "update",
+      "displayName": "Update"
+    },
+    {
+      "name": "Publish",
+      "action": "Publish an event",
+      "value": "publish",
+      "displayName": "Publish"
+    },
+    {
+      "name": "Unpublish",
+      "action": "Unpublish an event",
+      "value": "unpublish",
+      "displayName": "Unpublish"
+    },
+    {
+      "name": "Add",
+      "action": "Add a tag to an event",
+      "value": "add",
+      "displayName": "Add"
+    },
+    {
+      "name": "Remove",
+      "action": "Remove a tag from an event",
+      "value": "remove",
+      "displayName": "Remove"
+    },
+    {
+      "name": "Disable",
+      "action": "Disable a feed",
+      "value": "disable",
+      "displayName": "Disable"
+    },
+    {
+      "name": "Enable",
+      "action": "Enable a feed",
+      "value": "enable",
+      "displayName": "Enable"
+    }
+  ],
+  "operations_by_resource": {
+    "warninglist": [
+      {
+        "name": "Get",
+        "action": "Get a warninglist",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many warninglists",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "attribute": [
+      {
+        "name": "Create",
+        "action": "Create an attribute",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete an attribute",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get an attribute",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many attributes",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Search",
+        "action": "Get a filtered list of attributes",
+        "value": "search",
+        "displayName": "Search"
+      },
+      {
+        "name": "Update",
+        "action": "Update an attribute",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "event": [
+      {
+        "name": "Create",
+        "action": "Create an event",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete an event",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get an event",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many events",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Publish",
+        "action": "Publish an event",
+        "value": "publish",
+        "displayName": "Publish"
+      },
+      {
+        "name": "Search",
+        "action": "Get a filtered list of events",
+        "value": "search",
+        "displayName": "Search"
+      },
+      {
+        "name": "Unpublish",
+        "action": "Unpublish an event",
+        "value": "unpublish",
+        "displayName": "Unpublish"
+      },
+      {
+        "name": "Update",
+        "action": "Update an event",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "eventTag": [
+      {
+        "name": "Add",
+        "action": "Add a tag to an event",
+        "value": "add",
+        "displayName": "Add"
+      },
+      {
+        "name": "Remove",
+        "action": "Remove a tag from an event",
+        "value": "remove",
+        "displayName": "Remove"
+      }
+    ],
+    "feed": [
+      {
+        "name": "Create",
+        "action": "Create a feed",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Disable",
+        "action": "Disable a feed",
+        "value": "disable",
+        "displayName": "Disable"
+      },
+      {
+        "name": "Enable",
+        "action": "Enable a feed",
+        "value": "enable",
+        "displayName": "Enable"
+      },
+      {
+        "name": "Get",
+        "action": "Get a feed",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many feeds",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update a feed",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "galaxy": [
+      {
+        "name": "Delete",
+        "action": "Delete a galaxy",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a galaxy",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many galaxies",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "noticelist": [
+      {
+        "name": "Get",
+        "action": "Get a noticelist",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many noticelists",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "object": [
+      {
+        "name": "Search",
+        "action": "Get a filtered list of objects",
+        "value": "search",
+        "displayName": "Search"
+      }
+    ],
+    "organisation": [
+      {
+        "name": "Create",
+        "action": "Create an organization",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete an organization",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get an organization",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many organizations",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update an organization",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "tag": [
+      {
+        "name": "Create",
+        "action": "Create a tag",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a tag",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many tags",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update a tag",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "user": [
+      {
+        "name": "Create",
+        "action": "Create a user",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a user",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a user",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many users",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update a user",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "mispApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ]
+        }
+      }
+    },
+    "warninglistId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "warninglist"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "eventId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "eventTag"
+          ],
+          "operation": [
+            "remove"
+          ]
+        }
+      }
+    },
+    "type": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "value": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "attributeId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "attribute"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "org_id": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "information": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "tagId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "tag"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "name": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "tag"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "provider": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "url": {
+      "required": true,
+      "format": "url",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "feedId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "feed"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "galaxyId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "galaxy"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "noticelistId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "noticelist"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "organisationId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "organisation"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "email": {
+      "required": true,
+      "format": "email",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "role_id": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "userId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "attribute",
+          "name": "Attribute",
+          "description": ""
+        },
+        {
+          "value": "event",
+          "name": "Event",
+          "description": ""
+        },
+        {
+          "value": "eventTag",
+          "name": "Event Tag",
+          "description": ""
+        },
+        {
+          "value": "feed",
+          "name": "Feed",
+          "description": ""
+        },
+        {
+          "value": "galaxy",
+          "name": "Galaxy",
+          "description": ""
+        },
+        {
+          "value": "noticelist",
+          "name": "Noticelist",
+          "description": ""
+        },
+        {
+          "value": "object",
+          "name": "Object",
+          "description": ""
+        },
+        {
+          "value": "organisation",
+          "name": "Organisation",
+          "description": ""
+        },
+        {
+          "value": "tag",
+          "name": "Tag",
+          "description": ""
+        },
+        {
+          "value": "user",
+          "name": "User",
+          "description": ""
+        },
+        {
+          "value": "warninglist",
+          "name": "Warninglist",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": ""
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": ""
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": ""
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": ""
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": ""
+        }
+      ]
+    },
+    "warninglistId": {
+      "type": "string",
+      "displayName": "Warninglist ID",
+      "name": "warninglistId"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1
+      }
+    },
+    "eventId": {
+      "type": "string",
+      "displayName": "Event ID",
+      "name": "eventId"
+    },
+    "type": {
+      "type": "options",
+      "displayName": "Type",
+      "name": "type",
+      "possibleValues": [
+        {
+          "value": "text",
+          "name": "Text",
+          "description": ""
+        },
+        {
+          "value": "url",
+          "name": "URL",
+          "description": ""
+        },
+        {
+          "value": "comment",
+          "name": "Comment",
+          "description": ""
+        }
+      ]
+    },
+    "value": {
+      "type": "string",
+      "displayName": "Value",
+      "name": "value"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "typeOptions": {
+        "loadOptionsMethod": "getUsers"
+      },
+      "subProperties": [
+        {
+          "displayName": "GPG Key",
+          "name": "gpgkey",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Inviter Email or ID",
+          "name": "invited_by",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getUsers"
+          }
+        },
+        {
+          "displayName": "Organization Name or ID",
+          "name": "org_id",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getOrgs"
+          }
+        }
+      ]
+    },
+    "attributeId": {
+      "type": "string",
+      "displayName": "Attribute ID",
+      "name": "attributeId"
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "typeOptions": {
+        "loadOptionsMethod": "getUsers"
+      },
+      "subProperties": [
+        {
+          "displayName": "Email",
+          "name": "email",
+          "type": "string",
+          "placeholder": "name@email.com",
+          "default": ""
+        },
+        {
+          "displayName": "GPG Key",
+          "name": "gpgkey",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Inviter Name or ID",
+          "name": "invited_by",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getUsers"
+          }
+        },
+        {
+          "displayName": "Organization Name or ID",
+          "name": "org_id",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getOrgs"
+          }
+        }
+      ]
+    },
+    "org_id": {
+      "type": "options",
+      "displayName": "Organization Name or ID",
+      "name": "org_id",
+      "typeOptions": {
+        "loadOptionsMethod": "getOrgs"
+      },
+      "possibleValues": []
+    },
+    "information": {
+      "type": "string",
+      "displayName": "Information",
+      "name": "information"
+    },
+    "tagId": {
+      "type": "string",
+      "displayName": "Tag ID",
+      "name": "tagId"
+    },
+    "name": {
+      "type": "string",
+      "displayName": "Name",
+      "name": "name"
+    },
+    "provider": {
+      "type": "string",
+      "displayName": "Provider",
+      "name": "provider"
+    },
+    "url": {
+      "type": "string",
+      "displayName": "URL",
+      "name": "url"
+    },
+    "feedId": {
+      "type": "string",
+      "displayName": "Feed ID",
+      "name": "feedId"
+    },
+    "galaxyId": {
+      "type": "string",
+      "displayName": "Galaxy ID",
+      "name": "galaxyId"
+    },
+    "noticelistId": {
+      "type": "string",
+      "displayName": "Noticelist ID",
+      "name": "noticelistId"
+    },
+    "organisationId": {
+      "type": "string",
+      "displayName": "Organisation ID",
+      "name": "organisationId"
+    },
+    "email": {
+      "type": "string",
+      "displayName": "Email",
+      "name": "email"
+    },
+    "role_id": {
+      "type": "string",
+      "displayName": "Role ID",
+      "name": "role_id"
+    },
+    "userId": {
+      "type": "string",
+      "displayName": "User ID",
+      "name": "userId"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "url",
+        "text": "https://example.com"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "email",
+        "text": "name@email.com"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

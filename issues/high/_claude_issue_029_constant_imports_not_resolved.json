@@ -1,0 +1,58 @@
+{
+  "issue_id": "_claude_issue_029",
+  "title": "Imported constants from n8n-workflow package not resolved",
+  "severity": "high",
+  "status": "resolved",
+  "priority": 2,
+  "metadata": {
+    "created_at": "2025-11-11T00:00:00Z",
+    "created_by": "claude_code",
+    "affected_nodes": "Slack (SEND_AND_WAIT_OPERATION), potentially 10-20 nodes using workflow constants"
+  },
+  "description": {
+    "problem": "Constants imported from n8n-workflow package (or other external packages) are not resolved, resulting in operations/properties with undefined or null values",
+    "impact": "HIGH - Slack node's 'Send and Wait for Response' operation has value: undefined instead of value: 'sendAndWait', making the operation unusable. Operations array shows 42 operations but 4 have incomplete data (93% quality instead of 100%). Similar issues likely affect other nodes using workflow constants.",
+    "root_cause": "The extractor's constant resolution only handles:\n1. Local const declarations within the same file\n2. Imports from description files in the same directory\n\nIt does NOT resolve:\n1. Constants from external npm packages (n8n-workflow, n8n-core)\n2. Constants from package-level shared utilities\n3. Cross-package constant references\n\nThe SEND_AND_WAIT_OPERATION constant is defined in:\n  n8n/packages/workflow/src/constants.ts\n  export const SEND_AND_WAIT_OPERATION = 'sendAndWait'",
+    "evidence": [
+      "Slack MessageDescription.ts source (line 8):",
+      "  import { SEND_AND_WAIT_OPERATION } from 'n8n-workflow'",
+      "",
+      "Slack MessageDescription.ts source (line 56):",
+      "  {",
+      "    name: 'Send and Wait for Response',",
+      "    value: SEND_AND_WAIT_OPERATION,  // \u2190 Constant not resolved",
+      "    action: 'Send message and wait for response',",
+      "  }",
+      "",
+      "Slack extracted operations_by_resource.message:",
+      "  {",
+      "    \"name\": \"Send and Wait for Response\",",
+      "    \"action\": \"Send message and wait for response\",",
+      "    \"displayName\": \"Send And Wait For Response\"",
+      "    // Missing: \"value\": \"sendAndWait\"",
+      "  }",
+      "",
+      "Constant definition in n8n-workflow:",
+      "  cat n8n/packages/workflow/src/constants.ts | grep SEND_AND_WAIT",
+      "  Result: export const SEND_AND_WAIT_OPERATION = 'sendAndWait'",
+      "",
+      "Verification:",
+      "  jq '.operations_by_resource.message[] | select(.displayName == \"Send And Wait For Response\") | .value' extracted_docs/slack_data.json",
+      "  Result: null (Expected: \"sendAndWait\")",
+      "",
+      "Operations completeness:",
+      "  jq '[.operations_by_resource.message[] | select(.value == null)] | length' extracted_docs/slack_data.json",
+      "  Result: 1 (1 operation with missing value)"
+    ],
+    "fix_approach": "1. Create constant mapping for common n8n-workflow constants:\n   KNOWN_WORKFLOW_CONSTANTS = {\n       'SEND_AND_WAIT_OPERATION': 'sendAndWait',\n       'NodeConnectionTypes.Main': 'Main',\n       'NodeConnectionTypes.AiAgent': 'AiAgent',\n       'NodeConnectionTypes.AiDocument': 'AiDocument',\n       'NodeConnectionTypes.AiMemory': 'AiMemory',\n       'NodeConnectionTypes.AiTool': 'AiTool',\n       'NodeConnectionTypes.AiVectorStore': 'AiVectorStore',\n       'NodeConnectionTypes.AiEmbedding': 'AiEmbedding',\n       'NodeConnectionTypes.AiChain': 'AiChain',\n       'NodeConnectionTypes.AiRetriever': 'AiRetriever',\n       'NodeConnectionTypes.AiTextSplitter': 'AiTextSplitter',\n       'NodeConnectionTypes.AiOutputParser': 'AiOutputParser',\n       'NodeConnectionTypes.AiLanguageModel': 'AiLanguageModel',\n   }\n\n2. Enhance TypeScriptParser._resolve_identifier():\n   - Check if identifier matches KNOWN_WORKFLOW_CONSTANTS\n   - If match, return the mapped value\n   - Otherwise, try existing resolution methods\n\n3. Optional enhancement: Parse constants.ts dynamically:\n   constants_file = n8n_repo / 'packages/workflow/src/constants.ts'\n   if constants_file.exists():\n       constants_content = constants_file.read_text()\n       # Extract: export const NAME = 'value'\n       pattern = r\"export const (\\w+) = ['\\\"]([^'\\\"]+)['\\\"]\"\n       matches = re.findall(pattern, constants_content)\n       DYNAMIC_CONSTANTS = dict(matches)\n\n4. Test on:\n   - Slack (SEND_AND_WAIT_OPERATION should resolve)\n   - Any nodes using NodeConnectionTypes constants\n   - Nodes with other workflow package imports\n\n5. Validation:\n   python3 n8n_node_extractor.py extract Slack\n   jq '.operations_by_resource.message[] | select(.displayName == \"Send And Wait For Response\") | .value' extracted_docs/slack_data.json\n   Expected: \"sendAndWait\" (currently null)"
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  },
+  "resolved_by": "claude_code",
+  "resolved_at": "2025-11-12T01:42:13.628291Z"
+}

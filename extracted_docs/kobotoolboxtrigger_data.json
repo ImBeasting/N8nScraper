@@ -1,0 +1,422 @@
+{
+  "node_info": {
+    "icon": "file:koBoToolbox.svg",
+    "defaults": {
+      "name": "KoBoToolbox Trigger"
+    },
+    "inputs": [],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "trigger"
+    ],
+    "authentication": [
+      {
+        "name": "koBoToolboxApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "KoBoToolbox Trigger",
+    "name": "koBoToolboxTrigger",
+    "description": "Process KoBoToolbox submissions",
+    "subtitle": "",
+    "version": "1",
+    "node_type": "trigger",
+    "webhooks": [
+      {
+        "name": "default",
+        "httpMethod": "POST",
+        "responseMode": "onReceived",
+        "path": "webhook"
+      }
+    ]
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.koBoToolboxTrigger",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication",
+      "Data & Storage"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/kobotoolbox/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.kobotoolboxtrigger/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Form Name or ID",
+      "name": "formId",
+      "type": "options",
+      "description": "Form ID (e.g. aSAvYreNzVEkrWg5Gdcvg). Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "loadForms"
+      }
+    },
+    {
+      "displayName": "Trigger On",
+      "name": "triggerOn",
+      "type": "options",
+      "value": "formSubmission",
+      "default": "formSubmission",
+      "required": true,
+      "options": [
+        {
+          "name": "On Form Submission",
+          "value": "formSubmission",
+          "displayName": "On Form Submission"
+        }
+      ]
+    },
+    {
+      "displayName": "Options",
+      "name": "formatOptions",
+      "type": "collection",
+      "description": "Whether to download submitted attachments",
+      "placeholder": "Add option",
+      "value": "sequence",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Download Attachments",
+          "name": "download",
+          "type": "boolean",
+          "description": "Whether to download submitted attachments",
+          "default": false
+        },
+        {
+          "displayName": "Attachments Naming Scheme",
+          "name": "binaryNamingScheme",
+          "type": "options",
+          "value": "sequence",
+          "default": "sequence",
+          "options": [
+            {
+              "name": "Sequence (e.g. attachment_N)",
+              "value": "sequence",
+              "displayName": "Sequence (e.g. attachment N)"
+            },
+            {
+              "name": "Use Original Form Question ID",
+              "value": "question",
+              "displayName": "Use Original Form Question Id"
+            }
+          ],
+          "displayOptions": {
+            "show": {
+              "download": [
+                true
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Attachments Prefix",
+          "name": "dataPropertyAttachmentsPrefixName",
+          "type": "string",
+          "description": "Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is \"attachment_\" the first attachment is saved to \"attachment_0\"",
+          "default": "attachment_",
+          "displayOptions": {
+            "show": {
+              "download": [
+                true
+              ],
+              "binaryNamingScheme": [
+                "sequence"
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "File Size",
+          "name": "version",
+          "type": "options",
+          "description": "Attachment size to retrieve, if multiple versions are available",
+          "value": "download_url",
+          "default": "download_url",
+          "options": [
+            {
+              "name": "Original",
+              "value": "download_url",
+              "displayName": "Original"
+            },
+            {
+              "name": "Small",
+              "value": "download_small_url",
+              "displayName": "Small"
+            },
+            {
+              "name": "Medium",
+              "value": "download_medium_url",
+              "displayName": "Medium"
+            },
+            {
+              "name": "Large",
+              "value": "download_large_url",
+              "displayName": "Large"
+            }
+          ],
+          "displayOptions": {
+            "show": {
+              "download": [
+                true
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Multiselect Mask",
+          "name": "selectMask",
+          "type": "string",
+          "description": "Comma-separated list of wildcard-style selectors for fields that should be treated as multiselect fields, i.e. parsed as arrays.",
+          "default": "select_*"
+        },
+        {
+          "displayName": "Number Mask",
+          "name": "numberMask",
+          "type": "string",
+          "description": "Comma-separated list of wildcard-style selectors for fields that should be treated as numbers",
+          "default": "n_*, f_*"
+        },
+        {
+          "displayName": "Reformat",
+          "name": "reformat",
+          "type": "boolean",
+          "description": "Whether to apply some reformatting to the submission data, such as parsing GeoJSON coordinates",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "download": [
+            true
+          ]
+        }
+      }
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "koBoToolboxApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [],
+  "validation_rules": {
+    "formId": {
+      "required": true
+    },
+    "triggerOn": {
+      "required": true
+    },
+    "formatOptions": {
+      "displayOptions": {
+        "show": {
+          "download": [
+            true
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "formId": {
+      "type": "options",
+      "displayName": "Form Name or ID",
+      "name": "formId",
+      "typeOptions": {
+        "loadOptionsMethod": "loadForms"
+      },
+      "possibleValues": []
+    },
+    "triggerOn": {
+      "type": "options",
+      "displayName": "Trigger On",
+      "name": "triggerOn",
+      "possibleValues": [
+        {
+          "value": "formSubmission",
+          "name": "On Form Submission",
+          "description": ""
+        }
+      ]
+    },
+    "formatOptions": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "formatOptions",
+      "subProperties": [
+        {
+          "displayName": "Download Attachments",
+          "name": "download",
+          "type": "boolean",
+          "description": "Whether to download submitted attachments",
+          "default": false
+        },
+        {
+          "displayName": "Attachments Naming Scheme",
+          "name": "binaryNamingScheme",
+          "type": "options",
+          "value": "sequence",
+          "default": "sequence",
+          "options": [
+            {
+              "name": "Sequence (e.g. attachment_N)",
+              "value": "sequence",
+              "displayName": "Sequence (e.g. attachment N)"
+            },
+            {
+              "name": "Use Original Form Question ID",
+              "value": "question",
+              "displayName": "Use Original Form Question Id"
+            }
+          ],
+          "displayOptions": {
+            "show": {
+              "download": [
+                true
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Attachments Prefix",
+          "name": "dataPropertyAttachmentsPrefixName",
+          "type": "string",
+          "description": "Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is \"attachment_\" the first attachment is saved to \"attachment_0\"",
+          "default": "attachment_",
+          "displayOptions": {
+            "show": {
+              "download": [
+                true
+              ],
+              "binaryNamingScheme": [
+                "sequence"
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "File Size",
+          "name": "version",
+          "type": "options",
+          "description": "Attachment size to retrieve, if multiple versions are available",
+          "value": "download_url",
+          "default": "download_url",
+          "options": [
+            {
+              "name": "Original",
+              "value": "download_url",
+              "displayName": "Original"
+            },
+            {
+              "name": "Small",
+              "value": "download_small_url",
+              "displayName": "Small"
+            },
+            {
+              "name": "Medium",
+              "value": "download_medium_url",
+              "displayName": "Medium"
+            },
+            {
+              "name": "Large",
+              "value": "download_large_url",
+              "displayName": "Large"
+            }
+          ],
+          "displayOptions": {
+            "show": {
+              "download": [
+                true
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Multiselect Mask",
+          "name": "selectMask",
+          "type": "string",
+          "description": "Comma-separated list of wildcard-style selectors for fields that should be treated as multiselect fields, i.e. parsed as arrays.",
+          "default": "select_*"
+        },
+        {
+          "displayName": "Number Mask",
+          "name": "numberMask",
+          "type": "string",
+          "description": "Comma-separated list of wildcard-style selectors for fields that should be treated as numbers",
+          "default": "n_*, f_*"
+        },
+        {
+          "displayName": "Reformat",
+          "name": "reformat",
+          "type": "boolean",
+          "description": "Whether to apply some reformatting to the submission data, such as parsing GeoJSON coordinates",
+          "default": false
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [
+      "GET"
+    ],
+    "endpoints": [
+      "/api/v2/assets/"
+    ],
+    "headers": [],
+    "query_params": [
+      "name"
+    ]
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "formatOptions",
+        "text": "Add option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

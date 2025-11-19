@@ -1,0 +1,415 @@
+{
+  "node_info": {
+    "icon": "file:oneDrive.svg",
+    "defaults": {
+      "name": "Microsoft OneDrive Trigger"
+    },
+    "inputs": [],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "trigger"
+    ],
+    "authentication": [
+      {
+        "name": "microsoftOneDriveOAuth2Api",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Microsoft OneDrive Trigger",
+    "name": "microsoftOneDriveTrigger",
+    "description": "Trigger for Microsoft OneDrive API.",
+    "subtitle": "={{($parameter[\"event\"])}}",
+    "version": "1",
+    "node_type": "trigger",
+    "polling": true
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.microsoftOneDriveTrigger",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Data & Storage"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/microsoft/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.microsoftonedrivetrigger/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "Hey founders! Your business doesn't need you to operate",
+          "icon": " \ud83d\udda5\ufe0f",
+          "url": "https://n8n.io/blog/your-business-doesnt-need-you-to-operate/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Trigger On",
+      "name": "event",
+      "type": "options",
+      "description": "When a new file is created",
+      "value": "fileCreated",
+      "default": "fileCreated",
+      "options": [
+        {
+          "name": "File Created",
+          "description": "When a new file is created",
+          "value": "fileCreated",
+          "displayName": "File Created"
+        },
+        {
+          "name": "File Updated",
+          "description": "When an existing file is modified",
+          "value": "fileUpdated",
+          "displayName": "File Updated"
+        },
+        {
+          "name": "Folder Created",
+          "description": "When a new folder is created",
+          "value": "folderCreated",
+          "displayName": "Folder Created"
+        },
+        {
+          "name": "Folder Updated",
+          "description": "When an existing folder is modified",
+          "value": "folderUpdated",
+          "displayName": "Folder Updated"
+        }
+      ],
+      "_source": "Trigger_triggerDescription"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true,
+      "_source": "Trigger_triggerDescription"
+    },
+    {
+      "displayName": "Watch Folder",
+      "name": "watchFolder",
+      "type": "boolean",
+      "description": "Whether to watch for the created file in a given folder, rather than the entire OneDrive",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "event": [
+            "fileCreated"
+          ]
+        }
+      },
+      "_source": "Trigger_triggerDescription"
+    },
+    {
+      "displayName": "Watch",
+      "name": "watch",
+      "type": "options",
+      "description": "How to select which file to watch",
+      "value": "anyFile",
+      "default": "anyFile",
+      "options": [
+        {
+          "name": "Any File",
+          "description": "Watch for updated files in the entire OneDrive",
+          "value": "anyFile",
+          "displayName": "Any File"
+        },
+        {
+          "name": "Inside a Folder",
+          "description": "Watch for updated files inside a selected folder",
+          "value": "selectedFolder",
+          "displayName": "Inside A Folder"
+        },
+        {
+          "name": "A Selected File",
+          "description": "Watch a specific file for updates",
+          "value": "selectedFile",
+          "displayName": "A Selected File"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "event": [
+            "fileUpdated"
+          ]
+        }
+      },
+      "_source": "Trigger_triggerDescription"
+    },
+    {
+      "displayName": "Watch Folder",
+      "name": "watchFolder",
+      "type": "boolean",
+      "description": "Whether to watch for the created folder in a given folder, rather than the entire OneDrive",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "event": [
+            "folderCreated"
+          ]
+        }
+      },
+      "_source": "Trigger_triggerDescription"
+    },
+    {
+      "displayName": "Watch",
+      "name": "watch",
+      "type": "options",
+      "description": "How to select which folder to watch",
+      "value": "anyFolder",
+      "default": "anyFolder",
+      "options": [
+        {
+          "name": "Any Folder",
+          "description": "Watch for updated folders in the entire OneDrive",
+          "value": "anyFolder",
+          "displayName": "Any Folder"
+        },
+        {
+          "name": "Inside a Folder",
+          "description": "Watch for updated folders inside a selected folder",
+          "value": "selectedFolder",
+          "displayName": "Inside A Folder"
+        },
+        {
+          "name": "A Selected Folder",
+          "description": "Watch a specific folder for updates",
+          "value": "oneSelectedFolder",
+          "displayName": "A Selected Folder"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "event": [
+            "folderUpdated"
+          ]
+        }
+      },
+      "_source": "Trigger_triggerDescription"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to look for modified files/folders in all nested folders, rather than only direct descendants",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Watch Nested Folders",
+          "name": "folderChild",
+          "type": "boolean",
+          "description": "Whether to look for modified files/folders in all nested folders, rather than only direct descendants",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "watch": [
+            "selectedFolder"
+          ]
+        }
+      },
+      "_source": "Trigger_triggerDescription"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to look for modified files/folders in all nested folders, rather than only direct descendants",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Watch Nested Folders",
+          "name": "folderChild",
+          "type": "boolean",
+          "description": "Whether to look for modified files/folders in all nested folders, rather than only direct descendants",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "watchFolder": [
+            true
+          ]
+        }
+      },
+      "_source": "Trigger_triggerDescription"
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "microsoftOneDriveOAuth2Api",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{($parameter[\"event\"])}}"
+  ],
+  "validation_rules": {
+    "watchFolder": {
+      "displayOptions": {
+        "show": {
+          "event": [
+            "folderCreated"
+          ]
+        }
+      }
+    },
+    "watch": {
+      "displayOptions": {
+        "show": {
+          "event": [
+            "folderUpdated"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "watchFolder": [
+            true
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "event": {
+      "type": "options",
+      "displayName": "Trigger On",
+      "name": "event",
+      "possibleValues": [
+        {
+          "value": "fileCreated",
+          "name": "File Created",
+          "description": "When a new file is created"
+        },
+        {
+          "value": "fileUpdated",
+          "name": "File Updated",
+          "description": "When an existing file is modified"
+        },
+        {
+          "value": "folderCreated",
+          "name": "Folder Created",
+          "description": "When a new folder is created"
+        },
+        {
+          "value": "folderUpdated",
+          "name": "Folder Updated",
+          "description": "When an existing folder is modified"
+        }
+      ]
+    },
+    "simple": {
+      "type": "boolean",
+      "displayName": "Simplify",
+      "name": "simple"
+    },
+    "watchFolder": {
+      "type": "boolean",
+      "displayName": "Watch Folder",
+      "name": "watchFolder"
+    },
+    "watch": {
+      "type": "options",
+      "displayName": "Watch",
+      "name": "watch",
+      "possibleValues": [
+        {
+          "value": "anyFolder",
+          "name": "Any Folder",
+          "description": "Watch for updated folders in the entire OneDrive"
+        },
+        {
+          "value": "selectedFolder",
+          "name": "Inside a Folder",
+          "description": "Watch for updated folders inside a selected folder"
+        },
+        {
+          "value": "oneSelectedFolder",
+          "name": "A Selected Folder",
+          "description": "Watch a specific folder for updates"
+        }
+      ]
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Watch Nested Folders",
+          "name": "folderChild",
+          "type": "boolean",
+          "description": "Whether to look for modified files/folders in all nested folders, rather than only direct descendants",
+          "default": false
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

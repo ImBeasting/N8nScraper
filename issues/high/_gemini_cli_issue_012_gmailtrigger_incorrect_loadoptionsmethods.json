@@ -1,0 +1,38 @@
+{
+  "issue_id": "_gemini_cli_issue_012",
+  "title": "GmailTrigger node: Incorrect 'loadOptionsMethods' extracted, includes non-method names",
+  "severity": "high",
+  "status": "new",
+  "priority": 2,
+  "metadata": {
+    "created_at": "2025-11-13T18:50:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "GmailTrigger, Slack (potentially other nodes with complex 'methods.loadOptions' definitions)",
+    "validation_session": "comprehensive_audit_2025-11-13"
+  },
+  "description": {
+        "problem": "Multiple nodes (e.g., GmailTrigger, Slack) have incorrect 'loadOptionsMethods' extracted, including non-method names. For GmailTrigger, the 'loadOptionsMethods' array incorrectly includes 'for', 'name', and 'value' alongside 'getLabels'. For Slack, the 'loadOptionsMethods' array incorrectly includes 'for', 'name', and 'value' alongside 'getUsers'. These are not valid method names.",
+        "impact": "HIGH - Misleading and potentially confusing documentation. Users might attempt to use these non-existent methods, leading to errors or frustration. It indicates a fundamental parsing error in identifying actual method names.",
+        "root_cause": "The extractor's logic for identifying method names within the 'methods.loadOptions' object is flawed. It appears to be extracting keywords or property names from the method definition rather than just the function names.",
+        "evidence": [
+          "Source file: n8n/packages/nodes-base/nodes/Google/Gmail/GmailTrigger.node.ts",
+          "Source snippet (methods.loadOptions): methods = { loadOptions: { async getLabels(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> { ... } } }",
+          "Extracted file: extracted_docs/gmailtrigger_data.json",
+          "Extracted node_info.loadOptionsMethods: [\"getLabels\", \"for\", \"name\", \"value\"]",
+          "Source file: n8n/packages/nodes-base/nodes/Slack/Slack.node.ts (Note: loadOptionsMethods are defined in SlackV1/V2.node.ts, but the issue is visible in the main Slack node's extracted data)",
+          "Source snippet (from SlackV1/V2.node.ts, example): methods = { loadOptions: { async getUsers(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> { ... } } }",
+          "Extracted file: extracted_docs/slack_data.json",
+          "Extracted node_info.loadOptionsMethods: [\"getUsers\", \"for\", \"name\", \"value\"]",
+          "Command used to verify: jq '.node_info.loadOptionsMethods' extracted_docs/gmailtrigger_data.json, jq '.node_info.loadOptionsMethods' extracted_docs/slack_data.json and manual comparison with source."
+        ],
+        "fix_approach": "1. Refine the extractor's logic for parsing 'methods.loadOptions' to accurately identify and extract only the actual function names. \n2. Ensure that keywords, parameters, or other parts of the function signature are not mistakenly included as method names. \n3. Test with: GmailTrigger, Slack nodes. \n4. Expected result: 'gmailtrigger_data.json' should have 'loadOptionsMethods: [\"getLabels\"]', and 'slack_data.json' should have 'loadOptionsMethods: [\"getUsers\"]'. \n5. Validation command: jq '.node_info.loadOptionsMethods' extracted_docs/gmailtrigger_data.json should return [\"getLabels\"], and jq '.node_info.loadOptionsMethods' extracted_docs/slack_data.json should return [\"getUsers\"]"
+    ."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

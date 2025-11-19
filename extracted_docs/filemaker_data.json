@@ -1,0 +1,1488 @@
+{
+  "node_info": {
+    "icon": "file:filemaker.png",
+    "defaults": {
+      "name": "FileMaker"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "fileMaker",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getLayouts"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "FileMaker",
+    "name": "filemaker",
+    "description": "Retrieve data from the FileMaker data API",
+    "subtitle": "",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.filemaker",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development",
+      "Data & Storage"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/filemaker/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.filemaker/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Action",
+      "name": "action",
+      "type": "options",
+      "value": "login",
+      "default": "record",
+      "options": [
+        {
+          "name": "Login",
+          "value": "login",
+          "displayName": "Login"
+        },
+        {
+          "name": "Logout",
+          "value": "logout",
+          "displayName": "Logout"
+        },
+        {
+          "name": "Create Record",
+          "value": "create",
+          "displayName": "Create Record"
+        },
+        {
+          "name": "Delete Record",
+          "value": "delete",
+          "displayName": "Delete Record"
+        },
+        {
+          "name": "Duplicate Record",
+          "value": "duplicate",
+          "displayName": "Duplicate Record"
+        },
+        {
+          "name": "Edit Record",
+          "value": "edit",
+          "displayName": "Edit Record"
+        },
+        {
+          "name": "Find Records",
+          "value": "find",
+          "displayName": "Find Records"
+        },
+        {
+          "name": "Get Records",
+          "value": "records",
+          "displayName": "Get Records"
+        },
+        {
+          "name": "Get Records By ID",
+          "value": "record",
+          "displayName": "Get Records By Id"
+        },
+        {
+          "name": "Perform Script",
+          "value": "performscript",
+          "displayName": "Perform Script"
+        }
+      ]
+    },
+    {
+      "displayName": "Layout Name or ID",
+      "name": "layout",
+      "type": "options",
+      "description": "FileMaker Layout Name. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Layout Name",
+      "default": "",
+      "required": true,
+      "options": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getLayouts"
+      },
+      "displayOptions": {}
+    },
+    {
+      "displayName": "Record ID",
+      "name": "recid",
+      "type": "number",
+      "description": "Internal Record ID returned by get (recordid)",
+      "placeholder": "Record ID",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "action": [
+            "record",
+            "edit",
+            "delete",
+            "duplicate"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Offset",
+      "name": "offset",
+      "type": "number",
+      "description": "The record number of the first record in the range of records",
+      "placeholder": "0",
+      "default": 1,
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "records"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "placeholder": "100",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "records"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Get Portals",
+      "name": "getPortals",
+      "type": "boolean",
+      "description": "Whether to get portal data as well",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "action": [
+            "record",
+            "records",
+            "find"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Portals Name or ID",
+      "name": "portals",
+      "type": "options",
+      "description": "The portal result set to return. Use the portal object name or portal table name. If this parameter is omitted, the API will return all portal objects and records in the layout. For best performance, pass the portal object name or portal table name. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Portals",
+      "default": [],
+      "options": [],
+      "typeOptions": {
+        "multipleValues": true,
+        "loadOptionsMethod": "getPortals"
+      },
+      "displayOptions": {
+        "show": {
+          "action": [
+            "record",
+            "records",
+            "find"
+          ],
+          "getPortals": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Response Layout Name or ID",
+      "name": "responseLayout",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "options": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getResponseLayouts"
+      },
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Queries",
+      "name": "queries",
+      "type": "fixedCollection",
+      "description": "Search Field. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add query",
+      "default": {},
+      "options": [
+        {
+          "name": "query",
+          "displayName": "Query",
+          "values": [
+            {
+              "displayName": "Fields",
+              "name": "fields",
+              "type": "fixedCollection",
+              "description": "Search Field. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "placeholder": "Add field",
+              "default": {},
+              "options": [
+                {
+                  "name": "field",
+                  "displayName": "Field",
+                  "values": [
+                    {
+                      "displayName": "Field Name or ID",
+                      "name": "name",
+                      "type": "options",
+                      "description": "Search Field. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                      "default": "",
+                      "options": [],
+                      "typeOptions": {
+                        "loadOptionsMethod": "getFields"
+                      }
+                    },
+                    {
+                      "displayName": "Value",
+                      "name": "value",
+                      "type": "string",
+                      "description": "Value to search",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": true
+              }
+            },
+            {
+              "displayName": "Omit",
+              "name": "omit",
+              "type": "boolean",
+              "default": false
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Sort Data?",
+      "name": "setSort",
+      "type": "boolean",
+      "description": "Whether to sort data",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Sort",
+      "name": "sortParametersUi",
+      "type": "fixedCollection",
+      "description": "Sort rules",
+      "placeholder": "Add Sort Rules",
+      "value": "ascend",
+      "default": {},
+      "options": [
+        {
+          "name": "rules",
+          "displayName": "Rules",
+          "values": [
+            {
+              "displayName": "Field Name or ID",
+              "name": "name",
+              "type": "options",
+              "description": "Field Name. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": "",
+              "options": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getFields"
+              }
+            },
+            {
+              "displayName": "Order",
+              "name": "value",
+              "type": "options",
+              "description": "Sort order",
+              "value": "ascend",
+              "default": "ascend",
+              "options": [
+                {
+                  "name": "Ascend",
+                  "value": "ascend",
+                  "displayName": "Ascend"
+                },
+                {
+                  "name": "Descend",
+                  "value": "descend",
+                  "displayName": "Descend"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "setSort": [
+            true
+          ],
+          "action": [
+            "find",
+            "records"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Before Find Script",
+      "name": "setScriptBefore",
+      "type": "boolean",
+      "description": "Whether to define a script to be run before the action specified by the API call and after the subsequent sort",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Script Name or ID",
+      "name": "scriptBefore",
+      "type": "options",
+      "description": "The name of the FileMaker script to be run after the action specified by the API call and after the subsequent sort. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Script Name",
+      "default": "",
+      "required": true,
+      "options": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getScripts"
+      },
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ],
+          "setScriptBefore": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Script Parameter",
+      "name": "scriptBeforeParam",
+      "type": "string",
+      "description": "A parameter for the FileMaker script",
+      "placeholder": "Script Parameters",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ],
+          "setScriptBefore": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Before Sort Script",
+      "name": "setScriptSort",
+      "type": "boolean",
+      "description": "Whether to define a script to be run after the action specified by the API call but before the subsequent sort",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Script Name or ID",
+      "name": "scriptSort",
+      "type": "options",
+      "description": "The name of the FileMaker script to be run after the action specified by the API call but before the subsequent sort. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Script Name",
+      "default": "",
+      "required": true,
+      "options": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getScripts"
+      },
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ],
+          "setScriptSort": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Script Parameter",
+      "name": "scriptSortParam",
+      "type": "string",
+      "description": "A parameter for the FileMaker script",
+      "placeholder": "Script Parameters",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ],
+          "setScriptSort": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "After Sort Script",
+      "name": "setScriptAfter",
+      "type": "boolean",
+      "description": "Whether to define a script to be run after the action specified by the API call but before the subsequent sort",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Script Name or ID",
+      "name": "scriptAfter",
+      "type": "options",
+      "description": "The name of the FileMaker script to be run after the action specified by the API call and after the subsequent sort. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Script Name",
+      "default": "",
+      "required": true,
+      "options": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getScripts"
+      },
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ],
+          "setScriptAfter": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Script Parameter",
+      "name": "scriptAfterParam",
+      "type": "string",
+      "description": "A parameter for the FileMaker script",
+      "placeholder": "Script Parameters",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ],
+          "setScriptAfter": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "fieldData",
+      "name": "fieldData",
+      "type": "string",
+      "description": "Additional fields to add.",
+      "placeholder": "{\"field1\": \"value\", \"field2\": \"value\", ...}",
+      "default": "{}",
+      "displayOptions": {
+        "show": {
+          "action": [
+            "create",
+            "edit",
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Mod ID",
+      "name": "modId",
+      "type": "number",
+      "description": "The last modification ID. When you use modId, a record is edited only when the modId matches.",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "action": [
+            "edit"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Fields",
+      "name": "fieldsParametersUi",
+      "type": "fixedCollection",
+      "description": "Fields to define",
+      "placeholder": "Add field",
+      "default": {},
+      "options": [
+        {
+          "name": "fields",
+          "displayName": "Fields",
+          "values": [
+            {
+              "displayName": "Field Name or ID",
+              "name": "name",
+              "type": "options",
+              "description": "Field Name. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": "",
+              "options": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getFields"
+              }
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "action": [
+            "create",
+            "edit"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Script Name or ID",
+      "name": "script",
+      "type": "options",
+      "description": "The name of the FileMaker script to be run. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Script Name",
+      "default": "",
+      "required": true,
+      "options": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getScripts"
+      },
+      "displayOptions": {
+        "show": {
+          "action": [
+            "performscript"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Script Parameter",
+      "name": "scriptParam",
+      "type": "string",
+      "description": "A parameter for the FileMaker script",
+      "placeholder": "Script Parameters",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "action": [
+            "performscript"
+          ]
+        }
+      }
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "fileMaker",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [],
+  "validation_rules": {
+    "layout": {
+      "required": true
+    },
+    "recid": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "action": [
+            "record",
+            "edit",
+            "delete",
+            "duplicate"
+          ]
+        }
+      }
+    },
+    "offset": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "records"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "records"
+          ]
+        }
+      }
+    },
+    "getPortals": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "record",
+            "records",
+            "find"
+          ]
+        }
+      }
+    },
+    "portals": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "record",
+            "records",
+            "find"
+          ],
+          "getPortals": [
+            true
+          ]
+        }
+      }
+    },
+    "responseLayout": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find"
+          ]
+        }
+      }
+    },
+    "queries": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find"
+          ]
+        }
+      }
+    },
+    "setSort": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ]
+        }
+      }
+    },
+    "sortParametersUi": {
+      "displayOptions": {
+        "show": {
+          "setSort": [
+            true
+          ],
+          "action": [
+            "find",
+            "records"
+          ]
+        }
+      }
+    },
+    "setScriptBefore": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ]
+        }
+      }
+    },
+    "scriptBefore": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ],
+          "setScriptBefore": [
+            true
+          ]
+        }
+      }
+    },
+    "scriptBeforeParam": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ],
+          "setScriptBefore": [
+            true
+          ]
+        }
+      }
+    },
+    "setScriptSort": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ]
+        }
+      }
+    },
+    "scriptSort": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ],
+          "setScriptSort": [
+            true
+          ]
+        }
+      }
+    },
+    "scriptSortParam": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ],
+          "setScriptSort": [
+            true
+          ]
+        }
+      }
+    },
+    "setScriptAfter": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ]
+        }
+      }
+    },
+    "scriptAfter": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ],
+          "setScriptAfter": [
+            true
+          ]
+        }
+      }
+    },
+    "scriptAfterParam": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "find",
+            "record",
+            "records"
+          ],
+          "setScriptAfter": [
+            true
+          ]
+        }
+      }
+    },
+    "fieldData": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "create",
+            "edit",
+            ""
+          ]
+        }
+      }
+    },
+    "modId": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "edit"
+          ]
+        }
+      }
+    },
+    "fieldsParametersUi": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "create",
+            "edit"
+          ]
+        }
+      }
+    },
+    "script": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "action": [
+            "performscript"
+          ]
+        }
+      }
+    },
+    "scriptParam": {
+      "displayOptions": {
+        "show": {
+          "action": [
+            "performscript"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "action": {
+      "type": "options",
+      "displayName": "Action",
+      "name": "action",
+      "possibleValues": [
+        {
+          "value": "login",
+          "name": "Login",
+          "description": ""
+        },
+        {
+          "value": "logout",
+          "name": "Logout",
+          "description": ""
+        },
+        {
+          "value": "create",
+          "name": "Create Record",
+          "description": ""
+        },
+        {
+          "value": "delete",
+          "name": "Delete Record",
+          "description": ""
+        },
+        {
+          "value": "duplicate",
+          "name": "Duplicate Record",
+          "description": ""
+        },
+        {
+          "value": "edit",
+          "name": "Edit Record",
+          "description": ""
+        },
+        {
+          "value": "find",
+          "name": "Find Records",
+          "description": ""
+        },
+        {
+          "value": "records",
+          "name": "Get Records",
+          "description": ""
+        },
+        {
+          "value": "record",
+          "name": "Get Records By ID",
+          "description": ""
+        },
+        {
+          "value": "performscript",
+          "name": "Perform Script",
+          "description": ""
+        }
+      ]
+    },
+    "layout": {
+      "type": "options",
+      "displayName": "Layout Name or ID",
+      "name": "layout",
+      "typeOptions": {
+        "loadOptionsMethod": "getLayouts"
+      },
+      "possibleValues": []
+    },
+    "recid": {
+      "type": "number",
+      "displayName": "Record ID",
+      "name": "recid"
+    },
+    "offset": {
+      "type": "number",
+      "displayName": "Offset",
+      "name": "offset"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1
+      }
+    },
+    "getPortals": {
+      "type": "boolean",
+      "displayName": "Get Portals",
+      "name": "getPortals"
+    },
+    "portals": {
+      "type": "options",
+      "displayName": "Portals Name or ID",
+      "name": "portals",
+      "typeOptions": {
+        "multipleValues": true,
+        "loadOptionsMethod": "getPortals"
+      },
+      "possibleValues": []
+    },
+    "responseLayout": {
+      "type": "options",
+      "displayName": "Response Layout Name or ID",
+      "name": "responseLayout",
+      "typeOptions": {
+        "loadOptionsMethod": "getResponseLayouts"
+      },
+      "possibleValues": []
+    },
+    "queries": {
+      "type": "fixedCollection",
+      "displayName": "Queries",
+      "name": "queries",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "query",
+          "displayName": "Query",
+          "values": [
+            {
+              "displayName": "Fields",
+              "name": "fields",
+              "type": "fixedCollection",
+              "description": "Search Field. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "placeholder": "Add field",
+              "default": {},
+              "options": [
+                {
+                  "name": "field",
+                  "displayName": "Field",
+                  "values": [
+                    {
+                      "displayName": "Field Name or ID",
+                      "name": "name",
+                      "type": "options",
+                      "description": "Search Field. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                      "default": "",
+                      "options": [],
+                      "typeOptions": {
+                        "loadOptionsMethod": "getFields"
+                      }
+                    },
+                    {
+                      "displayName": "Value",
+                      "name": "value",
+                      "type": "string",
+                      "description": "Value to search",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": true
+              }
+            },
+            {
+              "displayName": "Omit",
+              "name": "omit",
+              "type": "boolean",
+              "default": false
+            }
+          ]
+        }
+      ]
+    },
+    "setSort": {
+      "type": "boolean",
+      "displayName": "Sort Data?",
+      "name": "setSort"
+    },
+    "sortParametersUi": {
+      "type": "fixedCollection",
+      "displayName": "Sort",
+      "name": "sortParametersUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "rules",
+          "displayName": "Rules",
+          "values": [
+            {
+              "displayName": "Field Name or ID",
+              "name": "name",
+              "type": "options",
+              "description": "Field Name. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": "",
+              "options": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getFields"
+              }
+            },
+            {
+              "displayName": "Order",
+              "name": "value",
+              "type": "options",
+              "description": "Sort order",
+              "value": "ascend",
+              "default": "ascend",
+              "options": [
+                {
+                  "name": "Ascend",
+                  "value": "ascend",
+                  "displayName": "Ascend"
+                },
+                {
+                  "name": "Descend",
+                  "value": "descend",
+                  "displayName": "Descend"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "setScriptBefore": {
+      "type": "boolean",
+      "displayName": "Before Find Script",
+      "name": "setScriptBefore"
+    },
+    "scriptBefore": {
+      "type": "options",
+      "displayName": "Script Name or ID",
+      "name": "scriptBefore",
+      "typeOptions": {
+        "loadOptionsMethod": "getScripts"
+      },
+      "possibleValues": []
+    },
+    "scriptBeforeParam": {
+      "type": "string",
+      "displayName": "Script Parameter",
+      "name": "scriptBeforeParam"
+    },
+    "setScriptSort": {
+      "type": "boolean",
+      "displayName": "Before Sort Script",
+      "name": "setScriptSort"
+    },
+    "scriptSort": {
+      "type": "options",
+      "displayName": "Script Name or ID",
+      "name": "scriptSort",
+      "typeOptions": {
+        "loadOptionsMethod": "getScripts"
+      },
+      "possibleValues": []
+    },
+    "scriptSortParam": {
+      "type": "string",
+      "displayName": "Script Parameter",
+      "name": "scriptSortParam"
+    },
+    "setScriptAfter": {
+      "type": "boolean",
+      "displayName": "After Sort Script",
+      "name": "setScriptAfter"
+    },
+    "scriptAfter": {
+      "type": "options",
+      "displayName": "Script Name or ID",
+      "name": "scriptAfter",
+      "typeOptions": {
+        "loadOptionsMethod": "getScripts"
+      },
+      "possibleValues": []
+    },
+    "scriptAfterParam": {
+      "type": "string",
+      "displayName": "Script Parameter",
+      "name": "scriptAfterParam"
+    },
+    "fieldData": {
+      "type": "string",
+      "displayName": "fieldData",
+      "name": "fieldData"
+    },
+    "modId": {
+      "type": "number",
+      "displayName": "Mod ID",
+      "name": "modId"
+    },
+    "fieldsParametersUi": {
+      "type": "fixedCollection",
+      "displayName": "Fields",
+      "name": "fieldsParametersUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "fields",
+          "displayName": "Fields",
+          "values": [
+            {
+              "displayName": "Field Name or ID",
+              "name": "name",
+              "type": "options",
+              "description": "Field Name. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": "",
+              "options": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getFields"
+              }
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "script": {
+      "type": "options",
+      "displayName": "Script Name or ID",
+      "name": "script",
+      "typeOptions": {
+        "loadOptionsMethod": "getScripts"
+      },
+      "possibleValues": []
+    },
+    "scriptParam": {
+      "type": "string",
+      "displayName": "Script Parameter",
+      "name": "scriptParam"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [
+      "GET",
+      "POST",
+      "DELETE"
+    ],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "layout",
+        "text": "Layout Name"
+      },
+      {
+        "field": "recid",
+        "text": "Record ID"
+      },
+      {
+        "field": "offset",
+        "text": "0"
+      },
+      {
+        "field": "limit",
+        "text": "100"
+      },
+      {
+        "field": "portals",
+        "text": "Portals"
+      },
+      {
+        "field": "queries",
+        "text": "Add query"
+      },
+      {
+        "field": "sortParametersUi",
+        "text": "Add Sort Rules"
+      },
+      {
+        "field": "scriptBefore",
+        "text": "Script Name"
+      },
+      {
+        "field": "scriptBeforeParam",
+        "text": "Script Parameters"
+      },
+      {
+        "field": "scriptSort",
+        "text": "Script Name"
+      },
+      {
+        "field": "scriptSortParam",
+        "text": "Script Parameters"
+      },
+      {
+        "field": "scriptAfter",
+        "text": "Script Name"
+      },
+      {
+        "field": "scriptAfterParam",
+        "text": "Script Parameters"
+      },
+      {
+        "field": "fieldData",
+        "text": "{\"field1\": \"value\", \"field2\": \"value\", ...}"
+      },
+      {
+        "field": "fieldsParametersUi",
+        "text": "Add field"
+      },
+      {
+        "field": "script",
+        "text": "Script Name"
+      },
+      {
+        "field": "scriptParam",
+        "text": "Script Parameters"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

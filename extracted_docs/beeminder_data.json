@@ -1,0 +1,2020 @@
+{
+  "node_info": {
+    "icon": "file:beeminder.png",
+    "defaults": {
+      "name": "Beeminder"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "beeminderApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "apiToken"
+            ]
+          }
+        }
+      },
+      {
+        "name": "beeminderOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getGoals",
+      "for",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Beeminder",
+    "name": "beeminder",
+    "description": "Consume Beeminder API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.beeminder",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Productivity"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/beeminder/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.beeminder/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "apiToken",
+      "default": "apiToken",
+      "options": [
+        {
+          "name": "API Token",
+          "value": "apiToken",
+          "displayName": "Api Token"
+        },
+        {
+          "name": "OAuth2",
+          "value": "oAuth2",
+          "displayName": "Oauth2"
+        }
+      ]
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "charge",
+      "default": "datapoint",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Charge",
+          "value": "charge",
+          "displayName": "Charge"
+        },
+        {
+          "name": "Datapoint",
+          "value": "datapoint",
+          "displayName": "Datapoint"
+        },
+        {
+          "name": "Goal",
+          "value": "goal",
+          "displayName": "Goal"
+        },
+        {
+          "name": "User",
+          "value": "user",
+          "displayName": "User"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a charge",
+      "action": "Create a charge",
+      "value": "create",
+      "default": "create",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a charge",
+          "action": "Create a charge",
+          "value": "create",
+          "displayName": "Create"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "charge"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create datapoint for goal",
+      "action": "Create datapoint for goal",
+      "value": "create",
+      "default": "create",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create datapoint for goal",
+          "action": "Create datapoint for goal",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Create All",
+          "description": "Create multiple datapoints at once",
+          "action": "Create multiple datapoints at once",
+          "value": "createAll",
+          "displayName": "Create All"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a datapoint",
+          "action": "Delete a datapoint",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get a single datapoint",
+          "action": "Get a single datapoint",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many datapoints for a goal",
+          "action": "Get many datapoints for a goal",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update a datapoint",
+          "action": "Update a datapoint",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "datapoint"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new goal",
+      "action": "Create a new goal",
+      "value": "create",
+      "default": "get",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a new goal",
+          "action": "Create a new goal",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Get",
+          "description": "Get a specific goal",
+          "action": "Get a specific goal",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many goals",
+          "action": "Get many goals",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Get Archived",
+          "description": "Get archived goals",
+          "action": "Get archived goals",
+          "value": "getArchived",
+          "displayName": "Get Archived"
+        },
+        {
+          "name": "Update",
+          "description": "Update a goal",
+          "action": "Update a goal",
+          "value": "update",
+          "displayName": "Update"
+        },
+        {
+          "name": "Refresh",
+          "description": "Refresh goal data",
+          "action": "Refresh goal data",
+          "value": "refresh",
+          "displayName": "Refresh"
+        },
+        {
+          "name": "Short Circuit",
+          "description": "Short circuit pledge",
+          "action": "Short circuit pledge",
+          "value": "shortCircuit",
+          "displayName": "Short Circuit"
+        },
+        {
+          "name": "Step Down",
+          "description": "Step down pledge",
+          "action": "Step down pledge",
+          "value": "stepDown",
+          "displayName": "Step Down"
+        },
+        {
+          "name": "Cancel Step Down",
+          "action": "Cancel step down",
+          "value": "cancelStepDown",
+          "displayName": "Cancel Step Down"
+        },
+        {
+          "name": "Uncle",
+          "description": "Derail a goal and charge the pledge amount",
+          "action": "Derail a goal and charge the pledge amount",
+          "value": "uncle",
+          "displayName": "Uncle"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Get user information",
+      "action": "Get user information",
+      "value": "get",
+      "default": "get",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "description": "Get user information",
+          "action": "Get user information",
+          "value": "get",
+          "displayName": "Get"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Goal Name or ID",
+      "name": "goalName",
+      "type": "options",
+      "description": "The name of the goal. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getGoals"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "datapoint"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Goal Name or ID",
+      "name": "goalName",
+      "type": "options",
+      "description": "The name of the goal to derail. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getGoals"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "uncle"
+          ]
+        }
+      },
+      "_operation": "uncle"
+    },
+    {
+      "displayName": "Goal Name or ID",
+      "name": "goalName",
+      "type": "options",
+      "description": "The name of the goal. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getGoals"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "get",
+            "update",
+            "refresh",
+            "shortCircuit",
+            "stepDown",
+            "cancelStepDown"
+          ]
+        }
+      },
+      "_operation": "get,update,refresh,shortCircuit,stepDown,cancelStepDown"
+    },
+    {
+      "displayName": "Amount",
+      "name": "amount",
+      "type": "number",
+      "description": "Charge amount in USD",
+      "default": 0,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "charge"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Datapoints",
+      "name": "datapoints",
+      "type": "json",
+      "description": "Array of datapoint objects to create. Each object should contain value and optionally timestamp, comment, etc.",
+      "placeholder": "[{\"value\": 1, \"comment\": \"First datapoint\"}, {\"value\": 2, \"comment\": \"Second datapoint\"}]",
+      "default": "[]",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "datapoint"
+          ],
+          "operation": [
+            "createAll"
+          ]
+        }
+      },
+      "_operation": "createAll"
+    },
+    {
+      "displayName": "Goal Slug",
+      "name": "slug",
+      "type": "string",
+      "description": "Unique identifier for the goal",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Goal Title",
+      "name": "title",
+      "type": "string",
+      "description": "Human-readable title for the goal",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Goal Type",
+      "name": "goal_type",
+      "type": "options",
+      "description": "Type of goal. <a href=\"https://api.beeminder.com/#attributes-2\">More info here.</a>.",
+      "value": "hustler",
+      "default": "hustler",
+      "required": true,
+      "options": [
+        {
+          "name": "Hustler",
+          "value": "hustler",
+          "displayName": "Hustler"
+        },
+        {
+          "name": "Biker",
+          "value": "biker",
+          "displayName": "Biker"
+        },
+        {
+          "name": "Fatloser",
+          "value": "fatloser",
+          "displayName": "Fatloser"
+        },
+        {
+          "name": "Gainer",
+          "value": "gainer",
+          "displayName": "Gainer"
+        },
+        {
+          "name": "Inboxer",
+          "value": "inboxer",
+          "displayName": "Inboxer"
+        },
+        {
+          "name": "Drinker",
+          "value": "drinker",
+          "displayName": "Drinker"
+        },
+        {
+          "name": "Custom",
+          "value": "custom",
+          "displayName": "Custom"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Goal Units",
+      "name": "gunits",
+      "type": "string",
+      "description": "Units for the goal (e.g., \"hours\", \"pages\", \"pounds\")",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "datapoint"
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 30,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 300
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "datapoint"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Value",
+      "name": "value",
+      "type": "number",
+      "description": "Datapoint value to send",
+      "default": 1,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "datapoint"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Datapoint ID",
+      "name": "datapointId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "datapoint"
+          ],
+          "operation": [
+            "update",
+            "delete",
+            "get"
+          ]
+        }
+      },
+      "_operation": "update,delete,get"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Defaults to \"now\" if none is passed in, or the existing timestamp if the datapoint is being updated rather than created",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Comment",
+          "name": "comment",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Timestamp",
+          "name": "timestamp",
+          "type": "dateTime",
+          "description": "Defaults to \"now\" if none is passed in, or the existing timestamp if the datapoint is being updated rather than created",
+          "default": ""
+        },
+        {
+          "displayName": "Request ID",
+          "name": "requestid",
+          "type": "string",
+          "description": "String to uniquely identify a datapoint",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "datapoint"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Charge explanation",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Note",
+          "name": "note",
+          "type": "string",
+          "description": "Charge explanation",
+          "default": ""
+        },
+        {
+          "displayName": "Dry Run",
+          "name": "dryrun",
+          "type": "boolean",
+          "description": "Whether to test charge creation without actually charging",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "charge"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Target date for the goal",
+      "placeholder": "Add Field",
+      "value": "api",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Goal Date",
+          "name": "goaldate",
+          "type": "dateTime",
+          "description": "Target date for the goal"
+        },
+        {
+          "displayName": "Goal Value",
+          "name": "goalval",
+          "type": "number",
+          "description": "Target value for the goal"
+        },
+        {
+          "displayName": "Rate",
+          "name": "rate",
+          "type": "number",
+          "description": "Rate of progress (units per day)"
+        },
+        {
+          "displayName": "Initial Value",
+          "name": "initval",
+          "type": "number",
+          "description": "Initial value for today's date",
+          "default": 0
+        },
+        {
+          "displayName": "Secret",
+          "name": "secret",
+          "type": "boolean",
+          "description": "Whether the goal is secret",
+          "default": false
+        },
+        {
+          "displayName": "Data Public",
+          "name": "datapublic",
+          "type": "boolean",
+          "description": "Whether the data is public",
+          "default": false
+        },
+        {
+          "displayName": "Data Source",
+          "name": "datasource",
+          "type": "options",
+          "description": "Data source for the goal",
+          "value": "api",
+          "default": "manual",
+          "options": [
+            {
+              "name": "API",
+              "value": "api",
+              "displayName": "Api"
+            },
+            {
+              "name": "IFTTT",
+              "value": "ifttt",
+              "displayName": "Ifttt"
+            },
+            {
+              "name": "Zapier",
+              "value": "zapier",
+              "displayName": "Zapier"
+            },
+            {
+              "name": "Manual",
+              "value": "manual",
+              "displayName": "Manual"
+            }
+          ]
+        },
+        {
+          "displayName": "Dry Run",
+          "name": "dryrun",
+          "type": "boolean",
+          "description": "Whether to test the endpoint without actually creating a goal",
+          "default": false
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "json",
+          "description": "Array of alphanumeric tags for the goal. Replaces existing tags.",
+          "placeholder": "[\"tag1\", \"tag2\"]",
+          "default": "[]"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Human-readable title for the goal",
+      "placeholder": "Add Field",
+      "value": "api",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Human-readable title for the goal",
+          "default": ""
+        },
+        {
+          "displayName": "Y-Axis",
+          "name": "yaxis",
+          "type": "string",
+          "description": "Y-axis label for the goal graph",
+          "default": ""
+        },
+        {
+          "displayName": "Tmin",
+          "name": "tmin",
+          "type": "string",
+          "description": "Minimum date for the goal in format yyyy-mm-dd",
+          "placeholder": "yyyy-mm-dd",
+          "default": ""
+        },
+        {
+          "displayName": "Tmax",
+          "name": "tmax",
+          "type": "string",
+          "description": "Maximum date for the goal in format yyyy-mm-dd",
+          "placeholder": "yyyy-mm-dd",
+          "default": ""
+        },
+        {
+          "displayName": "Secret",
+          "name": "secret",
+          "type": "boolean",
+          "description": "Whether the goal is secret",
+          "default": false
+        },
+        {
+          "displayName": "Data Public",
+          "name": "datapublic",
+          "type": "boolean",
+          "description": "Whether the data is public",
+          "default": false
+        },
+        {
+          "displayName": "Road All",
+          "name": "roadall",
+          "type": "json",
+          "description": "Array of arrays defining the bright red line. Each sub-array contains [date, value, rate] with exactly one field null.",
+          "placeholder": "[[\"2023-01-01\", 0, null], [null, 100, 1]]",
+          "default": "[]"
+        },
+        {
+          "displayName": "Data Source",
+          "name": "datasource",
+          "type": "options",
+          "description": "Data source for the goal. Use empty string for manual entry.",
+          "value": "api",
+          "default": "",
+          "options": [
+            {
+              "name": "API",
+              "value": "api",
+              "displayName": "Api"
+            },
+            {
+              "name": "IFTTT",
+              "value": "ifttt",
+              "displayName": "Ifttt"
+            },
+            {
+              "name": "Zapier",
+              "value": "zapier",
+              "displayName": "Zapier"
+            },
+            {
+              "name": "Manual",
+              "displayName": "Manual"
+            }
+          ]
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "json",
+          "description": "Array of alphanumeric tags for the goal. Replaces existing tags.",
+          "placeholder": "[\"tag1\", \"tag2\"]",
+          "default": "[]"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether to include datapoints in the response",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include Datapoints",
+          "name": "datapoints",
+          "type": "boolean",
+          "description": "Whether to include datapoints in the response",
+          "default": false
+        },
+        {
+          "displayName": "Emaciated",
+          "name": "emaciated",
+          "type": "boolean",
+          "description": "Whether to include the goal attributes called road, roadall, and fullroad will be stripped from the goal object",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether to include associations in the response",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Associations",
+          "name": "associations",
+          "type": "boolean",
+          "description": "Whether to include associations in the response",
+          "default": false
+        },
+        {
+          "displayName": "Diff Since",
+          "name": "diff_since",
+          "type": "dateTime",
+          "description": "Only goals and datapoints that have been created or updated since the timestamp will be returned"
+        },
+        {
+          "displayName": "Skinny",
+          "name": "skinny",
+          "type": "boolean",
+          "description": "Whether to return minimal user data",
+          "default": false
+        },
+        {
+          "displayName": "Emaciated",
+          "name": "emaciated",
+          "type": "boolean",
+          "description": "Whether to include the goal attributes called road, roadall, and fullroad will be stripped from any goal objects returned with the user",
+          "default": false
+        },
+        {
+          "displayName": "Datapoints Count",
+          "name": "datapoints_count",
+          "type": "number",
+          "description": "Number of datapoints to include"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether to include the goal attributes called road, roadall, and fullroad will be stripped from the goal objects",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Emaciated",
+          "name": "emaciated",
+          "type": "boolean",
+          "description": "Whether to include the goal attributes called road, roadall, and fullroad will be stripped from the goal objects",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether to include the goal attributes called road, roadall, and fullroad will be stripped from the goal objects",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Emaciated",
+          "name": "emaciated",
+          "type": "boolean",
+          "description": "Whether to include the goal attributes called road, roadall, and fullroad will be stripped from the goal objects",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "getArchived"
+          ]
+        }
+      },
+      "_operation": "getArchived"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Attribute to sort on",
+      "placeholder": "Add field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Sort",
+          "name": "sort",
+          "type": "string",
+          "description": "Attribute to sort on",
+          "default": "id"
+        },
+        {
+          "displayName": "Page",
+          "name": "page",
+          "type": "number",
+          "description": "Used to paginate results, 1-indexed, meaning page 1 is the first page",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Per Page",
+          "name": "per",
+          "type": "number",
+          "description": "Number of results per page. Default 25. Ignored without page parameter. Must be non-negative",
+          "default": 25,
+          "typeOptions": {
+            "minValue": 0
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ],
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "datapoint"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Datapoint value to send",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Value",
+          "name": "value",
+          "type": "number",
+          "description": "Datapoint value to send",
+          "default": 1
+        },
+        {
+          "displayName": "Comment",
+          "name": "comment",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Timestamp",
+          "name": "timestamp",
+          "type": "dateTime",
+          "description": "Defaults to \"now\" if none is passed in, or the existing timestamp if the datapoint is being updated rather than created",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "datapoint"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a charge",
+      "action": "Create a charge",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Create All",
+      "description": "Create multiple datapoints at once",
+      "action": "Create multiple datapoints at once",
+      "value": "createAll",
+      "displayName": "Create All"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a datapoint",
+      "action": "Delete a datapoint",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Get a single datapoint",
+      "action": "Get a single datapoint",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many datapoints for a goal",
+      "action": "Get many datapoints for a goal",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "description": "Update a datapoint",
+      "action": "Update a datapoint",
+      "value": "update",
+      "displayName": "Update"
+    },
+    {
+      "name": "Get Archived",
+      "description": "Get archived goals",
+      "action": "Get archived goals",
+      "value": "getArchived",
+      "displayName": "Get Archived"
+    },
+    {
+      "name": "Refresh",
+      "description": "Refresh goal data",
+      "action": "Refresh goal data",
+      "value": "refresh",
+      "displayName": "Refresh"
+    },
+    {
+      "name": "Short Circuit",
+      "description": "Short circuit pledge",
+      "action": "Short circuit pledge",
+      "value": "shortCircuit",
+      "displayName": "Short Circuit"
+    },
+    {
+      "name": "Step Down",
+      "description": "Step down pledge",
+      "action": "Step down pledge",
+      "value": "stepDown",
+      "displayName": "Step Down"
+    },
+    {
+      "name": "Cancel Step Down",
+      "action": "Cancel step down",
+      "value": "cancelStepDown",
+      "displayName": "Cancel Step Down"
+    },
+    {
+      "name": "Uncle",
+      "description": "Derail a goal and charge the pledge amount",
+      "action": "Derail a goal and charge the pledge amount",
+      "value": "uncle",
+      "displayName": "Uncle"
+    }
+  ],
+  "operations_by_resource": {
+    "charge": [
+      {
+        "name": "Create",
+        "description": "Create a charge",
+        "action": "Create a charge",
+        "value": "create",
+        "displayName": "Create"
+      }
+    ],
+    "datapoint": [
+      {
+        "name": "Create",
+        "description": "Create datapoint for goal",
+        "action": "Create datapoint for goal",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Create All",
+        "description": "Create multiple datapoints at once",
+        "action": "Create multiple datapoints at once",
+        "value": "createAll",
+        "displayName": "Create All"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a datapoint",
+        "action": "Delete a datapoint",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get a single datapoint",
+        "action": "Get a single datapoint",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many datapoints for a goal",
+        "action": "Get many datapoints for a goal",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update a datapoint",
+        "action": "Update a datapoint",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "goal": [
+      {
+        "name": "Create",
+        "description": "Create a new goal",
+        "action": "Create a new goal",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Get",
+        "description": "Get a specific goal",
+        "action": "Get a specific goal",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many goals",
+        "action": "Get many goals",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Get Archived",
+        "description": "Get archived goals",
+        "action": "Get archived goals",
+        "value": "getArchived",
+        "displayName": "Get Archived"
+      },
+      {
+        "name": "Update",
+        "description": "Update a goal",
+        "action": "Update a goal",
+        "value": "update",
+        "displayName": "Update"
+      },
+      {
+        "name": "Refresh",
+        "description": "Refresh goal data",
+        "action": "Refresh goal data",
+        "value": "refresh",
+        "displayName": "Refresh"
+      },
+      {
+        "name": "Short Circuit",
+        "description": "Short circuit pledge",
+        "action": "Short circuit pledge",
+        "value": "shortCircuit",
+        "displayName": "Short Circuit"
+      },
+      {
+        "name": "Step Down",
+        "description": "Step down pledge",
+        "action": "Step down pledge",
+        "value": "stepDown",
+        "displayName": "Step Down"
+      },
+      {
+        "name": "Cancel Step Down",
+        "action": "Cancel step down",
+        "value": "cancelStepDown",
+        "displayName": "Cancel Step Down"
+      },
+      {
+        "name": "Uncle",
+        "description": "Derail a goal and charge the pledge amount",
+        "action": "Derail a goal and charge the pledge amount",
+        "value": "uncle",
+        "displayName": "Uncle"
+      }
+    ],
+    "user": [
+      {
+        "name": "Get",
+        "description": "Get user information",
+        "action": "Get user information",
+        "value": "get",
+        "displayName": "Get"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "beeminderApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "apiToken"
+          ]
+        }
+      }
+    },
+    {
+      "name": "beeminderOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "resource": {
+      "required": true
+    },
+    "operation": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ]
+        }
+      }
+    },
+    "goalName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "get",
+            "update",
+            "refresh",
+            "shortCircuit",
+            "stepDown",
+            "cancelStepDown"
+          ]
+        }
+      }
+    },
+    "amount": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "charge"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "datapoints": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "datapoint"
+          ],
+          "operation": [
+            "createAll"
+          ]
+        }
+      }
+    },
+    "slug": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "title": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "goal_type": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "gunits": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "datapoint"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "datapoint"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "value": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "datapoint"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "datapointId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "datapoint"
+          ],
+          "operation": [
+            "update",
+            "delete",
+            "get"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "goal"
+          ],
+          "operation": [
+            "getArchived"
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "datapoint"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "datapoint"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "apiToken",
+          "name": "API Token",
+          "description": ""
+        },
+        {
+          "value": "oAuth2",
+          "name": "OAuth2",
+          "description": ""
+        }
+      ]
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "charge",
+          "name": "Charge",
+          "description": ""
+        },
+        {
+          "value": "datapoint",
+          "name": "Datapoint",
+          "description": ""
+        },
+        {
+          "value": "goal",
+          "name": "Goal",
+          "description": ""
+        },
+        {
+          "value": "user",
+          "name": "User",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get user information"
+        }
+      ]
+    },
+    "goalName": {
+      "type": "options",
+      "displayName": "Goal Name or ID",
+      "name": "goalName",
+      "typeOptions": {
+        "loadOptionsMethod": "getGoals"
+      },
+      "possibleValues": []
+    },
+    "amount": {
+      "type": "number",
+      "displayName": "Amount",
+      "name": "amount"
+    },
+    "datapoints": {
+      "type": "json",
+      "displayName": "Datapoints",
+      "name": "datapoints"
+    },
+    "slug": {
+      "type": "string",
+      "displayName": "Goal Slug",
+      "name": "slug"
+    },
+    "title": {
+      "type": "string",
+      "displayName": "Goal Title",
+      "name": "title"
+    },
+    "goal_type": {
+      "type": "options",
+      "displayName": "Goal Type",
+      "name": "goal_type",
+      "possibleValues": [
+        {
+          "value": "hustler",
+          "name": "Hustler",
+          "description": ""
+        },
+        {
+          "value": "biker",
+          "name": "Biker",
+          "description": ""
+        },
+        {
+          "value": "fatloser",
+          "name": "Fatloser",
+          "description": ""
+        },
+        {
+          "value": "gainer",
+          "name": "Gainer",
+          "description": ""
+        },
+        {
+          "value": "inboxer",
+          "name": "Inboxer",
+          "description": ""
+        },
+        {
+          "value": "drinker",
+          "name": "Drinker",
+          "description": ""
+        },
+        {
+          "value": "custom",
+          "name": "Custom",
+          "description": ""
+        }
+      ]
+    },
+    "gunits": {
+      "type": "string",
+      "displayName": "Goal Units",
+      "name": "gunits"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 300
+      }
+    },
+    "value": {
+      "type": "number",
+      "displayName": "Value",
+      "name": "value"
+    },
+    "datapointId": {
+      "type": "string",
+      "displayName": "Datapoint ID",
+      "name": "datapointId"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Emaciated",
+          "name": "emaciated",
+          "type": "boolean",
+          "description": "Whether to include the goal attributes called road, roadall, and fullroad will be stripped from the goal objects",
+          "default": false
+        }
+      ]
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "subProperties": [
+        {
+          "displayName": "Value",
+          "name": "value",
+          "type": "number",
+          "description": "Datapoint value to send",
+          "default": 1
+        },
+        {
+          "displayName": "Comment",
+          "name": "comment",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Timestamp",
+          "name": "timestamp",
+          "type": "dateTime",
+          "description": "Defaults to \"now\" if none is passed in, or the existing timestamp if the datapoint is being updated rather than created",
+          "default": ""
+        }
+      ]
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "minValue": 1
+      },
+      "subProperties": [
+        {
+          "displayName": "Sort",
+          "name": "sort",
+          "type": "string",
+          "description": "Attribute to sort on",
+          "default": "id"
+        },
+        {
+          "displayName": "Page",
+          "name": "page",
+          "type": "number",
+          "description": "Used to paginate results, 1-indexed, meaning page 1 is the first page",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Per Page",
+          "name": "per",
+          "type": "number",
+          "description": "Number of results per page. Default 25. Ignored without page parameter. Must be non-negative",
+          "default": 25,
+          "typeOptions": {
+            "minValue": 0
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "datapoints",
+        "text": "[{\"value\": 1, \"comment\": \"First datapoint\"}, {\"value\": 2, \"comment\": \"Second datapoint\"}]"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

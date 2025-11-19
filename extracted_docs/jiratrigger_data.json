@@ -1,0 +1,960 @@
+{
+  "node_info": {
+    "icon": "file:jira.svg",
+    "defaults": {
+      "name": "Jira Trigger"
+    },
+    "inputs": [],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "trigger"
+    ],
+    "authentication": [
+      {
+        "name": "jiraSoftwareCloudApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "jiraVersion": [
+              "cloud"
+            ]
+          }
+        }
+      },
+      {
+        "name": "jiraSoftwareServerApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "jiraVersion": [
+              "server"
+            ]
+          }
+        }
+      },
+      {
+        "name": "jiraSoftwareServerPatApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "jiraVersion": [
+              "serverPat"
+            ]
+          }
+        }
+      },
+      {
+        "name": "httpQueryAuth",
+        "required": false,
+        "displayOptions": {
+          "show": {
+            "authenticateWebhook": [
+              true
+            ]
+          }
+        }
+      },
+      {
+        "name": "httpQueryAuth",
+        "required": false,
+        "displayOptions": {
+          "show": {
+            "incomingAuthentication": [
+              "queryAuth"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Jira Trigger",
+    "name": "jiraTrigger",
+    "description": "Starts the workflow when Jira events occur",
+    "subtitle": "",
+    "version": [
+      "1",
+      "1.1"
+    ],
+    "node_type": "trigger",
+    "webhooks": [
+      {
+        "name": "default",
+        "httpMethod": "POST",
+        "responseMode": "onReceived",
+        "path": "webhook"
+      }
+    ]
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.jiraTrigger",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development",
+      "Productivity"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/jira/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.jiratrigger/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Jira Version",
+      "name": "jiraVersion",
+      "type": "options",
+      "value": "cloud",
+      "default": "cloud",
+      "options": [
+        {
+          "name": "Cloud",
+          "value": "cloud",
+          "displayName": "Cloud"
+        },
+        {
+          "name": "Server (Self Hosted)",
+          "value": "server",
+          "displayName": "Server (self Hosted)"
+        },
+        {
+          "name": "Server (Pat) (Self Hosted)",
+          "value": "serverPat",
+          "displayName": "Server (pat) (self Hosted)"
+        }
+      ]
+    },
+    {
+      "displayName": "Authenticate Incoming Webhook",
+      "name": "authenticateWebhook",
+      "type": "boolean",
+      "description": "Whether authentication should be activated for the incoming webhooks (makes it more secure)",
+      "default": false,
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    {
+      "displayName": "Authenticate Webhook With",
+      "name": "incomingAuthentication",
+      "type": "options",
+      "description": "If authentication should be activated for the webhook (makes it more secure)",
+      "value": "queryAuth",
+      "default": "none",
+      "options": [
+        {
+          "name": "Query Auth",
+          "value": "queryAuth",
+          "displayName": "Query Auth"
+        },
+        {
+          "name": "None",
+          "value": "none",
+          "displayName": "None"
+        }
+      ],
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    {
+      "displayName": "Events",
+      "name": "events",
+      "type": "multiOptions",
+      "description": "The events to listen to",
+      "value": "*",
+      "default": [],
+      "required": true,
+      "options": [
+        {
+          "name": "*",
+          "value": "*",
+          "displayName": "*"
+        },
+        {
+          "name": "Board Configuration Changed",
+          "value": "board_configuration_changed",
+          "displayName": "Board Configuration Changed"
+        },
+        {
+          "name": "Board Created",
+          "value": "board_created",
+          "displayName": "Board Created"
+        },
+        {
+          "name": "Board Deleted",
+          "value": "board_deleted",
+          "displayName": "Board Deleted"
+        },
+        {
+          "name": "Board Updated",
+          "value": "board_updated",
+          "displayName": "Board Updated"
+        },
+        {
+          "name": "Comment Created",
+          "value": "comment_created",
+          "displayName": "Comment Created"
+        },
+        {
+          "name": "Comment Deleted",
+          "value": "comment_deleted",
+          "displayName": "Comment Deleted"
+        },
+        {
+          "name": "Comment Updated",
+          "value": "comment_updated",
+          "displayName": "Comment Updated"
+        },
+        {
+          "name": "Issue Created",
+          "value": "jira:issue_created",
+          "displayName": "Issue Created"
+        },
+        {
+          "name": "Issue Deleted",
+          "value": "jira:issue_deleted",
+          "displayName": "Issue Deleted"
+        },
+        {
+          "name": "Issue Link Created",
+          "value": "issuelink_created",
+          "displayName": "Issue Link Created"
+        },
+        {
+          "name": "Issue Link Deleted",
+          "value": "issuelink_deleted",
+          "displayName": "Issue Link Deleted"
+        },
+        {
+          "name": "Issue Updated",
+          "value": "jira:issue_updated",
+          "displayName": "Issue Updated"
+        },
+        {
+          "name": "Option Attachments Changed",
+          "value": "option_attachments_changed",
+          "displayName": "Option Attachments Changed"
+        },
+        {
+          "name": "Option Issue Links Changed",
+          "value": "option_issuelinks_changed",
+          "displayName": "Option Issue Links Changed"
+        },
+        {
+          "name": "Option Subtasks Changed",
+          "value": "option_subtasks_changed",
+          "displayName": "Option Subtasks Changed"
+        },
+        {
+          "name": "Option Timetracking Changed",
+          "value": "option_timetracking_changed",
+          "displayName": "Option Timetracking Changed"
+        },
+        {
+          "name": "Option Unassigned Issues Changed",
+          "value": "option_unassigned_issues_changed",
+          "displayName": "Option Unassigned Issues Changed"
+        },
+        {
+          "name": "Option Voting Changed",
+          "value": "option_voting_changed",
+          "displayName": "Option Voting Changed"
+        },
+        {
+          "name": "Option Watching Changed",
+          "value": "option_watching_changed",
+          "displayName": "Option Watching Changed"
+        },
+        {
+          "name": "Project Created",
+          "value": "project_created",
+          "displayName": "Project Created"
+        },
+        {
+          "name": "Project Deleted",
+          "value": "project_deleted",
+          "displayName": "Project Deleted"
+        },
+        {
+          "name": "Project Updated",
+          "value": "project_updated",
+          "displayName": "Project Updated"
+        },
+        {
+          "name": "Sprint Closed",
+          "value": "sprint_closed",
+          "displayName": "Sprint Closed"
+        },
+        {
+          "name": "Sprint Created",
+          "value": "sprint_created",
+          "displayName": "Sprint Created"
+        },
+        {
+          "name": "Sprint Deleted",
+          "value": "sprint_deleted",
+          "displayName": "Sprint Deleted"
+        },
+        {
+          "name": "Sprint Started",
+          "value": "sprint_started",
+          "displayName": "Sprint Started"
+        },
+        {
+          "name": "Sprint Updated",
+          "value": "sprint_updated",
+          "displayName": "Sprint Updated"
+        },
+        {
+          "name": "User Created",
+          "value": "user_created",
+          "displayName": "User Created"
+        },
+        {
+          "name": "User Deleted",
+          "value": "user_deleted",
+          "displayName": "User Deleted"
+        },
+        {
+          "name": "User Updated",
+          "value": "user_updated",
+          "displayName": "User Updated"
+        },
+        {
+          "name": "Version Created",
+          "value": "jira:version_created",
+          "displayName": "Version Created"
+        },
+        {
+          "name": "Version Deleted",
+          "value": "jira:version_deleted",
+          "displayName": "Version Deleted"
+        },
+        {
+          "name": "Version Moved",
+          "value": "jira:version_moved",
+          "displayName": "Version Moved"
+        },
+        {
+          "name": "Version Released",
+          "value": "jira:version_released",
+          "displayName": "Version Released"
+        },
+        {
+          "name": "Version Unreleased",
+          "value": "jira:version_unreleased",
+          "displayName": "Version Unreleased"
+        },
+        {
+          "name": "Version Updated",
+          "value": "jira:version_updated",
+          "displayName": "Version Updated"
+        },
+        {
+          "name": "Worklog Created",
+          "value": "worklog_created",
+          "displayName": "Worklog Created"
+        },
+        {
+          "name": "Worklog Deleted",
+          "value": "worklog_deleted",
+          "displayName": "Worklog Deleted"
+        },
+        {
+          "name": "Worklog Updated",
+          "value": "worklog_updated",
+          "displayName": "Worklog Updated"
+        }
+      ]
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether a request with empty body will be sent to the URL. Leave unchecked if you want to receive JSON.",
+      "placeholder": "Add Field",
+      "value": "attachment.id",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Exclude Body",
+          "name": "excludeBody",
+          "type": "boolean",
+          "description": "Whether a request with empty body will be sent to the URL. Leave unchecked if you want to receive JSON.",
+          "default": false
+        },
+        {
+          "displayName": "Filter",
+          "name": "filter",
+          "type": "string",
+          "description": "You can specify a JQL query to send only events triggered by matching issues. The JQL filter only applies to events under the Issue and Comment columns.",
+          "placeholder": "Project = JRA AND resolution = Fixed",
+          "default": ""
+        },
+        {
+          "displayName": "Include Fields",
+          "name": "includeFields",
+          "type": "multiOptions",
+          "value": "attachment.id",
+          "default": [],
+          "options": [
+            {
+              "name": "Attachment ID",
+              "value": "attachment.id",
+              "displayName": "Attachment Id"
+            },
+            {
+              "name": "Board ID",
+              "value": "board.id",
+              "displayName": "Board Id"
+            },
+            {
+              "name": "Comment ID",
+              "value": "comment.id",
+              "displayName": "Comment Id"
+            },
+            {
+              "name": "Issue ID",
+              "value": "issue.id",
+              "displayName": "Issue Id"
+            },
+            {
+              "name": "Merge Version ID",
+              "value": "mergeVersion.id",
+              "displayName": "Merge Version Id"
+            },
+            {
+              "name": "Modified User Account ID",
+              "value": "modifiedUser.accountId",
+              "displayName": "Modified User Account Id"
+            },
+            {
+              "name": "Modified User Key",
+              "value": "modifiedUser.key",
+              "displayName": "Modified User Key"
+            },
+            {
+              "name": "Modified User Name",
+              "value": "modifiedUser.name",
+              "displayName": "Modified User Name"
+            },
+            {
+              "name": "Project ID",
+              "value": "project.id",
+              "displayName": "Project Id"
+            },
+            {
+              "name": "Project Key",
+              "value": "project.key",
+              "displayName": "Project Key"
+            },
+            {
+              "name": "Propery Key",
+              "value": "property.key",
+              "displayName": "Propery Key"
+            },
+            {
+              "name": "Sprint ID",
+              "value": "sprint.id",
+              "displayName": "Sprint Id"
+            },
+            {
+              "name": "Version ID",
+              "value": "version.id",
+              "displayName": "Version Id"
+            },
+            {
+              "name": "Worklog ID",
+              "value": "worklog.id",
+              "displayName": "Worklog Id"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "jiraSoftwareCloudApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "jiraVersion": [
+            "cloud"
+          ]
+        }
+      }
+    },
+    {
+      "name": "jiraSoftwareServerApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "jiraVersion": [
+            "server"
+          ]
+        }
+      }
+    },
+    {
+      "name": "jiraSoftwareServerPatApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "jiraVersion": [
+            "serverPat"
+          ]
+        }
+      }
+    },
+    {
+      "name": "httpQueryAuth",
+      "required": false,
+      "displayOptions": {
+        "show": {
+          "authenticateWebhook": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "name": "httpQueryAuth",
+      "required": false,
+      "displayOptions": {
+        "show": {
+          "incomingAuthentication": [
+            "queryAuth"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [],
+  "validation_rules": {
+    "authenticateWebhook": {
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    "incomingAuthentication": {
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    "events": {
+      "required": true
+    }
+  },
+  "type_info": {
+    "jiraVersion": {
+      "type": "options",
+      "displayName": "Jira Version",
+      "name": "jiraVersion",
+      "possibleValues": [
+        {
+          "value": "cloud",
+          "name": "Cloud",
+          "description": ""
+        },
+        {
+          "value": "server",
+          "name": "Server (Self Hosted)",
+          "description": ""
+        },
+        {
+          "value": "serverPat",
+          "name": "Server (Pat) (Self Hosted)",
+          "description": ""
+        }
+      ]
+    },
+    "authenticateWebhook": {
+      "type": "boolean",
+      "displayName": "Authenticate Incoming Webhook",
+      "name": "authenticateWebhook"
+    },
+    "incomingAuthentication": {
+      "type": "options",
+      "displayName": "Authenticate Webhook With",
+      "name": "incomingAuthentication",
+      "possibleValues": [
+        {
+          "value": "queryAuth",
+          "name": "Query Auth",
+          "description": ""
+        },
+        {
+          "value": "none",
+          "name": "None",
+          "description": ""
+        }
+      ]
+    },
+    "events": {
+      "type": "multiOptions",
+      "displayName": "Events",
+      "name": "events",
+      "possibleValues": [
+        {
+          "value": "*",
+          "name": "*",
+          "description": ""
+        },
+        {
+          "value": "board_configuration_changed",
+          "name": "Board Configuration Changed",
+          "description": ""
+        },
+        {
+          "value": "board_created",
+          "name": "Board Created",
+          "description": ""
+        },
+        {
+          "value": "board_deleted",
+          "name": "Board Deleted",
+          "description": ""
+        },
+        {
+          "value": "board_updated",
+          "name": "Board Updated",
+          "description": ""
+        },
+        {
+          "value": "comment_created",
+          "name": "Comment Created",
+          "description": ""
+        },
+        {
+          "value": "comment_deleted",
+          "name": "Comment Deleted",
+          "description": ""
+        },
+        {
+          "value": "comment_updated",
+          "name": "Comment Updated",
+          "description": ""
+        },
+        {
+          "value": "jira:issue_created",
+          "name": "Issue Created",
+          "description": ""
+        },
+        {
+          "value": "jira:issue_deleted",
+          "name": "Issue Deleted",
+          "description": ""
+        },
+        {
+          "value": "issuelink_created",
+          "name": "Issue Link Created",
+          "description": ""
+        },
+        {
+          "value": "issuelink_deleted",
+          "name": "Issue Link Deleted",
+          "description": ""
+        },
+        {
+          "value": "jira:issue_updated",
+          "name": "Issue Updated",
+          "description": ""
+        },
+        {
+          "value": "option_attachments_changed",
+          "name": "Option Attachments Changed",
+          "description": ""
+        },
+        {
+          "value": "option_issuelinks_changed",
+          "name": "Option Issue Links Changed",
+          "description": ""
+        },
+        {
+          "value": "option_subtasks_changed",
+          "name": "Option Subtasks Changed",
+          "description": ""
+        },
+        {
+          "value": "option_timetracking_changed",
+          "name": "Option Timetracking Changed",
+          "description": ""
+        },
+        {
+          "value": "option_unassigned_issues_changed",
+          "name": "Option Unassigned Issues Changed",
+          "description": ""
+        },
+        {
+          "value": "option_voting_changed",
+          "name": "Option Voting Changed",
+          "description": ""
+        },
+        {
+          "value": "option_watching_changed",
+          "name": "Option Watching Changed",
+          "description": ""
+        },
+        {
+          "value": "project_created",
+          "name": "Project Created",
+          "description": ""
+        },
+        {
+          "value": "project_deleted",
+          "name": "Project Deleted",
+          "description": ""
+        },
+        {
+          "value": "project_updated",
+          "name": "Project Updated",
+          "description": ""
+        },
+        {
+          "value": "sprint_closed",
+          "name": "Sprint Closed",
+          "description": ""
+        },
+        {
+          "value": "sprint_created",
+          "name": "Sprint Created",
+          "description": ""
+        },
+        {
+          "value": "sprint_deleted",
+          "name": "Sprint Deleted",
+          "description": ""
+        },
+        {
+          "value": "sprint_started",
+          "name": "Sprint Started",
+          "description": ""
+        },
+        {
+          "value": "sprint_updated",
+          "name": "Sprint Updated",
+          "description": ""
+        },
+        {
+          "value": "user_created",
+          "name": "User Created",
+          "description": ""
+        },
+        {
+          "value": "user_deleted",
+          "name": "User Deleted",
+          "description": ""
+        },
+        {
+          "value": "user_updated",
+          "name": "User Updated",
+          "description": ""
+        },
+        {
+          "value": "jira:version_created",
+          "name": "Version Created",
+          "description": ""
+        },
+        {
+          "value": "jira:version_deleted",
+          "name": "Version Deleted",
+          "description": ""
+        },
+        {
+          "value": "jira:version_moved",
+          "name": "Version Moved",
+          "description": ""
+        },
+        {
+          "value": "jira:version_released",
+          "name": "Version Released",
+          "description": ""
+        },
+        {
+          "value": "jira:version_unreleased",
+          "name": "Version Unreleased",
+          "description": ""
+        },
+        {
+          "value": "jira:version_updated",
+          "name": "Version Updated",
+          "description": ""
+        },
+        {
+          "value": "worklog_created",
+          "name": "Worklog Created",
+          "description": ""
+        },
+        {
+          "value": "worklog_deleted",
+          "name": "Worklog Deleted",
+          "description": ""
+        },
+        {
+          "value": "worklog_updated",
+          "name": "Worklog Updated",
+          "description": ""
+        }
+      ]
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Exclude Body",
+          "name": "excludeBody",
+          "type": "boolean",
+          "description": "Whether a request with empty body will be sent to the URL. Leave unchecked if you want to receive JSON.",
+          "default": false
+        },
+        {
+          "displayName": "Filter",
+          "name": "filter",
+          "type": "string",
+          "description": "You can specify a JQL query to send only events triggered by matching issues. The JQL filter only applies to events under the Issue and Comment columns.",
+          "placeholder": "Project = JRA AND resolution = Fixed",
+          "default": ""
+        },
+        {
+          "displayName": "Include Fields",
+          "name": "includeFields",
+          "type": "multiOptions",
+          "value": "attachment.id",
+          "default": [],
+          "options": [
+            {
+              "name": "Attachment ID",
+              "value": "attachment.id",
+              "displayName": "Attachment Id"
+            },
+            {
+              "name": "Board ID",
+              "value": "board.id",
+              "displayName": "Board Id"
+            },
+            {
+              "name": "Comment ID",
+              "value": "comment.id",
+              "displayName": "Comment Id"
+            },
+            {
+              "name": "Issue ID",
+              "value": "issue.id",
+              "displayName": "Issue Id"
+            },
+            {
+              "name": "Merge Version ID",
+              "value": "mergeVersion.id",
+              "displayName": "Merge Version Id"
+            },
+            {
+              "name": "Modified User Account ID",
+              "value": "modifiedUser.accountId",
+              "displayName": "Modified User Account Id"
+            },
+            {
+              "name": "Modified User Key",
+              "value": "modifiedUser.key",
+              "displayName": "Modified User Key"
+            },
+            {
+              "name": "Modified User Name",
+              "value": "modifiedUser.name",
+              "displayName": "Modified User Name"
+            },
+            {
+              "name": "Project ID",
+              "value": "project.id",
+              "displayName": "Project Id"
+            },
+            {
+              "name": "Project Key",
+              "value": "project.key",
+              "displayName": "Project Key"
+            },
+            {
+              "name": "Propery Key",
+              "value": "property.key",
+              "displayName": "Propery Key"
+            },
+            {
+              "name": "Sprint ID",
+              "value": "sprint.id",
+              "displayName": "Sprint Id"
+            },
+            {
+              "name": "Version ID",
+              "value": "version.id",
+              "displayName": "Version Id"
+            },
+            {
+              "name": "Worklog ID",
+              "value": "worklog.id",
+              "displayName": "Worklog Id"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type",
+      "no-check",
+      "X-Atlassian-Token"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

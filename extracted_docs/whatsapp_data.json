@@ -1,0 +1,2875 @@
+{
+  "node_info": {
+    "icon": "file:whatsapp.svg",
+    "defaults": {
+      "name": "WhatsApp Business Cloud"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "WhatsApp Business Cloud",
+    "name": "whatsApp",
+    "description": "Access WhatsApp API",
+    "subtitle": "={{ $parameter[\"resource\"] + \": \" + $parameter[\"operation\"] }}",
+    "version": [
+      "1",
+      "1.1"
+    ],
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.whatsApp",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication",
+      "HITL"
+    ],
+    "subcategories": {
+      "HITL": [
+        "Human in the Loop"
+      ]
+    },
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/whatsapp/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.whatsapp/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "message",
+      "default": "message",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Message",
+          "value": "message",
+          "displayName": "Message"
+        },
+        {
+          "name": "Media",
+          "value": "media",
+          "displayName": "Media"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Send message",
+      "value": "send",
+      "default": "sendTemplate",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Send",
+          "action": "Send message",
+          "value": "send",
+          "displayName": "Send"
+        },
+        {
+          "name": "Send and Wait for Response",
+          "action": "Send message and wait for response",
+          "displayName": "Send And Wait For Response"
+        },
+        {
+          "name": "Send Template",
+          "action": "Send template",
+          "value": "sendTemplate",
+          "displayName": "Send Template"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ]
+        }
+      },
+      "routing": "\n\t\t\trequest: {\n\t\t\t\tignoreHttpStatusErrors: true,\n\t\t\t",
+      "_source": "Messages_messageFields"
+    },
+    {
+      "displayName": "Messaging Product",
+      "name": "messagingProduct",
+      "type": "hidden",
+      "default": "whatsapp",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ]
+        }
+      },
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'messaging_product',\n\t\t\t",
+      "_source": "Messages_messageFields"
+    },
+    {
+      "displayName": "Sender Phone Number (or ID)",
+      "name": "phoneNumberId",
+      "type": "options",
+      "description": "The ID of the business account's phone number from which the message will be sent from",
+      "value": "={{$responseItem.id}}",
+      "default": "",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\turl: '={{$credentials.businessAccountId",
+      "_source": "Messages_messageFields"
+    },
+    {
+      "displayName": "Recipient's Phone Number",
+      "name": "recipientPhoneNumber",
+      "type": "string",
+      "description": "Phone number of the recipient of the message",
+      "hint": "When entering a phone number, make sure to include the country code",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ]
+        }
+      },
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tpreSend: [cleanPhoneNumber],\n\t\t\t",
+      "_source": "Messages_messageFields"
+    },
+    {
+      "displayName": "MessageType",
+      "name": "messageType",
+      "type": "options",
+      "description": "The type of the message",
+      "value": "audio",
+      "default": "text",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Audio",
+          "value": "audio",
+          "displayName": "Audio"
+        },
+        {
+          "name": "Contacts",
+          "value": "contacts",
+          "displayName": "Contacts"
+        },
+        {
+          "name": "Document",
+          "value": "document",
+          "displayName": "Document"
+        },
+        {
+          "name": "Image",
+          "value": "image",
+          "displayName": "Image"
+        },
+        {
+          "name": "Location",
+          "value": "location",
+          "displayName": "Location"
+        },
+        {
+          "name": "Text",
+          "value": "text",
+          "displayName": "Text"
+        },
+        {
+          "name": "Video",
+          "value": "video",
+          "displayName": "Video"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "send"
+          ]
+        }
+      },
+      "_operation": "send",
+      "_source": "Messages_messageFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "The operation to perform on the media",
+      "action": "Upload media",
+      "value": "mediaUpload",
+      "default": "mediaUpload",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Upload",
+          "action": "Upload media",
+          "value": "mediaUpload",
+          "displayName": "Upload"
+        },
+        {
+          "name": "Download",
+          "action": "Download media",
+          "value": "mediaUrlGet",
+          "displayName": "Download"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete media",
+          "value": "mediaDelete",
+          "displayName": "Delete"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "media"
+          ]
+        }
+      },
+      "_source": "Media_mediaFields"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "fixedCollection",
+      "placeholder": "Add Parameter",
+      "default": {},
+      "required": true,
+      "options": [
+        {
+          "name": "data",
+          "displayName": "Name",
+          "values": [
+            {
+              "displayName": "Formatted Name",
+              "name": "formatted_name",
+              "type": "string",
+              "default": "",
+              "required": true,
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contacts[0].name.formatted_name',\n\t\t\t\t\t\t\t"
+            },
+            {
+              "displayName": "First Name",
+              "name": "first_name",
+              "type": "string",
+              "default": "",
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contacts[0].name.first_name',\n\t\t\t\t\t\t\t"
+            },
+            {
+              "displayName": "Last Name",
+              "name": "last_name",
+              "type": "string",
+              "default": "",
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contacts[0].name.last_name',\n\t\t\t\t\t\t\t"
+            },
+            {
+              "displayName": "Middle Name",
+              "name": "middle_name",
+              "type": "string",
+              "default": "",
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contacts[0].name.middle_name',\n\t\t\t\t\t\t\t"
+            },
+            {
+              "displayName": "Suffix",
+              "name": "suffix",
+              "type": "string",
+              "default": "",
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contacts[0].name.suffix',\n\t\t\t\t\t\t\t"
+            },
+            {
+              "displayName": "Prefix",
+              "name": "prefix",
+              "type": "string",
+              "default": "",
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contacts[0].name.prefix',\n\t\t\t\t\t\t\t"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "contacts"
+          ]
+        }
+      },
+      "_operation": "send",
+      "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contacts[0].name.formatted_name',\n\t\t\t\t\t\t\t",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "If omitted, the message will display an Invite to WhatsApp button instead of the standard buttons",
+      "placeholder": "Add Field",
+      "value": "HOME",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Addresses",
+          "name": "addresses",
+          "type": "fixedCollection",
+          "placeholder": "Add Parameter",
+          "value": "HOME",
+          "default": {},
+          "options": [
+            {
+              "name": "address",
+              "displayName": "Address",
+              "values": [
+                {
+                  "displayName": "Type",
+                  "name": "type",
+                  "type": "options",
+                  "value": "HOME",
+                  "default": "HOME",
+                  "options": [
+                    {
+                      "name": "Home",
+                      "value": "HOME",
+                      "displayName": "Home"
+                    },
+                    {
+                      "name": "Work",
+                      "value": "WORK",
+                      "displayName": "Work"
+                    }
+                  ],
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].addresses[{{$index"
+                },
+                {
+                  "displayName": "Street",
+                  "name": "street",
+                  "type": "string",
+                  "default": "",
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].addresses[{{$index"
+                },
+                {
+                  "displayName": "City",
+                  "name": "city",
+                  "type": "string",
+                  "default": "",
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].addresses[{{$index"
+                },
+                {
+                  "displayName": "State",
+                  "name": "state",
+                  "type": "string",
+                  "default": "",
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].addresses[{{$index"
+                },
+                {
+                  "displayName": "Zip",
+                  "name": "zip",
+                  "type": "string",
+                  "default": "",
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].addresses[{{$index"
+                },
+                {
+                  "displayName": "Country",
+                  "name": "country",
+                  "type": "string",
+                  "default": "",
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].addresses[{{$index"
+                },
+                {
+                  "displayName": "Country Code",
+                  "name": "country_code",
+                  "type": "string",
+                  "default": "",
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].addresses[{{$index"
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].addresses[{{$index"
+        },
+        {
+          "displayName": "Birthday",
+          "name": "birthday",
+          "type": "string",
+          "placeholder": "YYYY-MM-DD",
+          "default": "",
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\tproperty: 'contacts[0].birthday',\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Emails",
+          "name": "emails",
+          "type": "fixedCollection",
+          "placeholder": "Add Parameter",
+          "value": "HOME",
+          "default": {},
+          "options": [
+            {
+              "name": "data",
+              "displayName": "Email",
+              "values": [
+                {
+                  "displayName": "Type",
+                  "name": "type",
+                  "type": "options",
+                  "value": "HOME",
+                  "default": "HOME",
+                  "options": [
+                    {
+                      "name": "Home",
+                      "value": "HOME",
+                      "displayName": "Home"
+                    },
+                    {
+                      "name": "Work",
+                      "value": "WORK",
+                      "displayName": "Work"
+                    }
+                  ],
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].emails[{{$index"
+                },
+                {
+                  "displayName": "Email",
+                  "name": "email",
+                  "type": "string",
+                  "placeholder": "name@email.com",
+                  "default": "",
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].emails[{{$index"
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].emails[{{$index"
+        },
+        {
+          "displayName": "Organization",
+          "name": "organization",
+          "type": "fixedCollection",
+          "placeholder": "Add Parameter",
+          "default": {},
+          "options": [
+            {
+              "name": "data",
+              "displayName": "Organization",
+              "values": [
+                {
+                  "displayName": "Company",
+                  "name": "company",
+                  "type": "string",
+                  "default": "",
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\t\t\tproperty: 'contacts[0].org.company',\n\t\t\t\t\t\t\t\t\t"
+                },
+                {
+                  "displayName": "Department",
+                  "name": "department",
+                  "type": "string",
+                  "default": "",
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\t\t\tproperty: 'contacts[0].org.department',\n\t\t\t\t\t\t\t\t\t"
+                },
+                {
+                  "displayName": "Title",
+                  "name": "title",
+                  "type": "string",
+                  "default": "",
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\t\t\tproperty: 'contacts[0].org.title',\n\t\t\t\t\t\t\t\t\t"
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": false
+          },
+          "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\t\t\tproperty: 'contacts[0].org.company',\n\t\t\t\t\t\t\t\t\t"
+        },
+        {
+          "displayName": "Phones",
+          "name": "phones",
+          "type": "fixedCollection",
+          "description": "If omitted, the message will display an Invite to WhatsApp button instead of the standard buttons",
+          "placeholder": "Add Parameter",
+          "value": "CELL",
+          "default": {},
+          "options": [
+            {
+              "name": "data",
+              "displayName": "Phone",
+              "values": [
+                {
+                  "displayName": "Type",
+                  "name": "type",
+                  "type": "options",
+                  "value": "CELL",
+                  "default": "CELL",
+                  "options": [
+                    {
+                      "name": "Cell",
+                      "value": "CELL",
+                      "displayName": "Cell"
+                    },
+                    {
+                      "name": "Home",
+                      "value": "HOME",
+                      "displayName": "Home"
+                    },
+                    {
+                      "name": "Iphone",
+                      "value": "IPHONE",
+                      "displayName": "Iphone"
+                    },
+                    {
+                      "name": "Main",
+                      "value": "MAIN",
+                      "displayName": "Main"
+                    },
+                    {
+                      "name": "WhatsApp ID",
+                      "value": "wa_id",
+                      "displayName": "Whats App Id"
+                    },
+                    {
+                      "name": "Work",
+                      "value": "WORK",
+                      "displayName": "Work"
+                    }
+                  ],
+                  "displayOptions": {
+                    "show": {}
+                  },
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].phones[{{$index"
+                },
+                {
+                  "displayName": "Type",
+                  "name": "type",
+                  "type": "options",
+                  "value": "CELL",
+                  "default": "CELL",
+                  "options": [
+                    {
+                      "name": "Cell",
+                      "value": "CELL",
+                      "displayName": "Cell"
+                    },
+                    {
+                      "name": "Home",
+                      "value": "HOME",
+                      "displayName": "Home"
+                    },
+                    {
+                      "name": "Iphone",
+                      "value": "IPHONE",
+                      "displayName": "Iphone"
+                    },
+                    {
+                      "name": "Main",
+                      "value": "MAIN",
+                      "displayName": "Main"
+                    },
+                    {
+                      "name": "Work",
+                      "value": "WORK",
+                      "displayName": "Work"
+                    }
+                  ],
+                  "displayOptions": {
+                    "show": {}
+                  },
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].phones[{{$index"
+                },
+                {
+                  "displayName": "Phone",
+                  "name": "phone",
+                  "type": "string",
+                  "default": "",
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].phones[{{$index"
+                },
+                {
+                  "displayName": "WhatsApp User ID",
+                  "name": "whatsapp_user_id",
+                  "type": "string",
+                  "description": "If omitted, the message will display an Invite to WhatsApp button instead of the standard buttons",
+                  "default": "",
+                  "displayOptions": {
+                    "hide": {}
+                  },
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].phones[{{$index"
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "show": {}
+          },
+          "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].phones[{{$index"
+        },
+        {
+          "displayName": "URLs",
+          "name": "urls",
+          "type": "fixedCollection",
+          "placeholder": "Add Parameter",
+          "value": "HOME",
+          "default": {},
+          "options": [
+            {
+              "name": "url",
+              "displayName": "URL",
+              "values": [
+                {
+                  "displayName": "Type",
+                  "name": "type",
+                  "type": "options",
+                  "value": "HOME",
+                  "default": "HOME",
+                  "options": [
+                    {
+                      "name": "Home",
+                      "value": "HOME",
+                      "displayName": "Home"
+                    },
+                    {
+                      "name": "Work",
+                      "value": "WORK",
+                      "displayName": "Work"
+                    }
+                  ],
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].urls[{{$index"
+                },
+                {
+                  "displayName": "URL",
+                  "name": "url",
+                  "type": "string",
+                  "default": "",
+                  "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].urls[{{$index"
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].urls[{{$index"
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "contacts"
+          ]
+        }
+      },
+      "_operation": "send",
+      "routing": "\n\t\t\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\t\t\tproperty: '=contacts[0].addresses[{{$index",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Longitude",
+      "name": "longitude",
+      "type": "number",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "maxValue": 180
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "location"
+          ]
+        }
+      },
+      "_operation": "send",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'location.longitude',\n\t\t\t",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Latitude",
+      "name": "latitude",
+      "type": "number",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "maxValue": 90
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "location"
+          ]
+        }
+      },
+      "_operation": "send",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'location.latitude',\n\t\t\t",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "fixedCollection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "name": "nameAndAddress",
+          "displayName": "Name and Address",
+          "values": [
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "default": "",
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'location.name',\n\t\t\t\t\t\t\t"
+            },
+            {
+              "displayName": "Address",
+              "name": "address",
+              "type": "string",
+              "default": "",
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'location.address',\n\t\t\t\t\t\t\t"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "location"
+          ]
+        }
+      },
+      "_operation": "send",
+      "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'location.name',\n\t\t\t\t\t\t\t",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Text Body",
+      "name": "textBody",
+      "type": "string",
+      "description": "The body of the message (max 4096 characters)",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "text"
+          ]
+        }
+      },
+      "_operation": "send",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'text.body',\n\t\t\t",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Take Audio From",
+      "name": "mediaPath",
+      "type": "options",
+      "description": "Use a link, an ID, or n8n to upload an audio file",
+      "value": "useMediaLink",
+      "default": "useMediaLink",
+      "options": [
+        {
+          "name": "Link",
+          "description": "WhatsApp will download the audio, saving you the step of uploading audio yourself",
+          "value": "useMediaLink",
+          "displayName": "Link"
+        },
+        {
+          "name": "WhatsApp Media",
+          "description": "If you have already uploaded the audio to WhatsApp",
+          "value": "useMediaId",
+          "displayName": "Whats App Media"
+        },
+        {
+          "name": "n8n",
+          "description": "Use binary data passed into this node",
+          "value": "useMedian8n",
+          "displayName": "N8n"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "audio"
+          ]
+        }
+      },
+      "_operation": "send",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Take Document From",
+      "name": "mediaPath",
+      "type": "options",
+      "description": "Use a link, an ID, or n8n to upload a document",
+      "value": "useMediaLink",
+      "default": "useMediaLink",
+      "options": [
+        {
+          "name": "Link",
+          "description": "When using a link, WhatsApp will download the document, saving you the step of uploading document yourself",
+          "value": "useMediaLink",
+          "displayName": "Link"
+        },
+        {
+          "name": "WhatsApp Media",
+          "description": "You can use an ID if you have already uploaded the document to WhatsApp",
+          "value": "useMediaId",
+          "displayName": "Whats App Media"
+        },
+        {
+          "name": "n8n",
+          "description": "Upload a binary file on the item being processed in n8n",
+          "value": "useMedian8n",
+          "displayName": "N8n"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "document"
+          ]
+        }
+      },
+      "_operation": "send",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Take Image From",
+      "name": "mediaPath",
+      "type": "options",
+      "description": "Use a link, an ID, or n8n to upload an image",
+      "value": "useMediaLink",
+      "default": "useMediaLink",
+      "options": [
+        {
+          "name": "Link",
+          "description": "When using a link, WhatsApp will download the image, saving you the step of uploading image yourself",
+          "value": "useMediaLink",
+          "displayName": "Link"
+        },
+        {
+          "name": "WhatsApp Media",
+          "description": "You can use an ID if you have already uploaded the image to WhatsApp",
+          "value": "useMediaId",
+          "displayName": "Whats App Media"
+        },
+        {
+          "name": "n8n",
+          "description": "Upload a binary file on the item being processed in n8n",
+          "value": "useMedian8n",
+          "displayName": "N8n"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "image"
+          ]
+        }
+      },
+      "_operation": "send",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Take Video From",
+      "name": "mediaPath",
+      "type": "options",
+      "description": "Use a link, an ID, or n8n to upload a video",
+      "value": "useMediaLink",
+      "default": "useMediaLink",
+      "options": [
+        {
+          "name": "Link",
+          "description": "When using a link, WhatsApp will download the video, saving you the step of uploading video yourself",
+          "value": "useMediaLink",
+          "displayName": "Link"
+        },
+        {
+          "name": "WhatsApp Media",
+          "description": "You can use an ID if you have already uploaded the video to WhatsApp",
+          "value": "useMediaId",
+          "displayName": "Whats App Media"
+        },
+        {
+          "name": "n8n",
+          "description": "Upload a binary file on the item being processed in n8n",
+          "value": "useMedian8n",
+          "displayName": "N8n"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "video"
+          ]
+        }
+      },
+      "_operation": "send",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Link",
+      "name": "mediaLink",
+      "type": "string",
+      "description": "Link of the media to be sent",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "mediaPath": [
+            "useMediaLink"
+          ]
+        }
+      },
+      "_operation": "send",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: '={{$parameter[\"messageType\"]",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "ID",
+      "name": "mediaId",
+      "type": "string",
+      "description": "ID of the media to be sent",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "mediaPath": [
+            "useMediaId"
+          ]
+        }
+      },
+      "_operation": "send",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: '={{$parameter[\"messageType\"]",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Input Data Field Name",
+      "name": "mediaPropertyName",
+      "type": "string",
+      "description": "The name of the input field containing the binary file data to be uploaded",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "mediaPath": [
+            "useMedian8n"
+          ]
+        }
+      },
+      "_operation": "send",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpreSend: [mediaUploadFromItem],\n\t\t\t",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Filename",
+      "name": "mediaFilename",
+      "type": "string",
+      "description": "The name of the file (required when using a file ID)",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "document"
+          ],
+          "mediaPath": [
+            "useMediaId"
+          ]
+        }
+      },
+      "_operation": "send",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: '={{$parameter[\"messageType\"]",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The name of the file",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Filename",
+          "name": "mediaFilename",
+          "type": "string",
+          "description": "The name of the file",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: '={{$parameter[\"messageType\"]"
+        },
+        {
+          "displayName": "Caption",
+          "name": "mediaCaption",
+          "type": "string",
+          "description": "The caption of the media",
+          "default": "",
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: '={{$parameter[\"messageType\"]"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "send"
+          ]
+        }
+      },
+      "_operation": "send",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: '={{$parameter[\"messageType\"]",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Template",
+      "name": "template",
+      "type": "options",
+      "description": "Name of the template",
+      "value": "={{$responseItem.name}}|{{$responseItem.language}}",
+      "default": "",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendTemplate"
+          ],
+          "resource": [
+            "message"
+          ]
+        }
+      },
+      "_operation": "sendTemplate",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\turl: '={{$credentials.businessAccountId",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Language Code",
+      "name": "templateLanguageCode",
+      "type": "string",
+      "default": "en_US",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendTemplate"
+          ],
+          "resource": [
+            "message"
+          ]
+        }
+      },
+      "_operation": "sendTemplate",
+      "routing": "\n\t//\t\tsend: {\n\t//\t\t\ttype: 'body',\n\t//\t\t\tproperty: 'template.language.code',\n\t//\t\t",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Components",
+      "name": "components",
+      "type": "fixedCollection",
+      "description": "Allows your customer to call a phone number and visit a website",
+      "placeholder": "Add Component",
+      "value": "body",
+      "default": {},
+      "options": [
+        {
+          "name": "component",
+          "displayName": "Component",
+          "values": [
+            {
+              "displayName": "Type",
+              "name": "type",
+              "type": "options",
+              "value": "body",
+              "default": "body",
+              "options": [
+                {
+                  "name": "Body",
+                  "value": "body",
+                  "displayName": "Body"
+                },
+                {
+                  "name": "Button",
+                  "value": "button",
+                  "displayName": "Button"
+                },
+                {
+                  "name": "Header",
+                  "value": "header",
+                  "displayName": "Header"
+                }
+              ]
+            },
+            {
+              "displayName": "Parameters",
+              "name": "bodyParameters",
+              "type": "fixedCollection",
+              "placeholder": "Add Parameter",
+              "value": "text",
+              "default": {},
+              "options": [
+                {
+                  "name": "parameter",
+                  "displayName": "Parameter",
+                  "values": [
+                    {
+                      "displayName": "Type",
+                      "name": "type",
+                      "type": "options",
+                      "value": "text",
+                      "default": "text",
+                      "options": [
+                        {
+                          "name": "Text",
+                          "value": "text",
+                          "displayName": "Text"
+                        },
+                        {
+                          "name": "Currency",
+                          "value": "currency",
+                          "displayName": "Currency"
+                        },
+                        {
+                          "name": "Date Time",
+                          "value": "date_time",
+                          "displayName": "Date Time"
+                        }
+                      ]
+                    },
+                    {
+                      "displayName": "Text",
+                      "name": "text",
+                      "type": "string",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "text"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Currency Code",
+                      "name": "code",
+                      "type": "options",
+                      "placeholder": "USD",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "currency"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Amount",
+                      "name": "amount_1000",
+                      "type": "number",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "currency"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Date Time",
+                      "name": "date_time",
+                      "type": "dateTime",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "date_time"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Fallback Value",
+                      "name": "fallback_value",
+                      "type": "string",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "currency"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": true
+              },
+              "displayOptions": {
+                "show": {
+                  "type": [
+                    "body"
+                  ]
+                }
+              }
+            },
+            {
+              "displayName": "Sub Type",
+              "name": "sub_type",
+              "type": "options",
+              "description": "Allows your customer to call a phone number and visit a website",
+              "value": "quick_reply",
+              "default": "quick_reply",
+              "options": [
+                {
+                  "name": "Quick Reply",
+                  "description": "Allows your customer to call a phone number and visit a website",
+                  "value": "quick_reply",
+                  "displayName": "Quick Reply"
+                },
+                {
+                  "name": "URL",
+                  "value": "url",
+                  "displayName": "Url"
+                }
+              ],
+              "displayOptions": {
+                "show": {
+                  "type": [
+                    "button"
+                  ]
+                }
+              }
+            },
+            {
+              "displayName": "Index",
+              "name": "index",
+              "type": "number",
+              "default": 0,
+              "typeOptions": {
+                "minValue": 0,
+                "maxValue": 2
+              },
+              "displayOptions": {
+                "show": {
+                  "type": [
+                    "button"
+                  ]
+                }
+              }
+            },
+            {
+              "displayName": "Parameters",
+              "name": "buttonParameters",
+              "type": "fixedCollection",
+              "placeholder": "Add Parameter",
+              "value": "payload",
+              "default": {},
+              "options": [
+                {
+                  "name": "parameter",
+                  "displayName": "Parameter",
+                  "values": [
+                    {
+                      "displayName": "Type",
+                      "name": "type",
+                      "type": "options",
+                      "value": "payload",
+                      "default": "payload",
+                      "options": [
+                        {
+                          "name": "Payload",
+                          "value": "payload",
+                          "displayName": "Payload"
+                        },
+                        {
+                          "name": "Text",
+                          "value": "text",
+                          "displayName": "Text"
+                        }
+                      ]
+                    },
+                    {
+                      "displayName": "Payload",
+                      "name": "payload",
+                      "type": "string",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "payload"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Text",
+                      "name": "text",
+                      "type": "string",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "text"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              },
+              "displayOptions": {
+                "show": {
+                  "type": [
+                    "button"
+                  ]
+                }
+              }
+            },
+            {
+              "displayName": "Parameters",
+              "name": "headerParameters",
+              "type": "fixedCollection",
+              "placeholder": "Add Parameter",
+              "value": "text",
+              "default": {},
+              "options": [
+                {
+                  "name": "parameter",
+                  "displayName": "Parameter",
+                  "values": [
+                    {
+                      "displayName": "Type",
+                      "name": "type",
+                      "type": "options",
+                      "value": "text",
+                      "default": "text",
+                      "options": [
+                        {
+                          "name": "Text",
+                          "value": "text",
+                          "displayName": "Text"
+                        },
+                        {
+                          "name": "Currency",
+                          "value": "currency",
+                          "displayName": "Currency"
+                        },
+                        {
+                          "name": "Date Time",
+                          "value": "date_time",
+                          "displayName": "Date Time"
+                        },
+                        {
+                          "name": "Image",
+                          "value": "image",
+                          "displayName": "Image"
+                        }
+                      ]
+                    },
+                    {
+                      "displayName": "Text",
+                      "name": "text",
+                      "type": "string",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "text"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Currency Code",
+                      "name": "code",
+                      "type": "options",
+                      "placeholder": "USD",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "currency"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Amount",
+                      "name": "amount_1000",
+                      "type": "number",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "currency"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Date Time",
+                      "name": "date_time",
+                      "type": "dateTime",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "date_time"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Image Link",
+                      "name": "imageLink",
+                      "type": "string",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "image"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": true
+              },
+              "displayOptions": {
+                "show": {
+                  "type": [
+                    "header"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendTemplate"
+          ],
+          "resource": [
+            "message"
+          ]
+        }
+      },
+      "_operation": "sendTemplate",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpreSend: [componentsRequest],\n\t\t\t",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether to display URL previews in text messages",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Show URL Previews",
+          "name": "previewUrl",
+          "type": "boolean",
+          "description": "Whether to display URL previews in text messages",
+          "default": false,
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'text.preview_url',\n\t\t\t\t\t"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "text"
+          ]
+        }
+      },
+      "_operation": "send",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'text.preview_url',\n\t\t\t\t\t",
+      "_source": "Messages_messageTypeFields"
+    },
+    {
+      "displayName": "Sender Phone Number (or ID)",
+      "name": "phoneNumberId",
+      "type": "options",
+      "description": "The ID of the business account's phone number to store the media",
+      "value": "={{$responseItem.id}}",
+      "default": "",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "mediaUpload"
+          ],
+          "resource": [
+            "media"
+          ]
+        }
+      },
+      "_operation": "mediaUpload",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\turl: '={{$credentials.businessAccountId",
+      "_source": "Media_mediaTypeFields"
+    },
+    {
+      "displayName": "Property Name",
+      "name": "mediaPropertyName",
+      "type": "string",
+      "description": "Name of the binary property which contains the data for the file to be uploaded",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "mediaUpload"
+          ],
+          "resource": [
+            "media"
+          ]
+        }
+      },
+      "_operation": "mediaUpload",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpreSend: [setupUpload],\n\t\t\t",
+      "_source": "Media_mediaTypeFields"
+    },
+    {
+      "displayName": "Media ID",
+      "name": "mediaGetId",
+      "type": "string",
+      "description": "The ID of the media",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "mediaUrlGet"
+          ],
+          "resource": [
+            "media"
+          ]
+        }
+      },
+      "_operation": "mediaUrlGet",
+      "routing": "\n\t\t\trequest: {\n\t\t\t\tmethod: 'GET',\n\t\t\t\turl: '=/{{$value",
+      "_source": "Media_mediaTypeFields"
+    },
+    {
+      "displayName": "Media ID",
+      "name": "mediaDeleteId",
+      "type": "string",
+      "description": "The ID of the media",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "mediaDelete"
+          ],
+          "resource": [
+            "media"
+          ]
+        }
+      },
+      "_operation": "mediaDelete",
+      "routing": "\n\t\t\trequest: {\n\t\t\t\tmethod: 'DELETE',\n\t\t\t\turl: '=/{{$value",
+      "_source": "Media_mediaTypeFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The name to use for the file",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Filename",
+          "name": "mediaFileName",
+          "type": "string",
+          "description": "The name to use for the file",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "media"
+          ],
+          "operation": [
+            "mediaUpload"
+          ]
+        }
+      },
+      "_operation": "mediaUpload",
+      "_source": "Media_mediaTypeFields"
+    },
+    {
+      "name": "default",
+      "displayName": "Default",
+      "_source": "descriptions_sendAndWaitWebhooksDescription"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Send",
+      "action": "Send message",
+      "value": "send",
+      "displayName": "Send"
+    },
+    {
+      "name": "Send and Wait for Response",
+      "action": "Send message and wait for response",
+      "displayName": "Send And Wait For Response"
+    },
+    {
+      "name": "Send Template",
+      "action": "Send template",
+      "value": "sendTemplate",
+      "displayName": "Send Template"
+    },
+    {
+      "name": "Upload",
+      "action": "Upload media",
+      "value": "mediaUpload",
+      "displayName": "Upload"
+    },
+    {
+      "name": "Download",
+      "action": "Download media",
+      "value": "mediaUrlGet",
+      "displayName": "Download"
+    },
+    {
+      "name": "Delete",
+      "action": "Delete media",
+      "value": "mediaDelete",
+      "displayName": "Delete"
+    }
+  ],
+  "operations_by_resource": {
+    "message": [
+      {
+        "name": "Send",
+        "action": "Send message",
+        "value": "send",
+        "displayName": "Send"
+      },
+      {
+        "name": "Send and Wait for Response",
+        "action": "Send message and wait for response",
+        "displayName": "Send And Wait For Response"
+      },
+      {
+        "name": "Send Template",
+        "action": "Send template",
+        "value": "sendTemplate",
+        "displayName": "Send Template"
+      }
+    ],
+    "media": [
+      {
+        "name": "Upload",
+        "action": "Upload media",
+        "value": "mediaUpload",
+        "displayName": "Upload"
+      },
+      {
+        "name": "Download",
+        "action": "Download media",
+        "value": "mediaUrlGet",
+        "displayName": "Download"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete media",
+        "value": "mediaDelete",
+        "displayName": "Delete"
+      }
+    ]
+  },
+  "credentials": [],
+  "workflow_examples": [],
+  "expressions": [
+    "={{ $parameter[\"resource\"] + \": \" + $parameter[\"operation\"] }}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "media"
+          ]
+        }
+      }
+    },
+    "messagingProduct": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ]
+        }
+      }
+    },
+    "phoneNumberId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "mediaUpload"
+          ],
+          "resource": [
+            "media"
+          ]
+        }
+      }
+    },
+    "recipientPhoneNumber": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ]
+        }
+      }
+    },
+    "messageType": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "send"
+          ]
+        }
+      }
+    },
+    "name": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "contacts"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "media"
+          ],
+          "operation": [
+            "mediaUpload"
+          ]
+        }
+      }
+    },
+    "longitude": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "location"
+          ]
+        }
+      }
+    },
+    "latitude": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "location"
+          ]
+        }
+      }
+    },
+    "textBody": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "text"
+          ]
+        }
+      }
+    },
+    "mediaPath": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "video"
+          ]
+        }
+      }
+    },
+    "mediaLink": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "mediaPath": [
+            "useMediaLink"
+          ]
+        }
+      }
+    },
+    "mediaId": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "mediaPath": [
+            "useMediaId"
+          ]
+        }
+      }
+    },
+    "mediaPropertyName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "mediaUpload"
+          ],
+          "resource": [
+            "media"
+          ]
+        }
+      }
+    },
+    "mediaFilename": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "messageType": [
+            "document"
+          ],
+          "mediaPath": [
+            "useMediaId"
+          ]
+        }
+      }
+    },
+    "template": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendTemplate"
+          ],
+          "resource": [
+            "message"
+          ]
+        }
+      }
+    },
+    "templateLanguageCode": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendTemplate"
+          ],
+          "resource": [
+            "message"
+          ]
+        }
+      }
+    },
+    "components": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendTemplate"
+          ],
+          "resource": [
+            "message"
+          ]
+        }
+      }
+    },
+    "mediaGetId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "mediaUrlGet"
+          ],
+          "resource": [
+            "media"
+          ]
+        }
+      }
+    },
+    "mediaDeleteId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "mediaDelete"
+          ],
+          "resource": [
+            "media"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "message",
+          "name": "Message",
+          "description": ""
+        },
+        {
+          "value": "media",
+          "name": "Media",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "mediaUpload",
+          "name": "Upload",
+          "description": ""
+        },
+        {
+          "value": "mediaUrlGet",
+          "name": "Download",
+          "description": ""
+        },
+        {
+          "value": "mediaDelete",
+          "name": "Delete",
+          "description": ""
+        }
+      ]
+    },
+    "messagingProduct": {
+      "type": "hidden",
+      "displayName": "Messaging Product",
+      "name": "messagingProduct"
+    },
+    "phoneNumberId": {
+      "type": "options",
+      "displayName": "Sender Phone Number (or ID)",
+      "name": "phoneNumberId",
+      "possibleValues": []
+    },
+    "recipientPhoneNumber": {
+      "type": "string",
+      "displayName": "Recipient's Phone Number",
+      "name": "recipientPhoneNumber"
+    },
+    "messageType": {
+      "type": "options",
+      "displayName": "MessageType",
+      "name": "messageType",
+      "possibleValues": [
+        {
+          "value": "audio",
+          "name": "Audio",
+          "description": ""
+        },
+        {
+          "value": "contacts",
+          "name": "Contacts",
+          "description": ""
+        },
+        {
+          "value": "document",
+          "name": "Document",
+          "description": ""
+        },
+        {
+          "value": "image",
+          "name": "Image",
+          "description": ""
+        },
+        {
+          "value": "location",
+          "name": "Location",
+          "description": ""
+        },
+        {
+          "value": "text",
+          "name": "Text",
+          "description": ""
+        },
+        {
+          "value": "video",
+          "name": "Video",
+          "description": ""
+        }
+      ]
+    },
+    "name": {
+      "type": "fixedCollection",
+      "displayName": "Name",
+      "name": "name",
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "subProperties": [
+        {
+          "name": "data",
+          "displayName": "Name",
+          "values": [
+            {
+              "displayName": "Formatted Name",
+              "name": "formatted_name",
+              "type": "string",
+              "default": "",
+              "required": true,
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contacts[0].name.formatted_name',\n\t\t\t\t\t\t\t"
+            },
+            {
+              "displayName": "First Name",
+              "name": "first_name",
+              "type": "string",
+              "default": "",
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contacts[0].name.first_name',\n\t\t\t\t\t\t\t"
+            },
+            {
+              "displayName": "Last Name",
+              "name": "last_name",
+              "type": "string",
+              "default": "",
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contacts[0].name.last_name',\n\t\t\t\t\t\t\t"
+            },
+            {
+              "displayName": "Middle Name",
+              "name": "middle_name",
+              "type": "string",
+              "default": "",
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contacts[0].name.middle_name',\n\t\t\t\t\t\t\t"
+            },
+            {
+              "displayName": "Suffix",
+              "name": "suffix",
+              "type": "string",
+              "default": "",
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contacts[0].name.suffix',\n\t\t\t\t\t\t\t"
+            },
+            {
+              "displayName": "Prefix",
+              "name": "prefix",
+              "type": "string",
+              "default": "",
+              "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contacts[0].name.prefix',\n\t\t\t\t\t\t\t"
+            }
+          ]
+        }
+      ]
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Filename",
+          "name": "mediaFileName",
+          "type": "string",
+          "description": "The name to use for the file",
+          "default": ""
+        }
+      ]
+    },
+    "longitude": {
+      "type": "number",
+      "displayName": "Longitude",
+      "name": "longitude",
+      "typeOptions": {
+        "maxValue": 180
+      }
+    },
+    "latitude": {
+      "type": "number",
+      "displayName": "Latitude",
+      "name": "latitude",
+      "typeOptions": {
+        "maxValue": 90
+      }
+    },
+    "textBody": {
+      "type": "string",
+      "displayName": "Text Body",
+      "name": "textBody"
+    },
+    "mediaPath": {
+      "type": "options",
+      "displayName": "Take Video From",
+      "name": "mediaPath",
+      "possibleValues": [
+        {
+          "value": "useMediaLink",
+          "name": "Link",
+          "description": "When using a link, WhatsApp will download the video, saving you the step of uploading video yourself"
+        },
+        {
+          "value": "useMediaId",
+          "name": "WhatsApp Media",
+          "description": "You can use an ID if you have already uploaded the video to WhatsApp"
+        },
+        {
+          "value": "useMedian8n",
+          "name": "n8n",
+          "description": "Upload a binary file on the item being processed in n8n"
+        }
+      ]
+    },
+    "mediaLink": {
+      "type": "string",
+      "displayName": "Link",
+      "name": "mediaLink"
+    },
+    "mediaId": {
+      "type": "string",
+      "displayName": "ID",
+      "name": "mediaId"
+    },
+    "mediaPropertyName": {
+      "type": "string",
+      "displayName": "Property Name",
+      "name": "mediaPropertyName"
+    },
+    "mediaFilename": {
+      "type": "string",
+      "displayName": "Filename",
+      "name": "mediaFilename"
+    },
+    "template": {
+      "type": "options",
+      "displayName": "Template",
+      "name": "template",
+      "possibleValues": []
+    },
+    "templateLanguageCode": {
+      "type": "string",
+      "displayName": "Language Code",
+      "name": "templateLanguageCode"
+    },
+    "components": {
+      "type": "fixedCollection",
+      "displayName": "Components",
+      "name": "components",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "component",
+          "displayName": "Component",
+          "values": [
+            {
+              "displayName": "Type",
+              "name": "type",
+              "type": "options",
+              "value": "body",
+              "default": "body",
+              "options": [
+                {
+                  "name": "Body",
+                  "value": "body",
+                  "displayName": "Body"
+                },
+                {
+                  "name": "Button",
+                  "value": "button",
+                  "displayName": "Button"
+                },
+                {
+                  "name": "Header",
+                  "value": "header",
+                  "displayName": "Header"
+                }
+              ]
+            },
+            {
+              "displayName": "Parameters",
+              "name": "bodyParameters",
+              "type": "fixedCollection",
+              "placeholder": "Add Parameter",
+              "value": "text",
+              "default": {},
+              "options": [
+                {
+                  "name": "parameter",
+                  "displayName": "Parameter",
+                  "values": [
+                    {
+                      "displayName": "Type",
+                      "name": "type",
+                      "type": "options",
+                      "value": "text",
+                      "default": "text",
+                      "options": [
+                        {
+                          "name": "Text",
+                          "value": "text",
+                          "displayName": "Text"
+                        },
+                        {
+                          "name": "Currency",
+                          "value": "currency",
+                          "displayName": "Currency"
+                        },
+                        {
+                          "name": "Date Time",
+                          "value": "date_time",
+                          "displayName": "Date Time"
+                        }
+                      ]
+                    },
+                    {
+                      "displayName": "Text",
+                      "name": "text",
+                      "type": "string",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "text"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Currency Code",
+                      "name": "code",
+                      "type": "options",
+                      "placeholder": "USD",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "currency"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Amount",
+                      "name": "amount_1000",
+                      "type": "number",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "currency"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Date Time",
+                      "name": "date_time",
+                      "type": "dateTime",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "date_time"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Fallback Value",
+                      "name": "fallback_value",
+                      "type": "string",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "currency"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": true
+              },
+              "displayOptions": {
+                "show": {
+                  "type": [
+                    "body"
+                  ]
+                }
+              }
+            },
+            {
+              "displayName": "Sub Type",
+              "name": "sub_type",
+              "type": "options",
+              "description": "Allows your customer to call a phone number and visit a website",
+              "value": "quick_reply",
+              "default": "quick_reply",
+              "options": [
+                {
+                  "name": "Quick Reply",
+                  "description": "Allows your customer to call a phone number and visit a website",
+                  "value": "quick_reply",
+                  "displayName": "Quick Reply"
+                },
+                {
+                  "name": "URL",
+                  "value": "url",
+                  "displayName": "Url"
+                }
+              ],
+              "displayOptions": {
+                "show": {
+                  "type": [
+                    "button"
+                  ]
+                }
+              }
+            },
+            {
+              "displayName": "Index",
+              "name": "index",
+              "type": "number",
+              "default": 0,
+              "typeOptions": {
+                "minValue": 0,
+                "maxValue": 2
+              },
+              "displayOptions": {
+                "show": {
+                  "type": [
+                    "button"
+                  ]
+                }
+              }
+            },
+            {
+              "displayName": "Parameters",
+              "name": "buttonParameters",
+              "type": "fixedCollection",
+              "placeholder": "Add Parameter",
+              "value": "payload",
+              "default": {},
+              "options": [
+                {
+                  "name": "parameter",
+                  "displayName": "Parameter",
+                  "values": [
+                    {
+                      "displayName": "Type",
+                      "name": "type",
+                      "type": "options",
+                      "value": "payload",
+                      "default": "payload",
+                      "options": [
+                        {
+                          "name": "Payload",
+                          "value": "payload",
+                          "displayName": "Payload"
+                        },
+                        {
+                          "name": "Text",
+                          "value": "text",
+                          "displayName": "Text"
+                        }
+                      ]
+                    },
+                    {
+                      "displayName": "Payload",
+                      "name": "payload",
+                      "type": "string",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "payload"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Text",
+                      "name": "text",
+                      "type": "string",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "text"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              },
+              "displayOptions": {
+                "show": {
+                  "type": [
+                    "button"
+                  ]
+                }
+              }
+            },
+            {
+              "displayName": "Parameters",
+              "name": "headerParameters",
+              "type": "fixedCollection",
+              "placeholder": "Add Parameter",
+              "value": "text",
+              "default": {},
+              "options": [
+                {
+                  "name": "parameter",
+                  "displayName": "Parameter",
+                  "values": [
+                    {
+                      "displayName": "Type",
+                      "name": "type",
+                      "type": "options",
+                      "value": "text",
+                      "default": "text",
+                      "options": [
+                        {
+                          "name": "Text",
+                          "value": "text",
+                          "displayName": "Text"
+                        },
+                        {
+                          "name": "Currency",
+                          "value": "currency",
+                          "displayName": "Currency"
+                        },
+                        {
+                          "name": "Date Time",
+                          "value": "date_time",
+                          "displayName": "Date Time"
+                        },
+                        {
+                          "name": "Image",
+                          "value": "image",
+                          "displayName": "Image"
+                        }
+                      ]
+                    },
+                    {
+                      "displayName": "Text",
+                      "name": "text",
+                      "type": "string",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "text"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Currency Code",
+                      "name": "code",
+                      "type": "options",
+                      "placeholder": "USD",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "currency"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Amount",
+                      "name": "amount_1000",
+                      "type": "number",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "currency"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Date Time",
+                      "name": "date_time",
+                      "type": "dateTime",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "date_time"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "displayName": "Image Link",
+                      "name": "imageLink",
+                      "type": "string",
+                      "default": "",
+                      "displayOptions": {
+                        "show": {
+                          "type": [
+                            "image"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": true
+              },
+              "displayOptions": {
+                "show": {
+                  "type": [
+                    "header"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "mediaGetId": {
+      "type": "string",
+      "displayName": "Media ID",
+      "name": "mediaGetId"
+    },
+    "mediaDeleteId": {
+      "type": "string",
+      "displayName": "Media ID",
+      "name": "mediaDeleteId"
+    },
+    "default": {
+      "type": "unknown",
+      "displayName": "Default",
+      "name": "default"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [
+      "POST"
+    ],
+    "endpoints": [
+      "https://graph.facebook.com/v19.0/oauth/access_token",
+      "https://graph.facebook.com/v19.0{resource}",
+      "{phoneNumberId}/messages"
+    ],
+    "headers": [
+      "content-type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "name",
+        "text": "Add Parameter"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "components",
+        "text": "Add Component"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": [
+      {
+        "field": "recipientPhoneNumber",
+        "text": "When entering a phone number, make sure to include the country code"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

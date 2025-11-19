@@ -1,0 +1,888 @@
+{
+  "node_info": {
+    "icon": "file:supabase.svg",
+    "defaults": {
+      "name": "Supabase"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "supabaseApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getTables"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Supabase",
+    "name": "supabase",
+    "description": "Add, get, delete and update data in a table",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.supabase",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Data & Storage"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/supabase/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.supabase/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Use Custom Schema",
+      "name": "useCustomSchema",
+      "type": "boolean",
+      "description": "Whether to use a database schema different from the default \"public\" schema (requires schema exposure in the <a href=\"https://supabase.com/docs/guides/api/using-custom-schemas?queryGroups=language&language=curl#exposing-custom-schemas\">Supabase API</a>)",
+      "default": false,
+      "noDataExpression": true
+    },
+    {
+      "displayName": "Schema",
+      "name": "schema",
+      "type": "string",
+      "description": "Name of database schema to use for table",
+      "default": "public",
+      "displayOptions": {
+        "show": {
+          "useCustomSchema": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "row",
+      "default": "row",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Row",
+          "value": "row",
+          "displayName": "Row"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new row",
+      "action": "Create a row",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a new row",
+          "action": "Create a row",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a row",
+          "action": "Delete a row",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get a row",
+          "action": "Get a row",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many rows",
+          "action": "Get many rows",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update a row",
+          "action": "Update a row",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ]
+        }
+      },
+      "_source": "Row_rowOperations"
+    },
+    {
+      "displayName": "Table Name or ID",
+      "name": "tableId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTables"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "create",
+            "delete",
+            "get",
+            "getAll",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,delete,get,getAll,update",
+      "_source": "Row_rowFields"
+    },
+    {
+      "name": "Any Select Condition",
+      "value": "anyFilter",
+      "displayName": "Any Select Condition",
+      "_source": "Row_rowFields"
+    },
+    {
+      "displayName": "Data to Send",
+      "name": "dataToSend",
+      "type": "options",
+      "description": "Use when node input properties match destination column names",
+      "value": "autoMapInputData",
+      "default": "defineBelow",
+      "options": [
+        {
+          "name": "Auto-Map Input Data to Columns",
+          "description": "Use when node input properties match destination column names",
+          "value": "autoMapInputData",
+          "displayName": "Auto-map Input Data To Columns"
+        },
+        {
+          "name": "Define Below for Each Column",
+          "description": "Set the value for each destination column",
+          "value": "defineBelow",
+          "displayName": "Define Below For Each Column"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "_source": "Row_rowFields"
+    },
+    {
+      "displayName": "Inputs to Ignore",
+      "name": "inputsToIgnore",
+      "type": "string",
+      "description": "List of input properties to avoid sending, separated by commas. Leave empty to send all properties.",
+      "placeholder": "Enter properties...",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ],
+          "dataToSend": [
+            "autoMapInputData"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "_source": "Row_rowFields"
+    },
+    {
+      "displayName": "Fields to Send",
+      "name": "fieldsUi",
+      "type": "fixedCollection",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "name": "fieldValues",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Field Name or ID",
+              "name": "fieldId",
+              "type": "options",
+              "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+              "default": "",
+              "typeOptions": {
+                "loadOptionsMethod": "getTableColumns"
+              }
+            },
+            {
+              "displayName": "Field Value",
+              "name": "fieldValue",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ],
+          "dataToSend": [
+            "defineBelow"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "_source": "Row_rowFields"
+    },
+    {
+      "displayName": "Select Conditions",
+      "name": "filters",
+      "type": "fixedCollection",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "placeholder": "Add Condition",
+      "default": {},
+      "options": [
+        {
+          "name": "conditions",
+          "displayName": "Conditions",
+          "values": [
+            {
+              "displayName": "Name or ID",
+              "name": "keyName",
+              "type": "options",
+              "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+              "default": "",
+              "typeOptions": {
+                "loadOptionsMethod": "getTableColumns"
+              }
+            },
+            {
+              "displayName": "Value",
+              "name": "keyValue",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Row_rowFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "noDataExpression": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Row_rowFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Row_rowFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a new row",
+      "action": "Create a row",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a row",
+      "action": "Delete a row",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Get a row",
+      "action": "Get a row",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many rows",
+      "action": "Get many rows",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "description": "Update a row",
+      "action": "Update a row",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "row": [
+      {
+        "name": "Create",
+        "description": "Create a new row",
+        "action": "Create a row",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a row",
+        "action": "Delete a row",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get a row",
+        "action": "Get a row",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many rows",
+        "action": "Get many rows",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update a row",
+        "action": "Update a row",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "supabaseApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{ $rawParameter.schema?.startsWith(\"=\") && $input.all().length > 1 }}",
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "schema": {
+      "displayOptions": {
+        "show": {
+          "useCustomSchema": [
+            true
+          ]
+        }
+      }
+    },
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ]
+        }
+      }
+    },
+    "tableId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "create",
+            "delete",
+            "get",
+            "getAll",
+            "update"
+          ]
+        }
+      }
+    },
+    "dataToSend": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      }
+    },
+    "inputsToIgnore": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ],
+          "dataToSend": [
+            "autoMapInputData"
+          ]
+        }
+      }
+    },
+    "fieldsUi": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ],
+          "dataToSend": [
+            "defineBelow"
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "row"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "useCustomSchema": {
+      "type": "boolean",
+      "displayName": "Use Custom Schema",
+      "name": "useCustomSchema"
+    },
+    "schema": {
+      "type": "string",
+      "displayName": "Schema",
+      "name": "schema"
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "row",
+          "name": "Row",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a new row"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a row"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a row"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get many rows"
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": "Update a row"
+        }
+      ]
+    },
+    "tableId": {
+      "type": "options",
+      "displayName": "Table Name or ID",
+      "name": "tableId",
+      "typeOptions": {
+        "loadOptionsMethod": "getTables"
+      },
+      "possibleValues": []
+    },
+    "Any Select Condition": {
+      "type": "unknown",
+      "displayName": "Any Select Condition",
+      "name": "Any Select Condition"
+    },
+    "dataToSend": {
+      "type": "options",
+      "displayName": "Data to Send",
+      "name": "dataToSend",
+      "possibleValues": [
+        {
+          "value": "autoMapInputData",
+          "name": "Auto-Map Input Data to Columns",
+          "description": "Use when node input properties match destination column names"
+        },
+        {
+          "value": "defineBelow",
+          "name": "Define Below for Each Column",
+          "description": "Set the value for each destination column"
+        }
+      ]
+    },
+    "inputsToIgnore": {
+      "type": "string",
+      "displayName": "Inputs to Ignore",
+      "name": "inputsToIgnore"
+    },
+    "fieldsUi": {
+      "type": "fixedCollection",
+      "displayName": "Fields to Send",
+      "name": "fieldsUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "fieldValues",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Field Name or ID",
+              "name": "fieldId",
+              "type": "options",
+              "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+              "default": "",
+              "typeOptions": {
+                "loadOptionsMethod": "getTableColumns"
+              }
+            },
+            {
+              "displayName": "Field Value",
+              "name": "fieldValue",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "filters": {
+      "type": "fixedCollection",
+      "displayName": "Select Conditions",
+      "name": "filters",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "conditions",
+          "displayName": "Conditions",
+          "values": [
+            {
+              "displayName": "Name or ID",
+              "name": "keyName",
+              "type": "options",
+              "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+              "default": "",
+              "typeOptions": {
+                "loadOptionsMethod": "getTableColumns"
+              }
+            },
+            {
+              "displayName": "Value",
+              "name": "keyValue",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1
+      }
+    }
+  },
+  "api_patterns": {
+    "http_methods": [
+      "GET"
+    ],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "inputsToIgnore",
+        "text": "Enter properties..."
+      },
+      {
+        "field": "fieldsUi",
+        "text": "Add Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Condition"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

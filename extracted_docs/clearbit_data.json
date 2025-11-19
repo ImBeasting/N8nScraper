@@ -1,0 +1,692 @@
+{
+  "node_info": {
+    "icon": "file:clearbit.svg",
+    "defaults": {
+      "name": "Clearbit"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "clearbitApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Clearbit",
+    "name": "clearbit",
+    "description": "Consume Clearbit API",
+    "subtitle": "={{$parameter[\"operation\"] + \":\" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.clearbit",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Sales"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/clearbit/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.clearbit/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "description": "The Company API allows you to look up a company by their domain",
+      "value": "company",
+      "default": "company",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Company",
+          "description": "The Company API allows you to look up a company by their domain",
+          "value": "company",
+          "displayName": "Company"
+        },
+        {
+          "name": "Person",
+          "description": "The Person API lets you retrieve social information associated with an email address, such as a person\u2019s name, location and Twitter handle",
+          "value": "person",
+          "displayName": "Person"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Auto-complete company names and retrieve logo and domain",
+      "action": "Autocomplete a company",
+      "value": "autocomplete",
+      "default": "enrich",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Autocomplete",
+          "description": "Auto-complete company names and retrieve logo and domain",
+          "action": "Autocomplete a company",
+          "value": "autocomplete",
+          "displayName": "Autocomplete"
+        },
+        {
+          "name": "Enrich",
+          "description": "Look up person and company data based on an email or domain",
+          "action": "Enrich a company",
+          "value": "enrich",
+          "displayName": "Enrich"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "company"
+          ]
+        }
+      },
+      "_source": "Company_companyOperations"
+    },
+    {
+      "displayName": "Domain",
+      "name": "domain",
+      "type": "string",
+      "description": "The domain to look up",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "company"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      },
+      "_operation": "enrich",
+      "_source": "Company_companyFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The name of the company",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Company Name",
+          "name": "companyName",
+          "type": "string",
+          "description": "The name of the company",
+          "default": ""
+        },
+        {
+          "displayName": "Facebook",
+          "name": "facebook",
+          "type": "string",
+          "description": "The Facebook URL for the company",
+          "default": ""
+        },
+        {
+          "displayName": "Linkedin",
+          "name": "linkedin",
+          "type": "string",
+          "description": "The LinkedIn URL for the company",
+          "default": ""
+        },
+        {
+          "displayName": "Twitter",
+          "name": "twitter",
+          "type": "string",
+          "description": "The Twitter handle for the company",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "company"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      },
+      "_operation": "enrich",
+      "_source": "Company_companyFields"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "Name is the partial name of the company",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "company"
+          ],
+          "operation": [
+            "autocomplete"
+          ]
+        }
+      },
+      "_operation": "autocomplete",
+      "_source": "Company_companyFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Look up a person and company data based on an email or domain",
+      "action": "Enrich a person",
+      "value": "enrich",
+      "default": "enrich",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Enrich",
+          "description": "Look up a person and company data based on an email or domain",
+          "action": "Enrich a person",
+          "value": "enrich",
+          "displayName": "Enrich"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "person"
+          ]
+        }
+      },
+      "_source": "Person_personOperations"
+    },
+    {
+      "displayName": "Email",
+      "name": "email",
+      "type": "string",
+      "description": "The email address to look up",
+      "placeholder": "name@email.com",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "person"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      },
+      "_operation": "enrich",
+      "_source": "Person_personFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The name of the person\u2019s employer",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Company",
+          "name": "company",
+          "type": "string",
+          "description": "The name of the person\u2019s employer",
+          "default": ""
+        },
+        {
+          "displayName": "Company Domain",
+          "name": "companyDomain",
+          "type": "string",
+          "description": "The domain for the person\u2019s employer",
+          "default": ""
+        },
+        {
+          "displayName": "Facebook",
+          "name": "facebook",
+          "type": "string",
+          "description": "The Facebook URL for the person",
+          "default": ""
+        },
+        {
+          "displayName": "Family Name",
+          "name": "familyName",
+          "type": "string",
+          "description": "Last name of person. If you have this, passing this is strongly recommended to improve match rates.",
+          "default": ""
+        },
+        {
+          "displayName": "Given Name",
+          "name": "givenName",
+          "type": "string",
+          "description": "First name of person",
+          "default": ""
+        },
+        {
+          "displayName": "IP Address",
+          "name": "ipAddress",
+          "type": "string",
+          "description": "IP address of the person. If you have this, passing this is strongly recommended to improve match rates.",
+          "default": ""
+        },
+        {
+          "displayName": "Location",
+          "name": "location",
+          "type": "string",
+          "description": "The city or country where the person resides",
+          "default": ""
+        },
+        {
+          "displayName": "LinkedIn",
+          "name": "linkedIn",
+          "type": "string",
+          "description": "The LinkedIn URL for the person",
+          "default": ""
+        },
+        {
+          "displayName": "Twitter",
+          "name": "twitter",
+          "type": "string",
+          "description": "The Twitter handle for the person",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "person"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      },
+      "_operation": "enrich",
+      "_source": "Person_personFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Autocomplete",
+      "description": "Auto-complete company names and retrieve logo and domain",
+      "action": "Autocomplete a company",
+      "value": "autocomplete",
+      "displayName": "Autocomplete"
+    },
+    {
+      "name": "Enrich",
+      "description": "Look up person and company data based on an email or domain",
+      "action": "Enrich a company",
+      "value": "enrich",
+      "displayName": "Enrich"
+    }
+  ],
+  "operations_by_resource": {
+    "company": [
+      {
+        "name": "Autocomplete",
+        "description": "Auto-complete company names and retrieve logo and domain",
+        "action": "Autocomplete a company",
+        "value": "autocomplete",
+        "displayName": "Autocomplete"
+      },
+      {
+        "name": "Enrich",
+        "description": "Look up person and company data based on an email or domain",
+        "action": "Enrich a company",
+        "value": "enrich",
+        "displayName": "Enrich"
+      }
+    ],
+    "person": [
+      {
+        "name": "Enrich",
+        "description": "Look up a person and company data based on an email or domain",
+        "action": "Enrich a person",
+        "value": "enrich",
+        "displayName": "Enrich"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "clearbitApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \":\" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "person"
+          ]
+        }
+      }
+    },
+    "domain": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "company"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "person"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      }
+    },
+    "name": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "company"
+          ],
+          "operation": [
+            "autocomplete"
+          ]
+        }
+      }
+    },
+    "email": {
+      "required": true,
+      "format": "email",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "person"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "company",
+          "name": "Company",
+          "description": "The Company API allows you to look up a company by their domain"
+        },
+        {
+          "value": "person",
+          "name": "Person",
+          "description": "The Person API lets you retrieve social information associated with an email address, such as a person\u2019s name, location and Twitter handle"
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "enrich",
+          "name": "Enrich",
+          "description": "Look up a person and company data based on an email or domain"
+        }
+      ]
+    },
+    "domain": {
+      "type": "string",
+      "displayName": "Domain",
+      "name": "domain"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Company",
+          "name": "company",
+          "type": "string",
+          "description": "The name of the person\u2019s employer",
+          "default": ""
+        },
+        {
+          "displayName": "Company Domain",
+          "name": "companyDomain",
+          "type": "string",
+          "description": "The domain for the person\u2019s employer",
+          "default": ""
+        },
+        {
+          "displayName": "Facebook",
+          "name": "facebook",
+          "type": "string",
+          "description": "The Facebook URL for the person",
+          "default": ""
+        },
+        {
+          "displayName": "Family Name",
+          "name": "familyName",
+          "type": "string",
+          "description": "Last name of person. If you have this, passing this is strongly recommended to improve match rates.",
+          "default": ""
+        },
+        {
+          "displayName": "Given Name",
+          "name": "givenName",
+          "type": "string",
+          "description": "First name of person",
+          "default": ""
+        },
+        {
+          "displayName": "IP Address",
+          "name": "ipAddress",
+          "type": "string",
+          "description": "IP address of the person. If you have this, passing this is strongly recommended to improve match rates.",
+          "default": ""
+        },
+        {
+          "displayName": "Location",
+          "name": "location",
+          "type": "string",
+          "description": "The city or country where the person resides",
+          "default": ""
+        },
+        {
+          "displayName": "LinkedIn",
+          "name": "linkedIn",
+          "type": "string",
+          "description": "The LinkedIn URL for the person",
+          "default": ""
+        },
+        {
+          "displayName": "Twitter",
+          "name": "twitter",
+          "type": "string",
+          "description": "The Twitter handle for the person",
+          "default": ""
+        }
+      ]
+    },
+    "name": {
+      "type": "string",
+      "displayName": "Name",
+      "name": "name"
+    },
+    "email": {
+      "type": "string",
+      "displayName": "Email",
+      "name": "email"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "email",
+        "text": "name@email.com"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

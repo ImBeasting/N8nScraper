@@ -1,0 +1,1655 @@
+{
+  "node_info": {
+    "icon": "file:todo.svg",
+    "defaults": {
+      "name": "Microsoft To Do"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "microsoftToDoOAuth2Api",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getTaskLists",
+      "for",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Microsoft To Do",
+    "name": "microsoftToDo",
+    "description": "Consume Microsoft To Do API.",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.microsoftToDo",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Productivity"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/microsoft/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.microsofttodo/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "linkedResource",
+      "default": "task",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Linked Resource",
+          "value": "linkedResource",
+          "displayName": "Linked Resource"
+        },
+        {
+          "name": "List",
+          "value": "list",
+          "displayName": "List"
+        },
+        {
+          "name": "Task",
+          "value": "task",
+          "displayName": "Task"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a linked resource",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a linked resource",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a linked resource",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a linked resource",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many linked resources",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update a linked resource",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "linkedResource"
+          ]
+        }
+      },
+      "_source": "LinkedResource_linkedResourceOperations"
+    },
+    {
+      "displayName": "Task List Name or ID",
+      "name": "taskListId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTaskLists"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create",
+            "delete",
+            "get",
+            "getAll",
+            "update"
+          ],
+          "resource": [
+            "linkedResource"
+          ]
+        }
+      },
+      "_operation": "create,delete,get,getAll,update",
+      "_source": "LinkedResource_linkedResourceFields"
+    },
+    {
+      "displayName": "Task ID",
+      "name": "taskId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create",
+            "delete",
+            "get",
+            "getAll",
+            "update"
+          ],
+          "resource": [
+            "linkedResource"
+          ]
+        }
+      },
+      "_operation": "create,delete,get,getAll,update",
+      "_source": "LinkedResource_linkedResourceFields"
+    },
+    {
+      "displayName": "Name",
+      "name": "displayName",
+      "type": "string",
+      "description": "Field indicating title of the linked entity",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "linkedResource"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "LinkedResource_linkedResourceFields"
+    },
+    {
+      "displayName": "Application Name",
+      "name": "applicationName",
+      "type": "string",
+      "description": "App name of the source that is sending the linked entity",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "linkedResource"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "LinkedResource_linkedResourceFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "ID of the object that is associated with this task on the third-party/partner system",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "External ID",
+          "name": "externalId",
+          "type": "string",
+          "description": "ID of the object that is associated with this task on the third-party/partner system",
+          "default": ""
+        },
+        {
+          "displayName": "Web URL",
+          "name": "webUrl",
+          "type": "string",
+          "description": "Deeplink to the linked entity",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "linkedResource"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "LinkedResource_linkedResourceFields"
+    },
+    {
+      "displayName": "Linked Resource ID",
+      "name": "linkedResourceId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "linkedResource"
+          ],
+          "operation": [
+            "delete",
+            "get",
+            "update"
+          ]
+        }
+      },
+      "_operation": "delete,get,update",
+      "_source": "LinkedResource_linkedResourceFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "linkedResource"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "LinkedResource_linkedResourceFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "linkedResource"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "LinkedResource_linkedResourceFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "App name of the source that is sending the linked entity",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Application Name",
+          "name": "applicationName",
+          "type": "string",
+          "description": "App name of the source that is sending the linked entity",
+          "default": ""
+        },
+        {
+          "displayName": "Name",
+          "name": "displayName",
+          "type": "string",
+          "description": "Field indicating title of the linked entity",
+          "default": ""
+        },
+        {
+          "displayName": "External ID",
+          "name": "externalId",
+          "type": "string",
+          "description": "ID of the object that is associated with this task on the third-party/partner system",
+          "default": ""
+        },
+        {
+          "displayName": "Web URL",
+          "name": "webUrl",
+          "type": "string",
+          "description": "Deeplink to the linked entity",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "linkedResource"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "LinkedResource_linkedResourceFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a task",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a task",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a task",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a task",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many tasks",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update a task",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_source": "Task_taskOperations"
+    },
+    {
+      "displayName": "List Name or ID",
+      "name": "taskListId",
+      "type": "options",
+      "description": "The identifier of the list, unique in the user's mailbox. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTaskLists"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Subject",
+      "name": "title",
+      "type": "string",
+      "description": "A brief description of the task",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The content of the task",
+      "placeholder": "Add Field",
+      "value": "low",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Content",
+          "name": "content",
+          "type": "string",
+          "description": "The content of the task",
+          "default": ""
+        },
+        {
+          "displayName": "Due",
+          "name": "dueDateTime",
+          "type": "dateTime",
+          "description": "The date in the specified time zone that the task is to be finished",
+          "default": ""
+        },
+        {
+          "displayName": "Reminder",
+          "name": "reminderDateTime",
+          "type": "dateTime",
+          "description": "The date in the specified time zone that the task is to be reminded",
+          "default": ""
+        },
+        {
+          "displayName": "Importance",
+          "name": "importance",
+          "type": "options",
+          "description": "The importance of the task",
+          "value": "low",
+          "default": "normal",
+          "options": [
+            {
+              "name": "Low",
+              "value": "low",
+              "displayName": "Low"
+            },
+            {
+              "name": "Normal",
+              "value": "normal",
+              "displayName": "Normal"
+            },
+            {
+              "name": "High",
+              "value": "high",
+              "displayName": "High"
+            }
+          ]
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Indicates the state or progress of the task",
+          "value": "notStarted",
+          "default": "notStarted",
+          "options": [
+            {
+              "name": "Not Started",
+              "value": "notStarted",
+              "displayName": "Not Started"
+            },
+            {
+              "name": "In Progress",
+              "value": "inProgress",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Completed",
+              "value": "completed",
+              "displayName": "Completed"
+            },
+            {
+              "name": "Waiting On Others",
+              "value": "waitingOnOthers",
+              "displayName": "Waiting On Others"
+            },
+            {
+              "name": "Deferred",
+              "value": "deferred",
+              "displayName": "Deferred"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "List Name or ID",
+      "name": "taskListId",
+      "type": "options",
+      "description": "The identifier of the list, unique in the user's mailbox. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTaskLists"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete",
+            "get",
+            "getAll",
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "delete,get,getAll,update",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Task ID",
+      "name": "taskId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete",
+            "get",
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "delete,get,update",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "The content of the task",
+      "placeholder": "Add Field",
+      "value": "low",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Content",
+          "name": "content",
+          "type": "string",
+          "description": "The content of the task",
+          "default": ""
+        },
+        {
+          "displayName": "Due Date Time",
+          "name": "dueDateTime",
+          "type": "dateTime",
+          "description": "The date in the specified time zone that the task is to be finished",
+          "default": ""
+        },
+        {
+          "displayName": "Reminder",
+          "name": "reminderDateTime",
+          "type": "dateTime",
+          "description": "The date in the specified time zone that the task is to be reminded",
+          "default": ""
+        },
+        {
+          "displayName": "Importance",
+          "name": "importance",
+          "type": "options",
+          "description": "The importance of the task",
+          "value": "low",
+          "default": "normal",
+          "options": [
+            {
+              "name": "Low",
+              "value": "low",
+              "displayName": "Low"
+            },
+            {
+              "name": "Normal",
+              "value": "normal",
+              "displayName": "Normal"
+            },
+            {
+              "name": "High",
+              "value": "high",
+              "displayName": "High"
+            }
+          ]
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Indicates the state or progress of the task",
+          "value": "notStarted",
+          "default": "notStarted",
+          "options": [
+            {
+              "name": "Not Started",
+              "value": "notStarted",
+              "displayName": "Not Started"
+            },
+            {
+              "name": "In Progress",
+              "value": "inProgress",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Completed",
+              "value": "completed",
+              "displayName": "Completed"
+            },
+            {
+              "name": "Waiting On Others",
+              "value": "waitingOnOthers",
+              "displayName": "Waiting On Others"
+            },
+            {
+              "name": "Deferred",
+              "value": "deferred",
+              "displayName": "Deferred"
+            }
+          ]
+        },
+        {
+          "displayName": "Subject",
+          "name": "title",
+          "type": "string",
+          "description": "A brief description of the task",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a list",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a list",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a list",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a list",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many lists",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update a list",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "list"
+          ]
+        }
+      },
+      "_source": "List_listOperations"
+    },
+    {
+      "displayName": "List Name",
+      "name": "displayName",
+      "type": "string",
+      "description": "List display name",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "list"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "List_listFields"
+    },
+    {
+      "displayName": "List ID",
+      "name": "listId",
+      "type": "string",
+      "description": "The identifier of the list, unique in the user's mailbox",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete",
+            "get",
+            "update"
+          ],
+          "resource": [
+            "list"
+          ]
+        }
+      },
+      "_operation": "delete,get,update",
+      "_source": "List_listFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "list"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "List_listFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "list"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "List_listFields"
+    },
+    {
+      "displayName": "New List Name",
+      "name": "displayName",
+      "type": "string",
+      "description": "List display name",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "list"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "List_listFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "action": "Create a linked resource",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "action": "Delete a linked resource",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "action": "Get a linked resource",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "action": "Get many linked resources",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "action": "Update a linked resource",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "linkedResource": [
+      {
+        "name": "Create",
+        "action": "Create a linked resource",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a linked resource",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a linked resource",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many linked resources",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update a linked resource",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "task": [
+      {
+        "name": "Create",
+        "action": "Create a task",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a task",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a task",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many tasks",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update a task",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "list": [
+      {
+        "name": "Create",
+        "action": "Create a list",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a list",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a list",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many lists",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update a list",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "microsoftToDoOAuth2Api",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "list"
+          ]
+        }
+      }
+    },
+    "taskListId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete",
+            "get",
+            "getAll",
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "taskId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete",
+            "get",
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "displayName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "list"
+          ]
+        }
+      }
+    },
+    "applicationName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "linkedResource"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "linkedResourceId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "linkedResource"
+          ],
+          "operation": [
+            "delete",
+            "get",
+            "update"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "list"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "list"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "title": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "listId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete",
+            "get",
+            "update"
+          ],
+          "resource": [
+            "list"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "linkedResource",
+          "name": "Linked Resource",
+          "description": ""
+        },
+        {
+          "value": "list",
+          "name": "List",
+          "description": ""
+        },
+        {
+          "value": "task",
+          "name": "Task",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": ""
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": ""
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": ""
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": ""
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": ""
+        }
+      ]
+    },
+    "taskListId": {
+      "type": "options",
+      "displayName": "List Name or ID",
+      "name": "taskListId",
+      "typeOptions": {
+        "loadOptionsMethod": "getTaskLists"
+      },
+      "possibleValues": []
+    },
+    "taskId": {
+      "type": "string",
+      "displayName": "Task ID",
+      "name": "taskId"
+    },
+    "displayName": {
+      "type": "string",
+      "displayName": "New List Name",
+      "name": "displayName"
+    },
+    "applicationName": {
+      "type": "string",
+      "displayName": "Application Name",
+      "name": "applicationName"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Content",
+          "name": "content",
+          "type": "string",
+          "description": "The content of the task",
+          "default": ""
+        },
+        {
+          "displayName": "Due",
+          "name": "dueDateTime",
+          "type": "dateTime",
+          "description": "The date in the specified time zone that the task is to be finished",
+          "default": ""
+        },
+        {
+          "displayName": "Reminder",
+          "name": "reminderDateTime",
+          "type": "dateTime",
+          "description": "The date in the specified time zone that the task is to be reminded",
+          "default": ""
+        },
+        {
+          "displayName": "Importance",
+          "name": "importance",
+          "type": "options",
+          "description": "The importance of the task",
+          "value": "low",
+          "default": "normal",
+          "options": [
+            {
+              "name": "Low",
+              "value": "low",
+              "displayName": "Low"
+            },
+            {
+              "name": "Normal",
+              "value": "normal",
+              "displayName": "Normal"
+            },
+            {
+              "name": "High",
+              "value": "high",
+              "displayName": "High"
+            }
+          ]
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Indicates the state or progress of the task",
+          "value": "notStarted",
+          "default": "notStarted",
+          "options": [
+            {
+              "name": "Not Started",
+              "value": "notStarted",
+              "displayName": "Not Started"
+            },
+            {
+              "name": "In Progress",
+              "value": "inProgress",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Completed",
+              "value": "completed",
+              "displayName": "Completed"
+            },
+            {
+              "name": "Waiting On Others",
+              "value": "waitingOnOthers",
+              "displayName": "Waiting On Others"
+            },
+            {
+              "name": "Deferred",
+              "value": "deferred",
+              "displayName": "Deferred"
+            }
+          ]
+        }
+      ]
+    },
+    "linkedResourceId": {
+      "type": "string",
+      "displayName": "Linked Resource ID",
+      "name": "linkedResourceId"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      }
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "subProperties": [
+        {
+          "displayName": "Content",
+          "name": "content",
+          "type": "string",
+          "description": "The content of the task",
+          "default": ""
+        },
+        {
+          "displayName": "Due Date Time",
+          "name": "dueDateTime",
+          "type": "dateTime",
+          "description": "The date in the specified time zone that the task is to be finished",
+          "default": ""
+        },
+        {
+          "displayName": "Reminder",
+          "name": "reminderDateTime",
+          "type": "dateTime",
+          "description": "The date in the specified time zone that the task is to be reminded",
+          "default": ""
+        },
+        {
+          "displayName": "Importance",
+          "name": "importance",
+          "type": "options",
+          "description": "The importance of the task",
+          "value": "low",
+          "default": "normal",
+          "options": [
+            {
+              "name": "Low",
+              "value": "low",
+              "displayName": "Low"
+            },
+            {
+              "name": "Normal",
+              "value": "normal",
+              "displayName": "Normal"
+            },
+            {
+              "name": "High",
+              "value": "high",
+              "displayName": "High"
+            }
+          ]
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Indicates the state or progress of the task",
+          "value": "notStarted",
+          "default": "notStarted",
+          "options": [
+            {
+              "name": "Not Started",
+              "value": "notStarted",
+              "displayName": "Not Started"
+            },
+            {
+              "name": "In Progress",
+              "value": "inProgress",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Completed",
+              "value": "completed",
+              "displayName": "Completed"
+            },
+            {
+              "name": "Waiting On Others",
+              "value": "waitingOnOthers",
+              "displayName": "Waiting On Others"
+            },
+            {
+              "name": "Deferred",
+              "value": "deferred",
+              "displayName": "Deferred"
+            }
+          ]
+        },
+        {
+          "displayName": "Subject",
+          "name": "title",
+          "type": "string",
+          "description": "A brief description of the task",
+          "default": ""
+        }
+      ]
+    },
+    "title": {
+      "type": "string",
+      "displayName": "Subject",
+      "name": "title"
+    },
+    "listId": {
+      "type": "string",
+      "displayName": "List ID",
+      "name": "listId"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

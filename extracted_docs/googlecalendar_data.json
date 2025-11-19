@@ -1,0 +1,2936 @@
+{
+  "node_info": {
+    "icon": "bot",
+    "defaults": {
+      "name": "Google Calendar"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "googleCalendarOAuth2Api",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getConferenceSolutions"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Google Calendar",
+    "name": "googleCalendar",
+    "description": "Consume Google Calendar API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": [
+      "1",
+      "1.1",
+      "1.2",
+      "1.3"
+    ],
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.googleCalendar",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Productivity"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/google/oauth-single-service/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.googlecalendar/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "How to host virtual coffee breaks with n8n",
+          "icon": "\u2615\ufe0f",
+          "url": "https://n8n.io/blog/how-to-host-virtual-coffee-breaks-with-n8n/"
+        },
+        {
+          "label": "Supercharging your conference registration process with n8n",
+          "icon": "\ud83c\udfab",
+          "url": "https://n8n.io/blog/supercharging-your-conference-registration-process-with-n8n/"
+        },
+        {
+          "label": "15 Google apps you can combine and automate to increase productivity",
+          "icon": "\ud83d\udca1",
+          "url": "https://n8n.io/blog/automate-google-apps-for-productivity/"
+        },
+        {
+          "label": "Hey founders! Your business doesn't need you to operate",
+          "icon": " \ud83d\udda5\ufe0f",
+          "url": "https://n8n.io/blog/your-business-doesnt-need-you-to-operate/"
+        },
+        {
+          "label": "5 workflow automation for Mattermost that we love at n8n",
+          "icon": "\ud83e\udd16",
+          "url": "https://n8n.io/blog/5-workflow-automations-for-mattermost-that-we-love-at-n8n/"
+        },
+        {
+          "label": "Tracking Time Spent in Meetings With Google Calendar, Twilio, and n8n",
+          "icon": "\ud83d\uddd3",
+          "url": "https://n8n.io/blog/tracking-time-spent-in-meetings-with-google-calendar-twilio-and-n8n/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "calendar",
+      "default": "event",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Calendar",
+          "value": "calendar",
+          "displayName": "Calendar"
+        },
+        {
+          "name": "Event",
+          "value": "event",
+          "displayName": "Event"
+        }
+      ]
+    },
+    {
+      "displayName": "This node will use the time zone set in n8n\u2019s settings, but you can override this in the workflow settings",
+      "name": "useN8nTimeZone",
+      "type": "notice",
+      "default": ""
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "If a time-slot is available in a calendar",
+      "action": "Get availability in a calendar",
+      "value": "availability",
+      "default": "availability",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Availability",
+          "description": "If a time-slot is available in a calendar",
+          "action": "Get availability in a calendar",
+          "value": "availability",
+          "displayName": "Availability"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "calendar"
+          ]
+        }
+      },
+      "_source": "Calendar_calendarOperations"
+    },
+    {
+      "displayName": "Calendar",
+      "name": "calendar",
+      "type": "resourceLocator",
+      "description": "Google Calendar to operate on",
+      "placeholder": "Select a Calendar...",
+      "required": true,
+      "modes": [
+        {
+          "displayName": "Calendar",
+          "name": "list",
+          "type": "list",
+          "placeholder": "Select a Calendar...",
+          "typeOptions": {}
+        }
+      ],
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "calendar"
+          ]
+        }
+      },
+      "_source": "Calendar_calendarFields"
+    },
+    {
+      "displayName": "Start Time",
+      "name": "timeMin",
+      "type": "dateTime",
+      "description": "Start of the interval",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "availability"
+          ],
+          "resource": [
+            "calendar"
+          ]
+        }
+      },
+      "_operation": "availability",
+      "_source": "Calendar_calendarFields"
+    },
+    {
+      "displayName": "End Time",
+      "name": "timeMax",
+      "type": "dateTime",
+      "description": "End of the interval",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "availability"
+          ],
+          "resource": [
+            "calendar"
+          ]
+        }
+      },
+      "_operation": "availability",
+      "_source": "Calendar_calendarFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Returns if there are any events in the given time or not",
+      "placeholder": "Add option",
+      "value": "availability",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Output Format",
+          "name": "outputFormat",
+          "type": "options",
+          "description": "Returns if there are any events in the given time or not",
+          "value": "availability",
+          "default": "availability",
+          "options": [
+            {
+              "name": "Availability",
+              "description": "Returns if there are any events in the given time or not",
+              "value": "availability",
+              "displayName": "Availability"
+            },
+            {
+              "name": "Booked Slots",
+              "description": "Returns the booked slots",
+              "value": "bookedSlots",
+              "displayName": "Booked Slots"
+            },
+            {
+              "name": "RAW",
+              "description": "Returns the RAW data from the API",
+              "value": "raw",
+              "displayName": "Raw"
+            }
+          ]
+        },
+        {
+          "displayName": "Timezone",
+          "name": "timezone",
+          "type": "resourceLocator",
+          "description": "Time zone used in the response. By default n8n timezone is used.",
+          "placeholder": "Select a Timezone...",
+          "modes": [
+            {
+              "displayName": "Timezone",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select a Timezone...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        }
+      ],
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "availability"
+          ],
+          "resource": [
+            "calendar"
+          ]
+        }
+      },
+      "_operation": "availability",
+      "_source": "Calendar_calendarFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Add a event to calendar",
+      "action": "Create an event",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Add a event to calendar",
+          "action": "Create an event",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete an event",
+          "action": "Delete an event",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Retrieve an event",
+          "action": "Get an event",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Retrieve many events from a calendar",
+          "action": "Get many events",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update an event",
+          "action": "Update an event",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_source": "Event_eventOperations"
+    },
+    {
+      "displayName": "Calendar",
+      "name": "calendar",
+      "type": "resourceLocator",
+      "description": "Google Calendar to operate on",
+      "placeholder": "Select a Calendar...",
+      "required": true,
+      "modes": [
+        {
+          "displayName": "Calendar",
+          "name": "list",
+          "type": "list",
+          "placeholder": "Select a Calendar...",
+          "typeOptions": {}
+        }
+      ],
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Start",
+      "name": "start",
+      "type": "dateTime",
+      "description": "Start time of the event",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "End",
+      "name": "end",
+      "type": "dateTime",
+      "description": "End time of the event",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Use Default Reminders",
+      "name": "useDefaultReminders",
+      "type": "boolean",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether the event is all day or not",
+      "placeholder": "Add Field",
+      "value": "yes",
+      "default": {},
+      "options": [
+        {
+          "displayName": "All Day",
+          "name": "allday",
+          "type": "options",
+          "description": "Whether the event is all day or not",
+          "value": "yes",
+          "default": "no",
+          "options": [
+            {
+              "name": "Yes",
+              "value": "yes",
+              "displayName": "Yes"
+            },
+            {
+              "name": "No",
+              "value": "no",
+              "displayName": "No"
+            }
+          ]
+        },
+        {
+          "displayName": "Attendees",
+          "name": "attendees",
+          "type": "string",
+          "description": "The attendees of the event. Multiple ones can be separated by comma.",
+          "default": "",
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Color Name or ID",
+          "name": "color",
+          "type": "options",
+          "description": "The color of the event. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getColors"
+          }
+        },
+        {
+          "displayName": "Conference Data",
+          "name": "conferenceDataUi",
+          "type": "fixedCollection",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "placeholder": "Add Conference",
+          "default": {},
+          "options": [
+            {
+              "name": "conferenceDataValues",
+              "displayName": "Conference Link",
+              "values": [
+                {
+                  "displayName": "Type Name or ID",
+                  "name": "conferenceSolution",
+                  "type": "options",
+                  "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+                  "default": "",
+                  "typeOptions": {
+                    "loadOptionsMethod": "getConferenceSolutions"
+                  }
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": false
+          }
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Guests Can Invite Others",
+          "name": "guestsCanInviteOthers",
+          "type": "boolean",
+          "description": "Whether attendees other than the organizer can invite others to the event",
+          "default": true
+        },
+        {
+          "displayName": "Guests Can Modify",
+          "name": "guestsCanModify",
+          "type": "boolean",
+          "description": "Whether attendees other than the organizer can modify the event",
+          "default": false
+        },
+        {
+          "displayName": "Guests Can See Other Guests",
+          "name": "guestsCanSeeOtherGuests",
+          "type": "boolean",
+          "description": "Whether attendees other than the organizer can see who the event's attendees are",
+          "default": true
+        },
+        {
+          "displayName": "ID",
+          "name": "id",
+          "type": "string",
+          "description": "Opaque identifier of the event",
+          "default": ""
+        },
+        {
+          "displayName": "Location",
+          "name": "location",
+          "type": "string",
+          "description": "Geographic location of the event as free-form text",
+          "default": ""
+        },
+        {
+          "displayName": "Max Attendees",
+          "name": "maxAttendees",
+          "type": "number",
+          "description": "The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned.",
+          "default": 0
+        },
+        {
+          "displayName": "Repeat Frequency",
+          "name": "repeatFrecuency",
+          "type": "options",
+          "value": "Daily",
+          "default": "",
+          "options": [
+            {
+              "name": "Daily",
+              "value": "Daily",
+              "displayName": "Daily"
+            },
+            {
+              "name": "Weekly",
+              "value": "weekly",
+              "displayName": "Weekly"
+            },
+            {
+              "name": "Monthly",
+              "value": "monthly",
+              "displayName": "Monthly"
+            },
+            {
+              "name": "Yearly",
+              "value": "yearly",
+              "displayName": "Yearly"
+            }
+          ]
+        },
+        {
+          "displayName": "Repeat How Many Times?",
+          "name": "repeatHowManyTimes",
+          "type": "number",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1
+          }
+        },
+        {
+          "displayName": "Repeat Until",
+          "name": "repeatUntil",
+          "type": "dateTime",
+          "default": ""
+        },
+        {
+          "displayName": "RRULE",
+          "name": "rrule",
+          "type": "string",
+          "description": "Recurrence rule. When set, the parameters Repeat Frequency, Repeat How Many Times and Repeat Until are ignored.",
+          "default": ""
+        },
+        {
+          "displayName": "Send Updates",
+          "name": "sendUpdates",
+          "type": "options",
+          "description": "Notifications are sent to all guests",
+          "value": "all",
+          "default": "",
+          "options": [
+            {
+              "name": "All",
+              "description": "Notifications are sent to all guests",
+              "value": "all",
+              "displayName": "All"
+            },
+            {
+              "name": "External Only",
+              "description": "Notifications are sent to non-Google Calendar guests only",
+              "value": "externalOnly",
+              "displayName": "External Only"
+            },
+            {
+              "name": "None",
+              "description": "No notifications are sent. This value should only be used for migration use case.",
+              "value": "none",
+              "displayName": "None"
+            }
+          ]
+        },
+        {
+          "displayName": "Show Me As",
+          "name": "showMeAs",
+          "type": "options",
+          "description": "The event does not block time on the calendar",
+          "value": "transparent",
+          "default": "opaque",
+          "options": [
+            {
+              "name": "Available",
+              "description": "The event does not block time on the calendar",
+              "value": "transparent",
+              "displayName": "Available"
+            },
+            {
+              "name": "Busy",
+              "description": "The event does block time on the calendar",
+              "value": "opaque",
+              "displayName": "Busy"
+            }
+          ]
+        },
+        {
+          "displayName": "Summary",
+          "name": "summary",
+          "type": "string",
+          "description": "Title of the event",
+          "default": ""
+        },
+        {
+          "displayName": "Visibility",
+          "name": "visibility",
+          "type": "options",
+          "description": "The event is private. This value is provided for compatibility reasons.",
+          "value": "confidential",
+          "default": "default",
+          "options": [
+            {
+              "name": "Confidential",
+              "description": "The event is private. This value is provided for compatibility reasons.",
+              "value": "confidential",
+              "displayName": "Confidential"
+            },
+            {
+              "name": "Default",
+              "description": "Uses the default visibility for events on the calendar",
+              "value": "default",
+              "displayName": "Default"
+            },
+            {
+              "name": "Private",
+              "description": "The event is private and only event attendees may view event details",
+              "value": "private",
+              "displayName": "Private"
+            },
+            {
+              "name": "Public",
+              "description": "The event is public and event details are visible to all readers of the calendar",
+              "value": "public",
+              "displayName": "Public"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Reminders",
+      "name": "remindersUi",
+      "type": "fixedCollection",
+      "description": "If the event doesn't use the default reminders, this lists the reminders specific to the event",
+      "placeholder": "Add Reminder",
+      "value": "email",
+      "default": {},
+      "options": [
+        {
+          "name": "remindersValues",
+          "displayName": "Reminder",
+          "values": [
+            {
+              "displayName": "Method",
+              "name": "method",
+              "type": "options",
+              "value": "email",
+              "default": "",
+              "options": [
+                {
+                  "name": "Email",
+                  "value": "email",
+                  "displayName": "Email"
+                },
+                {
+                  "name": "Popup",
+                  "value": "popup",
+                  "displayName": "Popup"
+                }
+              ]
+            },
+            {
+              "displayName": "Minutes Before",
+              "name": "minutes",
+              "type": "number",
+              "default": 0,
+              "typeOptions": {
+                "minValue": 0,
+                "maxValue": 40320
+              }
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "create"
+          ],
+          "useDefaultReminders": [
+            false
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Event ID",
+      "name": "eventId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Notifications are sent to all guests",
+      "placeholder": "Add option",
+      "value": "all",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Send Updates",
+          "name": "sendUpdates",
+          "type": "options",
+          "description": "Notifications are sent to all guests",
+          "value": "all",
+          "default": "",
+          "options": [
+            {
+              "name": "All",
+              "description": "Notifications are sent to all guests",
+              "value": "all",
+              "displayName": "All"
+            },
+            {
+              "name": "External Only",
+              "description": "Notifications are sent to non-Google Calendar guests only",
+              "value": "externalOnly",
+              "displayName": "External Only"
+            },
+            {
+              "name": "None",
+              "description": "No notifications are sent. This value should only be used for migration use case.",
+              "value": "none",
+              "displayName": "None"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Event ID",
+      "name": "eventId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned.",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Max Attendees",
+          "name": "maxAttendees",
+          "type": "number",
+          "description": "The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned.",
+          "default": 0
+        },
+        {
+          "displayName": "Return Next Instance of Recurring Event",
+          "name": "returnNextInstance",
+          "type": "boolean",
+          "description": "Whether to return the next instance of a recurring event instead of the event itself",
+          "default": false,
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Timezone",
+          "name": "timeZone",
+          "type": "resourceLocator",
+          "description": "Time zone used in the response. The default is the time zone of the calendar.",
+          "placeholder": "Select a Timezone...",
+          "modes": [
+            {
+              "displayName": "Timezone",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select a Timezone...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        }
+      ],
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "event"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "After",
+      "name": "timeMin",
+      "type": "dateTime",
+      "description": "At least some part of the event must be after this time, use <a href=\"https://docs.n8n.io/code/cookbook/luxon/\" target=\"_blank\">expression</a> to set a date, or switch to fixed mode to choose date from widget",
+      "default": "={{ $now }}",
+      "displayOptions": {
+        "show": {}
+      },
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Before",
+      "name": "timeMax",
+      "type": "dateTime",
+      "description": "At least some part of the event must be before this time, use <a href=\"https://docs.n8n.io/code/cookbook/luxon/\" target=\"_blank\">expression</a> to set a date, or switch to fixed mode to choose date from widget",
+      "default": "={{ $now.plus({ week: 1 }) }}",
+      "displayOptions": {
+        "show": {}
+      },
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "At least some part of the event must be after this time, use <a href=\"https://docs.n8n.io/code/cookbook/luxon/\" target=\"_blank\">expression</a> to set a date, or switch to fixed mode to choose date from widget",
+      "placeholder": "Add option",
+      "value": "startTime",
+      "default": {},
+      "options": [
+        {
+          "displayName": "After",
+          "name": "timeMin",
+          "type": "dateTime",
+          "description": "At least some part of the event must be after this time, use <a href=\"https://docs.n8n.io/code/cookbook/luxon/\" target=\"_blank\">expression</a> to set a date, or switch to fixed mode to choose date from widget",
+          "default": "",
+          "displayOptions": {
+            "hide": {}
+          }
+        },
+        {
+          "displayName": "Before",
+          "name": "timeMax",
+          "type": "dateTime",
+          "description": "At least some part of the event must be before this time, use <a href=\"https://docs.n8n.io/code/cookbook/luxon/\" target=\"_blank\">expression</a> to set a date, or switch to fixed mode to choose date from widget",
+          "default": "",
+          "displayOptions": {
+            "hide": {}
+          }
+        },
+        {
+          "displayName": "Expand Events",
+          "name": "singleEvents",
+          "type": "boolean",
+          "description": "Whether to expand recurring events into instances and only return single one-off events and instances of recurring events, but not the underlying recurring events themselves",
+          "default": false,
+          "displayOptions": {
+            "hide": {}
+          }
+        },
+        {
+          "displayName": "Fields",
+          "name": "fields",
+          "type": "string",
+          "description": "Specify fields to return, by default a predefined by Google set of commonly used fields would be returned. To return all fields, use '*', <a href='https://developers.google.com/calendar/api/guides/performance#partial' target='_blank'>More info</a>.",
+          "placeholder": "e.g. items(ID,status,summary)",
+          "default": ""
+        },
+        {
+          "displayName": "iCalUID",
+          "name": "iCalUID",
+          "type": "string",
+          "description": "Specifies event ID in the iCalendar format to be included in the response",
+          "default": ""
+        },
+        {
+          "displayName": "Max Attendees",
+          "name": "maxAttendees",
+          "type": "number",
+          "description": "The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned.",
+          "default": 0
+        },
+        {
+          "displayName": "Order By",
+          "name": "orderBy",
+          "type": "options",
+          "description": "Order by the start date/time (ascending). This is only available when querying single events (i.e. the parameter singleEvents is True).",
+          "value": "startTime",
+          "default": "",
+          "options": [
+            {
+              "name": "Start Time",
+              "description": "Order by the start date/time (ascending). This is only available when querying single events (i.e. the parameter singleEvents is True).",
+              "value": "startTime",
+              "displayName": "Start Time"
+            },
+            {
+              "name": "Updated",
+              "description": "Order by last modification time (ascending)",
+              "value": "updated",
+              "displayName": "Updated"
+            }
+          ]
+        },
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "Free text search terms to find events that match these terms in any field, except for extended properties",
+          "default": ""
+        },
+        {
+          "displayName": "Recurring Event Handling",
+          "name": "recurringEventHandling",
+          "type": "options",
+          "description": "Return all instances of recurring event for specified time range",
+          "value": "expand",
+          "default": "expand",
+          "options": [
+            {
+              "name": "All Occurrences",
+              "description": "Return all instances of recurring event for specified time range",
+              "value": "expand",
+              "displayName": "All Occurrences"
+            },
+            {
+              "name": "First Occurrence",
+              "description": "Return event with specified recurrence rule",
+              "value": "first",
+              "displayName": "First Occurrence"
+            },
+            {
+              "name": "Next Occurrence",
+              "description": "Return next instance of recurring event",
+              "value": "next",
+              "displayName": "Next Occurrence"
+            }
+          ],
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Show Deleted",
+          "name": "showDeleted",
+          "type": "boolean",
+          "description": "Whether to include deleted events (with status equals \"cancelled\") in the result",
+          "default": false
+        },
+        {
+          "displayName": "Show Hidden Invitations",
+          "name": "showHiddenInvitations",
+          "type": "boolean",
+          "description": "Whether to include hidden invitations in the result",
+          "default": false
+        },
+        {
+          "displayName": "Timezone",
+          "name": "timeZone",
+          "type": "resourceLocator",
+          "description": "Time zone used in the response. The default is the time zone of the calendar.",
+          "placeholder": "Select a Timezone...",
+          "modes": [
+            {
+              "displayName": "Timezone",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select a Timezone...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        },
+        {
+          "displayName": "Updated Min",
+          "name": "updatedMin",
+          "type": "dateTime",
+          "description": "Lower bound for an event's last modification time (as a RFC3339 timestamp) to filter by. When specified, entries deleted since this time will always be included regardless of showDeleted.",
+          "default": ""
+        }
+      ],
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Event ID",
+      "name": "eventId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Modify",
+      "name": "modifyTarget",
+      "type": "options",
+      "value": "instance",
+      "default": "instance",
+      "options": [
+        {
+          "name": "Recurring Event Instance",
+          "value": "instance",
+          "displayName": "Recurring Event Instance"
+        },
+        {
+          "name": "Recurring Event",
+          "value": "event",
+          "displayName": "Recurring Event"
+        }
+      ],
+      "displayOptions": {
+        "show": {}
+      },
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Use Default Reminders",
+      "name": "useDefaultReminders",
+      "type": "boolean",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Whether the event is all day or not",
+      "placeholder": "Add Field",
+      "value": "yes",
+      "default": {},
+      "options": [
+        {
+          "displayName": "All Day",
+          "name": "allday",
+          "type": "options",
+          "description": "Whether the event is all day or not",
+          "value": "yes",
+          "default": "no",
+          "options": [
+            {
+              "name": "Yes",
+              "value": "yes",
+              "displayName": "Yes"
+            },
+            {
+              "name": "No",
+              "value": "no",
+              "displayName": "No"
+            }
+          ]
+        },
+        {
+          "displayName": "Attendees",
+          "name": "attendeesUi",
+          "type": "fixedCollection",
+          "description": "The attendees of the event. Multiple ones can be separated by comma.",
+          "placeholder": "Add Attendees",
+          "value": "add",
+          "default": "add",
+          "options": [
+            {
+              "name": "values",
+              "displayName": "Values",
+              "values": [
+                {
+                  "displayName": "Mode",
+                  "name": "mode",
+                  "type": "options",
+                  "value": "add",
+                  "default": "add",
+                  "options": [
+                    {
+                      "name": "Add Attendees Below [Default]",
+                      "value": "add",
+                      "displayName": "Add Attendees Below [default]"
+                    },
+                    {
+                      "name": "Replace Attendees with Those Below",
+                      "value": "replace",
+                      "displayName": "Replace Attendees With Those Below"
+                    }
+                  ]
+                },
+                {
+                  "displayName": "Attendees",
+                  "name": "attendees",
+                  "type": "string",
+                  "description": "The attendees of the event. Multiple ones can be separated by comma.",
+                  "default": "",
+                  "typeOptions": {
+                    "multipleValues": true
+                  }
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Attendees",
+          "name": "attendees",
+          "type": "string",
+          "description": "The attendees of the event. Multiple ones can be separated by comma.",
+          "default": "",
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Color Name or ID",
+          "name": "color",
+          "type": "options",
+          "description": "The color of the event. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getColors"
+          }
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "End",
+          "name": "end",
+          "type": "dateTime",
+          "description": "End time of the event",
+          "default": ""
+        },
+        {
+          "displayName": "Guests Can Invite Others",
+          "name": "guestsCanInviteOthers",
+          "type": "boolean",
+          "description": "Whether attendees other than the organizer can invite others to the event",
+          "default": true
+        },
+        {
+          "displayName": "Guests Can Modify",
+          "name": "guestsCanModify",
+          "type": "boolean",
+          "description": "Whether attendees other than the organizer can modify the event",
+          "default": false
+        },
+        {
+          "displayName": "Guests Can See Other Guests",
+          "name": "guestsCanSeeOtherGuests",
+          "type": "boolean",
+          "description": "Whether attendees other than the organizer can see who the event's attendees are",
+          "default": true
+        },
+        {
+          "displayName": "ID",
+          "name": "id",
+          "type": "string",
+          "description": "Opaque identifier of the event",
+          "default": ""
+        },
+        {
+          "displayName": "Location",
+          "name": "location",
+          "type": "string",
+          "description": "Geographic location of the event as free-form text",
+          "default": ""
+        },
+        {
+          "displayName": "Max Attendees",
+          "name": "maxAttendees",
+          "type": "number",
+          "description": "The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned.",
+          "default": 0
+        },
+        {
+          "displayName": "Repeat Frequency",
+          "name": "repeatFrecuency",
+          "type": "options",
+          "value": "Daily",
+          "default": "",
+          "options": [
+            {
+              "name": "Daily",
+              "value": "Daily",
+              "displayName": "Daily"
+            },
+            {
+              "name": "Weekly",
+              "value": "weekly",
+              "displayName": "Weekly"
+            },
+            {
+              "name": "Monthly",
+              "value": "monthly",
+              "displayName": "Monthly"
+            },
+            {
+              "name": "Yearly",
+              "value": "yearly",
+              "displayName": "Yearly"
+            }
+          ]
+        },
+        {
+          "displayName": "Repeat How Many Times?",
+          "name": "repeatHowManyTimes",
+          "type": "number",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1
+          }
+        },
+        {
+          "displayName": "Repeat Until",
+          "name": "repeatUntil",
+          "type": "dateTime",
+          "default": ""
+        },
+        {
+          "displayName": "RRULE",
+          "name": "rrule",
+          "type": "string",
+          "description": "Recurrence rule. When set, the parameters Repeat Frequency, Repeat How Many Times and Repeat Until are ignored.",
+          "default": ""
+        },
+        {
+          "displayName": "Send Updates",
+          "name": "sendUpdates",
+          "type": "options",
+          "description": "Notifications are sent to all guests",
+          "value": "all",
+          "default": "",
+          "options": [
+            {
+              "name": "All",
+              "description": "Notifications are sent to all guests",
+              "value": "all",
+              "displayName": "All"
+            },
+            {
+              "name": "External Only",
+              "description": "Notifications are sent to non-Google Calendar guests only",
+              "value": "externalOnly",
+              "displayName": "External Only"
+            },
+            {
+              "name": "None",
+              "description": "No notifications are sent. This value should only be used for migration use case.",
+              "value": "none",
+              "displayName": "None"
+            }
+          ]
+        },
+        {
+          "displayName": "Show Me As",
+          "name": "showMeAs",
+          "type": "options",
+          "description": "The event does not block time on the calendar",
+          "value": "transparent",
+          "default": "opaque",
+          "options": [
+            {
+              "name": "Available",
+              "description": "The event does not block time on the calendar",
+              "value": "transparent",
+              "displayName": "Available"
+            },
+            {
+              "name": "Busy",
+              "description": "The event does block time on the calendar",
+              "value": "opaque",
+              "displayName": "Busy"
+            }
+          ]
+        },
+        {
+          "displayName": "Start",
+          "name": "start",
+          "type": "dateTime",
+          "description": "Start time of the event",
+          "default": ""
+        },
+        {
+          "displayName": "Summary",
+          "name": "summary",
+          "type": "string",
+          "description": "Title of the event",
+          "default": ""
+        },
+        {
+          "displayName": "Visibility",
+          "name": "visibility",
+          "type": "options",
+          "description": "The event is private. This value is provided for compatibility reasons.",
+          "value": "confidential",
+          "default": "default",
+          "options": [
+            {
+              "name": "Confidential",
+              "description": "The event is private. This value is provided for compatibility reasons.",
+              "value": "confidential",
+              "displayName": "Confidential"
+            },
+            {
+              "name": "Default",
+              "description": "Uses the default visibility for events on the calendar",
+              "value": "default",
+              "displayName": "Default"
+            },
+            {
+              "name": "Public",
+              "description": "The event is public and event details are visible to all readers of the calendar",
+              "value": "public",
+              "displayName": "Public"
+            },
+            {
+              "name": "Private",
+              "description": "The event is private and only event attendees may view event details",
+              "value": "private",
+              "displayName": "Private"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Reminders",
+      "name": "remindersUi",
+      "type": "fixedCollection",
+      "description": "If the event doesn't use the default reminders, this lists the reminders specific to the event",
+      "placeholder": "Add Reminder",
+      "value": "email",
+      "default": {},
+      "options": [
+        {
+          "name": "remindersValues",
+          "displayName": "Reminder",
+          "values": [
+            {
+              "displayName": "Method",
+              "name": "method",
+              "type": "options",
+              "value": "email",
+              "default": "",
+              "options": [
+                {
+                  "name": "Email",
+                  "value": "email",
+                  "displayName": "Email"
+                },
+                {
+                  "name": "Popup",
+                  "value": "popup",
+                  "displayName": "Popup"
+                }
+              ]
+            },
+            {
+              "displayName": "Minutes Before",
+              "name": "minutes",
+              "type": "number",
+              "default": 0,
+              "typeOptions": {
+                "minValue": 0,
+                "maxValue": 40320
+              }
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "update"
+          ],
+          "useDefaultReminders": [
+            false
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Event_eventFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Availability",
+      "description": "If a time-slot is available in a calendar",
+      "action": "Get availability in a calendar",
+      "value": "availability",
+      "displayName": "Availability"
+    },
+    {
+      "name": "Create",
+      "description": "Add a event to calendar",
+      "action": "Create an event",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete an event",
+      "action": "Delete an event",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Retrieve an event",
+      "action": "Get an event",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Retrieve many events from a calendar",
+      "action": "Get many events",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "description": "Update an event",
+      "action": "Update an event",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "calendar": [
+      {
+        "name": "Availability",
+        "description": "If a time-slot is available in a calendar",
+        "action": "Get availability in a calendar",
+        "value": "availability",
+        "displayName": "Availability"
+      }
+    ],
+    "event": [
+      {
+        "name": "Create",
+        "description": "Add a event to calendar",
+        "action": "Create an event",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete an event",
+        "action": "Delete an event",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Retrieve an event",
+        "action": "Get an event",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Retrieve many events from a calendar",
+        "action": "Get many events",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update an event",
+        "action": "Update an event",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "googleCalendarOAuth2Api",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ]
+        }
+      }
+    },
+    "calendar": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ]
+        }
+      }
+    },
+    "timeMin": {
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    "timeMax": {
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      }
+    },
+    "start": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      }
+    },
+    "end": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      }
+    },
+    "useDefaultReminders": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      }
+    },
+    "remindersUi": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "update"
+          ],
+          "useDefaultReminders": [
+            false
+          ]
+        }
+      }
+    },
+    "eventId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "event"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "modifyTarget": {
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "event"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "calendar",
+          "name": "Calendar",
+          "description": ""
+        },
+        {
+          "value": "event",
+          "name": "Event",
+          "description": ""
+        }
+      ]
+    },
+    "useN8nTimeZone": {
+      "type": "notice",
+      "displayName": "This node will use the time zone set in n8n\u2019s settings, but you can override this in the workflow settings",
+      "name": "useN8nTimeZone"
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Add a event to calendar"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete an event"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Retrieve an event"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Retrieve many events from a calendar"
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": "Update an event"
+        }
+      ]
+    },
+    "calendar": {
+      "type": "resourceLocator",
+      "displayName": "Calendar",
+      "name": "calendar"
+    },
+    "timeMin": {
+      "type": "dateTime",
+      "displayName": "After",
+      "name": "timeMin"
+    },
+    "timeMax": {
+      "type": "dateTime",
+      "displayName": "Before",
+      "name": "timeMax"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "After",
+          "name": "timeMin",
+          "type": "dateTime",
+          "description": "At least some part of the event must be after this time, use <a href=\"https://docs.n8n.io/code/cookbook/luxon/\" target=\"_blank\">expression</a> to set a date, or switch to fixed mode to choose date from widget",
+          "default": "",
+          "displayOptions": {
+            "hide": {}
+          }
+        },
+        {
+          "displayName": "Before",
+          "name": "timeMax",
+          "type": "dateTime",
+          "description": "At least some part of the event must be before this time, use <a href=\"https://docs.n8n.io/code/cookbook/luxon/\" target=\"_blank\">expression</a> to set a date, or switch to fixed mode to choose date from widget",
+          "default": "",
+          "displayOptions": {
+            "hide": {}
+          }
+        },
+        {
+          "displayName": "Expand Events",
+          "name": "singleEvents",
+          "type": "boolean",
+          "description": "Whether to expand recurring events into instances and only return single one-off events and instances of recurring events, but not the underlying recurring events themselves",
+          "default": false,
+          "displayOptions": {
+            "hide": {}
+          }
+        },
+        {
+          "displayName": "Fields",
+          "name": "fields",
+          "type": "string",
+          "description": "Specify fields to return, by default a predefined by Google set of commonly used fields would be returned. To return all fields, use '*', <a href='https://developers.google.com/calendar/api/guides/performance#partial' target='_blank'>More info</a>.",
+          "placeholder": "e.g. items(ID,status,summary)",
+          "default": ""
+        },
+        {
+          "displayName": "iCalUID",
+          "name": "iCalUID",
+          "type": "string",
+          "description": "Specifies event ID in the iCalendar format to be included in the response",
+          "default": ""
+        },
+        {
+          "displayName": "Max Attendees",
+          "name": "maxAttendees",
+          "type": "number",
+          "description": "The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned.",
+          "default": 0
+        },
+        {
+          "displayName": "Order By",
+          "name": "orderBy",
+          "type": "options",
+          "description": "Order by the start date/time (ascending). This is only available when querying single events (i.e. the parameter singleEvents is True).",
+          "value": "startTime",
+          "default": "",
+          "options": [
+            {
+              "name": "Start Time",
+              "description": "Order by the start date/time (ascending). This is only available when querying single events (i.e. the parameter singleEvents is True).",
+              "value": "startTime",
+              "displayName": "Start Time"
+            },
+            {
+              "name": "Updated",
+              "description": "Order by last modification time (ascending)",
+              "value": "updated",
+              "displayName": "Updated"
+            }
+          ]
+        },
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "Free text search terms to find events that match these terms in any field, except for extended properties",
+          "default": ""
+        },
+        {
+          "displayName": "Recurring Event Handling",
+          "name": "recurringEventHandling",
+          "type": "options",
+          "description": "Return all instances of recurring event for specified time range",
+          "value": "expand",
+          "default": "expand",
+          "options": [
+            {
+              "name": "All Occurrences",
+              "description": "Return all instances of recurring event for specified time range",
+              "value": "expand",
+              "displayName": "All Occurrences"
+            },
+            {
+              "name": "First Occurrence",
+              "description": "Return event with specified recurrence rule",
+              "value": "first",
+              "displayName": "First Occurrence"
+            },
+            {
+              "name": "Next Occurrence",
+              "description": "Return next instance of recurring event",
+              "value": "next",
+              "displayName": "Next Occurrence"
+            }
+          ],
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Show Deleted",
+          "name": "showDeleted",
+          "type": "boolean",
+          "description": "Whether to include deleted events (with status equals \"cancelled\") in the result",
+          "default": false
+        },
+        {
+          "displayName": "Show Hidden Invitations",
+          "name": "showHiddenInvitations",
+          "type": "boolean",
+          "description": "Whether to include hidden invitations in the result",
+          "default": false
+        },
+        {
+          "displayName": "Timezone",
+          "name": "timeZone",
+          "type": "resourceLocator",
+          "description": "Time zone used in the response. The default is the time zone of the calendar.",
+          "placeholder": "Select a Timezone...",
+          "modes": [
+            {
+              "displayName": "Timezone",
+              "name": "list",
+              "type": "list",
+              "placeholder": "Select a Timezone...",
+              "typeOptions": {}
+            }
+          ],
+          "typeOptions": {}
+        },
+        {
+          "displayName": "Updated Min",
+          "name": "updatedMin",
+          "type": "dateTime",
+          "description": "Lower bound for an event's last modification time (as a RFC3339 timestamp) to filter by. When specified, entries deleted since this time will always be included regardless of showDeleted.",
+          "default": ""
+        }
+      ]
+    },
+    "start": {
+      "type": "dateTime",
+      "displayName": "Start",
+      "name": "start"
+    },
+    "end": {
+      "type": "dateTime",
+      "displayName": "End",
+      "name": "end"
+    },
+    "useDefaultReminders": {
+      "type": "boolean",
+      "displayName": "Use Default Reminders",
+      "name": "useDefaultReminders"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "All Day",
+          "name": "allday",
+          "type": "options",
+          "description": "Whether the event is all day or not",
+          "value": "yes",
+          "default": "no",
+          "options": [
+            {
+              "name": "Yes",
+              "value": "yes",
+              "displayName": "Yes"
+            },
+            {
+              "name": "No",
+              "value": "no",
+              "displayName": "No"
+            }
+          ]
+        },
+        {
+          "displayName": "Attendees",
+          "name": "attendees",
+          "type": "string",
+          "description": "The attendees of the event. Multiple ones can be separated by comma.",
+          "default": "",
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Color Name or ID",
+          "name": "color",
+          "type": "options",
+          "description": "The color of the event. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getColors"
+          }
+        },
+        {
+          "displayName": "Conference Data",
+          "name": "conferenceDataUi",
+          "type": "fixedCollection",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "placeholder": "Add Conference",
+          "default": {},
+          "options": [
+            {
+              "name": "conferenceDataValues",
+              "displayName": "Conference Link",
+              "values": [
+                {
+                  "displayName": "Type Name or ID",
+                  "name": "conferenceSolution",
+                  "type": "options",
+                  "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+                  "default": "",
+                  "typeOptions": {
+                    "loadOptionsMethod": "getConferenceSolutions"
+                  }
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": false
+          }
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Guests Can Invite Others",
+          "name": "guestsCanInviteOthers",
+          "type": "boolean",
+          "description": "Whether attendees other than the organizer can invite others to the event",
+          "default": true
+        },
+        {
+          "displayName": "Guests Can Modify",
+          "name": "guestsCanModify",
+          "type": "boolean",
+          "description": "Whether attendees other than the organizer can modify the event",
+          "default": false
+        },
+        {
+          "displayName": "Guests Can See Other Guests",
+          "name": "guestsCanSeeOtherGuests",
+          "type": "boolean",
+          "description": "Whether attendees other than the organizer can see who the event's attendees are",
+          "default": true
+        },
+        {
+          "displayName": "ID",
+          "name": "id",
+          "type": "string",
+          "description": "Opaque identifier of the event",
+          "default": ""
+        },
+        {
+          "displayName": "Location",
+          "name": "location",
+          "type": "string",
+          "description": "Geographic location of the event as free-form text",
+          "default": ""
+        },
+        {
+          "displayName": "Max Attendees",
+          "name": "maxAttendees",
+          "type": "number",
+          "description": "The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned.",
+          "default": 0
+        },
+        {
+          "displayName": "Repeat Frequency",
+          "name": "repeatFrecuency",
+          "type": "options",
+          "value": "Daily",
+          "default": "",
+          "options": [
+            {
+              "name": "Daily",
+              "value": "Daily",
+              "displayName": "Daily"
+            },
+            {
+              "name": "Weekly",
+              "value": "weekly",
+              "displayName": "Weekly"
+            },
+            {
+              "name": "Monthly",
+              "value": "monthly",
+              "displayName": "Monthly"
+            },
+            {
+              "name": "Yearly",
+              "value": "yearly",
+              "displayName": "Yearly"
+            }
+          ]
+        },
+        {
+          "displayName": "Repeat How Many Times?",
+          "name": "repeatHowManyTimes",
+          "type": "number",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1
+          }
+        },
+        {
+          "displayName": "Repeat Until",
+          "name": "repeatUntil",
+          "type": "dateTime",
+          "default": ""
+        },
+        {
+          "displayName": "RRULE",
+          "name": "rrule",
+          "type": "string",
+          "description": "Recurrence rule. When set, the parameters Repeat Frequency, Repeat How Many Times and Repeat Until are ignored.",
+          "default": ""
+        },
+        {
+          "displayName": "Send Updates",
+          "name": "sendUpdates",
+          "type": "options",
+          "description": "Notifications are sent to all guests",
+          "value": "all",
+          "default": "",
+          "options": [
+            {
+              "name": "All",
+              "description": "Notifications are sent to all guests",
+              "value": "all",
+              "displayName": "All"
+            },
+            {
+              "name": "External Only",
+              "description": "Notifications are sent to non-Google Calendar guests only",
+              "value": "externalOnly",
+              "displayName": "External Only"
+            },
+            {
+              "name": "None",
+              "description": "No notifications are sent. This value should only be used for migration use case.",
+              "value": "none",
+              "displayName": "None"
+            }
+          ]
+        },
+        {
+          "displayName": "Show Me As",
+          "name": "showMeAs",
+          "type": "options",
+          "description": "The event does not block time on the calendar",
+          "value": "transparent",
+          "default": "opaque",
+          "options": [
+            {
+              "name": "Available",
+              "description": "The event does not block time on the calendar",
+              "value": "transparent",
+              "displayName": "Available"
+            },
+            {
+              "name": "Busy",
+              "description": "The event does block time on the calendar",
+              "value": "opaque",
+              "displayName": "Busy"
+            }
+          ]
+        },
+        {
+          "displayName": "Summary",
+          "name": "summary",
+          "type": "string",
+          "description": "Title of the event",
+          "default": ""
+        },
+        {
+          "displayName": "Visibility",
+          "name": "visibility",
+          "type": "options",
+          "description": "The event is private. This value is provided for compatibility reasons.",
+          "value": "confidential",
+          "default": "default",
+          "options": [
+            {
+              "name": "Confidential",
+              "description": "The event is private. This value is provided for compatibility reasons.",
+              "value": "confidential",
+              "displayName": "Confidential"
+            },
+            {
+              "name": "Default",
+              "description": "Uses the default visibility for events on the calendar",
+              "value": "default",
+              "displayName": "Default"
+            },
+            {
+              "name": "Private",
+              "description": "The event is private and only event attendees may view event details",
+              "value": "private",
+              "displayName": "Private"
+            },
+            {
+              "name": "Public",
+              "description": "The event is public and event details are visible to all readers of the calendar",
+              "value": "public",
+              "displayName": "Public"
+            }
+          ]
+        }
+      ]
+    },
+    "remindersUi": {
+      "type": "fixedCollection",
+      "displayName": "Reminders",
+      "name": "remindersUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "remindersValues",
+          "displayName": "Reminder",
+          "values": [
+            {
+              "displayName": "Method",
+              "name": "method",
+              "type": "options",
+              "value": "email",
+              "default": "",
+              "options": [
+                {
+                  "name": "Email",
+                  "value": "email",
+                  "displayName": "Email"
+                },
+                {
+                  "name": "Popup",
+                  "value": "popup",
+                  "displayName": "Popup"
+                }
+              ]
+            },
+            {
+              "displayName": "Minutes Before",
+              "name": "minutes",
+              "type": "number",
+              "default": 0,
+              "typeOptions": {
+                "minValue": 0,
+                "maxValue": 40320
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "eventId": {
+      "type": "string",
+      "displayName": "Event ID",
+      "name": "eventId"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      }
+    },
+    "modifyTarget": {
+      "type": "options",
+      "displayName": "Modify",
+      "name": "modifyTarget",
+      "possibleValues": [
+        {
+          "value": "instance",
+          "name": "Recurring Event Instance",
+          "description": ""
+        },
+        {
+          "value": "event",
+          "name": "Recurring Event",
+          "description": ""
+        }
+      ]
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "All Day",
+          "name": "allday",
+          "type": "options",
+          "description": "Whether the event is all day or not",
+          "value": "yes",
+          "default": "no",
+          "options": [
+            {
+              "name": "Yes",
+              "value": "yes",
+              "displayName": "Yes"
+            },
+            {
+              "name": "No",
+              "value": "no",
+              "displayName": "No"
+            }
+          ]
+        },
+        {
+          "displayName": "Attendees",
+          "name": "attendeesUi",
+          "type": "fixedCollection",
+          "description": "The attendees of the event. Multiple ones can be separated by comma.",
+          "placeholder": "Add Attendees",
+          "value": "add",
+          "default": "add",
+          "options": [
+            {
+              "name": "values",
+              "displayName": "Values",
+              "values": [
+                {
+                  "displayName": "Mode",
+                  "name": "mode",
+                  "type": "options",
+                  "value": "add",
+                  "default": "add",
+                  "options": [
+                    {
+                      "name": "Add Attendees Below [Default]",
+                      "value": "add",
+                      "displayName": "Add Attendees Below [default]"
+                    },
+                    {
+                      "name": "Replace Attendees with Those Below",
+                      "value": "replace",
+                      "displayName": "Replace Attendees With Those Below"
+                    }
+                  ]
+                },
+                {
+                  "displayName": "Attendees",
+                  "name": "attendees",
+                  "type": "string",
+                  "description": "The attendees of the event. Multiple ones can be separated by comma.",
+                  "default": "",
+                  "typeOptions": {
+                    "multipleValues": true
+                  }
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Attendees",
+          "name": "attendees",
+          "type": "string",
+          "description": "The attendees of the event. Multiple ones can be separated by comma.",
+          "default": "",
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Color Name or ID",
+          "name": "color",
+          "type": "options",
+          "description": "The color of the event. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getColors"
+          }
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "End",
+          "name": "end",
+          "type": "dateTime",
+          "description": "End time of the event",
+          "default": ""
+        },
+        {
+          "displayName": "Guests Can Invite Others",
+          "name": "guestsCanInviteOthers",
+          "type": "boolean",
+          "description": "Whether attendees other than the organizer can invite others to the event",
+          "default": true
+        },
+        {
+          "displayName": "Guests Can Modify",
+          "name": "guestsCanModify",
+          "type": "boolean",
+          "description": "Whether attendees other than the organizer can modify the event",
+          "default": false
+        },
+        {
+          "displayName": "Guests Can See Other Guests",
+          "name": "guestsCanSeeOtherGuests",
+          "type": "boolean",
+          "description": "Whether attendees other than the organizer can see who the event's attendees are",
+          "default": true
+        },
+        {
+          "displayName": "ID",
+          "name": "id",
+          "type": "string",
+          "description": "Opaque identifier of the event",
+          "default": ""
+        },
+        {
+          "displayName": "Location",
+          "name": "location",
+          "type": "string",
+          "description": "Geographic location of the event as free-form text",
+          "default": ""
+        },
+        {
+          "displayName": "Max Attendees",
+          "name": "maxAttendees",
+          "type": "number",
+          "description": "The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned.",
+          "default": 0
+        },
+        {
+          "displayName": "Repeat Frequency",
+          "name": "repeatFrecuency",
+          "type": "options",
+          "value": "Daily",
+          "default": "",
+          "options": [
+            {
+              "name": "Daily",
+              "value": "Daily",
+              "displayName": "Daily"
+            },
+            {
+              "name": "Weekly",
+              "value": "weekly",
+              "displayName": "Weekly"
+            },
+            {
+              "name": "Monthly",
+              "value": "monthly",
+              "displayName": "Monthly"
+            },
+            {
+              "name": "Yearly",
+              "value": "yearly",
+              "displayName": "Yearly"
+            }
+          ]
+        },
+        {
+          "displayName": "Repeat How Many Times?",
+          "name": "repeatHowManyTimes",
+          "type": "number",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1
+          }
+        },
+        {
+          "displayName": "Repeat Until",
+          "name": "repeatUntil",
+          "type": "dateTime",
+          "default": ""
+        },
+        {
+          "displayName": "RRULE",
+          "name": "rrule",
+          "type": "string",
+          "description": "Recurrence rule. When set, the parameters Repeat Frequency, Repeat How Many Times and Repeat Until are ignored.",
+          "default": ""
+        },
+        {
+          "displayName": "Send Updates",
+          "name": "sendUpdates",
+          "type": "options",
+          "description": "Notifications are sent to all guests",
+          "value": "all",
+          "default": "",
+          "options": [
+            {
+              "name": "All",
+              "description": "Notifications are sent to all guests",
+              "value": "all",
+              "displayName": "All"
+            },
+            {
+              "name": "External Only",
+              "description": "Notifications are sent to non-Google Calendar guests only",
+              "value": "externalOnly",
+              "displayName": "External Only"
+            },
+            {
+              "name": "None",
+              "description": "No notifications are sent. This value should only be used for migration use case.",
+              "value": "none",
+              "displayName": "None"
+            }
+          ]
+        },
+        {
+          "displayName": "Show Me As",
+          "name": "showMeAs",
+          "type": "options",
+          "description": "The event does not block time on the calendar",
+          "value": "transparent",
+          "default": "opaque",
+          "options": [
+            {
+              "name": "Available",
+              "description": "The event does not block time on the calendar",
+              "value": "transparent",
+              "displayName": "Available"
+            },
+            {
+              "name": "Busy",
+              "description": "The event does block time on the calendar",
+              "value": "opaque",
+              "displayName": "Busy"
+            }
+          ]
+        },
+        {
+          "displayName": "Start",
+          "name": "start",
+          "type": "dateTime",
+          "description": "Start time of the event",
+          "default": ""
+        },
+        {
+          "displayName": "Summary",
+          "name": "summary",
+          "type": "string",
+          "description": "Title of the event",
+          "default": ""
+        },
+        {
+          "displayName": "Visibility",
+          "name": "visibility",
+          "type": "options",
+          "description": "The event is private. This value is provided for compatibility reasons.",
+          "value": "confidential",
+          "default": "default",
+          "options": [
+            {
+              "name": "Confidential",
+              "description": "The event is private. This value is provided for compatibility reasons.",
+              "value": "confidential",
+              "displayName": "Confidential"
+            },
+            {
+              "name": "Default",
+              "description": "Uses the default visibility for events on the calendar",
+              "value": "default",
+              "displayName": "Default"
+            },
+            {
+              "name": "Public",
+              "description": "The event is public and event details are visible to all readers of the calendar",
+              "value": "public",
+              "displayName": "Public"
+            },
+            {
+              "name": "Private",
+              "description": "The event is private and only event attendees may view event details",
+              "value": "private",
+              "displayName": "Private"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [
+      {
+        "name": "useN8nTimeZone",
+        "text": "This node will use the time zone set in n8n\u2019s settings, but you can override this in the workflow settings",
+        "conditions": null
+      }
+    ],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "calendar",
+        "text": "Select a Calendar..."
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "calendar",
+        "text": "Select a Calendar..."
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "remindersUi",
+        "text": "Add Reminder"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "remindersUi",
+        "text": "Add Reminder"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

@@ -1,0 +1,1665 @@
+{
+  "node_info": {
+    "icon": "file:oneDrive.svg",
+    "defaults": {
+      "name": "Microsoft OneDrive"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "microsoftOneDriveOAuth2Api",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Microsoft OneDrive",
+    "name": "microsoftOneDrive",
+    "description": "Consume Microsoft OneDrive API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.microsoftOneDrive",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Data & Storage"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/microsoft/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.microsoftonedrive/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "Hey founders! Your business doesn't need you to operate",
+          "icon": " \ud83d\udda5\ufe0f",
+          "url": "https://n8n.io/blog/your-business-doesnt-need-you-to-operate/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "file",
+      "default": "file",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "File",
+          "value": "file",
+          "displayName": "File"
+        },
+        {
+          "name": "Folder",
+          "value": "folder",
+          "displayName": "Folder"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Copy a file",
+      "action": "Copy a file",
+      "value": "copy",
+      "default": "upload",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Copy",
+          "description": "Copy a file",
+          "action": "Copy a file",
+          "value": "copy",
+          "displayName": "Copy"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a file",
+          "action": "Delete a file",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Download",
+          "description": "Download a file",
+          "action": "Download a file",
+          "value": "download",
+          "displayName": "Download"
+        },
+        {
+          "name": "Get",
+          "description": "Get a file",
+          "action": "Get a file",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Rename",
+          "description": "Rename a file",
+          "action": "Rename a file",
+          "value": "rename",
+          "displayName": "Rename"
+        },
+        {
+          "name": "Search",
+          "description": "Search a file",
+          "action": "Search a file",
+          "value": "search",
+          "displayName": "Search"
+        },
+        {
+          "name": "Share",
+          "description": "Share a file",
+          "action": "Share a file",
+          "value": "share",
+          "displayName": "Share"
+        },
+        {
+          "name": "Upload",
+          "description": "Upload a file up to 4MB in size",
+          "action": "Upload a file",
+          "value": "upload",
+          "displayName": "Upload"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_source": "File_fileOperations"
+    },
+    {
+      "displayName": "File ID",
+      "name": "fileId",
+      "type": "string",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "copy"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "copy",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The new name for the copy. If this isn't provided, the same name will be used as the original.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "The new name for the copy. If this isn't provided, the same name will be used as the original.",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "copy"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "copy",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "Parent Reference",
+      "name": "parentReference",
+      "type": "collection",
+      "description": "Reference to the parent item the copy will be created in <a href=\"https://docs.microsoft.com/en-us/onedrive/developer/rest-api/resources/itemreference?view=odsp-graph-online\"> Details </a>",
+      "placeholder": "Add Parent Reference",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Drive ID",
+          "name": "driveId",
+          "type": "string",
+          "description": "Identifier of the drive instance that contains the item",
+          "default": ""
+        },
+        {
+          "displayName": "Drive Type",
+          "name": "driveType",
+          "type": "string",
+          "description": "Identifies the type of drive",
+          "default": ""
+        },
+        {
+          "displayName": "ID",
+          "name": "id",
+          "type": "string",
+          "description": "Identifier of the item in the drive",
+          "default": ""
+        },
+        {
+          "displayName": "List ID",
+          "name": "listId",
+          "type": "string",
+          "description": "Identifier of the list",
+          "default": ""
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "The name of the item being referenced",
+          "default": ""
+        },
+        {
+          "displayName": "Path",
+          "name": "path",
+          "type": "string",
+          "description": "Path that can be used to navigate to the item",
+          "default": ""
+        },
+        {
+          "displayName": "Share ID",
+          "name": "shareId",
+          "type": "string",
+          "description": "Identifier for a shared resource that can be accessed via the Shares API",
+          "default": ""
+        },
+        {
+          "displayName": "Site ID",
+          "name": "siteId",
+          "type": "string",
+          "description": "Identifier of the site",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "copy"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "copy",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "File ID",
+      "name": "fileId",
+      "type": "string",
+      "description": "Field ID",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "File ID",
+      "name": "fileId",
+      "type": "string",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "download"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "download",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "Put Output File in Field",
+      "name": "binaryPropertyName",
+      "type": "string",
+      "hint": "The name of the output binary field to put the file in",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "download"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "download",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "File ID",
+      "name": "fileId",
+      "type": "string",
+      "description": "Field ID",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "Item ID",
+      "name": "itemId",
+      "type": "string",
+      "description": "ID of the file",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "rename"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "rename",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "New Name",
+      "name": "newName",
+      "type": "string",
+      "description": "New name for file",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "rename"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "rename",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "Query",
+      "name": "query",
+      "type": "string",
+      "description": "The query text used to search for items. Values may be matched across several fields including filename, metadata, and file content.",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "search"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "search",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "File ID",
+      "name": "fileId",
+      "type": "string",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "share"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "share",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "Type",
+      "name": "type",
+      "type": "options",
+      "description": "The type of sharing link to create",
+      "value": "view",
+      "default": "",
+      "options": [
+        {
+          "name": "View",
+          "value": "view",
+          "displayName": "View"
+        },
+        {
+          "name": "Edit",
+          "value": "edit",
+          "displayName": "Edit"
+        },
+        {
+          "name": "Embed",
+          "value": "embed",
+          "displayName": "Embed"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "share"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "share",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "Scope",
+      "name": "scope",
+      "type": "options",
+      "description": "The type of sharing link to create",
+      "value": "anonymous",
+      "default": "",
+      "options": [
+        {
+          "name": "Anonymous",
+          "value": "anonymous",
+          "displayName": "Anonymous"
+        },
+        {
+          "name": "Organization",
+          "value": "organization",
+          "displayName": "Organization"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "share"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "share",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "File Name",
+      "name": "fileName",
+      "type": "string",
+      "description": "The name the file should be saved as",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "upload"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "upload",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "Parent ID",
+      "name": "parentId",
+      "type": "string",
+      "description": "ID of the parent folder that will contain the file",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "upload"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "upload",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "Binary File",
+      "name": "binaryData",
+      "type": "boolean",
+      "description": "Whether the data to upload should be taken from binary field",
+      "default": false,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "upload"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "upload",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "File Content",
+      "name": "fileContent",
+      "type": "string",
+      "description": "The text content of the file",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "binaryData": [
+            false
+          ],
+          "operation": [
+            "upload"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "upload",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "Input Binary Field",
+      "name": "binaryPropertyName",
+      "type": "string",
+      "hint": "The name of the input binary field containing the file to be written",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "binaryData": [
+            true
+          ],
+          "operation": [
+            "upload"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "upload",
+      "_source": "File_fileFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a folder",
+      "action": "Create a folder",
+      "value": "create",
+      "default": "getChildren",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a folder",
+          "action": "Create a folder",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a folder",
+          "action": "Delete a folder",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get Children",
+          "description": "Get items inside a folder",
+          "action": "Get items in a folder",
+          "value": "getChildren",
+          "displayName": "Get Children"
+        },
+        {
+          "name": "Rename",
+          "description": "Rename a folder",
+          "action": "Rename a folder",
+          "value": "rename",
+          "displayName": "Rename"
+        },
+        {
+          "name": "Search",
+          "description": "Search a folder",
+          "action": "Search a folder",
+          "value": "search",
+          "displayName": "Search"
+        },
+        {
+          "name": "Share",
+          "description": "Share a folder",
+          "action": "Share a folder",
+          "value": "share",
+          "displayName": "Share"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "folder"
+          ]
+        }
+      },
+      "_source": "Folder_folderOperations"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "The name or path of the folder",
+      "placeholder": "/Pictures/2021",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Folder_folderFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "ID of the folder you want to crate the new folder in",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Parent Folder ID",
+          "name": "parentFolderId",
+          "type": "string",
+          "description": "ID of the folder you want to crate the new folder in",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Folder_folderFields"
+    },
+    {
+      "displayName": "Folder ID",
+      "name": "folderId",
+      "type": "string",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete",
+            "getChildren"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      },
+      "_operation": "delete,getChildren",
+      "_source": "Folder_folderFields"
+    },
+    {
+      "displayName": "Item ID",
+      "name": "itemId",
+      "type": "string",
+      "description": "ID of the folder",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "rename"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      },
+      "_operation": "rename",
+      "_source": "Folder_folderFields"
+    },
+    {
+      "displayName": "New Name",
+      "name": "newName",
+      "type": "string",
+      "description": "New name for folder",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "rename"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      },
+      "_operation": "rename",
+      "_source": "Folder_folderFields"
+    },
+    {
+      "displayName": "Query",
+      "name": "query",
+      "type": "string",
+      "description": "The query text used to search for items. Values may be matched across several fields including filename, metadata, and file content.",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "search"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      },
+      "_operation": "search",
+      "_source": "Folder_folderFields"
+    },
+    {
+      "displayName": "Folder ID",
+      "name": "folderId",
+      "type": "string",
+      "description": "File ID",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "share"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      },
+      "_operation": "share",
+      "_source": "Folder_folderFields"
+    },
+    {
+      "displayName": "Type",
+      "name": "type",
+      "type": "options",
+      "description": "The type of sharing link to create",
+      "value": "view",
+      "default": "",
+      "options": [
+        {
+          "name": "View",
+          "value": "view",
+          "displayName": "View"
+        },
+        {
+          "name": "Edit",
+          "value": "edit",
+          "displayName": "Edit"
+        },
+        {
+          "name": "Embed",
+          "value": "embed",
+          "displayName": "Embed"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "share"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      },
+      "_operation": "share",
+      "_source": "Folder_folderFields"
+    },
+    {
+      "displayName": "Scope",
+      "name": "scope",
+      "type": "options",
+      "description": "The type of sharing link to create",
+      "value": "anonymous",
+      "default": "",
+      "options": [
+        {
+          "name": "Anonymous",
+          "value": "anonymous",
+          "displayName": "Anonymous"
+        },
+        {
+          "name": "Organization",
+          "value": "organization",
+          "displayName": "Organization"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "share"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      },
+      "_operation": "share",
+      "_source": "Folder_folderFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Copy",
+      "description": "Copy a file",
+      "action": "Copy a file",
+      "value": "copy",
+      "displayName": "Copy"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a file",
+      "action": "Delete a file",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Download",
+      "description": "Download a file",
+      "action": "Download a file",
+      "value": "download",
+      "displayName": "Download"
+    },
+    {
+      "name": "Get",
+      "description": "Get a file",
+      "action": "Get a file",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Rename",
+      "description": "Rename a file",
+      "action": "Rename a file",
+      "value": "rename",
+      "displayName": "Rename"
+    },
+    {
+      "name": "Search",
+      "description": "Search a file",
+      "action": "Search a file",
+      "value": "search",
+      "displayName": "Search"
+    },
+    {
+      "name": "Share",
+      "description": "Share a file",
+      "action": "Share a file",
+      "value": "share",
+      "displayName": "Share"
+    },
+    {
+      "name": "Upload",
+      "description": "Upload a file up to 4MB in size",
+      "action": "Upload a file",
+      "value": "upload",
+      "displayName": "Upload"
+    },
+    {
+      "name": "Create",
+      "description": "Create a folder",
+      "action": "Create a folder",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Get Children",
+      "description": "Get items inside a folder",
+      "action": "Get items in a folder",
+      "value": "getChildren",
+      "displayName": "Get Children"
+    }
+  ],
+  "operations_by_resource": {
+    "file": [
+      {
+        "name": "Copy",
+        "description": "Copy a file",
+        "action": "Copy a file",
+        "value": "copy",
+        "displayName": "Copy"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a file",
+        "action": "Delete a file",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Download",
+        "description": "Download a file",
+        "action": "Download a file",
+        "value": "download",
+        "displayName": "Download"
+      },
+      {
+        "name": "Get",
+        "description": "Get a file",
+        "action": "Get a file",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Rename",
+        "description": "Rename a file",
+        "action": "Rename a file",
+        "value": "rename",
+        "displayName": "Rename"
+      },
+      {
+        "name": "Search",
+        "description": "Search a file",
+        "action": "Search a file",
+        "value": "search",
+        "displayName": "Search"
+      },
+      {
+        "name": "Share",
+        "description": "Share a file",
+        "action": "Share a file",
+        "value": "share",
+        "displayName": "Share"
+      },
+      {
+        "name": "Upload",
+        "description": "Upload a file up to 4MB in size",
+        "action": "Upload a file",
+        "value": "upload",
+        "displayName": "Upload"
+      }
+    ],
+    "folder": [
+      {
+        "name": "Create",
+        "description": "Create a folder",
+        "action": "Create a folder",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a folder",
+        "action": "Delete a folder",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get Children",
+        "description": "Get items inside a folder",
+        "action": "Get items in a folder",
+        "value": "getChildren",
+        "displayName": "Get Children"
+      },
+      {
+        "name": "Rename",
+        "description": "Rename a folder",
+        "action": "Rename a folder",
+        "value": "rename",
+        "displayName": "Rename"
+      },
+      {
+        "name": "Search",
+        "description": "Search a folder",
+        "action": "Search a folder",
+        "value": "search",
+        "displayName": "Search"
+      },
+      {
+        "name": "Share",
+        "description": "Share a folder",
+        "action": "Share a folder",
+        "value": "share",
+        "displayName": "Share"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "microsoftOneDriveOAuth2Api",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "folder"
+          ]
+        }
+      }
+    },
+    "fileId": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "share"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "copy"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      }
+    },
+    "parentReference": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "copy"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      }
+    },
+    "binaryPropertyName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "binaryData": [
+            true
+          ],
+          "operation": [
+            "upload"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      }
+    },
+    "itemId": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "rename"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      }
+    },
+    "newName": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "rename"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      }
+    },
+    "query": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "search"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      }
+    },
+    "type": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "share"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      }
+    },
+    "scope": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "share"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      }
+    },
+    "fileName": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "upload"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      }
+    },
+    "parentId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "upload"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      }
+    },
+    "binaryData": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "upload"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      }
+    },
+    "fileContent": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "binaryData": [
+            false
+          ],
+          "operation": [
+            "upload"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      }
+    },
+    "name": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      }
+    },
+    "folderId": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "share"
+          ],
+          "resource": [
+            "folder"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "file",
+          "name": "File",
+          "description": ""
+        },
+        {
+          "value": "folder",
+          "name": "Folder",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a folder"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a folder"
+        },
+        {
+          "value": "getChildren",
+          "name": "Get Children",
+          "description": "Get items inside a folder"
+        },
+        {
+          "value": "rename",
+          "name": "Rename",
+          "description": "Rename a folder"
+        },
+        {
+          "value": "search",
+          "name": "Search",
+          "description": "Search a folder"
+        },
+        {
+          "value": "share",
+          "name": "Share",
+          "description": "Share a folder"
+        }
+      ]
+    },
+    "fileId": {
+      "type": "string",
+      "displayName": "File ID",
+      "name": "fileId"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "The new name for the copy. If this isn't provided, the same name will be used as the original.",
+          "default": ""
+        }
+      ]
+    },
+    "parentReference": {
+      "type": "collection",
+      "displayName": "Parent Reference",
+      "name": "parentReference",
+      "subProperties": [
+        {
+          "displayName": "Drive ID",
+          "name": "driveId",
+          "type": "string",
+          "description": "Identifier of the drive instance that contains the item",
+          "default": ""
+        },
+        {
+          "displayName": "Drive Type",
+          "name": "driveType",
+          "type": "string",
+          "description": "Identifies the type of drive",
+          "default": ""
+        },
+        {
+          "displayName": "ID",
+          "name": "id",
+          "type": "string",
+          "description": "Identifier of the item in the drive",
+          "default": ""
+        },
+        {
+          "displayName": "List ID",
+          "name": "listId",
+          "type": "string",
+          "description": "Identifier of the list",
+          "default": ""
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "The name of the item being referenced",
+          "default": ""
+        },
+        {
+          "displayName": "Path",
+          "name": "path",
+          "type": "string",
+          "description": "Path that can be used to navigate to the item",
+          "default": ""
+        },
+        {
+          "displayName": "Share ID",
+          "name": "shareId",
+          "type": "string",
+          "description": "Identifier for a shared resource that can be accessed via the Shares API",
+          "default": ""
+        },
+        {
+          "displayName": "Site ID",
+          "name": "siteId",
+          "type": "string",
+          "description": "Identifier of the site",
+          "default": ""
+        }
+      ]
+    },
+    "binaryPropertyName": {
+      "type": "string",
+      "displayName": "Input Binary Field",
+      "name": "binaryPropertyName"
+    },
+    "itemId": {
+      "type": "string",
+      "displayName": "Item ID",
+      "name": "itemId"
+    },
+    "newName": {
+      "type": "string",
+      "displayName": "New Name",
+      "name": "newName"
+    },
+    "query": {
+      "type": "string",
+      "displayName": "Query",
+      "name": "query"
+    },
+    "type": {
+      "type": "options",
+      "displayName": "Type",
+      "name": "type",
+      "possibleValues": [
+        {
+          "value": "view",
+          "name": "View",
+          "description": ""
+        },
+        {
+          "value": "edit",
+          "name": "Edit",
+          "description": ""
+        },
+        {
+          "value": "embed",
+          "name": "Embed",
+          "description": ""
+        }
+      ]
+    },
+    "scope": {
+      "type": "options",
+      "displayName": "Scope",
+      "name": "scope",
+      "possibleValues": [
+        {
+          "value": "anonymous",
+          "name": "Anonymous",
+          "description": ""
+        },
+        {
+          "value": "organization",
+          "name": "Organization",
+          "description": ""
+        }
+      ]
+    },
+    "fileName": {
+      "type": "string",
+      "displayName": "File Name",
+      "name": "fileName"
+    },
+    "parentId": {
+      "type": "string",
+      "displayName": "Parent ID",
+      "name": "parentId"
+    },
+    "binaryData": {
+      "type": "boolean",
+      "displayName": "Binary File",
+      "name": "binaryData"
+    },
+    "fileContent": {
+      "type": "string",
+      "displayName": "File Content",
+      "name": "fileContent"
+    },
+    "name": {
+      "type": "string",
+      "displayName": "Name",
+      "name": "name"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Parent Folder ID",
+          "name": "parentFolderId",
+          "type": "string",
+          "description": "ID of the folder you want to crate the new folder in",
+          "default": ""
+        }
+      ]
+    },
+    "folderId": {
+      "type": "string",
+      "displayName": "Folder ID",
+      "name": "folderId"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "parentReference",
+        "text": "Add Parent Reference"
+      },
+      {
+        "field": "name",
+        "text": "/Pictures/2021"
+      },
+      {
+        "field": "options",
+        "text": "Add Field"
+      }
+    ],
+    "hints": [
+      {
+        "field": "binaryPropertyName",
+        "text": "The name of the output binary field to put the file in"
+      },
+      {
+        "field": "binaryPropertyName",
+        "text": "The name of the input binary field containing the file to be written"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

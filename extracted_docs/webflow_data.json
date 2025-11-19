@@ -1,0 +1,475 @@
+{
+  "node_info": {
+    "icon": "file:webflow.svg",
+    "defaults": {},
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Webflow Trigger",
+    "description": "Handle Webflow events via webhooks",
+    "name": "webflow",
+    "subtitle": "",
+    "usableAsTool": true,
+    "node_type": "trigger"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.webflow",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Marketing"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/webflow/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.webflow/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "item",
+      "default": "item",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Item",
+          "value": "item",
+          "displayName": "Item"
+        }
+      ],
+      "_source": "version_versionDescription"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create an item",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create an item",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete an item",
+          "value": "deleteItem",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get an item",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many items",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update an item",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ]
+        }
+      },
+      "_source": "version_versionDescription"
+    },
+    {
+      "displayName": "Site Name or ID",
+      "name": "siteId",
+      "type": "options",
+      "description": "ID of the site containing the collection whose items to add to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getSites"
+      },
+      "_source": "action_Item_update.operation"
+    },
+    {
+      "displayName": "Collection Name or ID",
+      "name": "collectionId",
+      "type": "options",
+      "description": "ID of the collection to add an item to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getCollections"
+      },
+      "_source": "action_Item_update.operation"
+    },
+    {
+      "displayName": "Item ID",
+      "name": "itemId",
+      "type": "string",
+      "description": "ID of the item to update",
+      "default": "",
+      "required": true,
+      "_source": "action_Item_update.operation"
+    },
+    {
+      "displayName": "Live",
+      "name": "live",
+      "type": "boolean",
+      "description": "Whether the item should be published on the live site",
+      "default": false,
+      "required": true,
+      "_source": "action_Item_update.operation"
+    },
+    {
+      "displayName": "Fields",
+      "name": "fieldsUi",
+      "type": "fixedCollection",
+      "description": "Field to set for the item to create. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "name": "fieldValues",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Field Name or ID",
+              "name": "fieldId",
+              "type": "options",
+              "description": "Field to set for the item to create. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": "",
+              "typeOptions": {
+                "loadOptionsMethod": "getFields"
+              }
+            },
+            {
+              "displayName": "Field Value",
+              "name": "fieldValue",
+              "type": "string",
+              "description": "Value to set for the item to create",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "_source": "action_Item_update.operation"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "_source": "action_Item_getAll.operation"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_source": "action_Item_getAll.operation"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "action": "Create an item",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "action": "Delete an item",
+      "value": "deleteItem",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "action": "Get an item",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "action": "Get many items",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "action": "Update an item",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "item": [
+      {
+        "name": "Create",
+        "action": "Create an item",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete an item",
+        "value": "deleteItem",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get an item",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many items",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update an item",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ]
+        }
+      }
+    },
+    "siteId": {
+      "required": true
+    },
+    "collectionId": {
+      "required": true
+    },
+    "itemId": {
+      "required": true
+    },
+    "live": {
+      "required": true
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "item",
+          "name": "Item",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": ""
+        },
+        {
+          "value": "deleteItem",
+          "name": "Delete",
+          "description": ""
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": ""
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": ""
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": ""
+        }
+      ]
+    },
+    "siteId": {
+      "type": "options",
+      "displayName": "Site Name or ID",
+      "name": "siteId",
+      "typeOptions": {
+        "loadOptionsMethod": "getSites"
+      },
+      "possibleValues": []
+    },
+    "collectionId": {
+      "type": "options",
+      "displayName": "Collection Name or ID",
+      "name": "collectionId",
+      "typeOptions": {
+        "loadOptionsMethod": "getCollections"
+      },
+      "possibleValues": []
+    },
+    "itemId": {
+      "type": "string",
+      "displayName": "Item ID",
+      "name": "itemId"
+    },
+    "live": {
+      "type": "boolean",
+      "displayName": "Live",
+      "name": "live"
+    },
+    "fieldsUi": {
+      "type": "fixedCollection",
+      "displayName": "Fields",
+      "name": "fieldsUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "fieldValues",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Field Name or ID",
+              "name": "fieldId",
+              "type": "options",
+              "description": "Field to set for the item to create. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": "",
+              "typeOptions": {
+                "loadOptionsMethod": "getFields"
+              }
+            },
+            {
+              "displayName": "Field Value",
+              "name": "fieldValue",
+              "type": "string",
+              "description": "Value to set for the item to create",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      }
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "fieldsUi",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

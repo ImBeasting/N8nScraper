@@ -1,0 +1,42 @@
+{
+  "issue_id": "_gemini_cli_issue_011",
+  "title": "GmailTrigger node: Incomplete property extraction for 'filters' and 'options' collections",
+  "severity": "high",
+  "status": "new",
+  "priority": 2,
+  "metadata": {
+    "created_at": "2025-11-13T18:45:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "GmailTrigger, AwsSqs, ShopifyTrigger (potentially other nodes with nested collection properties)",
+    "validation_session": "comprehensive_audit_2025-11-13"
+  },
+  "description": {
+    "problem": "Multiple nodes (e.g., GmailTrigger, AwsSqs, ShopifyTrigger) are experiencing incomplete property extraction for 'collection' and 'options' type properties. For GmailTrigger, 'gmailtrigger_data.json' is missing a significant number of properties (5 extracted vs 13 expected). For AwsSqs, 'awssqs_data.json' is missing properties (7 extracted vs 20 expected). For ShopifyTrigger, 'shopifytrigger_data.json' is missing properties (2 extracted vs 62 expected). This is due to the extractor failing to fully parse the nested properties within 'collection', 'fixedCollection', and 'options' type properties.",
+    "impact": "HIGH - For GmailTrigger, 8/13 properties missing (61% loss). For AwsSqs, 13/20 properties missing (65% loss). For ShopifyTrigger, 60/62 properties missing (97% loss). This leads to incomplete documentation for critical filtering and configuration options within these nodes, severely limiting their usability and making it difficult for users to configure them correctly.",
+    "root_cause": "The extractor's logic for parsing properties within 'collection', 'fixedCollection', and 'options' type properties is insufficient. It appears to extract the parent property itself but fails to recursively extract all its nested 'options' or 'values' (which are the actual properties within the collection/options).",
+    "evidence": [
+      "Source file: n8n/packages/nodes-base/nodes/Google/Gmail/GmailTrigger.node.ts",
+      "Source snippet (filters collection): { displayName: 'Filters', name: 'filters', type: 'collection', ... options: [ { displayName: 'Include Spam and Trash', ... }, { displayName: 'Include Drafts', ... }, ... ] }",
+      "Source snippet (options collection): { displayName: 'Options', name: 'options', type: 'collection', ... options: [ { displayName: 'Attachment Prefix', ... }, { displayName: 'Download Attachments', ... } ] }",
+      "Calculated expected properties for GmailTrigger: 13 (1 authentication + 1 event + 1 simple + 1 filters (collection) + 6 nested filters properties + 1 options (collection) + 2 nested options properties)",
+      "Extracted properties count for GmailTrigger: 5",
+      "Source file: n8n/packages/nodes-base/nodes/Aws/SQS/AwsSqs.node.ts",
+      "Source snippet (options collection): { displayName: 'Options', name: 'options', type: 'collection', ... options: [ { displayName: 'Delay Seconds', ... }, { displayName: 'Message Attributes', ... }, { displayName: 'Message Deduplication ID', ... } ] }",
+      "Source snippet (messageAttributes fixedCollection): { displayName: 'Message Attributes', name: 'messageAttributes', type: 'fixedCollection', ... options: [ { name: 'binary', ... }, { name: 'number', ... }, { name: 'string', ... } ] }",
+      "Calculated expected properties for AwsSqs: 20 (1 operation + 1 queue + 1 queueType + 1 sendInputData + 1 message + 1 messageGroupId + 1 options (collection) + 3 nested options properties + 1 messageAttributes (fixedCollection) + 3 nested messageAttributes properties + 6 deeply nested properties within messageAttributes)",
+      "Extracted properties count for AwsSqs: 7",
+      "Source file: n8n/packages/nodes-base/nodes/Shopify/ShopifyTrigger.node.ts",
+      "Source snippet (topic options): { displayName: 'Trigger On', name: 'topic', type: 'options', default: '', options: [ { name: 'App Uninstalled', value: 'app/uninstalled' }, ... ] }",
+      "Calculated expected properties for ShopifyTrigger: 62 (1 authentication + 1 topic (options) + 60 nested options properties)",
+      "Extracted properties count for ShopifyTrigger: 2",
+      "Command used to verify: jq '.properties | length' extracted_docs/gmailtrigger_data.json, jq '.properties | length' extracted_docs/awssqs_data.json, jq '.properties | length' extracted_docs/shopifytrigger_data.json and manual calculation from source files."
+    ],
+    "fix_approach": "1. Enhance the extractor to recursively parse and extract all nested properties within 'collection', 'fixedCollection', and 'options' type properties. \n2. Ensure that the 'options' array of a collection/options property and the 'values' array of a fixedCollection property are correctly interpreted as lists of sub-properties. \n3. Test with: GmailTrigger, AwsSqs, ShopifyTrigger nodes. \n4. Expected result: 'gmailtrigger_data.json' should contain all 13 properties, 'awssqs_data.json' should contain all 20 properties, and 'shopifytrigger_data.json' should contain all 62 properties, including the nested properties within collections/options. \n5. Validation command: jq '.properties | length' extracted_docs/gmailtrigger_data.json should return 13, jq '.properties | length' extracted_docs/awssqs_data.json should return 20, and jq '.properties | length' extracted_docs/shopifytrigger_data.json should return 62."
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

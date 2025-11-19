@@ -1,0 +1,438 @@
+{
+  "node_info": {
+    "icon": "fa:map-signs",
+    "defaults": {
+      "name": "Switch"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "dynamic"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [],
+    "loadOptionsMethods": [
+      "getFallbackOutputOptions",
+      "name",
+      "value",
+      "description"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Switch",
+    "description": "Route items depending on defined expression or rules",
+    "name": "Switch",
+    "subtitle": "=mode: {{((template: capitalize))($parameter[\"mode\"])}}",
+    "outputs_note": "Dynamic outputs based on node configuration",
+    "version": [
+      "3",
+      "3.1",
+      "3.2",
+      "3.3"
+    ],
+    "node_type": "regular"
+  },
+  "metadata": {},
+  "properties": [
+    {
+      "displayName": "Mode",
+      "name": "mode",
+      "type": "options",
+      "description": "Build a matching rule for each output",
+      "value": "rules",
+      "default": "rules",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Rules",
+          "description": "Build a matching rule for each output",
+          "value": "rules",
+          "displayName": "Rules"
+        },
+        {
+          "name": "Expression",
+          "description": "Write an expression to return the output index",
+          "value": "expression",
+          "displayName": "Expression"
+        }
+      ]
+    },
+    {
+      "displayName": "Number of Outputs",
+      "name": "numberOutputs",
+      "type": "number",
+      "description": "How many outputs to create",
+      "default": 4,
+      "noDataExpression": true,
+      "displayOptions": {
+        "show": {
+          "mode": [
+            "expression"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Output Index",
+      "name": "output",
+      "type": "number",
+      "description": "The output index to send the input item to. Use an expression to calculate which input item should be routed to which output. The expression must return a number.",
+      "hint": "The index to route the item to, starts at 0",
+      "validateType": "number",
+      "default": "={{}}",
+      "displayOptions": {
+        "show": {
+          "mode": [
+            "expression"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Routing Rules",
+      "name": "rules",
+      "type": "fixedCollection",
+      "description": "The label of output to which to send data to if rule matches",
+      "placeholder": "Add Routing Rule",
+      "default": {},
+      "options": [],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "mode": [
+            "rules"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "If no rule matches the item will be sent to this output, by default they will be ignored",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Fallback Output",
+          "name": "fallbackOutput",
+          "type": "options",
+          "description": "If no rule matches the item will be sent to this output, by default they will be ignored",
+          "default": "none",
+          "typeOptions": {
+            "loadOptionsMethod": "getFallbackOutputOptions"
+          }
+        },
+        {
+          "displayName": "Ignore Case",
+          "name": "ignoreCase",
+          "type": "boolean",
+          "description": "Whether to ignore letter case when evaluating conditions",
+          "default": true
+        },
+        {
+          "displayName": "Rename Fallback Output",
+          "name": "renameFallbackOutput",
+          "type": "string",
+          "placeholder": "e.g. Fallback",
+          "default": "",
+          "displayOptions": {
+            "show": {
+              "fallbackOutput": [
+                "extra"
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Send data to all matching outputs",
+          "name": "allMatchingOutputs",
+          "type": "boolean",
+          "description": "Whether to send data to all outputs meeting conditions (and not just the first one)",
+          "default": false
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getFallbackOutputOptions"
+      },
+      "displayOptions": {
+        "show": {
+          "mode": [
+            "rules"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Convert types where required",
+      "name": "looseTypeValidation",
+      "type": "boolean",
+      "description": "If the type of an expression doesn't match the type of the comparison, n8n will try to cast the expression to the required type. E.g. for booleans <code>\"false\"</code> or <code>0</code> will be cast to <code>false</code>",
+      "default": true
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [],
+  "workflow_examples": [],
+  "expressions": [
+    "={{!$parameter.options.ignoreCase}}",
+    "={{}}",
+    "={{ $nodeVersion >= 3.2 ? 2 : 1 }}"
+  ],
+  "validation_rules": {
+    "numberOutputs": {
+      "displayOptions": {
+        "show": {
+          "mode": [
+            "expression"
+          ]
+        }
+      }
+    },
+    "output": {
+      "displayOptions": {
+        "show": {
+          "mode": [
+            "expression"
+          ]
+        }
+      }
+    },
+    "rules": {
+      "displayOptions": {
+        "show": {
+          "mode": [
+            "rules"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "mode": [
+            "rules"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "mode": {
+      "type": "options",
+      "displayName": "Mode",
+      "name": "mode",
+      "possibleValues": [
+        {
+          "value": "rules",
+          "name": "Rules",
+          "description": "Build a matching rule for each output"
+        },
+        {
+          "value": "expression",
+          "name": "Expression",
+          "description": "Write an expression to return the output index"
+        }
+      ]
+    },
+    "numberOutputs": {
+      "type": "number",
+      "displayName": "Number of Outputs",
+      "name": "numberOutputs"
+    },
+    "output": {
+      "type": "number",
+      "displayName": "Output Index",
+      "name": "output"
+    },
+    "rules": {
+      "type": "fixedCollection",
+      "displayName": "Routing Rules",
+      "name": "rules",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": []
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "loadOptionsMethod": "getFallbackOutputOptions"
+      },
+      "subProperties": [
+        {
+          "displayName": "Fallback Output",
+          "name": "fallbackOutput",
+          "type": "options",
+          "description": "If no rule matches the item will be sent to this output, by default they will be ignored",
+          "default": "none",
+          "typeOptions": {
+            "loadOptionsMethod": "getFallbackOutputOptions"
+          }
+        },
+        {
+          "displayName": "Ignore Case",
+          "name": "ignoreCase",
+          "type": "boolean",
+          "description": "Whether to ignore letter case when evaluating conditions",
+          "default": true
+        },
+        {
+          "displayName": "Rename Fallback Output",
+          "name": "renameFallbackOutput",
+          "type": "string",
+          "placeholder": "e.g. Fallback",
+          "default": "",
+          "displayOptions": {
+            "show": {
+              "fallbackOutput": [
+                "extra"
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Send data to all matching outputs",
+          "name": "allMatchingOutputs",
+          "type": "boolean",
+          "description": "Whether to send data to all outputs meeting conditions (and not just the first one)",
+          "default": false
+        }
+      ]
+    },
+    "looseTypeValidation": {
+      "type": "boolean",
+      "displayName": "Convert types where required",
+      "name": "looseTypeValidation"
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "rules",
+        "text": "Add Routing Rule"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": [
+      {
+        "field": "output",
+        "text": "The index to route the item to, starts at 0"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

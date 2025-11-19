@@ -1,0 +1,1563 @@
+{
+  "node_info": {
+    "icon": "file:flow.svg",
+    "defaults": {
+      "name": "Flow"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "flowApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Flow",
+    "name": "flow",
+    "description": "Consume Flow API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.flow",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Productivity"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/flow/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.flow/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "description": "Tasks are units of work that can be private or assigned to a list. Through this endpoint, you can manipulate your tasks in Flow, including creating new ones.",
+      "value": "task",
+      "default": "task",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Task",
+          "description": "Tasks are units of work that can be private or assigned to a list. Through this endpoint, you can manipulate your tasks in Flow, including creating new ones.",
+          "value": "task",
+          "displayName": "Task"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new task",
+      "action": "Create a task",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a new task",
+          "action": "Create a task",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Update",
+          "description": "Update a task",
+          "action": "Update a task",
+          "value": "update",
+          "displayName": "Update"
+        },
+        {
+          "name": "Get",
+          "description": "Get a task",
+          "action": "Get a task",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many tasks",
+          "action": "Get many tasks",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_source": "Task_taskOperations"
+    },
+    {
+      "displayName": "Workspace ID",
+      "name": "workspaceId",
+      "type": "string",
+      "description": "Create resources under the given workspace",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "The title of the task",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The ID of the account to whom this task will be assigned",
+      "placeholder": "Add Field",
+      "value": "text/plain",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Owner ID",
+          "name": "ownerid",
+          "type": "string",
+          "description": "The ID of the account to whom this task will be assigned",
+          "default": ""
+        },
+        {
+          "displayName": "List ID",
+          "name": "listID",
+          "type": "string",
+          "description": "Put the new task in a list (\"project\"). Omit this param to have the task be private.",
+          "default": ""
+        },
+        {
+          "displayName": "Starts On",
+          "name": "startsOn",
+          "type": "dateTime",
+          "description": "The date on which the task should start",
+          "default": ""
+        },
+        {
+          "displayName": "Due On",
+          "name": "dueOn",
+          "type": "dateTime",
+          "description": "The date on which the task should be due",
+          "default": ""
+        },
+        {
+          "displayName": "Mirror Parent Subscribers",
+          "name": "mirrorParentSubscribers",
+          "type": "boolean",
+          "description": "Whether this task will be a subtask, and this is true, the parent tasks's subscribers will be mirrored to this one",
+          "default": false
+        },
+        {
+          "displayName": "Mirror Parent Tags",
+          "name": "mirrorParentTags",
+          "type": "boolean",
+          "description": "Whether this task will be a subtask, and this is true, the parent tasks's tags will be mirrored to this one",
+          "default": false
+        },
+        {
+          "displayName": "Note Content",
+          "name": "noteContent",
+          "type": "string",
+          "description": "Provide the content for the task's note",
+          "default": ""
+        },
+        {
+          "displayName": "Note Mime Type",
+          "name": "noteMimeType",
+          "type": "options",
+          "description": "Identify which markup language is used to format the given note",
+          "value": "text/plain",
+          "default": "text/plain",
+          "options": [
+            {
+              "name": "text/plain",
+              "value": "text/plain",
+              "displayName": "Text/plain"
+            },
+            {
+              "name": "text/x-markdown",
+              "value": "text/x-markdown",
+              "displayName": "Text/x-markdown"
+            },
+            {
+              "name": "text/html",
+              "value": "text/html",
+              "displayName": "Text/html"
+            }
+          ]
+        },
+        {
+          "displayName": "Parent ID",
+          "name": "parentId",
+          "type": "string",
+          "description": "If provided, this task will become a subtask of the given task",
+          "default": ""
+        },
+        {
+          "displayName": "Position List",
+          "name": "positionList",
+          "type": "number",
+          "description": "Determines the sort order when showing tasks in, or grouped by, a list",
+          "default": 0
+        },
+        {
+          "displayName": "Position Upcoming",
+          "name": "positionUpcoming",
+          "type": "number",
+          "description": "Determines the sort order when showing tasks grouped by their due_date",
+          "default": 0
+        },
+        {
+          "displayName": "Position",
+          "name": "position",
+          "type": "number",
+          "description": "Determines the sort order of tasks",
+          "default": 0
+        },
+        {
+          "displayName": "Section ID",
+          "name": "sectionId",
+          "type": "string",
+          "description": "Specify which section under which to create this task",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "A list of tag names to apply to the new task separated by a comma (,)",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Workspace ID",
+      "name": "workspaceId",
+      "type": "string",
+      "description": "Create resources under the given workspace",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Task ID",
+      "name": "taskId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "The title of the task",
+      "placeholder": "Add Update Field",
+      "value": "text/plain",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "The title of the task",
+          "default": ""
+        },
+        {
+          "displayName": "Completed",
+          "name": "completed",
+          "type": "boolean",
+          "description": "Whether to complete the task",
+          "default": false
+        },
+        {
+          "displayName": "Owner ID",
+          "name": "ownerid",
+          "type": "string",
+          "description": "The ID of the account to whom this task will be assigned",
+          "default": ""
+        },
+        {
+          "displayName": "List ID",
+          "name": "listID",
+          "type": "string",
+          "description": "Put the new task in a list (\"project\"). Omit this param to have the task be private.",
+          "default": ""
+        },
+        {
+          "displayName": "Starts On",
+          "name": "startsOn",
+          "type": "dateTime",
+          "description": "The date on which the task should start",
+          "default": ""
+        },
+        {
+          "displayName": "Due On",
+          "name": "dueOn",
+          "type": "dateTime",
+          "description": "The date on which the task should be due",
+          "default": ""
+        },
+        {
+          "displayName": "Mirror Parent Subscribers",
+          "name": "mirrorParentSubscribers",
+          "type": "boolean",
+          "description": "Whether this task will be a subtask, and this is true, the parent tasks's subscribers will be mirrored to this one",
+          "default": false
+        },
+        {
+          "displayName": "Mirror Parent Tags",
+          "name": "mirrorParentTags",
+          "type": "boolean",
+          "description": "Whether this task will be a subtask, and this is true, the parent tasks's tags will be mirrored to this one",
+          "default": false
+        },
+        {
+          "displayName": "Note Content",
+          "name": "noteContent",
+          "type": "string",
+          "description": "Provide the content for the task's note",
+          "default": ""
+        },
+        {
+          "displayName": "Note Mime Type",
+          "name": "noteMimeType",
+          "type": "options",
+          "description": "Identify which markup language is used to format the given note",
+          "value": "text/plain",
+          "default": "text/plain",
+          "options": [
+            {
+              "name": "Text/plain",
+              "value": "text/plain",
+              "displayName": "Text/plain"
+            },
+            {
+              "name": "text/x-markdown",
+              "value": "text/x-markdown",
+              "displayName": "Text/x-markdown"
+            },
+            {
+              "name": "Text/html",
+              "value": "text/html",
+              "displayName": "Text/html"
+            }
+          ]
+        },
+        {
+          "displayName": "Parent ID",
+          "name": "parentId",
+          "type": "string",
+          "description": "If provided, this task will become a subtask of the given task",
+          "default": ""
+        },
+        {
+          "displayName": "Position List",
+          "name": "positionList",
+          "type": "number",
+          "description": "Determines the sort order when showing tasks in, or grouped by, a list",
+          "default": 0
+        },
+        {
+          "displayName": "Position Upcoming",
+          "name": "positionUpcoming",
+          "type": "number",
+          "description": "Determines the sort order when showing tasks grouped by their due_date",
+          "default": 0
+        },
+        {
+          "displayName": "Position",
+          "name": "position",
+          "type": "number",
+          "description": "Determines the sort order of tasks",
+          "default": 0
+        },
+        {
+          "displayName": "Section ID",
+          "name": "sectionId",
+          "type": "string",
+          "description": "Specify which section under which to create this task",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "A list of tag names to apply to the new task separated by a comma (,)",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Task ID",
+      "name": "taskId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "placeholder": "Add Filter",
+      "value": "schedule",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include",
+          "name": "include",
+          "type": "multiOptions",
+          "value": "schedule",
+          "default": [],
+          "options": [
+            {
+              "name": "Schedule",
+              "value": "schedule",
+              "displayName": "Schedule"
+            },
+            {
+              "name": "Files",
+              "value": "files",
+              "displayName": "Files"
+            },
+            {
+              "name": "File Associations",
+              "value": "file_associations",
+              "displayName": "File Associations"
+            },
+            {
+              "name": "Parent",
+              "value": "parent",
+              "displayName": "Parent"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Create resources under the given workspace",
+      "placeholder": "Add Filter",
+      "value": "schedule",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include",
+          "name": "include",
+          "type": "multiOptions",
+          "value": "schedule",
+          "default": [],
+          "options": [
+            {
+              "name": "Schedule",
+              "value": "schedule",
+              "displayName": "Schedule"
+            },
+            {
+              "name": "Files",
+              "value": "files",
+              "displayName": "Files"
+            },
+            {
+              "name": "File Associations",
+              "value": "file_associations",
+              "displayName": "File Associations"
+            },
+            {
+              "name": "Parent",
+              "value": "parent",
+              "displayName": "Parent"
+            }
+          ]
+        },
+        {
+          "displayName": "Order",
+          "name": "order",
+          "type": "options",
+          "value": "account_id",
+          "default": "created_at",
+          "options": [
+            {
+              "name": "Account ID",
+              "value": "account_id",
+              "displayName": "Account Id"
+            },
+            {
+              "name": "Completed At",
+              "value": "completed_at",
+              "displayName": "Completed At"
+            },
+            {
+              "name": "Created At",
+              "value": "created_at",
+              "displayName": "Created At"
+            },
+            {
+              "name": "Due On",
+              "value": "due_on",
+              "displayName": "Due On"
+            },
+            {
+              "name": "List ID",
+              "value": "list_id",
+              "displayName": "List Id"
+            },
+            {
+              "name": "Name",
+              "value": "name",
+              "displayName": "Name"
+            },
+            {
+              "name": "Owner ID",
+              "value": "owner_id",
+              "displayName": "Owner Id"
+            },
+            {
+              "name": "Position",
+              "value": "position",
+              "displayName": "Position"
+            },
+            {
+              "name": "Section ID",
+              "value": "section_id",
+              "displayName": "Section Id"
+            },
+            {
+              "name": "Starts On",
+              "value": "starts_on",
+              "displayName": "Starts On"
+            },
+            {
+              "name": "Updated At",
+              "value": "updated_at",
+              "displayName": "Updated At"
+            }
+          ]
+        },
+        {
+          "displayName": "Workspace ID",
+          "name": "workspaceId",
+          "type": "string",
+          "description": "Create resources under the given workspace",
+          "default": ""
+        },
+        {
+          "displayName": "Created Before",
+          "name": "createdBefore",
+          "type": "dateTime",
+          "description": "Select resources created before a certain time",
+          "default": ""
+        },
+        {
+          "displayName": "Created After",
+          "name": "createdAfter",
+          "type": "dateTime",
+          "description": "Select resources created after a certain time",
+          "default": ""
+        },
+        {
+          "displayName": "Update Before",
+          "name": "updateBefore",
+          "type": "dateTime",
+          "description": "Select resources updated before a certain time",
+          "default": ""
+        },
+        {
+          "displayName": "Update After",
+          "name": "updateAfter",
+          "type": "dateTime",
+          "description": "Select resources updated after a certain time",
+          "default": ""
+        },
+        {
+          "displayName": "Deleted",
+          "name": "deleted",
+          "type": "boolean",
+          "description": "Whether to select deleted resources",
+          "default": false
+        },
+        {
+          "displayName": "Cleared",
+          "name": "cleared",
+          "type": "boolean",
+          "description": "Whether to select cleared resources",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a new task",
+      "action": "Create a task",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Update",
+      "description": "Update a task",
+      "action": "Update a task",
+      "value": "update",
+      "displayName": "Update"
+    },
+    {
+      "name": "Get",
+      "description": "Get a task",
+      "action": "Get a task",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many tasks",
+      "action": "Get many tasks",
+      "value": "getAll",
+      "displayName": "Get Many"
+    }
+  ],
+  "operations_by_resource": {
+    "task": [
+      {
+        "name": "Create",
+        "description": "Create a new task",
+        "action": "Create a task",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Update",
+        "description": "Update a task",
+        "action": "Update a task",
+        "value": "update",
+        "displayName": "Update"
+      },
+      {
+        "name": "Get",
+        "description": "Get a task",
+        "action": "Get a task",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many tasks",
+        "action": "Get many tasks",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "flowApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "workspaceId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "name": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "taskId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "task",
+          "name": "Task",
+          "description": "Tasks are units of work that can be private or assigned to a list. Through this endpoint, you can manipulate your tasks in Flow, including creating new ones."
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a new task"
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": "Update a task"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a task"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get many tasks"
+        }
+      ]
+    },
+    "workspaceId": {
+      "type": "string",
+      "displayName": "Workspace ID",
+      "name": "workspaceId"
+    },
+    "name": {
+      "type": "string",
+      "displayName": "Name",
+      "name": "name"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Owner ID",
+          "name": "ownerid",
+          "type": "string",
+          "description": "The ID of the account to whom this task will be assigned",
+          "default": ""
+        },
+        {
+          "displayName": "List ID",
+          "name": "listID",
+          "type": "string",
+          "description": "Put the new task in a list (\"project\"). Omit this param to have the task be private.",
+          "default": ""
+        },
+        {
+          "displayName": "Starts On",
+          "name": "startsOn",
+          "type": "dateTime",
+          "description": "The date on which the task should start",
+          "default": ""
+        },
+        {
+          "displayName": "Due On",
+          "name": "dueOn",
+          "type": "dateTime",
+          "description": "The date on which the task should be due",
+          "default": ""
+        },
+        {
+          "displayName": "Mirror Parent Subscribers",
+          "name": "mirrorParentSubscribers",
+          "type": "boolean",
+          "description": "Whether this task will be a subtask, and this is true, the parent tasks's subscribers will be mirrored to this one",
+          "default": false
+        },
+        {
+          "displayName": "Mirror Parent Tags",
+          "name": "mirrorParentTags",
+          "type": "boolean",
+          "description": "Whether this task will be a subtask, and this is true, the parent tasks's tags will be mirrored to this one",
+          "default": false
+        },
+        {
+          "displayName": "Note Content",
+          "name": "noteContent",
+          "type": "string",
+          "description": "Provide the content for the task's note",
+          "default": ""
+        },
+        {
+          "displayName": "Note Mime Type",
+          "name": "noteMimeType",
+          "type": "options",
+          "description": "Identify which markup language is used to format the given note",
+          "value": "text/plain",
+          "default": "text/plain",
+          "options": [
+            {
+              "name": "text/plain",
+              "value": "text/plain",
+              "displayName": "Text/plain"
+            },
+            {
+              "name": "text/x-markdown",
+              "value": "text/x-markdown",
+              "displayName": "Text/x-markdown"
+            },
+            {
+              "name": "text/html",
+              "value": "text/html",
+              "displayName": "Text/html"
+            }
+          ]
+        },
+        {
+          "displayName": "Parent ID",
+          "name": "parentId",
+          "type": "string",
+          "description": "If provided, this task will become a subtask of the given task",
+          "default": ""
+        },
+        {
+          "displayName": "Position List",
+          "name": "positionList",
+          "type": "number",
+          "description": "Determines the sort order when showing tasks in, or grouped by, a list",
+          "default": 0
+        },
+        {
+          "displayName": "Position Upcoming",
+          "name": "positionUpcoming",
+          "type": "number",
+          "description": "Determines the sort order when showing tasks grouped by their due_date",
+          "default": 0
+        },
+        {
+          "displayName": "Position",
+          "name": "position",
+          "type": "number",
+          "description": "Determines the sort order of tasks",
+          "default": 0
+        },
+        {
+          "displayName": "Section ID",
+          "name": "sectionId",
+          "type": "string",
+          "description": "Specify which section under which to create this task",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "A list of tag names to apply to the new task separated by a comma (,)",
+          "default": ""
+        }
+      ]
+    },
+    "taskId": {
+      "type": "string",
+      "displayName": "Task ID",
+      "name": "taskId"
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "subProperties": [
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "The title of the task",
+          "default": ""
+        },
+        {
+          "displayName": "Completed",
+          "name": "completed",
+          "type": "boolean",
+          "description": "Whether to complete the task",
+          "default": false
+        },
+        {
+          "displayName": "Owner ID",
+          "name": "ownerid",
+          "type": "string",
+          "description": "The ID of the account to whom this task will be assigned",
+          "default": ""
+        },
+        {
+          "displayName": "List ID",
+          "name": "listID",
+          "type": "string",
+          "description": "Put the new task in a list (\"project\"). Omit this param to have the task be private.",
+          "default": ""
+        },
+        {
+          "displayName": "Starts On",
+          "name": "startsOn",
+          "type": "dateTime",
+          "description": "The date on which the task should start",
+          "default": ""
+        },
+        {
+          "displayName": "Due On",
+          "name": "dueOn",
+          "type": "dateTime",
+          "description": "The date on which the task should be due",
+          "default": ""
+        },
+        {
+          "displayName": "Mirror Parent Subscribers",
+          "name": "mirrorParentSubscribers",
+          "type": "boolean",
+          "description": "Whether this task will be a subtask, and this is true, the parent tasks's subscribers will be mirrored to this one",
+          "default": false
+        },
+        {
+          "displayName": "Mirror Parent Tags",
+          "name": "mirrorParentTags",
+          "type": "boolean",
+          "description": "Whether this task will be a subtask, and this is true, the parent tasks's tags will be mirrored to this one",
+          "default": false
+        },
+        {
+          "displayName": "Note Content",
+          "name": "noteContent",
+          "type": "string",
+          "description": "Provide the content for the task's note",
+          "default": ""
+        },
+        {
+          "displayName": "Note Mime Type",
+          "name": "noteMimeType",
+          "type": "options",
+          "description": "Identify which markup language is used to format the given note",
+          "value": "text/plain",
+          "default": "text/plain",
+          "options": [
+            {
+              "name": "Text/plain",
+              "value": "text/plain",
+              "displayName": "Text/plain"
+            },
+            {
+              "name": "text/x-markdown",
+              "value": "text/x-markdown",
+              "displayName": "Text/x-markdown"
+            },
+            {
+              "name": "Text/html",
+              "value": "text/html",
+              "displayName": "Text/html"
+            }
+          ]
+        },
+        {
+          "displayName": "Parent ID",
+          "name": "parentId",
+          "type": "string",
+          "description": "If provided, this task will become a subtask of the given task",
+          "default": ""
+        },
+        {
+          "displayName": "Position List",
+          "name": "positionList",
+          "type": "number",
+          "description": "Determines the sort order when showing tasks in, or grouped by, a list",
+          "default": 0
+        },
+        {
+          "displayName": "Position Upcoming",
+          "name": "positionUpcoming",
+          "type": "number",
+          "description": "Determines the sort order when showing tasks grouped by their due_date",
+          "default": 0
+        },
+        {
+          "displayName": "Position",
+          "name": "position",
+          "type": "number",
+          "description": "Determines the sort order of tasks",
+          "default": 0
+        },
+        {
+          "displayName": "Section ID",
+          "name": "sectionId",
+          "type": "string",
+          "description": "Specify which section under which to create this task",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "A list of tag names to apply to the new task separated by a comma (,)",
+          "default": ""
+        }
+      ]
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "subProperties": [
+        {
+          "displayName": "Include",
+          "name": "include",
+          "type": "multiOptions",
+          "value": "schedule",
+          "default": [],
+          "options": [
+            {
+              "name": "Schedule",
+              "value": "schedule",
+              "displayName": "Schedule"
+            },
+            {
+              "name": "Files",
+              "value": "files",
+              "displayName": "Files"
+            },
+            {
+              "name": "File Associations",
+              "value": "file_associations",
+              "displayName": "File Associations"
+            },
+            {
+              "name": "Parent",
+              "value": "parent",
+              "displayName": "Parent"
+            }
+          ]
+        },
+        {
+          "displayName": "Order",
+          "name": "order",
+          "type": "options",
+          "value": "account_id",
+          "default": "created_at",
+          "options": [
+            {
+              "name": "Account ID",
+              "value": "account_id",
+              "displayName": "Account Id"
+            },
+            {
+              "name": "Completed At",
+              "value": "completed_at",
+              "displayName": "Completed At"
+            },
+            {
+              "name": "Created At",
+              "value": "created_at",
+              "displayName": "Created At"
+            },
+            {
+              "name": "Due On",
+              "value": "due_on",
+              "displayName": "Due On"
+            },
+            {
+              "name": "List ID",
+              "value": "list_id",
+              "displayName": "List Id"
+            },
+            {
+              "name": "Name",
+              "value": "name",
+              "displayName": "Name"
+            },
+            {
+              "name": "Owner ID",
+              "value": "owner_id",
+              "displayName": "Owner Id"
+            },
+            {
+              "name": "Position",
+              "value": "position",
+              "displayName": "Position"
+            },
+            {
+              "name": "Section ID",
+              "value": "section_id",
+              "displayName": "Section Id"
+            },
+            {
+              "name": "Starts On",
+              "value": "starts_on",
+              "displayName": "Starts On"
+            },
+            {
+              "name": "Updated At",
+              "value": "updated_at",
+              "displayName": "Updated At"
+            }
+          ]
+        },
+        {
+          "displayName": "Workspace ID",
+          "name": "workspaceId",
+          "type": "string",
+          "description": "Create resources under the given workspace",
+          "default": ""
+        },
+        {
+          "displayName": "Created Before",
+          "name": "createdBefore",
+          "type": "dateTime",
+          "description": "Select resources created before a certain time",
+          "default": ""
+        },
+        {
+          "displayName": "Created After",
+          "name": "createdAfter",
+          "type": "dateTime",
+          "description": "Select resources created after a certain time",
+          "default": ""
+        },
+        {
+          "displayName": "Update Before",
+          "name": "updateBefore",
+          "type": "dateTime",
+          "description": "Select resources updated before a certain time",
+          "default": ""
+        },
+        {
+          "displayName": "Update After",
+          "name": "updateAfter",
+          "type": "dateTime",
+          "description": "Select resources updated after a certain time",
+          "default": ""
+        },
+        {
+          "displayName": "Deleted",
+          "name": "deleted",
+          "type": "boolean",
+          "description": "Whether to select deleted resources",
+          "default": false
+        },
+        {
+          "displayName": "Cleared",
+          "name": "cleared",
+          "type": "boolean",
+          "description": "Whether to select cleared resources",
+          "default": false
+        }
+      ]
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      }
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Update Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

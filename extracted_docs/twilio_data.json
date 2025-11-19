@@ -1,0 +1,628 @@
+{
+  "node_info": {
+    "icon": "file:twilio.svg",
+    "defaults": {
+      "name": "Twilio"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "twilioApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Twilio",
+    "name": "twilio",
+    "description": "Send SMS and WhatsApp messages or make phone calls",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.twilio",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication",
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/twilio/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.twilio/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "Love at first sight: Ricardo\u2019s n8n journey",
+          "icon": "\u2764\ufe0f",
+          "url": "https://n8n.io/blog/love-at-first-sight-ricardos-n8n-journey/"
+        },
+        {
+          "label": "Database Monitoring and Alerting with n8n",
+          "icon": "\ud83d\udce1",
+          "url": "https://n8n.io/blog/database-monitoring-and-alerting-with-n8n/"
+        },
+        {
+          "label": "Automatically Adding Expense Receipts to Google Sheets with Telegram, Mindee, Twilio, and n8n",
+          "icon": "\ud83e\uddfe",
+          "url": "https://n8n.io/blog/automatically-adding-expense-receipts-to-google-sheets-with-telegram-mindee-twilio-and-n8n/"
+        },
+        {
+          "label": "Tracking Time Spent in Meetings With Google Calendar, Twilio, and n8n",
+          "icon": "\ud83d\uddd3",
+          "url": "https://n8n.io/blog/tracking-time-spent-in-meetings-with-google-calendar-twilio-and-n8n/"
+        },
+        {
+          "label": "Creating Error Workflows in n8n",
+          "icon": "\ud83c\udf2a",
+          "url": "https://n8n.io/blog/creating-error-workflows-in-n8n/"
+        },
+        {
+          "label": "Sending Automated Congratulations with Google Sheets, Twilio, and n8n ",
+          "icon": "\ud83d\ude4c",
+          "url": "https://n8n.io/blog/sending-automated-congratulations-with-google-sheets-twilio-and-n8n/"
+        },
+        {
+          "label": "Learn to Build Powerful API Endpoints Using Webhooks",
+          "icon": "\ud83e\uddf0",
+          "url": "https://n8n.io/blog/learn-to-build-powerful-api-endpoints-using-webhooks/"
+        },
+        {
+          "label": "Sending SMS the Low-Code Way with Airtable, Twilio Programmable SMS, and n8n",
+          "icon": "\ud83d\udcf1",
+          "url": "https://n8n.io/blog/sending-sms-the-low-code-way-with-airtable-twilio-programmable-sms-and-n8n/"
+        }
+      ]
+    },
+    "alias": [
+      "SMS",
+      "Phone",
+      "Voice"
+    ]
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "call",
+      "default": "sms",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Call",
+          "value": "call",
+          "displayName": "Call"
+        },
+        {
+          "name": "SMS",
+          "value": "sms",
+          "displayName": "Sms"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Send SMS/MMS/WhatsApp message",
+      "action": "Send an SMS/MMS/WhatsApp message",
+      "value": "send",
+      "default": "send",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Send",
+          "description": "Send SMS/MMS/WhatsApp message",
+          "action": "Send an SMS/MMS/WhatsApp message",
+          "value": "send",
+          "displayName": "Send"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "sms"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Make a call",
+      "value": "make",
+      "default": "make",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Make",
+          "action": "Make a call",
+          "value": "make",
+          "displayName": "Make"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "From",
+      "name": "from",
+      "type": "string",
+      "description": "The number from which to send the message",
+      "placeholder": "+14155238886",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send",
+            "make"
+          ],
+          "resource": [
+            "sms",
+            "call"
+          ]
+        }
+      },
+      "_operation": "send,make"
+    },
+    {
+      "displayName": "To",
+      "name": "to",
+      "type": "string",
+      "description": "The number to which to send the message",
+      "placeholder": "+14155238886",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send",
+            "make"
+          ],
+          "resource": [
+            "sms",
+            "call"
+          ]
+        }
+      },
+      "_operation": "send,make"
+    },
+    {
+      "displayName": "To Whatsapp",
+      "name": "toWhatsapp",
+      "type": "boolean",
+      "description": "Whether the message should be sent to WhatsApp",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      },
+      "_operation": "send"
+    },
+    {
+      "displayName": "Message",
+      "name": "message",
+      "type": "string",
+      "description": "The message to send",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      },
+      "_operation": "send"
+    },
+    {
+      "displayName": "Use TwiML",
+      "name": "twiml",
+      "type": "boolean",
+      "description": "Whether to use the <a href=\"https://www.twilio.com/docs/voice/twiml\">Twilio Markup Language</a> in the message",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "make"
+          ],
+          "resource": [
+            "call"
+          ]
+        }
+      },
+      "_operation": "make"
+    },
+    {
+      "displayName": "Message",
+      "name": "message",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "make"
+          ],
+          "resource": [
+            "call"
+          ]
+        }
+      },
+      "_operation": "make"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Status Callbacks allow you to receive events related to the REST resources managed by Twilio: Rooms, Recordings and Compositions",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Status Callback",
+          "name": "statusCallback",
+          "type": "string",
+          "description": "Status Callbacks allow you to receive events related to the REST resources managed by Twilio: Rooms, Recordings and Compositions",
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "name": "Send",
+      "description": "Send SMS/MMS/WhatsApp message",
+      "action": "Send an SMS/MMS/WhatsApp message",
+      "value": "send",
+      "displayName": "Send"
+    },
+    {
+      "name": "Make",
+      "action": "Make a call",
+      "value": "make",
+      "displayName": "Make"
+    }
+  ],
+  "operations_by_resource": {
+    "sms": [
+      {
+        "name": "Send",
+        "description": "Send SMS/MMS/WhatsApp message",
+        "action": "Send an SMS/MMS/WhatsApp message",
+        "value": "send",
+        "displayName": "Send"
+      }
+    ],
+    "call": [
+      {
+        "name": "Make",
+        "action": "Make a call",
+        "value": "make",
+        "displayName": "Make"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "twilioApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ]
+        }
+      }
+    },
+    "from": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send",
+            "make"
+          ],
+          "resource": [
+            "sms",
+            "call"
+          ]
+        }
+      }
+    },
+    "to": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send",
+            "make"
+          ],
+          "resource": [
+            "sms",
+            "call"
+          ]
+        }
+      }
+    },
+    "toWhatsapp": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      }
+    },
+    "message": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "make"
+          ],
+          "resource": [
+            "call"
+          ]
+        }
+      }
+    },
+    "twiml": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "make"
+          ],
+          "resource": [
+            "call"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "call",
+          "name": "Call",
+          "description": ""
+        },
+        {
+          "value": "sms",
+          "name": "SMS",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "make",
+          "name": "Make",
+          "description": ""
+        }
+      ]
+    },
+    "from": {
+      "type": "string",
+      "displayName": "From",
+      "name": "from"
+    },
+    "to": {
+      "type": "string",
+      "displayName": "To",
+      "name": "to"
+    },
+    "toWhatsapp": {
+      "type": "boolean",
+      "displayName": "To Whatsapp",
+      "name": "toWhatsapp"
+    },
+    "message": {
+      "type": "string",
+      "displayName": "Message",
+      "name": "message"
+    },
+    "twiml": {
+      "type": "boolean",
+      "displayName": "Use TwiML",
+      "name": "twiml"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Status Callback",
+          "name": "statusCallback",
+          "type": "string",
+          "description": "Status Callbacks allow you to receive events related to the REST resources managed by Twilio: Rooms, Recordings and Compositions",
+          "default": ""
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [
+      "https://events.twilio.com/v1/{endpoint}"
+    ],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "from",
+        "text": "+14155238886"
+      },
+      {
+        "field": "to",
+        "text": "+14155238886"
+      },
+      {
+        "field": "options",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

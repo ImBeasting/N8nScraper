@@ -1,0 +1,31 @@
+{
+  "issue_id": "_gemini_issue_008",
+  "title": "PATTERN: `validate_extraction.py` incorrectly flags nodes with dynamic outputs as 'missing outputs'",
+  "severity": "medium",
+  "status": "new",
+  "priority": 3,
+  "metadata": {
+    "created_at": "2025-11-11T13:00:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "Switch, If, and other routing nodes (at least 6 files)"
+  },
+  "description": {
+    "problem": "The `validate_extraction.py` script incorrectly reports that nodes with dynamically generated outputs (like the Switch node) are 'missing outputs'.",
+    "impact": "MEDIUM - This bug mirrors issue `_gemini_issue_005` by creating numerous false positives in the validation report, which makes it difficult to spot genuine extraction errors. It affects fundamental routing nodes.",
+    "root_cause": "Nodes like 'Switch' define their outputs using a dynamic expression (e.g., `outputs: '={{...}}'`) that is evaluated at runtime based on user parameters. The extractor cannot resolve this expression and correctly records the `outputs` as an empty array. The validation script then incorrectly flags this valid empty array as a missing field, because it's not intelligent enough to understand the concept of dynamic outputs.",
+    "evidence": [
+      "The `validation_report.json` lists `switch_data.json` and 5 other files as `missing_outputs`.",
+      "The source for the Switch node (`n8n/packages/nodes-base/nodes/Switch/V3/SwitchV3.node.ts`) defines outputs as a dynamic expression: `outputs: '={{(${configuredOutputs})($parameter)}}'`.",
+      "The extracted data in `extracted_docs/switch_data.json` shows the result of the extractor's inability to parse this: `\"outputs\": []`.",
+      "This is another instance of the validation script being too simplistic and not accounting for valid edge cases in node definitions."
+    ],
+    "fix_approach": "The validation script needs to be updated to ignore this check for nodes known to have dynamic outputs.\n1. In `validate_extraction.py`, establish an allow-list of node names that use dynamic outputs (e.g., `dynamic_output_nodes = ['switch', 'if']`).\n2. During the 'missing fields' check, if a node's name is in this list, the script should bypass the validation for the `outputs` field.\n3. This will eliminate the false positives from the report."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

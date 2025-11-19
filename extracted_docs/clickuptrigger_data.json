@@ -1,0 +1,576 @@
+{
+  "node_info": {
+    "icon": "file:clickup.svg",
+    "defaults": {
+      "name": "ClickUp Trigger"
+    },
+    "inputs": [],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "trigger"
+    ],
+    "authentication": [
+      {
+        "name": "clickUpApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "accessToken"
+            ]
+          }
+        }
+      },
+      {
+        "name": "clickUpOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getTeams"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "ClickUp Trigger",
+    "name": "clickUpTrigger",
+    "description": "Handle ClickUp events via webhooks (Beta)",
+    "subtitle": "",
+    "version": "1",
+    "node_type": "trigger",
+    "webhooks": [
+      {
+        "name": "default",
+        "httpMethod": "POST",
+        "responseMode": "onReceived",
+        "path": "webhook"
+      }
+    ]
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.clickUpTrigger",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Productivity",
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/clickup/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.clickuptrigger/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "accessToken",
+      "default": "accessToken",
+      "options": [
+        {
+          "name": "Access Token",
+          "value": "accessToken",
+          "displayName": "Access Token"
+        },
+        {
+          "name": "OAuth2",
+          "value": "oAuth2",
+          "displayName": "Oauth2"
+        }
+      ]
+    },
+    {
+      "displayName": "Team Name or ID",
+      "name": "team",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      }
+    },
+    {
+      "displayName": "Events",
+      "name": "events",
+      "type": "multiOptions",
+      "value": "*",
+      "default": [],
+      "required": true,
+      "options": [
+        {
+          "name": "*",
+          "value": "*",
+          "displayName": "*"
+        },
+        {
+          "name": "folder.created",
+          "value": "folderCreated",
+          "displayName": "Folder.created"
+        },
+        {
+          "name": "folder.deleted",
+          "value": "folderDeleted",
+          "displayName": "Folder.deleted"
+        },
+        {
+          "name": "folder.updated",
+          "value": "folderUpdated",
+          "displayName": "Folder.updated"
+        },
+        {
+          "name": "goal.created",
+          "value": "goalCreated",
+          "displayName": "Goal.created"
+        },
+        {
+          "name": "goal.deleted",
+          "value": "goalDeleted",
+          "displayName": "Goal.deleted"
+        },
+        {
+          "name": "goal.updated",
+          "value": "goalUpdated",
+          "displayName": "Goal.updated"
+        },
+        {
+          "name": "keyResult.created",
+          "value": "keyResultCreated",
+          "displayName": "Key Result.created"
+        },
+        {
+          "name": "keyResult.deleted",
+          "value": "keyResultDelete",
+          "displayName": "Key Result.deleted"
+        },
+        {
+          "name": "keyResult.updated",
+          "value": "keyResultUpdated",
+          "displayName": "Key Result.updated"
+        },
+        {
+          "name": "list.created",
+          "value": "listCreated",
+          "displayName": "List.created"
+        },
+        {
+          "name": "list.deleted",
+          "value": "listDeleted",
+          "displayName": "List.deleted"
+        },
+        {
+          "name": "list.updated",
+          "value": "listUpdated",
+          "displayName": "List.updated"
+        },
+        {
+          "name": "space.created",
+          "value": "spaceCreated",
+          "displayName": "Space.created"
+        },
+        {
+          "name": "space.deleted",
+          "value": "spaceDeleted",
+          "displayName": "Space.deleted"
+        },
+        {
+          "name": "space.updated",
+          "value": "spaceUpdated",
+          "displayName": "Space.updated"
+        },
+        {
+          "name": "task.assignee.updated",
+          "value": "taskAssigneeUpdated",
+          "displayName": "Task.assignee.updated"
+        },
+        {
+          "name": "task.comment.posted",
+          "value": "taskCommentPosted",
+          "displayName": "Task.comment.posted"
+        },
+        {
+          "name": "task.comment.updated",
+          "value": "taskCommentUpdated",
+          "displayName": "Task.comment.updated"
+        },
+        {
+          "name": "task.created",
+          "value": "taskCreated",
+          "displayName": "Task.created"
+        },
+        {
+          "name": "task.deleted",
+          "value": "taskDeleted",
+          "displayName": "Task.deleted"
+        },
+        {
+          "name": "task.dueDate.updated",
+          "value": "taskDueDateUpdated",
+          "displayName": "Task.due Date.updated"
+        },
+        {
+          "name": "task.moved",
+          "value": "taskMoved",
+          "displayName": "Task.moved"
+        },
+        {
+          "name": "task.status.updated",
+          "value": "taskStatusUpdated",
+          "displayName": "Task.status.updated"
+        },
+        {
+          "name": "task.tag.updated",
+          "value": "taskTagUpdated",
+          "displayName": "Task.tag.updated"
+        },
+        {
+          "name": "task.timeEstimate.updated",
+          "value": "taskTimeEstimateUpdated",
+          "displayName": "Task.time Estimate.updated"
+        },
+        {
+          "name": "task.timeTracked.updated",
+          "value": "taskTimeTrackedUpdated",
+          "displayName": "Task.time Tracked.updated"
+        },
+        {
+          "name": "task.updated",
+          "value": "taskUpdated",
+          "displayName": "Task.updated"
+        }
+      ]
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Folder ID",
+          "name": "folderId",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "List ID",
+          "name": "listId",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Space ID",
+          "name": "spaceId",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Task ID",
+          "name": "taskId",
+          "type": "string",
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "clickUpApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "accessToken"
+          ]
+        }
+      }
+    },
+    {
+      "name": "clickUpOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [],
+  "validation_rules": {
+    "team": {
+      "required": true
+    },
+    "events": {
+      "required": true
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "accessToken",
+          "name": "Access Token",
+          "description": ""
+        },
+        {
+          "value": "oAuth2",
+          "name": "OAuth2",
+          "description": ""
+        }
+      ]
+    },
+    "team": {
+      "type": "options",
+      "displayName": "Team Name or ID",
+      "name": "team",
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "possibleValues": []
+    },
+    "events": {
+      "type": "multiOptions",
+      "displayName": "Events",
+      "name": "events",
+      "possibleValues": [
+        {
+          "value": "*",
+          "name": "*",
+          "description": ""
+        },
+        {
+          "value": "folderCreated",
+          "name": "folder.created",
+          "description": ""
+        },
+        {
+          "value": "folderDeleted",
+          "name": "folder.deleted",
+          "description": ""
+        },
+        {
+          "value": "folderUpdated",
+          "name": "folder.updated",
+          "description": ""
+        },
+        {
+          "value": "goalCreated",
+          "name": "goal.created",
+          "description": ""
+        },
+        {
+          "value": "goalDeleted",
+          "name": "goal.deleted",
+          "description": ""
+        },
+        {
+          "value": "goalUpdated",
+          "name": "goal.updated",
+          "description": ""
+        },
+        {
+          "value": "keyResultCreated",
+          "name": "keyResult.created",
+          "description": ""
+        },
+        {
+          "value": "keyResultDelete",
+          "name": "keyResult.deleted",
+          "description": ""
+        },
+        {
+          "value": "keyResultUpdated",
+          "name": "keyResult.updated",
+          "description": ""
+        },
+        {
+          "value": "listCreated",
+          "name": "list.created",
+          "description": ""
+        },
+        {
+          "value": "listDeleted",
+          "name": "list.deleted",
+          "description": ""
+        },
+        {
+          "value": "listUpdated",
+          "name": "list.updated",
+          "description": ""
+        },
+        {
+          "value": "spaceCreated",
+          "name": "space.created",
+          "description": ""
+        },
+        {
+          "value": "spaceDeleted",
+          "name": "space.deleted",
+          "description": ""
+        },
+        {
+          "value": "spaceUpdated",
+          "name": "space.updated",
+          "description": ""
+        },
+        {
+          "value": "taskAssigneeUpdated",
+          "name": "task.assignee.updated",
+          "description": ""
+        },
+        {
+          "value": "taskCommentPosted",
+          "name": "task.comment.posted",
+          "description": ""
+        },
+        {
+          "value": "taskCommentUpdated",
+          "name": "task.comment.updated",
+          "description": ""
+        },
+        {
+          "value": "taskCreated",
+          "name": "task.created",
+          "description": ""
+        },
+        {
+          "value": "taskDeleted",
+          "name": "task.deleted",
+          "description": ""
+        },
+        {
+          "value": "taskDueDateUpdated",
+          "name": "task.dueDate.updated",
+          "description": ""
+        },
+        {
+          "value": "taskMoved",
+          "name": "task.moved",
+          "description": ""
+        },
+        {
+          "value": "taskStatusUpdated",
+          "name": "task.status.updated",
+          "description": ""
+        },
+        {
+          "value": "taskTagUpdated",
+          "name": "task.tag.updated",
+          "description": ""
+        },
+        {
+          "value": "taskTimeEstimateUpdated",
+          "name": "task.timeEstimate.updated",
+          "description": ""
+        },
+        {
+          "value": "taskTimeTrackedUpdated",
+          "name": "task.timeTracked.updated",
+          "description": ""
+        },
+        {
+          "value": "taskUpdated",
+          "name": "task.updated",
+          "description": ""
+        }
+      ]
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "subProperties": [
+        {
+          "displayName": "Folder ID",
+          "name": "folderId",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "List ID",
+          "name": "listId",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Space ID",
+          "name": "spaceId",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Task ID",
+          "name": "taskId",
+          "type": "string",
+          "default": ""
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "filters",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

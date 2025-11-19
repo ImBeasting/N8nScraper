@@ -1,0 +1,756 @@
+{
+  "node_info": {
+    "icon": "file:messagebird.svg",
+    "defaults": {
+      "name": "MessageBird"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "messageBirdApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "MessageBird",
+    "name": "messageBird",
+    "description": "Sends SMS via MessageBird",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.messageBird",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/messagebird/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.messagebird/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "sms",
+      "default": "sms",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "SMS",
+          "value": "sms",
+          "displayName": "Sms"
+        },
+        {
+          "name": "Balance",
+          "value": "balance",
+          "displayName": "Balance"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Send text messages (SMS)",
+      "action": "Send an SMS",
+      "value": "send",
+      "default": "send",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Send",
+          "description": "Send text messages (SMS)",
+          "action": "Send an SMS",
+          "value": "send",
+          "displayName": "Send"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "sms"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Get the balance",
+      "action": "Get the current balance",
+      "value": "get",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "description": "Get the balance",
+          "action": "Get the current balance",
+          "value": "get",
+          "displayName": "Get"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "balance"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "From",
+      "name": "originator",
+      "type": "string",
+      "description": "The number from which to send the message",
+      "placeholder": "14155238886",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      },
+      "_operation": "send"
+    },
+    {
+      "displayName": "To",
+      "name": "recipients",
+      "type": "string",
+      "description": "All recipients separated by commas",
+      "placeholder": "14155238886/+14155238886",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      },
+      "_operation": "send"
+    },
+    {
+      "displayName": "Message",
+      "name": "message",
+      "type": "string",
+      "description": "The message to be send",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      },
+      "_operation": "send"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The date and time of the creation of the message in RFC3339 format (Y-m-dTH:i:sP)",
+      "placeholder": "Add Fields",
+      "value": "auto",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Created Date-Time",
+          "name": "createdDatetime",
+          "type": "dateTime",
+          "description": "The date and time of the creation of the message in RFC3339 format (Y-m-dTH:i:sP)",
+          "default": ""
+        },
+        {
+          "displayName": "Datacoding",
+          "name": "datacoding",
+          "type": "options",
+          "description": "Using unicode will limit the maximum number of characters to 70 instead of 160",
+          "value": "auto",
+          "default": "",
+          "options": [
+            {
+              "name": "Auto",
+              "value": "auto",
+              "displayName": "Auto"
+            },
+            {
+              "name": "Plain",
+              "value": "plain",
+              "displayName": "Plain"
+            },
+            {
+              "name": "Unicode",
+              "value": "unicode",
+              "displayName": "Unicode"
+            }
+          ]
+        },
+        {
+          "displayName": "Gateway",
+          "name": "gateway",
+          "type": "number",
+          "description": "The SMS route that is used to send the message",
+          "default": ""
+        },
+        {
+          "displayName": "Group IDs",
+          "name": "groupIds",
+          "type": "string",
+          "description": "Group IDs separated by commas, If provided recipients can be omitted",
+          "placeholder": "1,2",
+          "default": ""
+        },
+        {
+          "displayName": "Message Type",
+          "name": "mclass",
+          "type": "options",
+          "description": "Indicated the message type. 1 is a normal message, 0 is a flash message.",
+          "placeholder": "Permissible values from 0-3",
+          "default": 1,
+          "options": [
+            {
+              "name": "Flash",
+              "displayName": "Flash"
+            },
+            {
+              "name": "Normal",
+              "displayName": "Normal"
+            }
+          ]
+        },
+        {
+          "displayName": "Reference",
+          "name": "reference",
+          "type": "string",
+          "description": "A client reference",
+          "default": ""
+        },
+        {
+          "displayName": "Report Url",
+          "name": "reportUrl",
+          "type": "string",
+          "description": "The status report URL to be used on a per-message basis. Reference is required for a status report webhook to be sent.",
+          "default": ""
+        },
+        {
+          "displayName": "Scheduled Date-Time",
+          "name": "scheduledDatetime",
+          "type": "dateTime",
+          "description": "The scheduled date and time of the message in RFC3339 format (Y-m-dTH:i:sP)",
+          "default": ""
+        },
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "options",
+          "description": "The type of message. Values can be: sms, binary, or flash.",
+          "value": "binary",
+          "default": "",
+          "options": [
+            {
+              "name": "Binary",
+              "value": "binary",
+              "displayName": "Binary"
+            },
+            {
+              "name": "Flash",
+              "value": "flash",
+              "displayName": "Flash"
+            },
+            {
+              "name": "SMS",
+              "value": "sms",
+              "displayName": "Sms"
+            }
+          ]
+        },
+        {
+          "displayName": "Type Details",
+          "name": "typeDetails",
+          "type": "string",
+          "description": "A hash with extra information. Is only used when a binary message is sent.",
+          "default": ""
+        },
+        {
+          "displayName": "Validity",
+          "name": "validity",
+          "type": "number",
+          "description": "The amount of seconds that the message is valid",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1
+          }
+        }
+      ],
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      },
+      "_operation": "send"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Send",
+      "description": "Send text messages (SMS)",
+      "action": "Send an SMS",
+      "value": "send",
+      "displayName": "Send"
+    },
+    {
+      "name": "Get",
+      "description": "Get the balance",
+      "action": "Get the current balance",
+      "value": "get",
+      "displayName": "Get"
+    }
+  ],
+  "operations_by_resource": {
+    "sms": [
+      {
+        "name": "Send",
+        "description": "Send text messages (SMS)",
+        "action": "Send an SMS",
+        "value": "send",
+        "displayName": "Send"
+      }
+    ],
+    "balance": [
+      {
+        "name": "Get",
+        "description": "Get the balance",
+        "action": "Get the current balance",
+        "value": "get",
+        "displayName": "Get"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "messageBirdApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "balance"
+          ]
+        }
+      }
+    },
+    "originator": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      }
+    },
+    "recipients": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      }
+    },
+    "message": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "sms",
+          "name": "SMS",
+          "description": ""
+        },
+        {
+          "value": "balance",
+          "name": "Balance",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get the balance"
+        }
+      ]
+    },
+    "originator": {
+      "type": "string",
+      "displayName": "From",
+      "name": "originator"
+    },
+    "recipients": {
+      "type": "string",
+      "displayName": "To",
+      "name": "recipients"
+    },
+    "message": {
+      "type": "string",
+      "displayName": "Message",
+      "name": "message"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "typeOptions": {
+        "minValue": 1
+      },
+      "subProperties": [
+        {
+          "displayName": "Created Date-Time",
+          "name": "createdDatetime",
+          "type": "dateTime",
+          "description": "The date and time of the creation of the message in RFC3339 format (Y-m-dTH:i:sP)",
+          "default": ""
+        },
+        {
+          "displayName": "Datacoding",
+          "name": "datacoding",
+          "type": "options",
+          "description": "Using unicode will limit the maximum number of characters to 70 instead of 160",
+          "value": "auto",
+          "default": "",
+          "options": [
+            {
+              "name": "Auto",
+              "value": "auto",
+              "displayName": "Auto"
+            },
+            {
+              "name": "Plain",
+              "value": "plain",
+              "displayName": "Plain"
+            },
+            {
+              "name": "Unicode",
+              "value": "unicode",
+              "displayName": "Unicode"
+            }
+          ]
+        },
+        {
+          "displayName": "Gateway",
+          "name": "gateway",
+          "type": "number",
+          "description": "The SMS route that is used to send the message",
+          "default": ""
+        },
+        {
+          "displayName": "Group IDs",
+          "name": "groupIds",
+          "type": "string",
+          "description": "Group IDs separated by commas, If provided recipients can be omitted",
+          "placeholder": "1,2",
+          "default": ""
+        },
+        {
+          "displayName": "Message Type",
+          "name": "mclass",
+          "type": "options",
+          "description": "Indicated the message type. 1 is a normal message, 0 is a flash message.",
+          "placeholder": "Permissible values from 0-3",
+          "default": 1,
+          "options": [
+            {
+              "name": "Flash",
+              "displayName": "Flash"
+            },
+            {
+              "name": "Normal",
+              "displayName": "Normal"
+            }
+          ]
+        },
+        {
+          "displayName": "Reference",
+          "name": "reference",
+          "type": "string",
+          "description": "A client reference",
+          "default": ""
+        },
+        {
+          "displayName": "Report Url",
+          "name": "reportUrl",
+          "type": "string",
+          "description": "The status report URL to be used on a per-message basis. Reference is required for a status report webhook to be sent.",
+          "default": ""
+        },
+        {
+          "displayName": "Scheduled Date-Time",
+          "name": "scheduledDatetime",
+          "type": "dateTime",
+          "description": "The scheduled date and time of the message in RFC3339 format (Y-m-dTH:i:sP)",
+          "default": ""
+        },
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "options",
+          "description": "The type of message. Values can be: sms, binary, or flash.",
+          "value": "binary",
+          "default": "",
+          "options": [
+            {
+              "name": "Binary",
+              "value": "binary",
+              "displayName": "Binary"
+            },
+            {
+              "name": "Flash",
+              "value": "flash",
+              "displayName": "Flash"
+            },
+            {
+              "name": "SMS",
+              "value": "sms",
+              "displayName": "Sms"
+            }
+          ]
+        },
+        {
+          "displayName": "Type Details",
+          "name": "typeDetails",
+          "type": "string",
+          "description": "A hash with extra information. Is only used when a binary message is sent.",
+          "default": ""
+        },
+        {
+          "displayName": "Validity",
+          "name": "validity",
+          "type": "number",
+          "description": "The amount of seconds that the message is valid",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1
+          }
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "originator",
+        "text": "14155238886"
+      },
+      {
+        "field": "recipients",
+        "text": "14155238886/+14155238886"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Fields"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

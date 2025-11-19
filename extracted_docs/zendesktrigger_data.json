@@ -1,0 +1,914 @@
+{
+  "node_info": {
+    "icon": "file:zendesk.svg",
+    "defaults": {
+      "name": "Zendesk Trigger"
+    },
+    "inputs": [],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "trigger"
+    ],
+    "authentication": [
+      {
+        "name": "zendeskApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "apiToken"
+            ]
+          }
+        }
+      },
+      {
+        "name": "zendeskOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getFields",
+      "for",
+      "if",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Zendesk Trigger",
+    "name": "zendeskTrigger",
+    "description": "Handle Zendesk events via webhooks",
+    "subtitle": "",
+    "version": "1",
+    "node_type": "trigger",
+    "webhooks": [
+      {
+        "name": "default",
+        "httpMethod": "POST",
+        "responseMode": "onReceived",
+        "path": "webhook"
+      }
+    ]
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.zendeskTrigger",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/zendesk/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.zendesktrigger/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "apiToken",
+      "default": "apiToken",
+      "options": [
+        {
+          "name": "API Token",
+          "value": "apiToken",
+          "displayName": "Api Token"
+        },
+        {
+          "name": "OAuth2",
+          "value": "oAuth2",
+          "displayName": "Oauth2"
+        }
+      ]
+    },
+    {
+      "displayName": "Service",
+      "name": "service",
+      "type": "options",
+      "value": "support",
+      "default": "support",
+      "required": true,
+      "options": [
+        {
+          "name": "Support",
+          "value": "support",
+          "displayName": "Support"
+        }
+      ]
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "The fields to return the values of. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Field Names or IDs",
+          "name": "fields",
+          "type": "multiOptions",
+          "description": "The fields to return the values of. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getFields"
+          }
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getFields"
+      },
+      "displayOptions": {
+        "show": {
+          "service": [
+            "support"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Conditions",
+      "name": "conditions",
+      "type": "fixedCollection",
+      "description": "The condition to set",
+      "placeholder": "Add Condition",
+      "default": {},
+      "options": [
+        {
+          "name": "all",
+          "displayName": "All",
+          "values": []
+        },
+        {
+          "name": "any",
+          "displayName": "Any",
+          "values": []
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "service": [
+            "support"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "ticket",
+      "default": "ticket",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Ticket",
+          "value": "ticket",
+          "displayName": "Ticket"
+        }
+      ],
+      "_source": "Condition_conditionFields"
+    },
+    {
+      "displayName": "Field",
+      "name": "field",
+      "type": "options",
+      "value": "assignee",
+      "default": "status",
+      "options": [
+        {
+          "name": "Assignee",
+          "value": "assignee",
+          "displayName": "Assignee"
+        },
+        {
+          "name": "Group",
+          "value": "group",
+          "displayName": "Group"
+        },
+        {
+          "name": "Priority",
+          "value": "priority",
+          "displayName": "Priority"
+        },
+        {
+          "name": "Status",
+          "value": "status",
+          "displayName": "Status"
+        },
+        {
+          "name": "Type",
+          "value": "type",
+          "displayName": "Type"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ]
+        }
+      },
+      "_source": "Condition_conditionFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "value": "changed",
+      "default": "is",
+      "options": [
+        {
+          "name": "Changed",
+          "value": "changed",
+          "displayName": "Changed"
+        },
+        {
+          "name": "Changed From",
+          "value": "value_previous",
+          "displayName": "Changed From"
+        },
+        {
+          "name": "Changed To",
+          "value": "value",
+          "displayName": "Changed To"
+        },
+        {
+          "name": "Greater Than",
+          "value": "greater_than",
+          "displayName": "Greater Than"
+        },
+        {
+          "name": "Is",
+          "value": "is",
+          "displayName": "Is"
+        },
+        {
+          "name": "Is Not",
+          "value": "is_not",
+          "displayName": "Is Not"
+        },
+        {
+          "name": "Less Than",
+          "value": "less_than",
+          "displayName": "Less Than"
+        },
+        {
+          "name": "Not Changed",
+          "value": "not_changed",
+          "displayName": "Not Changed"
+        },
+        {
+          "name": "Not Changed From",
+          "value": "not_value_previous",
+          "displayName": "Not Changed From"
+        },
+        {
+          "name": "Not Changed To",
+          "value": "not_value",
+          "displayName": "Not Changed To"
+        }
+      ],
+      "displayOptions": {
+        "hide": {
+          "field": [
+            "assignee"
+          ]
+        }
+      },
+      "_source": "Condition_conditionFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "value": "changed",
+      "default": "is",
+      "options": [
+        {
+          "name": "Changed",
+          "value": "changed",
+          "displayName": "Changed"
+        },
+        {
+          "name": "Changed From",
+          "value": "value_previous",
+          "displayName": "Changed From"
+        },
+        {
+          "name": "Changed To",
+          "value": "value",
+          "displayName": "Changed To"
+        },
+        {
+          "name": "Is",
+          "value": "is",
+          "displayName": "Is"
+        },
+        {
+          "name": "Is Not",
+          "value": "is_not",
+          "displayName": "Is Not"
+        },
+        {
+          "name": "Not Changed",
+          "value": "not_changed",
+          "displayName": "Not Changed"
+        },
+        {
+          "name": "Not Changed From",
+          "value": "not_value_previous",
+          "displayName": "Not Changed From"
+        },
+        {
+          "name": "Not Changed To",
+          "value": "not_value",
+          "displayName": "Not Changed To"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "field": [
+            "assignee"
+          ]
+        }
+      },
+      "_source": "Condition_conditionFields"
+    },
+    {
+      "displayName": "Value",
+      "name": "value",
+      "type": "options",
+      "value": "closed",
+      "default": "open",
+      "options": [
+        {
+          "name": "Closed",
+          "value": "closed",
+          "displayName": "Closed"
+        },
+        {
+          "name": "New",
+          "value": "new",
+          "displayName": "New"
+        },
+        {
+          "name": "Open",
+          "value": "open",
+          "displayName": "Open"
+        },
+        {
+          "name": "Pending",
+          "value": "pending",
+          "displayName": "Pending"
+        },
+        {
+          "name": "Solved",
+          "value": "solved",
+          "displayName": "Solved"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "field": [
+            "status"
+          ]
+        },
+        "hide": {
+          "operation": [
+            "changed",
+            "not_changed"
+          ],
+          "field": [
+            "assignee",
+            "group",
+            "priority",
+            "type"
+          ]
+        }
+      },
+      "_source": "Condition_conditionFields"
+    },
+    {
+      "displayName": "Value",
+      "name": "value",
+      "type": "options",
+      "value": "question",
+      "default": "question",
+      "options": [
+        {
+          "name": "Question",
+          "value": "question",
+          "displayName": "Question"
+        },
+        {
+          "name": "Incident",
+          "value": "incident",
+          "displayName": "Incident"
+        },
+        {
+          "name": "Problem",
+          "value": "problem",
+          "displayName": "Problem"
+        },
+        {
+          "name": "Task",
+          "value": "task",
+          "displayName": "Task"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "field": [
+            "type"
+          ]
+        },
+        "hide": {
+          "operation": [
+            "changed",
+            "not_changed"
+          ],
+          "field": [
+            "assignee",
+            "group",
+            "priority",
+            "status"
+          ]
+        }
+      },
+      "_source": "Condition_conditionFields"
+    },
+    {
+      "displayName": "Value",
+      "name": "value",
+      "type": "options",
+      "value": "low",
+      "default": "low",
+      "options": [
+        {
+          "name": "Low",
+          "value": "low",
+          "displayName": "Low"
+        },
+        {
+          "name": "Normal",
+          "value": "normal",
+          "displayName": "Normal"
+        },
+        {
+          "name": "High",
+          "value": "high",
+          "displayName": "High"
+        },
+        {
+          "name": "Urgent",
+          "value": "urgent",
+          "displayName": "Urgent"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "field": [
+            "priority"
+          ]
+        },
+        "hide": {
+          "operation": [
+            "changed",
+            "not_changed"
+          ],
+          "field": [
+            "assignee",
+            "group",
+            "type",
+            "status"
+          ]
+        }
+      },
+      "_source": "Condition_conditionFields"
+    },
+    {
+      "displayName": "Value",
+      "name": "value",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "typeOptions": {
+        "loadOptionsMethod": "getGroups"
+      },
+      "displayOptions": {
+        "show": {
+          "field": [
+            "group"
+          ]
+        },
+        "hide": {
+          "field": [
+            "assignee",
+            "priority",
+            "type",
+            "status"
+          ]
+        }
+      },
+      "_source": "Condition_conditionFields"
+    },
+    {
+      "displayName": "Value",
+      "name": "value",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "typeOptions": {
+        "loadOptionsMethod": "getUsers"
+      },
+      "displayOptions": {
+        "show": {
+          "field": [
+            "assignee"
+          ]
+        },
+        "hide": {
+          "field": [
+            "group",
+            "priority",
+            "type",
+            "status"
+          ]
+        }
+      },
+      "_source": "Condition_conditionFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Changed",
+      "value": "changed",
+      "displayName": "Changed"
+    },
+    {
+      "name": "Changed From",
+      "value": "value_previous",
+      "displayName": "Changed From"
+    },
+    {
+      "name": "Changed To",
+      "value": "value",
+      "displayName": "Changed To"
+    },
+    {
+      "name": "Greater Than",
+      "value": "greater_than",
+      "displayName": "Greater Than"
+    },
+    {
+      "name": "Is",
+      "value": "is",
+      "displayName": "Is"
+    },
+    {
+      "name": "Is Not",
+      "value": "is_not",
+      "displayName": "Is Not"
+    },
+    {
+      "name": "Less Than",
+      "value": "less_than",
+      "displayName": "Less Than"
+    },
+    {
+      "name": "Not Changed",
+      "value": "not_changed",
+      "displayName": "Not Changed"
+    },
+    {
+      "name": "Not Changed From",
+      "value": "not_value_previous",
+      "displayName": "Not Changed From"
+    },
+    {
+      "name": "Not Changed To",
+      "value": "not_value",
+      "displayName": "Not Changed To"
+    }
+  ],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "zendeskApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "apiToken"
+          ]
+        }
+      }
+    },
+    {
+      "name": "zendeskOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [],
+  "validation_rules": {
+    "service": {
+      "required": true
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "service": [
+            "support"
+          ]
+        }
+      }
+    },
+    "conditions": {
+      "displayOptions": {
+        "show": {
+          "service": [
+            "support"
+          ]
+        }
+      }
+    },
+    "field": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ]
+        }
+      }
+    },
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "field": [
+            "assignee"
+          ]
+        }
+      }
+    },
+    "value": {
+      "displayOptions": {
+        "show": {
+          "field": [
+            "assignee"
+          ]
+        },
+        "hide": {
+          "field": [
+            "group",
+            "priority",
+            "type",
+            "status"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "apiToken",
+          "name": "API Token",
+          "description": ""
+        },
+        {
+          "value": "oAuth2",
+          "name": "OAuth2",
+          "description": ""
+        }
+      ]
+    },
+    "service": {
+      "type": "options",
+      "displayName": "Service",
+      "name": "service",
+      "possibleValues": [
+        {
+          "value": "support",
+          "name": "Support",
+          "description": ""
+        }
+      ]
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "loadOptionsMethod": "getFields"
+      },
+      "subProperties": [
+        {
+          "displayName": "Field Names or IDs",
+          "name": "fields",
+          "type": "multiOptions",
+          "description": "The fields to return the values of. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getFields"
+          }
+        }
+      ]
+    },
+    "conditions": {
+      "type": "fixedCollection",
+      "displayName": "Conditions",
+      "name": "conditions",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "all",
+          "displayName": "All",
+          "values": []
+        },
+        {
+          "name": "any",
+          "displayName": "Any",
+          "values": []
+        }
+      ]
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "ticket",
+          "name": "Ticket",
+          "description": ""
+        }
+      ]
+    },
+    "field": {
+      "type": "options",
+      "displayName": "Field",
+      "name": "field",
+      "possibleValues": [
+        {
+          "value": "assignee",
+          "name": "Assignee",
+          "description": ""
+        },
+        {
+          "value": "group",
+          "name": "Group",
+          "description": ""
+        },
+        {
+          "value": "priority",
+          "name": "Priority",
+          "description": ""
+        },
+        {
+          "value": "status",
+          "name": "Status",
+          "description": ""
+        },
+        {
+          "value": "type",
+          "name": "Type",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "changed",
+          "name": "Changed",
+          "description": ""
+        },
+        {
+          "value": "value_previous",
+          "name": "Changed From",
+          "description": ""
+        },
+        {
+          "value": "value",
+          "name": "Changed To",
+          "description": ""
+        },
+        {
+          "value": "is",
+          "name": "Is",
+          "description": ""
+        },
+        {
+          "value": "is_not",
+          "name": "Is Not",
+          "description": ""
+        },
+        {
+          "value": "not_changed",
+          "name": "Not Changed",
+          "description": ""
+        },
+        {
+          "value": "not_value_previous",
+          "name": "Not Changed From",
+          "description": ""
+        },
+        {
+          "value": "not_value",
+          "name": "Not Changed To",
+          "description": ""
+        }
+      ]
+    },
+    "value": {
+      "type": "options",
+      "displayName": "Value",
+      "name": "value",
+      "typeOptions": {
+        "loadOptionsMethod": "getUsers"
+      },
+      "possibleValues": []
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "conditions",
+        "text": "Add Condition"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

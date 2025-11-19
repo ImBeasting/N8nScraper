@@ -1,0 +1,1461 @@
+{
+  "node_info": {
+    "icon": "file:mandrill.svg",
+    "defaults": {
+      "name": "Mandrill"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "mandrillApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getTemplates"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Mandrill",
+    "name": "mandrill",
+    "description": "Consume Mandrill API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.mandrill",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication",
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/mandrill/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.mandrill/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "Love at first sight: Ricardo\u2019s n8n journey",
+          "icon": "\u2764\ufe0f",
+          "url": "https://n8n.io/blog/love-at-first-sight-ricardos-n8n-journey/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "description": "Send a message",
+      "value": "message",
+      "default": "message",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Message",
+          "description": "Send a message",
+          "value": "message",
+          "displayName": "Message"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Send message based on template",
+      "action": "Send a message based on a template",
+      "value": "sendTemplate",
+      "default": "sendTemplate",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Send Template",
+          "description": "Send message based on template",
+          "action": "Send a message based on a template",
+          "value": "sendTemplate",
+          "displayName": "Send Template"
+        },
+        {
+          "name": "Send HTML",
+          "description": "Send message based on HTML",
+          "action": "Send a message based on HTML",
+          "value": "sendHtml",
+          "displayName": "Send Html"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Template Name or ID",
+      "name": "template",
+      "type": "options",
+      "description": "The template you want to send. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "options": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getTemplates"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendTemplate"
+          ]
+        }
+      },
+      "_operation": "sendTemplate"
+    },
+    {
+      "displayName": "From Email",
+      "name": "fromEmail",
+      "type": "string",
+      "description": "Email address of the sender optional with name",
+      "placeholder": "Admin <example@yourdomain.com>",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendHtml",
+            "sendTemplate"
+          ]
+        }
+      },
+      "_operation": "sendHtml,sendTemplate"
+    },
+    {
+      "displayName": "To Email",
+      "name": "toEmail",
+      "type": "string",
+      "description": "Email address of the recipient. Multiple ones can be separated by comma.",
+      "placeholder": "info@example.com",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendHtml",
+            "sendTemplate"
+          ]
+        }
+      },
+      "_operation": "sendHtml,sendTemplate"
+    },
+    {
+      "displayName": "JSON Parameters",
+      "name": "jsonParameters",
+      "type": "boolean",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendHtml",
+            "sendTemplate"
+          ]
+        }
+      },
+      "_operation": "sendHtml,sendTemplate"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to enable a background sending mode that is optimized for bulk sending. In async mode, messages/send will immediately return a status of \"queued\" for every recipient. To handle rejections when sending in async mode, set up a webhook for the 'reject' event. Defaults to false for messages with no more than 10 recipients; messages with more than 10 recipients are always sent asynchronously, regardless of the value of async.",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Async",
+          "name": "async",
+          "type": "boolean",
+          "description": "Whether to enable a background sending mode that is optimized for bulk sending. In async mode, messages/send will immediately return a status of \"queued\" for every recipient. To handle rejections when sending in async mode, set up a webhook for the 'reject' event. Defaults to false for messages with no more than 10 recipients; messages with more than 10 recipients are always sent asynchronously, regardless of the value of async.",
+          "default": false
+        },
+        {
+          "displayName": "Auto Text",
+          "name": "autoText",
+          "type": "boolean",
+          "description": "Whether or not to automatically generate a text part for messages that are not given text",
+          "default": false
+        },
+        {
+          "displayName": "Auto HTML",
+          "name": "autoHtml",
+          "type": "boolean",
+          "description": "Whether or not to automatically generate an HTML part for messages that are not given HTML",
+          "default": false
+        },
+        {
+          "displayName": "BCC Address",
+          "name": "bccAddress",
+          "type": "string",
+          "description": "An optional address to receive an exact copy of each recipient's email",
+          "placeholder": "message.bcc_address@example.com",
+          "default": ""
+        },
+        {
+          "displayName": "From Name",
+          "name": "fromName",
+          "type": "string",
+          "description": "Optional from name to be used",
+          "placeholder": "John Doe",
+          "default": ""
+        },
+        {
+          "displayName": "Google Analytics Campaign",
+          "name": "googleAnalyticsCampaign",
+          "type": "string",
+          "description": "Optional string indicating the value to set for the utm_campaign tracking parameter. If this isn't provided the email's from address will be used instead.",
+          "default": ""
+        },
+        {
+          "displayName": "Google Analytics Domains",
+          "name": "googleAnalyticsDomains",
+          "type": "string",
+          "description": "An array of strings separated by a comma (,) indicating for which any matching URLs will automatically have Google Analytics parameters appended to their query string automatically",
+          "default": ""
+        },
+        {
+          "displayName": "HTML",
+          "name": "html",
+          "type": "string",
+          "description": "The html you want to send",
+          "default": "",
+          "typeOptions": {
+            "rows": 5
+          }
+        },
+        {
+          "displayName": "Important",
+          "name": "important",
+          "type": "boolean",
+          "description": "Whether or not this message is important, and should be delivered ahead of non-important messages",
+          "default": false
+        },
+        {
+          "displayName": "Inline CSS",
+          "name": "inlineCss",
+          "type": "boolean",
+          "description": "Whether or not to automatically inline all CSS styles provided in the message HTML - only for HTML documents less than 256KB in size",
+          "default": false
+        },
+        {
+          "displayName": "Ip Pool",
+          "name": "ipPool",
+          "type": "string",
+          "description": "The name of the dedicated ip pool that should be used to send the message. If you do not have any dedicated IPs, this parameter has no effect. If you specify a pool that does not exist, your default pool will be used instead.",
+          "default": ""
+        },
+        {
+          "displayName": "Preserve Recipients",
+          "name": "preserveRecipients",
+          "type": "boolean",
+          "description": "Whether or not to expose all recipients in to \"To\" header for each email",
+          "default": false
+        },
+        {
+          "displayName": "Return Path Domain",
+          "name": "returnPathDomain",
+          "type": "string",
+          "description": "A custom domain to use for the messages's return-path",
+          "default": ""
+        },
+        {
+          "displayName": "Sent At",
+          "name": "sendAt",
+          "type": "dateTime",
+          "description": "When this message should be sent as a UTC timestamp in YYYY-MM-DD HH:MM:SS format. If you specify a time in the past, the message will be sent immediately. An additional fee applies for scheduled email, and this feature is only available to accounts with a positive balance.",
+          "default": ""
+        },
+        {
+          "displayName": "Signing Domain",
+          "name": "signingDomain",
+          "type": "string",
+          "description": "A custom domain to use for SPF/DKIM signing instead of mandrill(for \"via\" or \"on behalf of\" in email clients)",
+          "default": ""
+        },
+        {
+          "displayName": "Subaccount",
+          "name": "subAccount",
+          "type": "string",
+          "description": "The unique ID of a subaccount for this message - must already exist or will fail with an error",
+          "default": ""
+        },
+        {
+          "displayName": "Subject",
+          "name": "subject",
+          "type": "string",
+          "description": "Subject line of the email",
+          "placeholder": "My subject line",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "An array of string separated by a comma (,) to tag the message with. Stats are accumulated using tags, though we only store the first 100 we see, so this should not be unique or change frequently. Tags should be 50 characters or less. Any tags starting with an underscore are reserved for internal use and will cause errors.",
+          "default": ""
+        },
+        {
+          "displayName": "Text",
+          "name": "text",
+          "type": "string",
+          "description": "Example text content",
+          "default": "",
+          "typeOptions": {
+            "rows": 5
+          }
+        },
+        {
+          "displayName": "Track Clicks",
+          "name": "trackClicks",
+          "type": "boolean",
+          "description": "Whether or not to turn on click tracking for the message",
+          "default": false
+        },
+        {
+          "displayName": "Track Opens",
+          "name": "trackOpens",
+          "type": "boolean",
+          "description": "Whether or not to turn on open tracking for the message",
+          "default": false
+        },
+        {
+          "displayName": "Tracking Domain",
+          "name": "trackingDomain",
+          "type": "string",
+          "description": "A custom domain to use for tracking opens and clicks instead of mandrillapp.com",
+          "default": ""
+        },
+        {
+          "displayName": "Url Strip Qs",
+          "name": "urlStripQs",
+          "type": "boolean",
+          "description": "Whether or not to strip the query string from URLs when aggregating tracked URL data",
+          "default": false
+        },
+        {
+          "displayName": "View Content Link",
+          "name": "viewContentLink",
+          "type": "boolean",
+          "description": "Whether to remove content logging for sensitive emails",
+          "default": false
+        }
+      ],
+      "typeOptions": {
+        "rows": 5
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendHtml",
+            "sendTemplate"
+          ]
+        }
+      },
+      "_operation": "sendHtml,sendTemplate"
+    },
+    {
+      "displayName": "Merge Vars",
+      "name": "mergeVarsJson",
+      "type": "json",
+      "description": "Global merge variables",
+      "placeholder": "[\n\t{\n\t\t{ \"name\": \"name\", \"content\": \"content\" }\n\t}\n]",
+      "default": "",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Merge Vars",
+      "name": "mergeVarsUi",
+      "type": "fixedCollection",
+      "description": "Per-recipient merge variables",
+      "placeholder": "Add Merge Vars",
+      "default": {},
+      "options": [
+        {
+          "name": "mergeVarsValues",
+          "displayName": "Vars",
+          "values": [
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Content",
+              "name": "content",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            false
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Metadata",
+      "name": "metadataUi",
+      "type": "fixedCollection",
+      "description": "Metadata an associative array of user metadata. Mandrill will store this metadata and make it available for retrieval. In addition, you can select up to 10 metadata fields to index and make searchable using the Mandrill search api.",
+      "placeholder": "Add Metadata",
+      "default": {},
+      "options": [
+        {
+          "name": "metadataValues",
+          "displayName": "Metadata",
+          "values": [
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "default": "Name of the metadata key to add."
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "description": "Value to set for the metadata key",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            false
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Metadata",
+      "name": "metadataJson",
+      "type": "json",
+      "description": "Metadata an associative array of user metadata. Mandrill will store this metadata and make it available for retrieval. In addition, you can select up to 10 metadata fields to index and make searchable using the Mandrill search api.",
+      "placeholder": "{\n\t\"website\": \"www.example.com\"\n}",
+      "default": "",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Attachments",
+      "name": "attachmentsJson",
+      "type": "json",
+      "description": "An array of supported attachments to add to the message",
+      "placeholder": "[\n\t{\n\t\t\"type\": \"text/plain\" (the MIME type of the attachment),\n\t\t\"name\": \"myfile.txt\" (the file name of the attachment),\n\t\t\"content\": \"ZXhhbXBsZSBmaWxl\" (the content of the attachment as a base64-encoded string)\n\t}\n]",
+      "default": "",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Attachments",
+      "name": "attachmentsUi",
+      "type": "fixedCollection",
+      "description": "The MIME type of the attachment",
+      "placeholder": "Add Attachments",
+      "default": "",
+      "options": [
+        {
+          "name": "attachmentsValues",
+          "displayName": "Attachments Values",
+          "values": [
+            {
+              "displayName": "Type",
+              "name": "type",
+              "type": "string",
+              "description": "The MIME type of the attachment",
+              "placeholder": "text/plain",
+              "default": ""
+            },
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "description": "The file name of the attachment",
+              "placeholder": "myfile.txt",
+              "default": ""
+            },
+            {
+              "displayName": "Content",
+              "name": "content",
+              "type": "string",
+              "description": "The content of the attachment as a base64-encoded string",
+              "placeholder": "ZXhhbXBsZSBmaWxl",
+              "default": ""
+            }
+          ]
+        },
+        {
+          "name": "attachmentsBinary",
+          "displayName": "Attachments Binary",
+          "values": [
+            {
+              "displayName": "Property",
+              "name": "property",
+              "type": "string",
+              "description": "Name of the binary properties which contain data which should be added to email as attachment",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            false
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Headers",
+      "name": "headersJson",
+      "type": "json",
+      "description": "Optional extra headers to add to the message (most headers are allowed)",
+      "placeholder": "{\n\t\"Reply-To\": \"replies@example.com\"\n}",
+      "default": "",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Headers",
+      "name": "headersUi",
+      "type": "fixedCollection",
+      "description": "Optional extra headers to add to the message (most headers are allowed)",
+      "placeholder": "Add Headers",
+      "default": {},
+      "options": [
+        {
+          "name": "headersValues",
+          "displayName": "Values",
+          "values": [
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            false
+          ]
+        }
+      }
+    }
+  ],
+  "operations": [
+    {
+      "name": "Send Template",
+      "description": "Send message based on template",
+      "action": "Send a message based on a template",
+      "value": "sendTemplate",
+      "displayName": "Send Template"
+    },
+    {
+      "name": "Send HTML",
+      "description": "Send message based on HTML",
+      "action": "Send a message based on HTML",
+      "value": "sendHtml",
+      "displayName": "Send Html"
+    }
+  ],
+  "operations_by_resource": {
+    "message": [
+      {
+        "name": "Send Template",
+        "description": "Send message based on template",
+        "action": "Send a message based on a template",
+        "value": "sendTemplate",
+        "displayName": "Send Template"
+      },
+      {
+        "name": "Send HTML",
+        "description": "Send message based on HTML",
+        "action": "Send a message based on HTML",
+        "value": "sendHtml",
+        "displayName": "Send Html"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "mandrillApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [
+    {
+      "name": "Mandrill",
+      "parameters": {
+        "resource": "message",
+        "operation": "sendTemplate",
+        "template": "test-template-subaccount",
+        "fromEmail": "sender@example.com",
+        "toEmail": "recipient@example.com",
+        "options": {
+          "subAccount": "regression-test-subaccount",
+          "subject": "Testing subaccount functionality"
+        }
+      },
+      "credentials": {
+        "mandrillApi": {
+          "id": "test-credentials-id",
+          "name": "Test Mandrill API"
+        }
+      },
+      "position": [
+        220,
+        0
+      ],
+      "workflow_file": "sendTemplateWithSubaccount.workflow.json",
+      "workflow_name": "sendTemplateWithSubaccount"
+    },
+    {
+      "name": "Mandrill",
+      "parameters": {
+        "resource": "message",
+        "operation": "sendTemplate",
+        "template": "test-template",
+        "fromEmail": "sender@example.com",
+        "toEmail": "recipient@example.com",
+        "options": {
+          "subAccount": "test-subaccount"
+        }
+      },
+      "credentials": {
+        "mandrillApi": {
+          "id": "test-credentials-id",
+          "name": "Test Mandrill API"
+        }
+      },
+      "position": [
+        220,
+        0
+      ],
+      "workflow_file": "sendTemplate.workflow.json",
+      "workflow_name": "sendTemplate"
+    },
+    {
+      "name": "Mandrill",
+      "parameters": {
+        "operation": "sendHtml",
+        "fromEmail": "sender@example.com",
+        "toEmail": "recipient@example.com",
+        "options": {
+          "html": "<h1>Test HTML Content</h1>",
+          "subject": "Test HTML Subject"
+        }
+      },
+      "credentials": {
+        "mandrillApi": {
+          "id": "test-credentials-id",
+          "name": "Test Mandrill API"
+        }
+      },
+      "position": [
+        220,
+        0
+      ],
+      "workflow_file": "sendHtml.workflow.json",
+      "workflow_name": "sendHtml"
+    }
+  ],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ]
+        }
+      }
+    },
+    "template": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendTemplate"
+          ]
+        }
+      }
+    },
+    "fromEmail": {
+      "required": true,
+      "format": "email",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendHtml",
+            "sendTemplate"
+          ]
+        }
+      }
+    },
+    "toEmail": {
+      "required": true,
+      "format": "email",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendHtml",
+            "sendTemplate"
+          ]
+        }
+      }
+    },
+    "jsonParameters": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendHtml",
+            "sendTemplate"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendHtml",
+            "sendTemplate"
+          ]
+        }
+      }
+    },
+    "mergeVarsJson": {
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            true
+          ]
+        }
+      }
+    },
+    "mergeVarsUi": {
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            false
+          ]
+        }
+      }
+    },
+    "metadataUi": {
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            false
+          ]
+        }
+      }
+    },
+    "metadataJson": {
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            true
+          ]
+        }
+      }
+    },
+    "attachmentsJson": {
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            true
+          ]
+        }
+      }
+    },
+    "attachmentsUi": {
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            false
+          ]
+        }
+      }
+    },
+    "headersJson": {
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            true
+          ]
+        }
+      }
+    },
+    "headersUi": {
+      "displayOptions": {
+        "show": {
+          "jsonParameters": [
+            false
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "message",
+          "name": "Message",
+          "description": "Send a message"
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "sendTemplate",
+          "name": "Send Template",
+          "description": "Send message based on template"
+        },
+        {
+          "value": "sendHtml",
+          "name": "Send HTML",
+          "description": "Send message based on HTML"
+        }
+      ]
+    },
+    "template": {
+      "type": "options",
+      "displayName": "Template Name or ID",
+      "name": "template",
+      "typeOptions": {
+        "loadOptionsMethod": "getTemplates"
+      },
+      "possibleValues": []
+    },
+    "fromEmail": {
+      "type": "string",
+      "displayName": "From Email",
+      "name": "fromEmail"
+    },
+    "toEmail": {
+      "type": "string",
+      "displayName": "To Email",
+      "name": "toEmail"
+    },
+    "jsonParameters": {
+      "type": "boolean",
+      "displayName": "JSON Parameters",
+      "name": "jsonParameters"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "rows": 5
+      },
+      "subProperties": [
+        {
+          "displayName": "Async",
+          "name": "async",
+          "type": "boolean",
+          "description": "Whether to enable a background sending mode that is optimized for bulk sending. In async mode, messages/send will immediately return a status of \"queued\" for every recipient. To handle rejections when sending in async mode, set up a webhook for the 'reject' event. Defaults to false for messages with no more than 10 recipients; messages with more than 10 recipients are always sent asynchronously, regardless of the value of async.",
+          "default": false
+        },
+        {
+          "displayName": "Auto Text",
+          "name": "autoText",
+          "type": "boolean",
+          "description": "Whether or not to automatically generate a text part for messages that are not given text",
+          "default": false
+        },
+        {
+          "displayName": "Auto HTML",
+          "name": "autoHtml",
+          "type": "boolean",
+          "description": "Whether or not to automatically generate an HTML part for messages that are not given HTML",
+          "default": false
+        },
+        {
+          "displayName": "BCC Address",
+          "name": "bccAddress",
+          "type": "string",
+          "description": "An optional address to receive an exact copy of each recipient's email",
+          "placeholder": "message.bcc_address@example.com",
+          "default": ""
+        },
+        {
+          "displayName": "From Name",
+          "name": "fromName",
+          "type": "string",
+          "description": "Optional from name to be used",
+          "placeholder": "John Doe",
+          "default": ""
+        },
+        {
+          "displayName": "Google Analytics Campaign",
+          "name": "googleAnalyticsCampaign",
+          "type": "string",
+          "description": "Optional string indicating the value to set for the utm_campaign tracking parameter. If this isn't provided the email's from address will be used instead.",
+          "default": ""
+        },
+        {
+          "displayName": "Google Analytics Domains",
+          "name": "googleAnalyticsDomains",
+          "type": "string",
+          "description": "An array of strings separated by a comma (,) indicating for which any matching URLs will automatically have Google Analytics parameters appended to their query string automatically",
+          "default": ""
+        },
+        {
+          "displayName": "HTML",
+          "name": "html",
+          "type": "string",
+          "description": "The html you want to send",
+          "default": "",
+          "typeOptions": {
+            "rows": 5
+          }
+        },
+        {
+          "displayName": "Important",
+          "name": "important",
+          "type": "boolean",
+          "description": "Whether or not this message is important, and should be delivered ahead of non-important messages",
+          "default": false
+        },
+        {
+          "displayName": "Inline CSS",
+          "name": "inlineCss",
+          "type": "boolean",
+          "description": "Whether or not to automatically inline all CSS styles provided in the message HTML - only for HTML documents less than 256KB in size",
+          "default": false
+        },
+        {
+          "displayName": "Ip Pool",
+          "name": "ipPool",
+          "type": "string",
+          "description": "The name of the dedicated ip pool that should be used to send the message. If you do not have any dedicated IPs, this parameter has no effect. If you specify a pool that does not exist, your default pool will be used instead.",
+          "default": ""
+        },
+        {
+          "displayName": "Preserve Recipients",
+          "name": "preserveRecipients",
+          "type": "boolean",
+          "description": "Whether or not to expose all recipients in to \"To\" header for each email",
+          "default": false
+        },
+        {
+          "displayName": "Return Path Domain",
+          "name": "returnPathDomain",
+          "type": "string",
+          "description": "A custom domain to use for the messages's return-path",
+          "default": ""
+        },
+        {
+          "displayName": "Sent At",
+          "name": "sendAt",
+          "type": "dateTime",
+          "description": "When this message should be sent as a UTC timestamp in YYYY-MM-DD HH:MM:SS format. If you specify a time in the past, the message will be sent immediately. An additional fee applies for scheduled email, and this feature is only available to accounts with a positive balance.",
+          "default": ""
+        },
+        {
+          "displayName": "Signing Domain",
+          "name": "signingDomain",
+          "type": "string",
+          "description": "A custom domain to use for SPF/DKIM signing instead of mandrill(for \"via\" or \"on behalf of\" in email clients)",
+          "default": ""
+        },
+        {
+          "displayName": "Subaccount",
+          "name": "subAccount",
+          "type": "string",
+          "description": "The unique ID of a subaccount for this message - must already exist or will fail with an error",
+          "default": ""
+        },
+        {
+          "displayName": "Subject",
+          "name": "subject",
+          "type": "string",
+          "description": "Subject line of the email",
+          "placeholder": "My subject line",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "An array of string separated by a comma (,) to tag the message with. Stats are accumulated using tags, though we only store the first 100 we see, so this should not be unique or change frequently. Tags should be 50 characters or less. Any tags starting with an underscore are reserved for internal use and will cause errors.",
+          "default": ""
+        },
+        {
+          "displayName": "Text",
+          "name": "text",
+          "type": "string",
+          "description": "Example text content",
+          "default": "",
+          "typeOptions": {
+            "rows": 5
+          }
+        },
+        {
+          "displayName": "Track Clicks",
+          "name": "trackClicks",
+          "type": "boolean",
+          "description": "Whether or not to turn on click tracking for the message",
+          "default": false
+        },
+        {
+          "displayName": "Track Opens",
+          "name": "trackOpens",
+          "type": "boolean",
+          "description": "Whether or not to turn on open tracking for the message",
+          "default": false
+        },
+        {
+          "displayName": "Tracking Domain",
+          "name": "trackingDomain",
+          "type": "string",
+          "description": "A custom domain to use for tracking opens and clicks instead of mandrillapp.com",
+          "default": ""
+        },
+        {
+          "displayName": "Url Strip Qs",
+          "name": "urlStripQs",
+          "type": "boolean",
+          "description": "Whether or not to strip the query string from URLs when aggregating tracked URL data",
+          "default": false
+        },
+        {
+          "displayName": "View Content Link",
+          "name": "viewContentLink",
+          "type": "boolean",
+          "description": "Whether to remove content logging for sensitive emails",
+          "default": false
+        }
+      ]
+    },
+    "mergeVarsJson": {
+      "type": "json",
+      "displayName": "Merge Vars",
+      "name": "mergeVarsJson",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      }
+    },
+    "mergeVarsUi": {
+      "type": "fixedCollection",
+      "displayName": "Merge Vars",
+      "name": "mergeVarsUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "mergeVarsValues",
+          "displayName": "Vars",
+          "values": [
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Content",
+              "name": "content",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "metadataUi": {
+      "type": "fixedCollection",
+      "displayName": "Metadata",
+      "name": "metadataUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "metadataValues",
+          "displayName": "Metadata",
+          "values": [
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "default": "Name of the metadata key to add."
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "description": "Value to set for the metadata key",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "metadataJson": {
+      "type": "json",
+      "displayName": "Metadata",
+      "name": "metadataJson",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      }
+    },
+    "attachmentsJson": {
+      "type": "json",
+      "displayName": "Attachments",
+      "name": "attachmentsJson",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      }
+    },
+    "attachmentsUi": {
+      "type": "fixedCollection",
+      "displayName": "Attachments",
+      "name": "attachmentsUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "attachmentsValues",
+          "displayName": "Attachments Values",
+          "values": [
+            {
+              "displayName": "Type",
+              "name": "type",
+              "type": "string",
+              "description": "The MIME type of the attachment",
+              "placeholder": "text/plain",
+              "default": ""
+            },
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "description": "The file name of the attachment",
+              "placeholder": "myfile.txt",
+              "default": ""
+            },
+            {
+              "displayName": "Content",
+              "name": "content",
+              "type": "string",
+              "description": "The content of the attachment as a base64-encoded string",
+              "placeholder": "ZXhhbXBsZSBmaWxl",
+              "default": ""
+            }
+          ]
+        },
+        {
+          "name": "attachmentsBinary",
+          "displayName": "Attachments Binary",
+          "values": [
+            {
+              "displayName": "Property",
+              "name": "property",
+              "type": "string",
+              "description": "Name of the binary properties which contain data which should be added to email as attachment",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "headersJson": {
+      "type": "json",
+      "displayName": "Headers",
+      "name": "headersJson",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      }
+    },
+    "headersUi": {
+      "type": "fixedCollection",
+      "displayName": "Headers",
+      "name": "headersUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "headersValues",
+          "displayName": "Values",
+          "values": [
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "fromEmail",
+        "text": "Admin <example@yourdomain.com>"
+      },
+      {
+        "field": "toEmail",
+        "text": "info@example.com"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "mergeVarsJson",
+        "text": "[\n\t{\n\t\t{ \"name\": \"name\", \"content\": \"content\" }\n\t}\n]"
+      },
+      {
+        "field": "mergeVarsUi",
+        "text": "Add Merge Vars"
+      },
+      {
+        "field": "metadataUi",
+        "text": "Add Metadata"
+      },
+      {
+        "field": "metadataJson",
+        "text": "{\n\t\"website\": \"www.example.com\"\n}"
+      },
+      {
+        "field": "attachmentsJson",
+        "text": "[\n\t{\n\t\t\"type\": \"text/plain\" (the MIME type of the attachment),\n\t\t\"name\": \"myfile.txt\" (the file name of the attachment),\n\t\t\"content\": \"ZXhhbXBsZSBmaWxl\" (the content of the attachment as a base64-encoded string)\n\t}\n]"
+      },
+      {
+        "field": "attachmentsUi",
+        "text": "Add Attachments"
+      },
+      {
+        "field": "headersJson",
+        "text": "{\n\t\"Reply-To\": \"replies@example.com\"\n}"
+      },
+      {
+        "field": "headersUi",
+        "text": "Add Headers"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

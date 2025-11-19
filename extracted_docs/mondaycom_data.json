@@ -1,0 +1,2342 @@
+{
+  "node_info": {
+    "icon": "file:mondayCom.svg",
+    "defaults": {
+      "name": "Monday.com"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "mondayComApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "accessToken"
+            ]
+          }
+        }
+      },
+      {
+        "name": "mondayComOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getBoards",
+      "query",
+      "boards",
+      "limit"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Monday.com",
+    "name": "mondayCom",
+    "description": "Consume Monday.com API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.mondayCom",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Productivity"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/mondaycom/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.mondaycom/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "accessToken",
+      "default": "accessToken",
+      "options": [
+        {
+          "name": "Access Token",
+          "value": "accessToken",
+          "displayName": "Access Token"
+        },
+        {
+          "name": "OAuth2",
+          "value": "oAuth2",
+          "displayName": "Oauth2"
+        }
+      ]
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "board",
+      "default": "board",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Board",
+          "value": "board",
+          "displayName": "Board"
+        },
+        {
+          "name": "Board Column",
+          "value": "boardColumn",
+          "displayName": "Board Column"
+        },
+        {
+          "name": "Board Group",
+          "value": "boardGroup",
+          "displayName": "Board Group"
+        },
+        {
+          "name": "Board Item",
+          "value": "boardItem",
+          "displayName": "Board Item"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Archive a board",
+      "action": "Archive a board",
+      "value": "archive",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Archive",
+          "description": "Archive a board",
+          "action": "Archive a board",
+          "value": "archive",
+          "displayName": "Archive"
+        },
+        {
+          "name": "Create",
+          "description": "Create a new board",
+          "action": "Create a board",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Get",
+          "description": "Get a board",
+          "action": "Get a board",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many boards",
+          "action": "Get many boards",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "board"
+          ]
+        }
+      },
+      "_source": "Board_boardOperations"
+    },
+    {
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "type": "options",
+      "description": "Board unique identifiers. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "board"
+          ],
+          "operation": [
+            "archive"
+          ]
+        }
+      },
+      "_operation": "archive",
+      "_source": "Board_boardFields"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "The board's name",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "board"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Board_boardFields"
+    },
+    {
+      "displayName": "Kind",
+      "name": "kind",
+      "type": "options",
+      "description": "The board's kind (public / private / share)",
+      "value": "share",
+      "default": "",
+      "required": true,
+      "options": [
+        {
+          "name": "Share",
+          "value": "share",
+          "displayName": "Share"
+        },
+        {
+          "name": "Public",
+          "value": "public",
+          "displayName": "Public"
+        },
+        {
+          "name": "Private",
+          "value": "private",
+          "displayName": "Private"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "board"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Board_boardFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Optional board template ID",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Template ID",
+          "name": "templateId",
+          "type": "number",
+          "description": "Optional board template ID",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0
+          }
+        }
+      ],
+      "typeOptions": {
+        "minValue": 0
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "board"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Board_boardFields"
+    },
+    {
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "type": "options",
+      "description": "Board unique identifiers. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "board"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Board_boardFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "board"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Board_boardFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "board"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Board_boardFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new column",
+      "action": "Create a board column",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a new column",
+          "action": "Create a board column",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many columns",
+          "action": "Get many board columns",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardColumn"
+          ]
+        }
+      },
+      "_source": "BoardColumn_boardColumnOperations"
+    },
+    {
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardColumn"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "BoardColumn_boardColumnFields"
+    },
+    {
+      "displayName": "Title",
+      "name": "title",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardColumn"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "BoardColumn_boardColumnFields"
+    },
+    {
+      "displayName": "Column Type",
+      "name": "columnType",
+      "type": "options",
+      "value": "checkbox",
+      "default": "",
+      "required": true,
+      "options": [
+        {
+          "name": "Checkbox",
+          "value": "checkbox",
+          "displayName": "Checkbox"
+        },
+        {
+          "name": "Country",
+          "value": "country",
+          "displayName": "Country"
+        },
+        {
+          "name": "Date",
+          "value": "date",
+          "displayName": "Date"
+        },
+        {
+          "name": "Dropdown",
+          "value": "dropdown",
+          "displayName": "Dropdown"
+        },
+        {
+          "name": "Email",
+          "value": "email",
+          "displayName": "Email"
+        },
+        {
+          "name": "Hour",
+          "value": "hour",
+          "displayName": "Hour"
+        },
+        {
+          "name": "Link",
+          "value": "Link",
+          "displayName": "Link"
+        },
+        {
+          "name": "Long Text",
+          "value": "longText",
+          "displayName": "Long Text"
+        },
+        {
+          "name": "Numbers",
+          "value": "numbers",
+          "displayName": "Numbers"
+        },
+        {
+          "name": "People",
+          "value": "people",
+          "displayName": "People"
+        },
+        {
+          "name": "Person",
+          "value": "person",
+          "displayName": "Person"
+        },
+        {
+          "name": "Phone",
+          "value": "phone",
+          "displayName": "Phone"
+        },
+        {
+          "name": "Rating",
+          "value": "rating",
+          "displayName": "Rating"
+        },
+        {
+          "name": "Status",
+          "value": "status",
+          "displayName": "Status"
+        },
+        {
+          "name": "Tags",
+          "value": "tags",
+          "displayName": "Tags"
+        },
+        {
+          "name": "Team",
+          "value": "team",
+          "displayName": "Team"
+        },
+        {
+          "name": "Text",
+          "value": "text",
+          "displayName": "Text"
+        },
+        {
+          "name": "Timeline",
+          "value": "timeline",
+          "displayName": "Timeline"
+        },
+        {
+          "name": "Timezone",
+          "value": "timezone",
+          "displayName": "Timezone"
+        },
+        {
+          "name": "Week",
+          "value": "week",
+          "displayName": "Week"
+        },
+        {
+          "name": "World Clock",
+          "value": "worldClock",
+          "displayName": "World Clock"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardColumn"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "BoardColumn_boardColumnFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The new column's defaults",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Defauls",
+          "name": "defaults",
+          "type": "json",
+          "description": "The new column's defaults",
+          "default": "",
+          "typeOptions": {
+            "alwaysOpenEditWindow": true
+          }
+        }
+      ],
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardColumn"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "BoardColumn_boardColumnFields"
+    },
+    {
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardColumn"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "BoardColumn_boardColumnFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Delete a group in a board",
+      "action": "Delete a board group",
+      "value": "delete",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Delete",
+          "description": "Delete a group in a board",
+          "action": "Delete a board group",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Create",
+          "description": "Create a group in a board",
+          "action": "Create a board group",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get list of groups in a board",
+          "action": "Get many board groups",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardGroup"
+          ]
+        }
+      },
+      "_source": "BoardGroup_boardGroupOperations"
+    },
+    {
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardGroup"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "BoardGroup_boardGroupFields"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "The group name",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "boardGroup"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "BoardGroup_boardGroupFields"
+    },
+    {
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardGroup"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "BoardGroup_boardGroupFields"
+    },
+    {
+      "displayName": "Group Name or ID",
+      "name": "groupId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getGroups"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardGroup"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "BoardGroup_boardGroupFields"
+    },
+    {
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardGroup"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "BoardGroup_boardGroupFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Add an update to an item",
+      "action": "Add an update to an item",
+      "value": "addUpdate",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Add Update",
+          "description": "Add an update to an item",
+          "action": "Add an update to an item",
+          "value": "addUpdate",
+          "displayName": "Add Update"
+        },
+        {
+          "name": "Change Column Value",
+          "description": "Change a column value for a board item",
+          "action": "Change a column value for a board item",
+          "value": "changeColumnValue",
+          "displayName": "Change Column Value"
+        },
+        {
+          "name": "Change Multiple Column Values",
+          "description": "Change multiple column values for a board item",
+          "action": "Change multiple column values for a board item",
+          "value": "changeMultipleColumnValues",
+          "displayName": "Change Multiple Column Values"
+        },
+        {
+          "name": "Create",
+          "description": "Create an item in a board's group",
+          "action": "Create an item in a board's group",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete an item",
+          "action": "Delete an item",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get an item",
+          "action": "Get an item",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get By Column Value",
+          "description": "Get items by column value",
+          "action": "Get items item by column value",
+          "value": "getByColumnValue",
+          "displayName": "Get By Column Value"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many items",
+          "action": "Get many items",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Move",
+          "description": "Move item to group",
+          "action": "Move an item to a group",
+          "value": "move",
+          "displayName": "Move"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ]
+        }
+      },
+      "_source": "BoardItem_boardItemOperations"
+    },
+    {
+      "displayName": "Item ID",
+      "name": "itemId",
+      "type": "string",
+      "description": "The unique identifier of the item to add update to",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "addUpdate"
+          ]
+        }
+      },
+      "_operation": "addUpdate",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Update Text",
+      "name": "value",
+      "type": "string",
+      "description": "The update text to add",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "addUpdate"
+          ]
+        }
+      },
+      "_operation": "addUpdate",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "type": "options",
+      "description": "The unique identifier of the board. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "changeColumnValue"
+          ]
+        }
+      },
+      "_operation": "changeColumnValue",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Item ID",
+      "name": "itemId",
+      "type": "string",
+      "description": "The unique identifier of the item to change column of",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "changeColumnValue"
+          ]
+        }
+      },
+      "_operation": "changeColumnValue",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Column Name or ID",
+      "name": "columnId",
+      "type": "options",
+      "description": "The column's unique identifier. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getColumns"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "changeColumnValue"
+          ]
+        }
+      },
+      "_operation": "changeColumnValue",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Value",
+      "name": "value",
+      "type": "json",
+      "description": "The column value in JSON format. Documentation can be found <a href=\"https://monday.com/developers/v2#mutations-section-columns-change-column-value\">here</a>.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "changeColumnValue"
+          ]
+        }
+      },
+      "_operation": "changeColumnValue",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "type": "options",
+      "description": "The unique identifier of the board. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "changeMultipleColumnValues"
+          ]
+        }
+      },
+      "_operation": "changeMultipleColumnValues",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Item ID",
+      "name": "itemId",
+      "type": "string",
+      "description": "Item's ID",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "changeMultipleColumnValues"
+          ]
+        }
+      },
+      "_operation": "changeMultipleColumnValues",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Column Values",
+      "name": "columnValues",
+      "type": "json",
+      "description": "The column fields and values in JSON format. Documentation can be found <a href=\"https://monday.com/developers/v2#mutations-section-columns-change-multiple-column-values\">here</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "changeMultipleColumnValues"
+          ]
+        }
+      },
+      "_operation": "changeMultipleColumnValues",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Group Name or ID",
+      "name": "groupId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getGroups"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "The new item's name",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "boardItem"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The column values of the new item",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Column Values",
+          "name": "columnValues",
+          "type": "json",
+          "description": "The column values of the new item",
+          "default": "",
+          "typeOptions": {
+            "alwaysOpenEditWindow": true
+          }
+        }
+      ],
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "boardItem"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Item ID",
+      "name": "itemId",
+      "type": "string",
+      "description": "Item's ID",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Item ID",
+      "name": "itemId",
+      "type": "string",
+      "description": "Item's ID (Multiple can be added separated by comma)",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Group Name or ID",
+      "name": "groupId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getGroups"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "type": "options",
+      "description": "The unique identifier of the board. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "getByColumnValue"
+          ]
+        }
+      },
+      "_operation": "getByColumnValue",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Column Name or ID",
+      "name": "columnId",
+      "type": "options",
+      "description": "The column's unique identifier. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getColumns"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "getByColumnValue"
+          ]
+        }
+      },
+      "_operation": "getByColumnValue",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Column Value",
+      "name": "columnValue",
+      "type": "string",
+      "description": "The column value to search items by",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "getByColumnValue"
+          ]
+        }
+      },
+      "_operation": "getByColumnValue",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "getByColumnValue"
+          ]
+        }
+      },
+      "_operation": "getByColumnValue",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "getByColumnValue"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getByColumnValue",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "move"
+          ]
+        }
+      },
+      "_operation": "move",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Item ID",
+      "name": "itemId",
+      "type": "string",
+      "description": "The item's ID",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "move"
+          ],
+          "resource": [
+            "boardItem"
+          ]
+        }
+      },
+      "_operation": "move",
+      "_source": "BoardItem_boardItemFields"
+    },
+    {
+      "displayName": "Group Name or ID",
+      "name": "groupId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getGroups"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "move"
+          ]
+        }
+      },
+      "_operation": "move",
+      "_source": "BoardItem_boardItemFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Archive",
+      "description": "Archive a board",
+      "action": "Archive a board",
+      "value": "archive",
+      "displayName": "Archive"
+    },
+    {
+      "name": "Create",
+      "description": "Create a new board",
+      "action": "Create a board",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Get",
+      "description": "Get a board",
+      "action": "Get a board",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many boards",
+      "action": "Get many boards",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a group in a board",
+      "action": "Delete a board group",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Add Update",
+      "description": "Add an update to an item",
+      "action": "Add an update to an item",
+      "value": "addUpdate",
+      "displayName": "Add Update"
+    },
+    {
+      "name": "Change Column Value",
+      "description": "Change a column value for a board item",
+      "action": "Change a column value for a board item",
+      "value": "changeColumnValue",
+      "displayName": "Change Column Value"
+    },
+    {
+      "name": "Change Multiple Column Values",
+      "description": "Change multiple column values for a board item",
+      "action": "Change multiple column values for a board item",
+      "value": "changeMultipleColumnValues",
+      "displayName": "Change Multiple Column Values"
+    },
+    {
+      "name": "Get By Column Value",
+      "description": "Get items by column value",
+      "action": "Get items item by column value",
+      "value": "getByColumnValue",
+      "displayName": "Get By Column Value"
+    },
+    {
+      "name": "Move",
+      "description": "Move item to group",
+      "action": "Move an item to a group",
+      "value": "move",
+      "displayName": "Move"
+    }
+  ],
+  "operations_by_resource": {
+    "board": [
+      {
+        "name": "Archive",
+        "description": "Archive a board",
+        "action": "Archive a board",
+        "value": "archive",
+        "displayName": "Archive"
+      },
+      {
+        "name": "Create",
+        "description": "Create a new board",
+        "action": "Create a board",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Get",
+        "description": "Get a board",
+        "action": "Get a board",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many boards",
+        "action": "Get many boards",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "boardColumn": [
+      {
+        "name": "Create",
+        "description": "Create a new column",
+        "action": "Create a board column",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many columns",
+        "action": "Get many board columns",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "boardGroup": [
+      {
+        "name": "Delete",
+        "description": "Delete a group in a board",
+        "action": "Delete a board group",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Create",
+        "description": "Create a group in a board",
+        "action": "Create a board group",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get list of groups in a board",
+        "action": "Get many board groups",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "boardItem": [
+      {
+        "name": "Add Update",
+        "description": "Add an update to an item",
+        "action": "Add an update to an item",
+        "value": "addUpdate",
+        "displayName": "Add Update"
+      },
+      {
+        "name": "Change Column Value",
+        "description": "Change a column value for a board item",
+        "action": "Change a column value for a board item",
+        "value": "changeColumnValue",
+        "displayName": "Change Column Value"
+      },
+      {
+        "name": "Change Multiple Column Values",
+        "description": "Change multiple column values for a board item",
+        "action": "Change multiple column values for a board item",
+        "value": "changeMultipleColumnValues",
+        "displayName": "Change Multiple Column Values"
+      },
+      {
+        "name": "Create",
+        "description": "Create an item in a board's group",
+        "action": "Create an item in a board's group",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete an item",
+        "action": "Delete an item",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get an item",
+        "action": "Get an item",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get By Column Value",
+        "description": "Get items by column value",
+        "action": "Get items item by column value",
+        "value": "getByColumnValue",
+        "displayName": "Get By Column Value"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many items",
+        "action": "Get many items",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Move",
+        "description": "Move item to group",
+        "action": "Move an item to a group",
+        "value": "move",
+        "displayName": "Move"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "mondayComApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "accessToken"
+          ]
+        }
+      }
+    },
+    {
+      "name": "mondayComOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ]
+        }
+      }
+    },
+    "boardId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "move"
+          ]
+        }
+      }
+    },
+    "name": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "boardItem"
+          ]
+        }
+      }
+    },
+    "kind": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "board"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "boardItem"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "getByColumnValue"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "getByColumnValue"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "title": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardColumn"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "columnType": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardColumn"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "groupId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "move"
+          ]
+        }
+      }
+    },
+    "itemId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "move"
+          ],
+          "resource": [
+            "boardItem"
+          ]
+        }
+      }
+    },
+    "value": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "changeColumnValue"
+          ]
+        }
+      }
+    },
+    "columnId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "getByColumnValue"
+          ]
+        }
+      }
+    },
+    "columnValues": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "changeMultipleColumnValues"
+          ]
+        }
+      }
+    },
+    "columnValue": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "boardItem"
+          ],
+          "operation": [
+            "getByColumnValue"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "accessToken",
+          "name": "Access Token",
+          "description": ""
+        },
+        {
+          "value": "oAuth2",
+          "name": "OAuth2",
+          "description": ""
+        }
+      ]
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "board",
+          "name": "Board",
+          "description": ""
+        },
+        {
+          "value": "boardColumn",
+          "name": "Board Column",
+          "description": ""
+        },
+        {
+          "value": "boardGroup",
+          "name": "Board Group",
+          "description": ""
+        },
+        {
+          "value": "boardItem",
+          "name": "Board Item",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "addUpdate",
+          "name": "Add Update",
+          "description": "Add an update to an item"
+        },
+        {
+          "value": "changeColumnValue",
+          "name": "Change Column Value",
+          "description": "Change a column value for a board item"
+        },
+        {
+          "value": "changeMultipleColumnValues",
+          "name": "Change Multiple Column Values",
+          "description": "Change multiple column values for a board item"
+        },
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create an item in a board's group"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete an item"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get an item"
+        },
+        {
+          "value": "getByColumnValue",
+          "name": "Get By Column Value",
+          "description": "Get items by column value"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get many items"
+        },
+        {
+          "value": "move",
+          "name": "Move",
+          "description": "Move item to group"
+        }
+      ]
+    },
+    "boardId": {
+      "type": "options",
+      "displayName": "Board Name or ID",
+      "name": "boardId",
+      "typeOptions": {
+        "loadOptionsMethod": "getBoards"
+      },
+      "possibleValues": []
+    },
+    "name": {
+      "type": "string",
+      "displayName": "Name",
+      "name": "name"
+    },
+    "kind": {
+      "type": "options",
+      "displayName": "Kind",
+      "name": "kind",
+      "possibleValues": [
+        {
+          "value": "share",
+          "name": "Share",
+          "description": ""
+        },
+        {
+          "value": "public",
+          "name": "Public",
+          "description": ""
+        },
+        {
+          "value": "private",
+          "name": "Private",
+          "description": ""
+        }
+      ]
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Column Values",
+          "name": "columnValues",
+          "type": "json",
+          "description": "The column values of the new item",
+          "default": "",
+          "typeOptions": {
+            "alwaysOpenEditWindow": true
+          }
+        }
+      ]
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      }
+    },
+    "title": {
+      "type": "string",
+      "displayName": "Title",
+      "name": "title"
+    },
+    "columnType": {
+      "type": "options",
+      "displayName": "Column Type",
+      "name": "columnType",
+      "possibleValues": [
+        {
+          "value": "checkbox",
+          "name": "Checkbox",
+          "description": ""
+        },
+        {
+          "value": "country",
+          "name": "Country",
+          "description": ""
+        },
+        {
+          "value": "date",
+          "name": "Date",
+          "description": ""
+        },
+        {
+          "value": "dropdown",
+          "name": "Dropdown",
+          "description": ""
+        },
+        {
+          "value": "email",
+          "name": "Email",
+          "description": ""
+        },
+        {
+          "value": "hour",
+          "name": "Hour",
+          "description": ""
+        },
+        {
+          "value": "Link",
+          "name": "Link",
+          "description": ""
+        },
+        {
+          "value": "longText",
+          "name": "Long Text",
+          "description": ""
+        },
+        {
+          "value": "numbers",
+          "name": "Numbers",
+          "description": ""
+        },
+        {
+          "value": "people",
+          "name": "People",
+          "description": ""
+        },
+        {
+          "value": "person",
+          "name": "Person",
+          "description": ""
+        },
+        {
+          "value": "phone",
+          "name": "Phone",
+          "description": ""
+        },
+        {
+          "value": "rating",
+          "name": "Rating",
+          "description": ""
+        },
+        {
+          "value": "status",
+          "name": "Status",
+          "description": ""
+        },
+        {
+          "value": "tags",
+          "name": "Tags",
+          "description": ""
+        },
+        {
+          "value": "team",
+          "name": "Team",
+          "description": ""
+        },
+        {
+          "value": "text",
+          "name": "Text",
+          "description": ""
+        },
+        {
+          "value": "timeline",
+          "name": "Timeline",
+          "description": ""
+        },
+        {
+          "value": "timezone",
+          "name": "Timezone",
+          "description": ""
+        },
+        {
+          "value": "week",
+          "name": "Week",
+          "description": ""
+        },
+        {
+          "value": "worldClock",
+          "name": "World Clock",
+          "description": ""
+        }
+      ]
+    },
+    "groupId": {
+      "type": "options",
+      "displayName": "Group Name or ID",
+      "name": "groupId",
+      "typeOptions": {
+        "loadOptionsMethod": "getGroups"
+      },
+      "possibleValues": []
+    },
+    "itemId": {
+      "type": "string",
+      "displayName": "Item ID",
+      "name": "itemId"
+    },
+    "value": {
+      "type": "json",
+      "displayName": "Value",
+      "name": "value"
+    },
+    "columnId": {
+      "type": "options",
+      "displayName": "Column Name or ID",
+      "name": "columnId",
+      "typeOptions": {
+        "loadOptionsMethod": "getColumns"
+      },
+      "possibleValues": []
+    },
+    "columnValues": {
+      "type": "json",
+      "displayName": "Column Values",
+      "name": "columnValues",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      }
+    },
+    "columnValue": {
+      "type": "string",
+      "displayName": "Column Value",
+      "name": "columnValue"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [
+      "POST"
+    ],
+    "endpoints": [],
+    "headers": [
+      "Content-Type",
+      "API-Version"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

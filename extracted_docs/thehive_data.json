@@ -1,0 +1,4903 @@
+{
+  "node_info": {
+    "icon": "file:thehive.svg",
+    "defaults": {
+      "name": "TheHive"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "theHiveApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "loadResponders"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "TheHive",
+    "name": "theHive",
+    "description": "Consume TheHive API",
+    "subtitle": "={{$parameter[\"operation\"]}} : {{$parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.theHive",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/thehive/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.thehive/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "alert",
+      "default": "alert",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Alert",
+          "value": "alert",
+          "displayName": "Alert"
+        },
+        {
+          "name": "Case",
+          "value": "case",
+          "displayName": "Case"
+        },
+        {
+          "name": "Log",
+          "value": "log",
+          "displayName": "Log"
+        },
+        {
+          "name": "Observable",
+          "value": "observable",
+          "displayName": "Observable"
+        },
+        {
+          "name": "Task",
+          "value": "task",
+          "displayName": "Task"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation Name or ID",
+      "name": "operation",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "create",
+      "required": true,
+      "noDataExpression": true,
+      "typeOptions": {
+        "loadOptionsMethod": "loadAlertOptions"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ]
+        }
+      },
+      "_source": "Alert_alertOperations"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "alert"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "alert"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Alert ID",
+      "name": "id",
+      "type": "string",
+      "description": "Title of the alert",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "promote",
+            "markAsRead",
+            "markAsUnread",
+            "merge",
+            "update",
+            "executeResponder",
+            "get",
+            ""
+          ]
+        }
+      },
+      "_operation": "promote,markAsRead,markAsUnread,merge,update,executeResponder,get,",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "caseId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "merge"
+          ]
+        }
+      },
+      "_operation": "merge",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Title",
+      "name": "title",
+      "type": "string",
+      "description": "Title of the alert",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Description",
+      "name": "description",
+      "type": "string",
+      "description": "Description of the alert",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Severity",
+      "name": "severity",
+      "type": "options",
+      "description": "Severity of the alert. Default=Medium.",
+      "default": 2,
+      "required": true,
+      "options": [
+        {
+          "name": "Low",
+          "displayName": "Low"
+        },
+        {
+          "name": "Medium",
+          "displayName": "Medium"
+        },
+        {
+          "name": "High",
+          "displayName": "High"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Date",
+      "name": "date",
+      "type": "dateTime",
+      "description": "Date and time when the alert was raised default=now",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Tags",
+      "name": "tags",
+      "type": "string",
+      "description": "Case Tags",
+      "placeholder": "tag,tag2,tag3...",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "TLP",
+      "name": "tlp",
+      "type": "options",
+      "description": "Traffict Light Protocol (TLP). Default=Amber.",
+      "default": 2,
+      "required": true,
+      "options": [
+        {
+          "name": "White",
+          "displayName": "White"
+        },
+        {
+          "name": "Green",
+          "displayName": "Green"
+        },
+        {
+          "name": "Amber",
+          "displayName": "Amber"
+        },
+        {
+          "name": "Red",
+          "displayName": "Red"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Status",
+      "name": "status",
+      "type": "options",
+      "description": "Status of the alert",
+      "value": "New",
+      "default": "New",
+      "required": true,
+      "options": [
+        {
+          "name": "New",
+          "value": "New",
+          "displayName": "New"
+        },
+        {
+          "name": "Updated",
+          "value": "Updated",
+          "displayName": "Updated"
+        },
+        {
+          "name": "Ignored",
+          "value": "Ignored",
+          "displayName": "Ignored"
+        },
+        {
+          "name": "Imported",
+          "value": "Imported",
+          "displayName": "Imported"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Type",
+      "name": "type",
+      "type": "string",
+      "description": "Type of the alert",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Source",
+      "name": "source",
+      "type": "string",
+      "description": "Source of the alert",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "SourceRef",
+      "name": "sourceRef",
+      "type": "string",
+      "description": "Source reference of the alert",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Follow",
+      "name": "follow",
+      "type": "boolean",
+      "description": "Whether the alert becomes active when updated default=true",
+      "default": true,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Artifacts",
+      "name": "artifactUi",
+      "type": "fixedCollection",
+      "description": "Type of the observable. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add Artifact",
+      "hint": "The name of the input binary field containing the file to be written",
+      "default": {},
+      "options": [
+        {
+          "name": "artifactValues",
+          "displayName": "Artifact",
+          "values": [
+            {
+              "displayName": "Data Type Name or ID",
+              "name": "dataType",
+              "type": "options",
+              "description": "Type of the observable. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": "",
+              "typeOptions": {
+                "loadOptionsMethod": "loadObservableTypes"
+              }
+            },
+            {
+              "displayName": "Data",
+              "name": "data",
+              "type": "string",
+              "default": "",
+              "displayOptions": {
+                "hide": {
+                  "dataType": [
+                    "file"
+                  ]
+                }
+              }
+            },
+            {
+              "displayName": "Input Binary Field",
+              "name": "binaryProperty",
+              "type": "string",
+              "hint": "The name of the input binary field containing the file to be written",
+              "default": "data",
+              "displayOptions": {
+                "show": {
+                  "dataType": [
+                    "file"
+                  ]
+                }
+              }
+            },
+            {
+              "displayName": "Message",
+              "name": "message",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Case Tags",
+              "name": "tags",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Responder Name or ID",
+      "name": "responder",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "loadResponders"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "executeResponder"
+          ]
+        },
+        "hide": {
+          "id": [
+            ""
+          ]
+        }
+      },
+      "_operation": "executeResponder",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "JSON Parameters",
+      "name": "jsonParameters",
+      "type": "boolean",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Case template to use when a case is created from this alert",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Case Template",
+          "name": "caseTemplate",
+          "type": "string",
+          "description": "Case template to use when a case is created from this alert",
+          "default": ""
+        },
+        {
+          "displayName": "Custom Fields",
+          "name": "customFieldsUi",
+          "type": "fixedCollection",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "placeholder": "Add Custom Field",
+          "default": {},
+          "options": [
+            {
+              "name": "customFields",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Field Name or ID",
+                  "name": "field",
+                  "type": "options",
+                  "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+                  "default": "Custom Field",
+                  "typeOptions": {
+                    "loadOptionsMethod": "loadCustomFields"
+                  }
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "Custom Field value. Use an expression if the type is not a string.",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Custom Fields (JSON)",
+          "name": "customFieldsJson",
+          "type": "string",
+          "description": "Custom fields in JSON format. Overrides Custom Fields UI if set.",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Case template to use when a case is created from this alert",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Case Template",
+          "name": "caseTemplate",
+          "type": "string",
+          "description": "Case template to use when a case is created from this alert",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "promote"
+          ]
+        }
+      },
+      "_operation": "promote",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Type of the observable. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add Field",
+      "hint": "The name of the input binary field containing the file to be written",
+      "value": "New",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Artifacts",
+          "name": "artifactUi",
+          "type": "fixedCollection",
+          "description": "Type of the observable. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "placeholder": "Add Artifact",
+          "hint": "The name of the input binary field containing the file to be written",
+          "default": {},
+          "options": [
+            {
+              "name": "artifactValues",
+              "displayName": "Artifact",
+              "values": [
+                {
+                  "displayName": "Data Type Name or ID",
+                  "name": "dataType",
+                  "type": "options",
+                  "description": "Type of the observable. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+                  "default": "",
+                  "typeOptions": {
+                    "loadOptionsMethod": "loadObservableTypes"
+                  }
+                },
+                {
+                  "displayName": "Data",
+                  "name": "data",
+                  "type": "string",
+                  "default": "",
+                  "displayOptions": {
+                    "hide": {
+                      "dataType": [
+                        "file"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "displayName": "Input Binary Field",
+                  "name": "binaryProperty",
+                  "type": "string",
+                  "hint": "The name of the input binary field containing the file to be written",
+                  "default": "data",
+                  "displayOptions": {
+                    "show": {
+                      "dataType": [
+                        "file"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "displayName": "Message",
+                  "name": "message",
+                  "type": "string",
+                  "default": ""
+                },
+                {
+                  "displayName": "Case Tags",
+                  "name": "tags",
+                  "type": "string",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "hide": {
+              "dataType": [
+                "file"
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Custom Fields",
+          "name": "customFieldsUi",
+          "type": "fixedCollection",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "placeholder": "Add Custom Field",
+          "default": {},
+          "options": [
+            {
+              "name": "customFields",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Field Name or ID",
+                  "name": "field",
+                  "type": "options",
+                  "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+                  "default": "Custom Field",
+                  "typeOptions": {
+                    "loadOptionsMethod": "loadCustomFields"
+                  }
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "Custom Field value. Use an expression if the type is not a string.",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Custom Fields (JSON)",
+          "name": "customFieldsJson",
+          "type": "string",
+          "description": "Custom fields in JSON format. Overrides Custom Fields UI if set.",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Case Template",
+          "name": "caseTemplate",
+          "type": "string",
+          "description": "Case template to use when a case is created from this alert",
+          "default": ""
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Description of the alert",
+          "default": ""
+        },
+        {
+          "displayName": "Follow",
+          "name": "follow",
+          "type": "boolean",
+          "description": "Whether the alert becomes active when updated default=true",
+          "default": true
+        },
+        {
+          "displayName": "Severity",
+          "name": "severity",
+          "type": "options",
+          "description": "Severity of the alert. Default=Medium.",
+          "default": 2,
+          "options": [
+            {
+              "name": "Low",
+              "displayName": "Low"
+            },
+            {
+              "name": "Medium",
+              "displayName": "Medium"
+            },
+            {
+              "name": "High",
+              "displayName": "High"
+            }
+          ]
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "value": "New",
+          "default": "New",
+          "options": [
+            {
+              "name": "New",
+              "value": "New",
+              "displayName": "New"
+            },
+            {
+              "name": "Updated",
+              "value": "Updated",
+              "displayName": "Updated"
+            },
+            {
+              "name": "Ignored",
+              "value": "Ignored",
+              "displayName": "Ignored"
+            },
+            {
+              "name": "Imported",
+              "value": "Imported",
+              "displayName": "Imported"
+            }
+          ]
+        },
+        {
+          "displayName": "Case Tags",
+          "name": "tags",
+          "type": "string",
+          "placeholder": "tag,tag2,tag3...",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Title of the alert",
+          "default": ""
+        },
+        {
+          "displayName": "TLP",
+          "name": "tlp",
+          "type": "options",
+          "description": "Traffict Light Protocol (TLP). Default=Amber.",
+          "default": 2,
+          "options": [
+            {
+              "name": "White",
+              "displayName": "White"
+            },
+            {
+              "name": "Green",
+              "displayName": "Green"
+            },
+            {
+              "name": "Amber",
+              "displayName": "Amber"
+            },
+            {
+              "name": "Red",
+              "displayName": "Red"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Sort",
+          "name": "sort",
+          "type": "string",
+          "placeholder": "\u00b1Attribut, exp +status",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "alert"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to include similar cases",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include Similar Cases",
+          "name": "includeSimilar",
+          "type": "boolean",
+          "description": "Whether to include similar cases",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "alert"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "placeholder": "Add Filter",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Custom Fields",
+          "name": "customFieldsUi",
+          "type": "fixedCollection",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "placeholder": "Add Custom Field",
+          "default": {},
+          "options": [
+            {
+              "name": "customFields",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Field Name or ID",
+                  "name": "field",
+                  "type": "options",
+                  "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+                  "default": "Custom Field",
+                  "typeOptions": {
+                    "loadOptionsMethod": "loadCustomFields"
+                  }
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "Custom Field value. Use an expression if the type is not a string.",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Description of the alert",
+          "default": ""
+        },
+        {
+          "displayName": "Follow",
+          "name": "follow",
+          "type": "boolean",
+          "description": "Whether the alert becomes active when updated default=true",
+          "default": false
+        },
+        {
+          "displayName": "Severity",
+          "name": "severity",
+          "type": "options",
+          "description": "Severity of the alert. Default=Medium.",
+          "default": 2,
+          "options": [
+            {
+              "name": "Low",
+              "displayName": "Low"
+            },
+            {
+              "name": "Medium",
+              "displayName": "Medium"
+            },
+            {
+              "name": "High",
+              "displayName": "High"
+            }
+          ]
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "placeholder": "tag,tag2,tag3...",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "TLP",
+          "name": "tlp",
+          "type": "options",
+          "description": "Traffict Light Protocol (TLP). Default=Amber.",
+          "default": 2,
+          "options": [
+            {
+              "name": "White",
+              "displayName": "White"
+            },
+            {
+              "name": "Green",
+              "displayName": "Green"
+            },
+            {
+              "name": "Amber",
+              "displayName": "Amber"
+            },
+            {
+              "name": "Red",
+              "displayName": "Red"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "getAll",
+            "count"
+          ]
+        }
+      },
+      "_operation": "getAll,count",
+      "_source": "Alert_alertFields"
+    },
+    {
+      "displayName": "Operation Name or ID",
+      "name": "operation",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "getAll",
+      "required": true,
+      "noDataExpression": true,
+      "typeOptions": {
+        "loadOptionsMethod": "loadObservableOptions"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ]
+        }
+      },
+      "_source": "Observable_observableOperations"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "caseId",
+      "type": "string",
+      "description": "ID of the case",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create",
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "create,getAll",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll",
+            "search"
+          ],
+          "resource": [
+            "observable"
+          ]
+        }
+      },
+      "_operation": "getAll,search",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll",
+            "search"
+          ],
+          "resource": [
+            "observable"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll,search",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Observable ID",
+      "name": "id",
+      "type": "string",
+      "description": "ID of the observable",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "update",
+            "executeResponder",
+            "executeAnalyzer",
+            "get"
+          ]
+        }
+      },
+      "_operation": "update,executeResponder,executeAnalyzer,get",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Data Type Name or ID",
+      "name": "dataType",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "loadObservableTypes"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create",
+            "executeAnalyzer"
+          ]
+        }
+      },
+      "_operation": "create,executeAnalyzer",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Data",
+      "name": "data",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create"
+          ]
+        },
+        "hide": {
+          "dataType": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Input Binary Field",
+      "name": "binaryProperty",
+      "type": "string",
+      "description": "The name of the input binary field that represent the attachment file",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create"
+          ],
+          "dataType": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Message",
+      "name": "message",
+      "type": "string",
+      "description": "Description of the observable in the context of the case",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Start Date",
+      "name": "startDate",
+      "type": "dateTime",
+      "description": "Date and time of the begin of the case default=now",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "TLP",
+      "name": "tlp",
+      "type": "options",
+      "description": "Traffict Light Protocol (TLP). Default=Amber.",
+      "default": 2,
+      "required": true,
+      "options": [
+        {
+          "name": "White",
+          "displayName": "White"
+        },
+        {
+          "name": "Green",
+          "displayName": "Green"
+        },
+        {
+          "name": "Amber",
+          "displayName": "Amber"
+        },
+        {
+          "name": "Red",
+          "displayName": "Red"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "IOC",
+      "name": "ioc",
+      "type": "boolean",
+      "description": "Whether the observable is an IOC (Indicator of compromise)",
+      "default": false,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Sighted",
+      "name": "sighted",
+      "type": "boolean",
+      "description": "Whether sighted previously",
+      "default": false,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Status",
+      "name": "status",
+      "type": "options",
+      "description": "Status of the observable. Default=Ok.",
+      "value": "Ok",
+      "default": "",
+      "required": true,
+      "options": [
+        {
+          "name": "Ok",
+          "value": "Ok",
+          "displayName": "Ok"
+        },
+        {
+          "name": "Deleted",
+          "value": "Deleted",
+          "displayName": "Deleted"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Analyzer Names or IDs",
+      "name": "analyzers",
+      "type": "multiOptions",
+      "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": [],
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "loadAnalyzers"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "executeAnalyzer"
+          ]
+        },
+        "hide": {
+          "id": [
+            ""
+          ]
+        }
+      },
+      "_operation": "executeAnalyzer",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Responder Name or ID",
+      "name": "responder",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "loadResponders"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "executeResponder"
+          ]
+        },
+        "hide": {
+          "id": [
+            ""
+          ]
+        }
+      },
+      "_operation": "executeResponder",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Observable Tags",
+          "name": "tags",
+          "type": "string",
+          "placeholder": "tag1,tag2",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Description of the observable in the context of the case",
+      "placeholder": "tag1,tag2",
+      "value": "Ok",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Message",
+          "name": "message",
+          "type": "string",
+          "description": "Description of the observable in the context of the case",
+          "default": ""
+        },
+        {
+          "displayName": "Observable Tags",
+          "name": "tags",
+          "type": "string",
+          "placeholder": "tag1,tag2",
+          "default": ""
+        },
+        {
+          "displayName": "TLP",
+          "name": "tlp",
+          "type": "options",
+          "description": "Traffict Light Protocol (TLP). Default=Amber.",
+          "default": 2,
+          "options": [
+            {
+              "name": "White",
+              "displayName": "White"
+            },
+            {
+              "name": "Green",
+              "displayName": "Green"
+            },
+            {
+              "name": "Amber",
+              "displayName": "Amber"
+            },
+            {
+              "name": "Red",
+              "displayName": "Red"
+            }
+          ]
+        },
+        {
+          "displayName": "IOC",
+          "name": "ioc",
+          "type": "boolean",
+          "description": "Whether the observable is an IOC (Indicator of compromise)",
+          "default": false
+        },
+        {
+          "displayName": "Sighted",
+          "name": "sighted",
+          "type": "boolean",
+          "description": "Whether sighted previously",
+          "default": false
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Status of the observable. Default=Ok.",
+          "value": "Ok",
+          "default": "",
+          "options": [
+            {
+              "name": "Ok",
+              "value": "Ok",
+              "displayName": "Ok"
+            },
+            {
+              "name": "Deleted",
+              "value": "Deleted",
+              "displayName": "Deleted"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Specify the sorting attribut, + for asc, - for desc",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Sort",
+          "name": "sort",
+          "type": "string",
+          "description": "Specify the sorting attribut, + for asc, - for desc",
+          "placeholder": "\u00b1Attribut, exp +status",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll",
+            "search"
+          ],
+          "resource": [
+            "observable"
+          ]
+        }
+      },
+      "_operation": "getAll,search",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "placeholder": "Add Filter",
+      "value": "Ok",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Data Type Names or IDs",
+          "name": "dataType",
+          "type": "multiOptions",
+          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "loadObservableTypes"
+          }
+        },
+        {
+          "displayName": "Date Range",
+          "name": "range",
+          "type": "fixedCollection",
+          "default": {},
+          "options": [
+            {
+              "name": "dateRange",
+              "displayName": "Add Date Range Inputs",
+              "values": [
+                {
+                  "displayName": "From Date",
+                  "name": "fromDate",
+                  "type": "dateTime",
+                  "default": ""
+                },
+                {
+                  "displayName": "To Date",
+                  "name": "toDate",
+                  "type": "dateTime",
+                  "default": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "placeholder": "exp,freetext",
+          "default": ""
+        },
+        {
+          "displayName": "IOC",
+          "name": "ioc",
+          "type": "boolean",
+          "description": "Whether the observable is an IOC (Indicator of compromise)",
+          "default": false
+        },
+        {
+          "displayName": "Keyword",
+          "name": "keyword",
+          "type": "string",
+          "placeholder": "exp,freetext",
+          "default": ""
+        },
+        {
+          "displayName": "Message",
+          "name": "message",
+          "type": "string",
+          "description": "Description of the observable in the context of the case",
+          "default": ""
+        },
+        {
+          "displayName": "Observable Tags",
+          "name": "tags",
+          "type": "string",
+          "placeholder": "tag1,tag2",
+          "default": ""
+        },
+        {
+          "displayName": "Sighted",
+          "name": "sighted",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "displayName": "Status",
+          "name": "Status",
+          "type": "options",
+          "description": "Status of the observable. Default=Ok.",
+          "value": "Ok",
+          "default": "",
+          "options": [
+            {
+              "name": "Ok",
+              "value": "Ok",
+              "displayName": "Ok"
+            },
+            {
+              "name": "Deleted",
+              "value": "Deleted",
+              "displayName": "Deleted"
+            }
+          ]
+        },
+        {
+          "displayName": "TLP",
+          "name": "tlp",
+          "type": "options",
+          "description": "Traffict Light Protocol (TLP). Default=Amber.",
+          "default": 2,
+          "options": [
+            {
+              "name": "White",
+              "displayName": "White"
+            },
+            {
+              "name": "Green",
+              "displayName": "Green"
+            },
+            {
+              "name": "Amber",
+              "displayName": "Amber"
+            },
+            {
+              "name": "Red",
+              "displayName": "Red"
+            }
+          ]
+        },
+        {
+          "displayName": "Value",
+          "name": "data",
+          "type": "string",
+          "placeholder": "example.com; 8.8.8.8",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "loadObservableTypes"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "search",
+            "count"
+          ]
+        }
+      },
+      "_operation": "search,count",
+      "_source": "Observable_observableFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "getAll",
+      "required": true,
+      "noDataExpression": true,
+      "typeOptions": {
+        "loadOptionsMethod": "loadCaseOptions"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ]
+        }
+      },
+      "_source": "Case_caseOperations"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "case"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "case"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "id",
+      "type": "string",
+      "description": "ID of the case",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "update",
+            "executeResponder",
+            "get"
+          ]
+        }
+      },
+      "_operation": "update,executeResponder,get",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Title",
+      "name": "title",
+      "type": "string",
+      "description": "Title of the case",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Description",
+      "name": "description",
+      "type": "string",
+      "description": "Description of the case",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Severity",
+      "name": "severity",
+      "type": "options",
+      "description": "Severity of the alert. Default=Medium.",
+      "default": 2,
+      "required": true,
+      "options": [
+        {
+          "name": "Low",
+          "displayName": "Low"
+        },
+        {
+          "name": "Medium",
+          "displayName": "Medium"
+        },
+        {
+          "name": "High",
+          "displayName": "High"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Start Date",
+      "name": "startDate",
+      "type": "dateTime",
+      "description": "Date and time of the begin of the case default=now",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Owner",
+      "name": "owner",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Flag",
+      "name": "flag",
+      "type": "boolean",
+      "description": "Flag of the case default=false",
+      "default": false,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "TLP",
+      "name": "tlp",
+      "type": "options",
+      "description": "Traffict Light Protocol (TLP). Default=Amber.",
+      "default": 2,
+      "required": true,
+      "options": [
+        {
+          "name": "White",
+          "displayName": "White"
+        },
+        {
+          "name": "Green",
+          "displayName": "Green"
+        },
+        {
+          "name": "Amber",
+          "displayName": "Amber"
+        },
+        {
+          "name": "Red",
+          "displayName": "Red"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Tags",
+      "name": "tags",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Responder Name or ID",
+      "name": "responder",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "loadResponders"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "executeResponder"
+          ]
+        },
+        "hide": {
+          "id": [
+            ""
+          ]
+        }
+      },
+      "_operation": "executeResponder",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "JSON Parameters",
+      "name": "jsonParameters",
+      "type": "boolean",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Custom Fields",
+          "name": "customFieldsUi",
+          "type": "fixedCollection",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "placeholder": "Add Custom Field",
+          "default": {},
+          "options": [
+            {
+              "name": "customFields",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Field Name or ID",
+                  "name": "field",
+                  "type": "options",
+                  "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+                  "default": "Custom Field",
+                  "typeOptions": {
+                    "loadOptionsMethod": "loadCustomFields"
+                  }
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "Custom Field value. Use an expression if the type is not a string.",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Custom Fields (JSON)",
+          "name": "customFieldsJson",
+          "type": "string",
+          "description": "Custom fields in JSON format. Overrides Custom Fields UI if set.",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "End Date",
+          "name": "endDate",
+          "type": "dateTime",
+          "description": "Resolution date",
+          "default": ""
+        },
+        {
+          "displayName": "Summary",
+          "name": "summary",
+          "type": "string",
+          "description": "Summary of the case, to be provided when closing a case",
+          "default": ""
+        },
+        {
+          "displayName": "Metrics (JSON)",
+          "name": "metrics",
+          "type": "json",
+          "description": "List of metrics",
+          "default": "[]",
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "placeholder": "Add Field",
+      "value": "NoImpact",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Custom Fields",
+          "name": "customFieldsUi",
+          "type": "fixedCollection",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "placeholder": "Add Custom Field",
+          "default": {},
+          "options": [
+            {
+              "name": "customFields",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Field Name or ID",
+                  "name": "field",
+                  "type": "options",
+                  "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+                  "default": "Custom Field",
+                  "typeOptions": {
+                    "loadOptionsMethod": "loadCustomFields"
+                  }
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "Custom Field value. Use an expression if the type is not a string.",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Custom Fields (JSON)",
+          "name": "customFieldsJson",
+          "type": "string",
+          "description": "Custom fields in JSON format. Overrides Custom Fields UI if set.",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Description of the case",
+          "default": ""
+        },
+        {
+          "displayName": "End Date",
+          "name": "endDate",
+          "type": "dateTime",
+          "description": "Resolution date",
+          "default": ""
+        },
+        {
+          "displayName": "Flag",
+          "name": "flag",
+          "type": "boolean",
+          "description": "Flag of the case default=false",
+          "default": false
+        },
+        {
+          "displayName": "Impact Status",
+          "name": "impactStatus",
+          "type": "options",
+          "description": "Impact status of the case",
+          "value": "NoImpact",
+          "default": "",
+          "options": [
+            {
+              "name": "No Impact",
+              "value": "NoImpact",
+              "displayName": "No Impact"
+            },
+            {
+              "name": "With Impact",
+              "value": "WithImpact",
+              "displayName": "With Impact"
+            },
+            {
+              "name": "Not Applicable",
+              "value": "NotApplicable",
+              "displayName": "Not Applicable"
+            }
+          ]
+        },
+        {
+          "displayName": "Metrics (JSON)",
+          "name": "metrics",
+          "type": "json",
+          "description": "List of metrics",
+          "default": "[]",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Owner",
+          "name": "owner",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Resolution Status",
+          "name": "resolutionStatus",
+          "type": "options",
+          "description": "Resolution status of the case",
+          "value": "Duplicated",
+          "default": "",
+          "options": [
+            {
+              "name": "Duplicated",
+              "value": "Duplicated",
+              "displayName": "Duplicated"
+            },
+            {
+              "name": "False Positive",
+              "value": "FalsePositive",
+              "displayName": "False Positive"
+            },
+            {
+              "name": "Indeterminate",
+              "value": "Indeterminate",
+              "displayName": "Indeterminate"
+            },
+            {
+              "name": "Other",
+              "value": "Other",
+              "displayName": "Other"
+            },
+            {
+              "name": "True Positive",
+              "value": "TruePositive",
+              "displayName": "True Positive"
+            }
+          ]
+        },
+        {
+          "displayName": "Severity",
+          "name": "severity",
+          "type": "options",
+          "description": "Severity of the alert. Default=Medium.",
+          "default": 2,
+          "options": [
+            {
+              "name": "Low",
+              "displayName": "Low"
+            },
+            {
+              "name": "Medium",
+              "displayName": "Medium"
+            },
+            {
+              "name": "High",
+              "displayName": "High"
+            }
+          ]
+        },
+        {
+          "displayName": "Start Date",
+          "name": "startDate",
+          "type": "dateTime",
+          "description": "Date and time of the begin of the case default=now",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "value": "Open",
+          "default": "Open",
+          "options": [
+            {
+              "name": "Open",
+              "value": "Open",
+              "displayName": "Open"
+            },
+            {
+              "name": "Resolved",
+              "value": "Resolved",
+              "displayName": "Resolved"
+            },
+            {
+              "name": "Deleted",
+              "value": "Deleted",
+              "displayName": "Deleted"
+            }
+          ]
+        },
+        {
+          "displayName": "Summary",
+          "name": "summary",
+          "type": "string",
+          "description": "Summary of the case, to be provided when closing a case",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Title of the case",
+          "default": ""
+        },
+        {
+          "displayName": "TLP",
+          "name": "tlp",
+          "type": "options",
+          "description": "Traffict Light Protocol (TLP). Default=Amber.",
+          "default": 2,
+          "options": [
+            {
+              "name": "White",
+              "displayName": "White"
+            },
+            {
+              "name": "Green",
+              "displayName": "Green"
+            },
+            {
+              "name": "Amber",
+              "displayName": "Amber"
+            },
+            {
+              "name": "Red",
+              "displayName": "Red"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Specify the sorting attribut, + for asc, - for desc",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Sort",
+          "name": "sort",
+          "type": "string",
+          "description": "Specify the sorting attribut, + for asc, - for desc",
+          "placeholder": "\u00b1Attribut, exp +status",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "case"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "placeholder": "Add a Filter",
+      "value": "NoImpact",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Custom Fields",
+          "name": "customFieldsUi",
+          "type": "fixedCollection",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "placeholder": "Add Custom Field",
+          "default": {},
+          "options": [
+            {
+              "name": "customFields",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Field Name or ID",
+                  "name": "field",
+                  "type": "options",
+                  "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+                  "default": "Custom Field",
+                  "typeOptions": {
+                    "loadOptionsMethod": "loadCustomFields"
+                  }
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "Custom Field value. Use an expression if the type is not a string.",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Description of the case",
+          "default": ""
+        },
+        {
+          "displayName": "End Date",
+          "name": "endDate",
+          "type": "dateTime",
+          "description": "Resolution date",
+          "default": ""
+        },
+        {
+          "displayName": "Flag",
+          "name": "flag",
+          "type": "boolean",
+          "description": "Flag of the case default=false",
+          "default": false
+        },
+        {
+          "displayName": "Impact Status",
+          "name": "impactStatus",
+          "type": "options",
+          "value": "NoImpact",
+          "default": "",
+          "options": [
+            {
+              "name": "No Impact",
+              "value": "NoImpact",
+              "displayName": "No Impact"
+            },
+            {
+              "name": "With Impact",
+              "value": "WithImpact",
+              "displayName": "With Impact"
+            },
+            {
+              "name": "Not Applicable",
+              "value": "NotApplicable",
+              "displayName": "Not Applicable"
+            }
+          ]
+        },
+        {
+          "displayName": "Owner",
+          "name": "owner",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Resolution Status",
+          "name": "resolutionStatus",
+          "type": "options",
+          "value": "Duplicated",
+          "default": "",
+          "options": [
+            {
+              "name": "Duplicated",
+              "value": "Duplicated",
+              "displayName": "Duplicated"
+            },
+            {
+              "name": "FalsePositive",
+              "value": "False Positive",
+              "displayName": "False Positive"
+            },
+            {
+              "name": "Indeterminate",
+              "value": "Indeterminate",
+              "displayName": "Indeterminate"
+            },
+            {
+              "name": "Other",
+              "value": "Other",
+              "displayName": "Other"
+            },
+            {
+              "name": "TruePositive",
+              "value": "True Positive",
+              "displayName": "True Positive"
+            }
+          ]
+        },
+        {
+          "displayName": "Severity",
+          "name": "severity",
+          "type": "options",
+          "description": "Severity of the alert. Default=Medium.",
+          "default": 2,
+          "options": [
+            {
+              "name": "Low",
+              "displayName": "Low"
+            },
+            {
+              "name": "Medium",
+              "displayName": "Medium"
+            },
+            {
+              "name": "High",
+              "displayName": "High"
+            }
+          ]
+        },
+        {
+          "displayName": "Start Date",
+          "name": "startDate",
+          "type": "dateTime",
+          "description": "Date and time of the begin of the case default=now",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "value": "Open",
+          "default": "Open",
+          "options": [
+            {
+              "name": "Open",
+              "value": "Open",
+              "displayName": "Open"
+            },
+            {
+              "name": "Resolved",
+              "value": "Resolved",
+              "displayName": "Resolved"
+            },
+            {
+              "name": "Deleted",
+              "value": "Deleted",
+              "displayName": "Deleted"
+            }
+          ]
+        },
+        {
+          "displayName": "Summary",
+          "name": "summary",
+          "type": "string",
+          "description": "Summary of the case, to be provided when closing a case",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Title of the case",
+          "default": ""
+        },
+        {
+          "displayName": "TLP",
+          "name": "tlp",
+          "type": "options",
+          "description": "Traffict Light Protocol (TLP). Default=Amber.",
+          "default": 2,
+          "options": [
+            {
+              "name": "White",
+              "displayName": "White"
+            },
+            {
+              "name": "Green",
+              "displayName": "Green"
+            },
+            {
+              "name": "Amber",
+              "displayName": "Amber"
+            },
+            {
+              "name": "Red",
+              "displayName": "Red"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "getAll",
+            "count"
+          ]
+        }
+      },
+      "_operation": "getAll,count",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Operation Name or ID",
+      "name": "operation",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "getAll",
+      "required": true,
+      "noDataExpression": true,
+      "typeOptions": {
+        "loadOptionsMethod": "loadTaskOptions"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_source": "Task_taskOperations"
+    },
+    {
+      "displayName": "Task ID",
+      "name": "id",
+      "type": "string",
+      "description": "ID of the taks",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "update",
+            "executeResponder",
+            "get"
+          ]
+        }
+      },
+      "_operation": "update,executeResponder,get",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "caseId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create",
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "create,getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "search",
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "search,getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "search",
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "search,getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Title",
+      "name": "title",
+      "type": "string",
+      "description": "Task details",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Status",
+      "name": "status",
+      "type": "options",
+      "description": "Status of the task. Default=Waiting.",
+      "value": "Cancel",
+      "default": "Waiting",
+      "required": true,
+      "options": [
+        {
+          "name": "Cancel",
+          "value": "Cancel",
+          "displayName": "Cancel"
+        },
+        {
+          "name": "Completed",
+          "value": "Completed",
+          "displayName": "Completed"
+        },
+        {
+          "name": "InProgress",
+          "value": "InProgress",
+          "displayName": "In Progress"
+        },
+        {
+          "name": "Waiting",
+          "value": "Waiting",
+          "displayName": "Waiting"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Flag",
+      "name": "flag",
+      "type": "boolean",
+      "description": "Whether to flag the task. Default=false.",
+      "default": false,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Responder Name or ID",
+      "name": "responder",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "loadResponders"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "executeResponder"
+          ]
+        },
+        "hide": {
+          "id": [
+            ""
+          ]
+        }
+      },
+      "_operation": "executeResponder",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Task details",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Task details",
+          "default": ""
+        },
+        {
+          "displayName": "End Date",
+          "name": "endDate",
+          "type": "dateTime",
+          "description": "Date of the end of the task. This is automatically set when status is set to Completed.",
+          "default": ""
+        },
+        {
+          "displayName": "Owner",
+          "name": "owner",
+          "type": "string",
+          "description": "User who owns the task. This is automatically set to current user when status is set to InProgress.",
+          "default": ""
+        },
+        {
+          "displayName": "Start Date",
+          "name": "startDate",
+          "type": "dateTime",
+          "description": "Date of the beginning of the task. This is automatically set when status is set to Open.",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Task details",
+      "placeholder": "Add Field",
+      "value": "Cancel",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Task details",
+          "default": ""
+        },
+        {
+          "displayName": "End Date",
+          "name": "endDate",
+          "type": "dateTime",
+          "description": "Date of the end of the task. This is automatically set when status is set to Completed.",
+          "default": ""
+        },
+        {
+          "displayName": "Flag",
+          "name": "flag",
+          "type": "boolean",
+          "description": "Whether to flag the task. Default=false.",
+          "default": false
+        },
+        {
+          "displayName": "Owner",
+          "name": "owner",
+          "type": "string",
+          "description": "User who owns the task. This is automatically set to current user when status is set to InProgress.",
+          "default": ""
+        },
+        {
+          "displayName": "Start Date",
+          "name": "startDate",
+          "type": "dateTime",
+          "description": "Date of the beginning of the task. This is automatically set when status is set to Open.",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Status of the task. Default=Waiting.",
+          "value": "Cancel",
+          "default": "Waiting",
+          "options": [
+            {
+              "name": "Cancel",
+              "value": "Cancel",
+              "displayName": "Cancel"
+            },
+            {
+              "name": "Completed",
+              "value": "Completed",
+              "displayName": "Completed"
+            },
+            {
+              "name": "In Progress",
+              "value": "InProgress",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Waiting",
+              "value": "Waiting",
+              "displayName": "Waiting"
+            }
+          ]
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Task details",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Specify the sorting attribut, + for asc, - for desc",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Sort",
+          "name": "sort",
+          "type": "string",
+          "description": "Specify the sorting attribut, + for asc, - for desc",
+          "placeholder": "\u00b1Attribut, exp +status",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll",
+            "search"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "getAll,search",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Task details",
+      "placeholder": "Add Filter",
+      "value": "Cancel",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Task details",
+          "default": ""
+        },
+        {
+          "displayName": "End Date",
+          "name": "endDate",
+          "type": "dateTime",
+          "description": "Date of the end of the task. This is automatically set when status is set to Completed.",
+          "default": ""
+        },
+        {
+          "displayName": "Flag",
+          "name": "flag",
+          "type": "boolean",
+          "description": "Whether to flag the task. Default=false.",
+          "default": false
+        },
+        {
+          "displayName": "Owner",
+          "name": "owner",
+          "type": "string",
+          "description": "User who owns the task. This is automatically set to current user when status is set to InProgress.",
+          "default": ""
+        },
+        {
+          "displayName": "Start Date",
+          "name": "startDate",
+          "type": "dateTime",
+          "description": "Date of the beginning of the task. This is automatically set when status is set to Open.",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Status of the task. Default=Waiting.",
+          "value": "Cancel",
+          "default": "Waiting",
+          "options": [
+            {
+              "name": "Cancel",
+              "value": "Cancel",
+              "displayName": "Cancel"
+            },
+            {
+              "name": "Completed",
+              "value": "Completed",
+              "displayName": "Completed"
+            },
+            {
+              "name": "In Progress",
+              "value": "InProgress",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Waiting",
+              "value": "Waiting",
+              "displayName": "Waiting"
+            }
+          ]
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Task details",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "search",
+            "count"
+          ]
+        }
+      },
+      "_operation": "search,count",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create task log",
+      "action": "Create a log",
+      "value": "create",
+      "default": "getAll",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create task log",
+          "action": "Create a log",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Execute Responder",
+          "description": "Execute a responder on a selected log",
+          "action": "Execute a responder",
+          "value": "executeResponder",
+          "displayName": "Execute Responder"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many task logs",
+          "action": "Get many logs",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Get",
+          "description": "Get a single log",
+          "action": "Get a log",
+          "value": "get",
+          "displayName": "Get"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ]
+        }
+      },
+      "_source": "Log_logOperations"
+    },
+    {
+      "displayName": "Task ID",
+      "name": "taskId",
+      "type": "string",
+      "description": "ID of the task",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "create",
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "create,getAll",
+      "_source": "Log_logFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "log"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Log_logFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "log"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Log_logFields"
+    },
+    {
+      "displayName": "Log ID",
+      "name": "id",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "executeResponder",
+            "get"
+          ]
+        }
+      },
+      "_operation": "executeResponder,get",
+      "_source": "Log_logFields"
+    },
+    {
+      "displayName": "Message",
+      "name": "message",
+      "type": "string",
+      "description": "Content of the Log",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Log_logFields"
+    },
+    {
+      "displayName": "Start Date",
+      "name": "startDate",
+      "type": "dateTime",
+      "description": "Date of the log submission default=now",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Log_logFields"
+    },
+    {
+      "displayName": "Status",
+      "name": "status",
+      "type": "options",
+      "description": "Status of the log (Ok or Deleted) default=Ok",
+      "value": "Ok",
+      "default": "",
+      "required": true,
+      "options": [
+        {
+          "name": "Ok",
+          "value": "Ok",
+          "displayName": "Ok"
+        },
+        {
+          "name": "Deleted",
+          "value": "Deleted",
+          "displayName": "Deleted"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Log_logFields"
+    },
+    {
+      "displayName": "Responder Name or ID",
+      "name": "responder",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "loadResponders"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "executeResponder"
+          ]
+        },
+        "hide": {
+          "id": [
+            ""
+          ]
+        }
+      },
+      "_operation": "executeResponder",
+      "_source": "Log_logFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "The name of the input binary field which holds binary data",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Attachment",
+          "name": "attachmentValues",
+          "type": "fixedCollection",
+          "description": "The name of the input binary field which holds binary data",
+          "placeholder": "Add Attachment",
+          "default": {},
+          "options": [
+            {
+              "name": "attachmentValues",
+              "displayName": "Attachment",
+              "values": [
+                {
+                  "displayName": "Input Binary Field",
+                  "name": "binaryProperty",
+                  "type": "string",
+                  "description": "The name of the input binary field which holds binary data",
+                  "default": "data"
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": false
+          }
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Log_logFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create task log",
+      "action": "Create a log",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Execute Responder",
+      "description": "Execute a responder on a selected log",
+      "action": "Execute a responder",
+      "value": "executeResponder",
+      "displayName": "Execute Responder"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many task logs",
+      "action": "Get many logs",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Get",
+      "description": "Get a single log",
+      "action": "Get a log",
+      "value": "get",
+      "displayName": "Get"
+    }
+  ],
+  "operations_by_resource": {
+    "alert": [],
+    "observable": [],
+    "case": [],
+    "task": [],
+    "log": [
+      {
+        "name": "Create",
+        "description": "Create task log",
+        "action": "Create a log",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Execute Responder",
+        "description": "Execute a responder on a selected log",
+        "action": "Execute a responder",
+        "value": "executeResponder",
+        "displayName": "Execute Responder"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many task logs",
+        "action": "Get many logs",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Get",
+        "description": "Get a single log",
+        "action": "Get a log",
+        "value": "get",
+        "displayName": "Get"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "theHiveApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"]}}"
+  ],
+  "validation_rules": {
+    "resource": {
+      "required": true
+    },
+    "operation": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "log"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "log"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "id": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "executeResponder",
+            "get"
+          ]
+        }
+      }
+    },
+    "caseId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create",
+            "getAll"
+          ]
+        }
+      }
+    },
+    "title": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "description": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "severity": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "date": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "tags": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "tlp": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "status": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "type": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "source": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "sourceRef": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "follow": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "artifactUi": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "responder": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "executeResponder"
+          ]
+        },
+        "hide": {
+          "id": [
+            ""
+          ]
+        }
+      }
+    },
+    "jsonParameters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create",
+            "update"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "alert"
+          ],
+          "operation": [
+            "promote"
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "search",
+            "count"
+          ]
+        }
+      }
+    },
+    "dataType": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create",
+            "executeAnalyzer"
+          ]
+        }
+      }
+    },
+    "data": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create"
+          ]
+        },
+        "hide": {
+          "dataType": [
+            "file"
+          ]
+        }
+      }
+    },
+    "binaryProperty": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create"
+          ],
+          "dataType": [
+            "file"
+          ]
+        }
+      }
+    },
+    "message": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "startDate": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "ioc": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "sighted": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "analyzers": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "observable"
+          ],
+          "operation": [
+            "executeAnalyzer"
+          ]
+        },
+        "hide": {
+          "id": [
+            ""
+          ]
+        }
+      }
+    },
+    "owner": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "flag": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "taskId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "log"
+          ],
+          "operation": [
+            "create",
+            "getAll"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "alert",
+          "name": "Alert",
+          "description": ""
+        },
+        {
+          "value": "case",
+          "name": "Case",
+          "description": ""
+        },
+        {
+          "value": "log",
+          "name": "Log",
+          "description": ""
+        },
+        {
+          "value": "observable",
+          "name": "Observable",
+          "description": ""
+        },
+        {
+          "value": "task",
+          "name": "Task",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create task log"
+        },
+        {
+          "value": "executeResponder",
+          "name": "Execute Responder",
+          "description": "Execute a responder on a selected log"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get many task logs"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a single log"
+        }
+      ]
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      }
+    },
+    "id": {
+      "type": "string",
+      "displayName": "Log ID",
+      "name": "id"
+    },
+    "caseId": {
+      "type": "string",
+      "displayName": "Case ID",
+      "name": "caseId"
+    },
+    "title": {
+      "type": "string",
+      "displayName": "Title",
+      "name": "title"
+    },
+    "description": {
+      "type": "string",
+      "displayName": "Description",
+      "name": "description"
+    },
+    "severity": {
+      "type": "options",
+      "displayName": "Severity",
+      "name": "severity",
+      "possibleValues": [
+        {
+          "value": "Low",
+          "name": "Low",
+          "description": ""
+        },
+        {
+          "value": "Medium",
+          "name": "Medium",
+          "description": ""
+        },
+        {
+          "value": "High",
+          "name": "High",
+          "description": ""
+        }
+      ]
+    },
+    "date": {
+      "type": "dateTime",
+      "displayName": "Date",
+      "name": "date"
+    },
+    "tags": {
+      "type": "string",
+      "displayName": "Tags",
+      "name": "tags"
+    },
+    "tlp": {
+      "type": "options",
+      "displayName": "TLP",
+      "name": "tlp",
+      "possibleValues": [
+        {
+          "value": "White",
+          "name": "White",
+          "description": ""
+        },
+        {
+          "value": "Green",
+          "name": "Green",
+          "description": ""
+        },
+        {
+          "value": "Amber",
+          "name": "Amber",
+          "description": ""
+        },
+        {
+          "value": "Red",
+          "name": "Red",
+          "description": ""
+        }
+      ]
+    },
+    "status": {
+      "type": "options",
+      "displayName": "Status",
+      "name": "status",
+      "possibleValues": [
+        {
+          "value": "Ok",
+          "name": "Ok",
+          "description": ""
+        },
+        {
+          "value": "Deleted",
+          "name": "Deleted",
+          "description": ""
+        }
+      ]
+    },
+    "type": {
+      "type": "string",
+      "displayName": "Type",
+      "name": "type"
+    },
+    "source": {
+      "type": "string",
+      "displayName": "Source",
+      "name": "source"
+    },
+    "sourceRef": {
+      "type": "string",
+      "displayName": "SourceRef",
+      "name": "sourceRef"
+    },
+    "follow": {
+      "type": "boolean",
+      "displayName": "Follow",
+      "name": "follow"
+    },
+    "artifactUi": {
+      "type": "fixedCollection",
+      "displayName": "Artifacts",
+      "name": "artifactUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "artifactValues",
+          "displayName": "Artifact",
+          "values": [
+            {
+              "displayName": "Data Type Name or ID",
+              "name": "dataType",
+              "type": "options",
+              "description": "Type of the observable. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": "",
+              "typeOptions": {
+                "loadOptionsMethod": "loadObservableTypes"
+              }
+            },
+            {
+              "displayName": "Data",
+              "name": "data",
+              "type": "string",
+              "default": "",
+              "displayOptions": {
+                "hide": {
+                  "dataType": [
+                    "file"
+                  ]
+                }
+              }
+            },
+            {
+              "displayName": "Input Binary Field",
+              "name": "binaryProperty",
+              "type": "string",
+              "hint": "The name of the input binary field containing the file to be written",
+              "default": "data",
+              "displayOptions": {
+                "show": {
+                  "dataType": [
+                    "file"
+                  ]
+                }
+              }
+            },
+            {
+              "displayName": "Message",
+              "name": "message",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Case Tags",
+              "name": "tags",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "responder": {
+      "type": "options",
+      "displayName": "Responder Name or ID",
+      "name": "responder",
+      "typeOptions": {
+        "loadOptionsMethod": "loadResponders"
+      },
+      "possibleValues": []
+    },
+    "jsonParameters": {
+      "type": "boolean",
+      "displayName": "JSON Parameters",
+      "name": "jsonParameters"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Case Template",
+          "name": "caseTemplate",
+          "type": "string",
+          "description": "Case template to use when a case is created from this alert",
+          "default": ""
+        }
+      ]
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "subProperties": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Task details",
+          "default": ""
+        },
+        {
+          "displayName": "End Date",
+          "name": "endDate",
+          "type": "dateTime",
+          "description": "Date of the end of the task. This is automatically set when status is set to Completed.",
+          "default": ""
+        },
+        {
+          "displayName": "Flag",
+          "name": "flag",
+          "type": "boolean",
+          "description": "Whether to flag the task. Default=false.",
+          "default": false
+        },
+        {
+          "displayName": "Owner",
+          "name": "owner",
+          "type": "string",
+          "description": "User who owns the task. This is automatically set to current user when status is set to InProgress.",
+          "default": ""
+        },
+        {
+          "displayName": "Start Date",
+          "name": "startDate",
+          "type": "dateTime",
+          "description": "Date of the beginning of the task. This is automatically set when status is set to Open.",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Status of the task. Default=Waiting.",
+          "value": "Cancel",
+          "default": "Waiting",
+          "options": [
+            {
+              "name": "Cancel",
+              "value": "Cancel",
+              "displayName": "Cancel"
+            },
+            {
+              "name": "Completed",
+              "value": "Completed",
+              "displayName": "Completed"
+            },
+            {
+              "name": "In Progress",
+              "value": "InProgress",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Waiting",
+              "value": "Waiting",
+              "displayName": "Waiting"
+            }
+          ]
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Task details",
+          "default": ""
+        }
+      ]
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "subProperties": [
+        {
+          "displayName": "Attachment",
+          "name": "attachmentValues",
+          "type": "fixedCollection",
+          "description": "The name of the input binary field which holds binary data",
+          "placeholder": "Add Attachment",
+          "default": {},
+          "options": [
+            {
+              "name": "attachmentValues",
+              "displayName": "Attachment",
+              "values": [
+                {
+                  "displayName": "Input Binary Field",
+                  "name": "binaryProperty",
+                  "type": "string",
+                  "description": "The name of the input binary field which holds binary data",
+                  "default": "data"
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": false
+          }
+        }
+      ]
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "subProperties": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Task details",
+          "default": ""
+        },
+        {
+          "displayName": "End Date",
+          "name": "endDate",
+          "type": "dateTime",
+          "description": "Date of the end of the task. This is automatically set when status is set to Completed.",
+          "default": ""
+        },
+        {
+          "displayName": "Flag",
+          "name": "flag",
+          "type": "boolean",
+          "description": "Whether to flag the task. Default=false.",
+          "default": false
+        },
+        {
+          "displayName": "Owner",
+          "name": "owner",
+          "type": "string",
+          "description": "User who owns the task. This is automatically set to current user when status is set to InProgress.",
+          "default": ""
+        },
+        {
+          "displayName": "Start Date",
+          "name": "startDate",
+          "type": "dateTime",
+          "description": "Date of the beginning of the task. This is automatically set when status is set to Open.",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Status of the task. Default=Waiting.",
+          "value": "Cancel",
+          "default": "Waiting",
+          "options": [
+            {
+              "name": "Cancel",
+              "value": "Cancel",
+              "displayName": "Cancel"
+            },
+            {
+              "name": "Completed",
+              "value": "Completed",
+              "displayName": "Completed"
+            },
+            {
+              "name": "In Progress",
+              "value": "InProgress",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Waiting",
+              "value": "Waiting",
+              "displayName": "Waiting"
+            }
+          ]
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Task details",
+          "default": ""
+        }
+      ]
+    },
+    "dataType": {
+      "type": "options",
+      "displayName": "Data Type Name or ID",
+      "name": "dataType",
+      "typeOptions": {
+        "loadOptionsMethod": "loadObservableTypes"
+      },
+      "possibleValues": []
+    },
+    "data": {
+      "type": "string",
+      "displayName": "Data",
+      "name": "data"
+    },
+    "binaryProperty": {
+      "type": "string",
+      "displayName": "Input Binary Field",
+      "name": "binaryProperty"
+    },
+    "message": {
+      "type": "string",
+      "displayName": "Message",
+      "name": "message"
+    },
+    "startDate": {
+      "type": "dateTime",
+      "displayName": "Start Date",
+      "name": "startDate"
+    },
+    "ioc": {
+      "type": "boolean",
+      "displayName": "IOC",
+      "name": "ioc"
+    },
+    "sighted": {
+      "type": "boolean",
+      "displayName": "Sighted",
+      "name": "sighted"
+    },
+    "analyzers": {
+      "type": "multiOptions",
+      "displayName": "Analyzer Names or IDs",
+      "name": "analyzers",
+      "typeOptions": {
+        "loadOptionsMethod": "loadAnalyzers"
+      },
+      "possibleValues": []
+    },
+    "owner": {
+      "type": "string",
+      "displayName": "Owner",
+      "name": "owner"
+    },
+    "flag": {
+      "type": "boolean",
+      "displayName": "Flag",
+      "name": "flag"
+    },
+    "taskId": {
+      "type": "string",
+      "displayName": "Task ID",
+      "name": "taskId"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "tags",
+        "text": "tag,tag2,tag3..."
+      },
+      {
+        "field": "artifactUi",
+        "text": "Add Artifact"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "updateFields",
+        "text": "tag1,tag2"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "filters",
+        "text": "Add a Filter"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": [
+      {
+        "field": "artifactUi",
+        "text": "The name of the input binary field containing the file to be written"
+      },
+      {
+        "field": "updateFields",
+        "text": "The name of the input binary field containing the file to be written"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

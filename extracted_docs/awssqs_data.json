@@ -1,0 +1,617 @@
+{
+  "node_info": {
+    "icon": "file:sqs.svg",
+    "defaults": {
+      "name": "AWS SQS"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "aws",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getQueues"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "AWS SQS",
+    "name": "awsSqs",
+    "description": "Sends messages to AWS SQS",
+    "subtitle": "={{$parameter[\"operation\"]}}",
+    "version": "1",
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.awsSqs",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development",
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/aws/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.awssqs/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Send a message to a queue",
+      "action": "Send a message to a queue",
+      "value": "sendMessage",
+      "default": "sendMessage",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Send Message",
+          "description": "Send a message to a queue",
+          "action": "Send a message to a queue",
+          "value": "sendMessage",
+          "displayName": "Send Message"
+        }
+      ]
+    },
+    {
+      "displayName": "Queue Name or ID",
+      "name": "queue",
+      "type": "options",
+      "description": "Queue to send a message to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "options": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getQueues"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendMessage"
+          ]
+        }
+      },
+      "_operation": "sendMessage"
+    },
+    {
+      "displayName": "Queue Type",
+      "name": "queueType",
+      "type": "options",
+      "description": "FIFO SQS queue",
+      "value": "fifo",
+      "default": "standard",
+      "options": [
+        {
+          "name": "FIFO",
+          "description": "FIFO SQS queue",
+          "value": "fifo",
+          "displayName": "Fifo"
+        },
+        {
+          "name": "Standard",
+          "description": "Standard SQS queue",
+          "value": "standard",
+          "displayName": "Standard"
+        }
+      ]
+    },
+    {
+      "displayName": "Send Input Data",
+      "name": "sendInputData",
+      "type": "boolean",
+      "description": "Whether to send the data the node receives as JSON to SQS",
+      "default": true
+    },
+    {
+      "displayName": "Message",
+      "name": "message",
+      "type": "string",
+      "description": "Message to send to the queue",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendMessage"
+          ],
+          "sendInputData": [
+            false
+          ]
+        }
+      },
+      "_operation": "sendMessage"
+    },
+    {
+      "displayName": "Message Group ID",
+      "name": "messageGroupId",
+      "type": "string",
+      "description": "Tag that specifies that a message belongs to a specific message group. Applies only to FIFO (first-in-first-out) queues.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "queueType": [
+            "fifo"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "How long, in seconds, to delay a message for",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Delay Seconds",
+          "name": "delaySeconds",
+          "type": "number",
+          "description": "How long, in seconds, to delay a message for",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0,
+            "maxValue": 900
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Message Attributes",
+          "name": "messageAttributes",
+          "type": "fixedCollection",
+          "description": "Attributes to set",
+          "placeholder": "Add Attribute",
+          "default": {},
+          "options": [
+            {
+              "name": "binary",
+              "displayName": "Binary",
+              "values": [
+                {
+                  "displayName": "Name",
+                  "name": "name",
+                  "type": "string",
+                  "description": "Name of the attribute",
+                  "default": ""
+                },
+                {
+                  "displayName": "Property Name",
+                  "name": "dataPropertyName",
+                  "type": "string",
+                  "description": "Name of the binary property which contains the data for the message attribute",
+                  "default": "data"
+                }
+              ]
+            },
+            {
+              "name": "number",
+              "displayName": "Number",
+              "values": [
+                {
+                  "displayName": "Name",
+                  "name": "name",
+                  "type": "string",
+                  "description": "Name of the attribute",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "number",
+                  "description": "Number value of the attribute",
+                  "default": 0
+                }
+              ]
+            },
+            {
+              "name": "string",
+              "displayName": "String",
+              "values": [
+                {
+                  "displayName": "Name",
+                  "name": "name",
+                  "type": "string",
+                  "description": "Name of the attribute",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "String value of attribute",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Message Deduplication ID",
+          "name": "messageDeduplicationId",
+          "type": "string",
+          "description": "Token used for deduplication of sent messages. Applies only to FIFO (first-in-first-out) queues.",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ],
+      "typeOptions": {
+        "minValue": 0,
+        "maxValue": 900
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendMessage"
+          ]
+        }
+      },
+      "_operation": "sendMessage"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Send Message",
+      "description": "Send a message to a queue",
+      "action": "Send a message to a queue",
+      "value": "sendMessage",
+      "displayName": "Send Message"
+    }
+  ],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "aws",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"]}}"
+  ],
+  "validation_rules": {
+    "queue": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendMessage"
+          ]
+        }
+      }
+    },
+    "message": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendMessage"
+          ],
+          "sendInputData": [
+            false
+          ]
+        }
+      }
+    },
+    "messageGroupId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "queueType": [
+            "fifo"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sendMessage"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "sendMessage",
+          "name": "Send Message",
+          "description": "Send a message to a queue"
+        }
+      ]
+    },
+    "queue": {
+      "type": "options",
+      "displayName": "Queue Name or ID",
+      "name": "queue",
+      "typeOptions": {
+        "loadOptionsMethod": "getQueues"
+      },
+      "possibleValues": []
+    },
+    "queueType": {
+      "type": "options",
+      "displayName": "Queue Type",
+      "name": "queueType",
+      "possibleValues": [
+        {
+          "value": "fifo",
+          "name": "FIFO",
+          "description": "FIFO SQS queue"
+        },
+        {
+          "value": "standard",
+          "name": "Standard",
+          "description": "Standard SQS queue"
+        }
+      ]
+    },
+    "sendInputData": {
+      "type": "boolean",
+      "displayName": "Send Input Data",
+      "name": "sendInputData"
+    },
+    "message": {
+      "type": "string",
+      "displayName": "Message",
+      "name": "message"
+    },
+    "messageGroupId": {
+      "type": "string",
+      "displayName": "Message Group ID",
+      "name": "messageGroupId"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "minValue": 0,
+        "maxValue": 900
+      },
+      "subProperties": [
+        {
+          "displayName": "Delay Seconds",
+          "name": "delaySeconds",
+          "type": "number",
+          "description": "How long, in seconds, to delay a message for",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0,
+            "maxValue": 900
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Message Attributes",
+          "name": "messageAttributes",
+          "type": "fixedCollection",
+          "description": "Attributes to set",
+          "placeholder": "Add Attribute",
+          "default": {},
+          "options": [
+            {
+              "name": "binary",
+              "displayName": "Binary",
+              "values": [
+                {
+                  "displayName": "Name",
+                  "name": "name",
+                  "type": "string",
+                  "description": "Name of the attribute",
+                  "default": ""
+                },
+                {
+                  "displayName": "Property Name",
+                  "name": "dataPropertyName",
+                  "type": "string",
+                  "description": "Name of the binary property which contains the data for the message attribute",
+                  "default": "data"
+                }
+              ]
+            },
+            {
+              "name": "number",
+              "displayName": "Number",
+              "values": [
+                {
+                  "displayName": "Name",
+                  "name": "name",
+                  "type": "string",
+                  "description": "Name of the attribute",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "number",
+                  "description": "Number value of the attribute",
+                  "default": 0
+                }
+              ]
+            },
+            {
+              "name": "string",
+              "displayName": "String",
+              "values": [
+                {
+                  "displayName": "Name",
+                  "name": "name",
+                  "type": "string",
+                  "description": "Name of the attribute",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "String value of attribute",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Message Deduplication ID",
+          "name": "messageDeduplicationId",
+          "type": "string",
+          "description": "Token used for deduplication of sent messages. Applies only to FIFO (first-in-first-out) queues.",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ]
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

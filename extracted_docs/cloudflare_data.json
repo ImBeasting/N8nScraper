@@ -1,0 +1,714 @@
+{
+  "node_info": {
+    "icon": "file:cloudflare.svg",
+    "defaults": {
+      "name": "Cloudflare"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "cloudflareApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getZones"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Cloudflare",
+    "name": "cloudflare",
+    "description": "Consume Cloudflare API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.cloudflare",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/cloudflare/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.cloudflare/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "zoneCertificate",
+      "default": "zoneCertificate",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Zone Certificate",
+          "value": "zoneCertificate",
+          "displayName": "Zone Certificate"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Delete a certificate",
+      "action": "Delete a certificate",
+      "value": "delete",
+      "default": "upload",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Delete",
+          "description": "Delete a certificate",
+          "action": "Delete a certificate",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get a certificate",
+          "action": "Get a certificate",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many certificates",
+          "action": "Get many certificates",
+          "value": "getMany",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Upload",
+          "description": "Upload a certificate",
+          "action": "Upload a certificate",
+          "value": "upload",
+          "displayName": "Upload"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ]
+        }
+      },
+      "_source": "ZoneCertificate_zoneCertificateOperations"
+    },
+    {
+      "displayName": "Zone Name or ID",
+      "name": "zoneId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getZones"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "upload",
+            "getMany",
+            "get",
+            "delete"
+          ]
+        }
+      },
+      "_operation": "upload,getMany,get,delete",
+      "_source": "ZoneCertificate_zoneCertificateFields"
+    },
+    {
+      "displayName": "Certificate Content",
+      "name": "certificate",
+      "type": "string",
+      "description": "The zone's leaf certificate",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "upload"
+          ]
+        }
+      },
+      "_operation": "upload",
+      "_source": "ZoneCertificate_zoneCertificateFields"
+    },
+    {
+      "displayName": "Private Key",
+      "name": "privateKey",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "upload"
+          ]
+        }
+      },
+      "_operation": "upload",
+      "_source": "ZoneCertificate_zoneCertificateFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "getMany"
+          ]
+        }
+      },
+      "_operation": "getMany",
+      "_source": "ZoneCertificate_zoneCertificateFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 25,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 50
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "getMany"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getMany",
+      "_source": "ZoneCertificate_zoneCertificateFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Status of the zone's custom SSL",
+      "placeholder": "Add Field",
+      "value": "active",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Status of the zone's custom SSL",
+          "value": "active",
+          "default": "",
+          "options": [
+            {
+              "name": "Active",
+              "value": "active",
+              "displayName": "Active"
+            },
+            {
+              "name": "Expired",
+              "value": "expired",
+              "displayName": "Expired"
+            },
+            {
+              "name": "Deleted",
+              "value": "deleted",
+              "displayName": "Deleted"
+            },
+            {
+              "name": "Pending",
+              "value": "pending",
+              "displayName": "Pending"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "getMany"
+          ]
+        }
+      },
+      "_operation": "getMany",
+      "_source": "ZoneCertificate_zoneCertificateFields"
+    },
+    {
+      "displayName": "Certificate ID",
+      "name": "certificateId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "get",
+            "delete"
+          ]
+        }
+      },
+      "_operation": "get,delete",
+      "_source": "ZoneCertificate_zoneCertificateFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Delete",
+      "description": "Delete a certificate",
+      "action": "Delete a certificate",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Get a certificate",
+      "action": "Get a certificate",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many certificates",
+      "action": "Get many certificates",
+      "value": "getMany",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Upload",
+      "description": "Upload a certificate",
+      "action": "Upload a certificate",
+      "value": "upload",
+      "displayName": "Upload"
+    }
+  ],
+  "operations_by_resource": {
+    "zoneCertificate": [
+      {
+        "name": "Delete",
+        "description": "Delete a certificate",
+        "action": "Delete a certificate",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get a certificate",
+        "action": "Get a certificate",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many certificates",
+        "action": "Get many certificates",
+        "value": "getMany",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Upload",
+        "description": "Upload a certificate",
+        "action": "Upload a certificate",
+        "value": "upload",
+        "displayName": "Upload"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "cloudflareApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ]
+        }
+      }
+    },
+    "zoneId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "upload",
+            "getMany",
+            "get",
+            "delete"
+          ]
+        }
+      }
+    },
+    "certificate": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "upload"
+          ]
+        }
+      }
+    },
+    "privateKey": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "upload"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "getMany"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "getMany"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "getMany"
+          ]
+        }
+      }
+    },
+    "certificateId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "zoneCertificate"
+          ],
+          "operation": [
+            "get",
+            "delete"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "zoneCertificate",
+          "name": "Zone Certificate",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a certificate"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a certificate"
+        },
+        {
+          "value": "getMany",
+          "name": "Get Many",
+          "description": "Get many certificates"
+        },
+        {
+          "value": "upload",
+          "name": "Upload",
+          "description": "Upload a certificate"
+        }
+      ]
+    },
+    "zoneId": {
+      "type": "options",
+      "displayName": "Zone Name or ID",
+      "name": "zoneId",
+      "typeOptions": {
+        "loadOptionsMethod": "getZones"
+      },
+      "possibleValues": []
+    },
+    "certificate": {
+      "type": "string",
+      "displayName": "Certificate Content",
+      "name": "certificate"
+    },
+    "privateKey": {
+      "type": "string",
+      "displayName": "Private Key",
+      "name": "privateKey"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 50
+      }
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "subProperties": [
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Status of the zone's custom SSL",
+          "value": "active",
+          "default": "",
+          "options": [
+            {
+              "name": "Active",
+              "value": "active",
+              "displayName": "Active"
+            },
+            {
+              "name": "Expired",
+              "value": "expired",
+              "displayName": "Expired"
+            },
+            {
+              "name": "Deleted",
+              "value": "deleted",
+              "displayName": "Deleted"
+            },
+            {
+              "name": "Pending",
+              "value": "pending",
+              "displayName": "Pending"
+            }
+          ]
+        }
+      ]
+    },
+    "certificateId": {
+      "type": "string",
+      "displayName": "Certificate ID",
+      "name": "certificateId"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "filters",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

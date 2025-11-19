@@ -1,0 +1,2079 @@
+{
+  "node_info": {
+    "icon": "file:elasticsearch.svg",
+    "defaults": {
+      "name": "Elasticsearch"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "elasticsearchApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Elasticsearch",
+    "name": "elasticsearch",
+    "description": "Consume the Elasticsearch API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.elasticsearch",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development",
+      "Data & Storage"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/elasticsearch/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.elasticsearch/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "document",
+      "default": "document",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Document",
+          "value": "document",
+          "displayName": "Document"
+        },
+        {
+          "name": "Index",
+          "value": "index",
+          "displayName": "Index"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create an index",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create an index",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete an index",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get an index",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many indices",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "index"
+          ]
+        }
+      },
+      "_source": "Index_indexOperations"
+    },
+    {
+      "displayName": "Index ID",
+      "name": "indexId",
+      "type": "string",
+      "description": "ID of the index to create",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "index"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Index_indexFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Index aliases which include the index, as an <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-aliases.html\">alias object</a>",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Aliases",
+          "name": "aliases",
+          "type": "json",
+          "description": "Index aliases which include the index, as an <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-aliases.html\">alias object</a>",
+          "default": "",
+          "typeOptions": {
+            "alwaysOpenEditWindow": true
+          }
+        },
+        {
+          "displayName": "Include Type Name",
+          "name": "include_type_name",
+          "type": "boolean",
+          "description": "Whether a mapping type is expected in the body of mappings. Defaults to false.",
+          "default": false
+        },
+        {
+          "displayName": "Mappings",
+          "name": "mappings",
+          "type": "json",
+          "description": "Mapping for fields in the index, as <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html\">mapping object</a>",
+          "default": "",
+          "typeOptions": {
+            "alwaysOpenEditWindow": true
+          }
+        },
+        {
+          "displayName": "Master Timeout",
+          "name": "master_timeout",
+          "type": "string",
+          "description": "Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error. Defaults to <code>1m</code>. See the <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html#time-units\">Elasticsearch time units reference</a>",
+          "default": "1m"
+        },
+        {
+          "displayName": "Settings",
+          "name": "settings",
+          "type": "json",
+          "description": "Configuration options for the index, as an <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules.html#index-modules-settings\">index settings object</a>",
+          "default": "",
+          "typeOptions": {
+            "alwaysOpenEditWindow": true
+          }
+        },
+        {
+          "displayName": "Timeout",
+          "name": "timeout",
+          "type": "string",
+          "description": "Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error. Defaults to <code>30s</code>. See the <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html#time-units\">Elasticsearch time units reference</a>",
+          "default": "30s"
+        },
+        {
+          "displayName": "Wait for Active Shards",
+          "name": "wait_for_active_shards",
+          "type": "string",
+          "description": "The number of shard copies that must be active before proceeding with the operation. Set to <code>all</code> or any positive integer up to the total number of shards in the index. Default: 1, the primary shard",
+          "default": "1"
+        }
+      ],
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "index"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Index_indexFields"
+    },
+    {
+      "displayName": "Index ID",
+      "name": "indexId",
+      "type": "string",
+      "description": "ID of the index to delete",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "index"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Index_indexFields"
+    },
+    {
+      "displayName": "Index ID",
+      "name": "indexId",
+      "type": "string",
+      "description": "ID of the index to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "index"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Index_indexFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "If false, return an error if any of the following targets only missing/closed indices: wildcard expression, index alias, or <code>_all</code> value. Defaults to true.",
+      "placeholder": "Add Field",
+      "value": "all",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Allow No Indices",
+          "name": "allow_no_indices",
+          "type": "boolean",
+          "description": "If false, return an error if any of the following targets only missing/closed indices: wildcard expression, index alias, or <code>_all</code> value. Defaults to true.",
+          "default": true
+        },
+        {
+          "displayName": "Expand Wildcards",
+          "name": "expand_wildcards",
+          "type": "options",
+          "description": "Type of index that wildcard expressions can match. Defaults to <code>open</code>",
+          "value": "all",
+          "default": "all",
+          "options": [
+            {
+              "name": "All",
+              "value": "all",
+              "displayName": "All"
+            },
+            {
+              "name": "Closed",
+              "value": "closed",
+              "displayName": "Closed"
+            },
+            {
+              "name": "Hidden",
+              "value": "hidden",
+              "displayName": "Hidden"
+            },
+            {
+              "name": "None",
+              "value": "none",
+              "displayName": "None"
+            },
+            {
+              "name": "Open",
+              "value": "open",
+              "displayName": "Open"
+            }
+          ]
+        },
+        {
+          "displayName": "Flat Settings",
+          "name": "flat_settings",
+          "type": "boolean",
+          "description": "Whether to return settings in flat format. Defaults to false.",
+          "default": false
+        },
+        {
+          "displayName": "Ignore Unavailable",
+          "name": "ignore_unavailable",
+          "type": "boolean",
+          "description": "Whether to request that target a missing index return an error. Defaults to false.",
+          "default": false
+        },
+        {
+          "displayName": "Include Defaults",
+          "name": "include_defaults",
+          "type": "boolean",
+          "description": "Whether to return all default settings in the response. Defaults to false.",
+          "default": false
+        },
+        {
+          "displayName": "Local",
+          "name": "local",
+          "type": "boolean",
+          "description": "Whether to retrieve information from the local node only. Defaults to false.",
+          "default": false
+        },
+        {
+          "displayName": "Master Timeout",
+          "name": "master_timeout",
+          "type": "string",
+          "description": "Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error. Defaults to <code>1m</code>. See the <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html#time-units\">Elasticsearch time units reference</a>",
+          "default": "1m"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "index"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Index_indexFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "index"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Index_indexFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "index"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Index_indexFields"
+    },
+    {
+      "displayName": "Index ID",
+      "name": "indexId",
+      "type": "string",
+      "description": "ID of the index containing the document to delete",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Document ID",
+      "name": "documentId",
+      "type": "string",
+      "description": "ID of the document to delete",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to use the bulk operation to delete the document/s",
+      "placeholder": "Add Option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Bulk Delete",
+          "name": "bulkOperation",
+          "type": "boolean",
+          "description": "Whether to use the bulk operation to delete the document/s",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Index ID",
+      "name": "indexId",
+      "type": "string",
+      "description": "ID of the index containing the document to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Document ID",
+      "name": "documentId",
+      "type": "string",
+      "description": "ID of the document to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Comma-separated list of source fields to exclude from the response",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Source Excludes",
+          "name": "_source_excludes",
+          "type": "string",
+          "description": "Comma-separated list of source fields to exclude from the response",
+          "default": ""
+        },
+        {
+          "displayName": "Source Includes",
+          "name": "_source_includes",
+          "type": "string",
+          "description": "Comma-separated list of source fields to include in the response",
+          "default": ""
+        },
+        {
+          "displayName": "Stored Fields",
+          "name": "stored_fields",
+          "type": "boolean",
+          "description": "Whether to retrieve the document fields stored in the index rather than the document <code>_source</code>. Defaults to false.",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Index ID",
+      "name": "indexId",
+      "type": "string",
+      "description": "ID of the index containing the documents to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "By default, you cannot page through more than 10,000 hits. To page through more hits, add \"Sort\" from options.",
+      "name": "paginateNotice",
+      "type": "notice",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            true
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "If false, return an error if any of the following targets only missing/closed indices: wildcard expression, index alias, or <code>_all</code> value. Defaults to true.",
+      "placeholder": "Add option",
+      "value": "all",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Allow No Indices",
+          "name": "allow_no_indices",
+          "type": "boolean",
+          "description": "If false, return an error if any of the following targets only missing/closed indices: wildcard expression, index alias, or <code>_all</code> value. Defaults to true.",
+          "default": true
+        },
+        {
+          "displayName": "Allow Partial Search Results",
+          "name": "allow_partial_search_results",
+          "type": "boolean",
+          "description": "<p>If true, return partial results if there are shard request timeouts or shard failures.</p><p>If false, returns an error with no partial results. Defaults to true.</p>.",
+          "default": true
+        },
+        {
+          "displayName": "Batched Reduce Size",
+          "name": "batched_reduce_size",
+          "type": "number",
+          "description": "Number of shard results that should be reduced at once on the coordinating node. Defaults to 512.",
+          "default": 512,
+          "typeOptions": {
+            "minValue": 2
+          }
+        },
+        {
+          "displayName": "CCS Minimize Roundtrips",
+          "name": "ccs_minimize_roundtrips",
+          "type": "boolean",
+          "description": "Whether network round-trips between the coordinating node and the remote clusters are minimized when executing cross-cluster search (CCS) requests. Defaults to true.",
+          "default": true
+        },
+        {
+          "displayName": "Doc Value Fields",
+          "name": "docvalue_fields",
+          "type": "string",
+          "description": "Comma-separated list of fields to return as the docvalue representation of a field for each hit",
+          "default": ""
+        },
+        {
+          "displayName": "Expand Wildcards",
+          "name": "expand_wildcards",
+          "type": "options",
+          "description": "Type of index that wildcard expressions can match. Defaults to <code>open</code>",
+          "value": "all",
+          "default": "open",
+          "options": [
+            {
+              "name": "All",
+              "value": "all",
+              "displayName": "All"
+            },
+            {
+              "name": "Closed",
+              "value": "closed",
+              "displayName": "Closed"
+            },
+            {
+              "name": "Hidden",
+              "value": "hidden",
+              "displayName": "Hidden"
+            },
+            {
+              "name": "None",
+              "value": "none",
+              "displayName": "None"
+            },
+            {
+              "name": "Open",
+              "value": "open",
+              "displayName": "Open"
+            }
+          ]
+        },
+        {
+          "displayName": "Explain",
+          "name": "explain",
+          "type": "boolean",
+          "description": "Whether to return detailed information about score computation as part of a hit. Defaults to false.",
+          "default": false
+        },
+        {
+          "displayName": "Ignore Throttled",
+          "name": "ignore_throttled",
+          "type": "boolean",
+          "description": "Whether concrete, expanded or aliased indices are ignored when frozen. Defaults to true.",
+          "default": true
+        },
+        {
+          "displayName": "Ignore Unavailable",
+          "name": "ignore_unavailable",
+          "type": "boolean",
+          "description": "Whether missing or closed indices are not included in the response. Defaults to false.",
+          "default": false
+        },
+        {
+          "displayName": "Max Concurrent Shard Requests",
+          "name": "max_concurrent_shard_requests",
+          "type": "number",
+          "description": "Define the number of shard requests per node this search executes concurrently. Defaults to 5.",
+          "default": 5
+        },
+        {
+          "displayName": "Pre-Filter Shard Size",
+          "name": "pre_filter_shard_size",
+          "type": "number",
+          "description": "Define a threshold that enforces a pre-filter roundtrip to prefilter search shards based on query rewriting. Only used if the number of shards the search request expands to exceeds the threshold.",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1
+          }
+        },
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "json",
+          "description": "Query in the <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html\">Elasticsearch Query DSL</a>",
+          "default": "",
+          "typeOptions": {
+            "alwaysOpenEditWindow": true
+          }
+        },
+        {
+          "displayName": "Request Cache",
+          "name": "request_cache",
+          "type": "boolean",
+          "description": "Whether the caching of search results is enabled for requests where size is 0. See <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/shard-request-cache.html\">Elasticsearch shard request cache settings</a>.",
+          "default": false
+        },
+        {
+          "displayName": "Routing",
+          "name": "routing",
+          "type": "string",
+          "description": "Target this primary shard",
+          "default": ""
+        },
+        {
+          "displayName": "Search Type",
+          "name": "search_type",
+          "type": "options",
+          "description": "How distributed term frequencies are calculated for relevance scoring. Defaults to Query then Fetch.",
+          "value": "dfs_query_then_fetch",
+          "default": "query_then_fetch",
+          "options": [
+            {
+              "name": "DFS Query Then Fetch",
+              "value": "dfs_query_then_fetch",
+              "displayName": "Dfs Query Then Fetch"
+            },
+            {
+              "name": "Query Then Fetch",
+              "value": "query_then_fetch",
+              "displayName": "Query Then Fetch"
+            }
+          ]
+        },
+        {
+          "displayName": "Sequence Number and Primary Term",
+          "name": "seq_no_primary_term",
+          "type": "boolean",
+          "description": "Whether to return the sequence number and primary term of the last modification of each hit. See <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/optimistic-concurrency-control.html\">Optimistic concurrency control</a>.",
+          "default": false
+        },
+        {
+          "displayName": "Sort",
+          "name": "sort",
+          "type": "string",
+          "description": "Comma-separated list of <code>field:direction</code> pairs",
+          "default": ""
+        },
+        {
+          "displayName": "Source Excludes",
+          "name": "_source_excludes",
+          "type": "string",
+          "description": "Comma-separated list of source fields to exclude from the response",
+          "default": ""
+        },
+        {
+          "displayName": "Source Includes",
+          "name": "_source_includes",
+          "type": "string",
+          "description": "Comma-separated list of source fields to include in the response",
+          "default": ""
+        },
+        {
+          "displayName": "Stats",
+          "name": "stats",
+          "type": "string",
+          "description": "Tag of the request for logging and statistical purposes",
+          "default": ""
+        },
+        {
+          "displayName": "Stored Fields",
+          "name": "stored_fields",
+          "type": "boolean",
+          "description": "Whether to retrieve the document fields stored in the index rather than the document <code>_source</code>. Defaults to false.",
+          "default": false
+        },
+        {
+          "displayName": "Terminate After",
+          "name": "terminate_after",
+          "type": "number",
+          "description": "Max number of documents to collect for each shard",
+          "default": 0
+        },
+        {
+          "displayName": "Timeout",
+          "name": "timeout",
+          "type": "string",
+          "description": "Period to wait for active shards. Defaults to <code>1m</code> (one minute). See the <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html#time-units\">Elasticsearch time units reference</a>",
+          "default": "1m"
+        },
+        {
+          "displayName": "Track Scores",
+          "name": "track_scores",
+          "type": "boolean",
+          "description": "Whether to calculate and return document scores, even if the scores are not used for sorting. Defaults to false.",
+          "default": false
+        },
+        {
+          "displayName": "Track Total Hits",
+          "name": "track_total_hits",
+          "type": "number",
+          "description": "Number of hits matching the query to count accurately. Defaults to 10000.",
+          "default": 10000
+        },
+        {
+          "displayName": "Version",
+          "name": "version",
+          "type": "boolean",
+          "description": "Whether to return document version as part of a hit. Defaults to false.",
+          "default": false
+        }
+      ],
+      "typeOptions": {
+        "minValue": 2
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Index ID",
+      "name": "indexId",
+      "type": "string",
+      "description": "ID of the index to add the document to",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Data to Send",
+      "name": "dataToSend",
+      "type": "options",
+      "description": "Set the value for each destination column",
+      "value": "defineBelow",
+      "default": "defineBelow",
+      "options": [
+        {
+          "name": "Define Below for Each Column",
+          "description": "Set the value for each destination column",
+          "value": "defineBelow",
+          "displayName": "Define Below For Each Column"
+        },
+        {
+          "name": "Auto-Map Input Data to Columns",
+          "description": "Use when node input properties match destination column names",
+          "value": "autoMapInputData",
+          "displayName": "Auto-map Input Data To Columns"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Inputs to Ignore",
+      "name": "inputsToIgnore",
+      "type": "string",
+      "description": "List of input properties to avoid sending, separated by commas. Leave empty to send all properties.",
+      "placeholder": "Enter properties...",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "create"
+          ],
+          "dataToSend": [
+            "autoMapInputData"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Fields to Send",
+      "name": "fieldsUi",
+      "type": "fixedCollection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "name": "fieldValues",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Field Name",
+              "name": "fieldId",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Field Value",
+              "name": "fieldValue",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "create"
+          ],
+          "dataToSend": [
+            "defineBelow"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "ID of the document to create and add to the index",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Document ID",
+          "name": "documentId",
+          "type": "string",
+          "description": "ID of the document to create and add to the index",
+          "default": ""
+        },
+        {
+          "displayName": "Routing",
+          "name": "routing",
+          "type": "string",
+          "description": "Target this primary shard",
+          "default": ""
+        },
+        {
+          "displayName": "Timeout",
+          "name": "timeout",
+          "type": "string",
+          "description": "Period to wait for active shards. Defaults to <code>1m</code> (one minute). See the <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html#time-units\">Elasticsearch time units reference</a>",
+          "default": "1m"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to use the bulk operation to create the document/s",
+      "placeholder": "Add Field",
+      "value": "true",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Bulk Create",
+          "name": "bulkOperation",
+          "type": "boolean",
+          "description": "Whether to use the bulk operation to create the document/s",
+          "default": false
+        },
+        {
+          "displayName": "Pipeline ID",
+          "name": "pipeline",
+          "type": "string",
+          "description": "ID of the pipeline to use to preprocess incoming documents",
+          "default": ""
+        },
+        {
+          "displayName": "Refresh",
+          "name": "refresh",
+          "type": "options",
+          "description": "If true, Elasticsearch refreshes the affected shards to make this operation visible to search,if wait_for then wait for a refresh to make this operation visible to search,if false do nothing with refreshes",
+          "value": "true",
+          "default": "false",
+          "options": [
+            {
+              "name": "True",
+              "description": "Refreshes the affected shards to make this operation visible to search",
+              "value": "true",
+              "displayName": "True"
+            },
+            {
+              "name": "Wait For",
+              "description": "Wait for a refresh to make this operation visible",
+              "value": "wait_for",
+              "displayName": "Wait For"
+            },
+            {
+              "name": "False",
+              "description": "Do nothing with refreshes",
+              "value": "false",
+              "displayName": "False"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Index ID",
+      "name": "indexId",
+      "type": "string",
+      "description": "ID of the document to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Document ID",
+      "name": "documentId",
+      "type": "string",
+      "description": "ID of the document to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Data to Send",
+      "name": "dataToSend",
+      "type": "options",
+      "description": "Set the value for each destination column",
+      "value": "defineBelow",
+      "default": "defineBelow",
+      "options": [
+        {
+          "name": "Define Below for Each Column",
+          "description": "Set the value for each destination column",
+          "value": "defineBelow",
+          "displayName": "Define Below For Each Column"
+        },
+        {
+          "name": "Auto-Map Input Data to Columns",
+          "description": "Use when node input properties match destination column names",
+          "value": "autoMapInputData",
+          "displayName": "Auto-map Input Data To Columns"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Inputs to Ignore",
+      "name": "inputsToIgnore",
+      "type": "string",
+      "description": "List of input properties to avoid sending, separated by commas. Leave empty to send all properties.",
+      "placeholder": "Enter properties...",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "update"
+          ],
+          "dataToSend": [
+            "autoMapInputData"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Fields to Send",
+      "name": "fieldsUi",
+      "type": "fixedCollection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "name": "fieldValues",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Field Name",
+              "name": "fieldId",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Field Value",
+              "name": "fieldValue",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "update"
+          ],
+          "dataToSend": [
+            "defineBelow"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to use the bulk operation to update the document/s",
+      "placeholder": "Add Field",
+      "value": "true",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Bulk Update",
+          "name": "bulkOperation",
+          "type": "boolean",
+          "description": "Whether to use the bulk operation to update the document/s",
+          "default": false
+        },
+        {
+          "displayName": "Refresh",
+          "name": "refresh",
+          "type": "options",
+          "description": "If true, Elasticsearch refreshes the affected shards to make this operation visible to search,if wait_for then wait for a refresh to make this operation visible to search,if false do nothing with refreshes",
+          "value": "true",
+          "default": "false",
+          "options": [
+            {
+              "name": "True",
+              "description": "Refreshes the affected shards to make this operation visible to search",
+              "value": "true",
+              "displayName": "True"
+            },
+            {
+              "name": "Wait For",
+              "description": "Wait for a refresh to make this operation visible",
+              "value": "wait_for",
+              "displayName": "Wait For"
+            },
+            {
+              "name": "False",
+              "description": "Do nothing with refreshes",
+              "value": "false",
+              "displayName": "False"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Document_documentFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a document",
+      "action": "Create a document",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a document",
+          "action": "Create a document",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a document",
+          "action": "Delete a document",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get a document",
+          "action": "Get a document",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many documents",
+          "action": "Get many documents",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update a document",
+          "action": "Update a document",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ]
+        }
+      },
+      "_source": "Document_documentOperations"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "action": "Create an index",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "action": "Delete an index",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "action": "Get an index",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "action": "Get many indices",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "description": "Update a document",
+      "action": "Update a document",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "index": [
+      {
+        "name": "Create",
+        "action": "Create an index",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete an index",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get an index",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many indices",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "document": [
+      {
+        "name": "Create",
+        "description": "Create a document",
+        "action": "Create a document",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a document",
+        "action": "Delete a document",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get a document",
+        "action": "Get a document",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many documents",
+        "action": "Get many documents",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update a document",
+        "action": "Update a document",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "elasticsearchApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ]
+        }
+      }
+    },
+    "indexId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "documentId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "simple": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "paginateNotice": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            true
+          ]
+        }
+      }
+    },
+    "dataToSend": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "inputsToIgnore": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "update"
+          ],
+          "dataToSend": [
+            "autoMapInputData"
+          ]
+        }
+      }
+    },
+    "fieldsUi": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "document"
+          ],
+          "operation": [
+            "update"
+          ],
+          "dataToSend": [
+            "defineBelow"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "document",
+          "name": "Document",
+          "description": ""
+        },
+        {
+          "value": "index",
+          "name": "Index",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a document"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a document"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a document"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get many documents"
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": "Update a document"
+        }
+      ]
+    },
+    "indexId": {
+      "type": "string",
+      "displayName": "Index ID",
+      "name": "indexId"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Document ID",
+          "name": "documentId",
+          "type": "string",
+          "description": "ID of the document to create and add to the index",
+          "default": ""
+        },
+        {
+          "displayName": "Routing",
+          "name": "routing",
+          "type": "string",
+          "description": "Target this primary shard",
+          "default": ""
+        },
+        {
+          "displayName": "Timeout",
+          "name": "timeout",
+          "type": "string",
+          "description": "Period to wait for active shards. Defaults to <code>1m</code> (one minute). See the <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html#time-units\">Elasticsearch time units reference</a>",
+          "default": "1m"
+        }
+      ]
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1
+      }
+    },
+    "documentId": {
+      "type": "string",
+      "displayName": "Document ID",
+      "name": "documentId"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Bulk Update",
+          "name": "bulkOperation",
+          "type": "boolean",
+          "description": "Whether to use the bulk operation to update the document/s",
+          "default": false
+        },
+        {
+          "displayName": "Refresh",
+          "name": "refresh",
+          "type": "options",
+          "description": "If true, Elasticsearch refreshes the affected shards to make this operation visible to search,if wait_for then wait for a refresh to make this operation visible to search,if false do nothing with refreshes",
+          "value": "true",
+          "default": "false",
+          "options": [
+            {
+              "name": "True",
+              "description": "Refreshes the affected shards to make this operation visible to search",
+              "value": "true",
+              "displayName": "True"
+            },
+            {
+              "name": "Wait For",
+              "description": "Wait for a refresh to make this operation visible",
+              "value": "wait_for",
+              "displayName": "Wait For"
+            },
+            {
+              "name": "False",
+              "description": "Do nothing with refreshes",
+              "value": "false",
+              "displayName": "False"
+            }
+          ]
+        }
+      ]
+    },
+    "simple": {
+      "type": "boolean",
+      "displayName": "Simplify",
+      "name": "simple"
+    },
+    "paginateNotice": {
+      "type": "notice",
+      "displayName": "By default, you cannot page through more than 10,000 hits. To page through more hits, add \"Sort\" from options.",
+      "name": "paginateNotice"
+    },
+    "dataToSend": {
+      "type": "options",
+      "displayName": "Data to Send",
+      "name": "dataToSend",
+      "possibleValues": [
+        {
+          "value": "defineBelow",
+          "name": "Define Below for Each Column",
+          "description": "Set the value for each destination column"
+        },
+        {
+          "value": "autoMapInputData",
+          "name": "Auto-Map Input Data to Columns",
+          "description": "Use when node input properties match destination column names"
+        }
+      ]
+    },
+    "inputsToIgnore": {
+      "type": "string",
+      "displayName": "Inputs to Ignore",
+      "name": "inputsToIgnore"
+    },
+    "fieldsUi": {
+      "type": "fixedCollection",
+      "displayName": "Fields to Send",
+      "name": "fieldsUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "fieldValues",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Field Name",
+              "name": "fieldId",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Field Value",
+              "name": "fieldValue",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [
+      "POST"
+    ],
+    "endpoints": [
+      "${baseUrl.replace(/\\/$/, ",
+      "${baseUrl.replace(/\\/$/, "
+    ],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [
+      {
+        "name": "paginateNotice",
+        "text": "By default, you cannot page through more than 10,000 hits. To page through more hits, add \"Sort\" from options.",
+        "conditions": {
+          "show": {
+            "resource": [
+              "document"
+            ],
+            "operation": [
+              "getAll"
+            ],
+            "returnAll": [
+              true
+            ]
+          }
+        }
+      }
+    ],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add Option"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "inputsToIgnore",
+        "text": "Enter properties..."
+      },
+      {
+        "field": "fieldsUi",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add Field"
+      },
+      {
+        "field": "inputsToIgnore",
+        "text": "Enter properties..."
+      },
+      {
+        "field": "fieldsUi",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

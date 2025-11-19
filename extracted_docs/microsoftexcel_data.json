@@ -1,0 +1,692 @@
+{
+  "node_info": {
+    "icon": "file:excel.svg",
+    "defaults": {
+      "name": "Microsoft Excel 365"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "microsoftExcelOAuth2Api",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Microsoft Excel 365",
+    "name": "microsoftExcel",
+    "description": "Consume Microsoft Excel API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": [
+      "2",
+      "2.1",
+      "2.2"
+    ],
+    "node_type": "regular"
+  },
+  "metadata": {},
+  "properties": [
+    {
+      "displayName": "This node connects to the Microsoft 365 cloud platform. Use the 'Extract from File' and 'Convert to File' nodes to directly manipulate spreadsheet files (.xls, .csv, etc). <a href=\"https://n8n.io/workflows/890-read-in-an-excel-spreadsheet-file/\" target=\"_blank\">More info</a>.",
+      "name": "notice",
+      "type": "notice",
+      "default": ""
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "description": "Represents an Excel table",
+      "value": "table",
+      "default": "workbook",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Table",
+          "description": "Represents an Excel table",
+          "value": "table",
+          "displayName": "Table"
+        },
+        {
+          "name": "Workbook",
+          "description": "A workbook is the top level object which contains one or more worksheets",
+          "value": "workbook",
+          "displayName": "Workbook"
+        },
+        {
+          "name": "Sheet",
+          "description": "A sheet is a grid of cells which can contain data, tables, charts, etc",
+          "value": "worksheet",
+          "displayName": "Sheet"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Add rows to the end of the table",
+      "action": "Append rows to table",
+      "value": "append",
+      "default": "append",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Append",
+          "description": "Add rows to the end of the table",
+          "action": "Append rows to table",
+          "value": "append",
+          "displayName": "Append"
+        },
+        {
+          "name": "Convert to Range",
+          "description": "Convert a table to a range",
+          "action": "Convert to range",
+          "value": "convertToRange",
+          "displayName": "Convert To Range"
+        },
+        {
+          "name": "Create",
+          "description": "Add a table based on range",
+          "action": "Create a table",
+          "value": "addTable",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a table",
+          "action": "Delete a table",
+          "value": "deleteTable",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get Columns",
+          "description": "Retrieve a list of table columns",
+          "action": "Get columns",
+          "value": "getColumns",
+          "displayName": "Get Columns"
+        },
+        {
+          "name": "Get Rows",
+          "description": "Retrieve a list of table rows",
+          "action": "Get rows",
+          "value": "getRows",
+          "displayName": "Get Rows"
+        },
+        {
+          "name": "Lookup",
+          "description": "Look for rows that match a given value in a column",
+          "action": "Lookup a column",
+          "value": "lookup",
+          "displayName": "Lookup"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "table"
+          ]
+        }
+      },
+      "_source": "table"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Add a new sheet to the workbook",
+      "action": "Add a sheet to a workbook",
+      "value": "addWorksheet",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Add Sheet",
+          "description": "Add a new sheet to the workbook",
+          "action": "Add a sheet to a workbook",
+          "value": "addWorksheet",
+          "displayName": "Add Sheet"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete workbook",
+          "action": "Delete workbook",
+          "value": "deleteWorkbook",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get workbooks",
+          "action": "Get workbooks",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workbook"
+          ]
+        }
+      },
+      "_source": "workbook"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Append data to sheet",
+      "action": "Append data to sheet",
+      "value": "append",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Append",
+          "description": "Append data to sheet",
+          "action": "Append data to sheet",
+          "value": "append",
+          "displayName": "Append"
+        },
+        {
+          "name": "Append or Update",
+          "description": "Append a new row or update the current one if it already exists (upsert)",
+          "action": "Append or update a sheet",
+          "value": "upsert",
+          "displayName": "Append Or Update"
+        },
+        {
+          "name": "Clear",
+          "description": "Clear sheet",
+          "action": "Clear sheet",
+          "value": "clear",
+          "displayName": "Clear"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete sheet",
+          "action": "Delete sheet",
+          "value": "deleteWorksheet",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get a list of sheets",
+          "action": "Get sheets",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Get Rows",
+          "description": "Retrieve a list of sheet rows",
+          "action": "Get rows from sheet",
+          "value": "readRows",
+          "displayName": "Get Rows"
+        },
+        {
+          "name": "Update",
+          "description": "Update rows of a sheet or sheet range",
+          "action": "Update sheet",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "worksheet"
+          ]
+        }
+      },
+      "_source": "worksheet"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Append",
+      "description": "Add rows to the end of the table",
+      "action": "Append rows to table",
+      "value": "append",
+      "displayName": "Append"
+    },
+    {
+      "name": "Convert to Range",
+      "description": "Convert a table to a range",
+      "action": "Convert to range",
+      "value": "convertToRange",
+      "displayName": "Convert To Range"
+    },
+    {
+      "name": "Create",
+      "description": "Add a table based on range",
+      "action": "Create a table",
+      "value": "addTable",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a table",
+      "action": "Delete a table",
+      "value": "deleteTable",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get Columns",
+      "description": "Retrieve a list of table columns",
+      "action": "Get columns",
+      "value": "getColumns",
+      "displayName": "Get Columns"
+    },
+    {
+      "name": "Get Rows",
+      "description": "Retrieve a list of table rows",
+      "action": "Get rows",
+      "value": "getRows",
+      "displayName": "Get Rows"
+    },
+    {
+      "name": "Lookup",
+      "description": "Look for rows that match a given value in a column",
+      "action": "Lookup a column",
+      "value": "lookup",
+      "displayName": "Lookup"
+    },
+    {
+      "name": "Add Sheet",
+      "description": "Add a new sheet to the workbook",
+      "action": "Add a sheet to a workbook",
+      "value": "addWorksheet",
+      "displayName": "Add Sheet"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete workbook",
+      "action": "Delete workbook",
+      "value": "deleteWorkbook",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get workbooks",
+      "action": "Get workbooks",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Append or Update",
+      "description": "Append a new row or update the current one if it already exists (upsert)",
+      "action": "Append or update a sheet",
+      "value": "upsert",
+      "displayName": "Append Or Update"
+    },
+    {
+      "name": "Clear",
+      "description": "Clear sheet",
+      "action": "Clear sheet",
+      "value": "clear",
+      "displayName": "Clear"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete sheet",
+      "action": "Delete sheet",
+      "value": "deleteWorksheet",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get Rows",
+      "description": "Retrieve a list of sheet rows",
+      "action": "Get rows from sheet",
+      "value": "readRows",
+      "displayName": "Get Rows"
+    },
+    {
+      "name": "Update",
+      "description": "Update rows of a sheet or sheet range",
+      "action": "Update sheet",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "table": [
+      {
+        "name": "Append",
+        "description": "Add rows to the end of the table",
+        "action": "Append rows to table",
+        "value": "append",
+        "displayName": "Append"
+      },
+      {
+        "name": "Convert to Range",
+        "description": "Convert a table to a range",
+        "action": "Convert to range",
+        "value": "convertToRange",
+        "displayName": "Convert To Range"
+      },
+      {
+        "name": "Create",
+        "description": "Add a table based on range",
+        "action": "Create a table",
+        "value": "addTable",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a table",
+        "action": "Delete a table",
+        "value": "deleteTable",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get Columns",
+        "description": "Retrieve a list of table columns",
+        "action": "Get columns",
+        "value": "getColumns",
+        "displayName": "Get Columns"
+      },
+      {
+        "name": "Get Rows",
+        "description": "Retrieve a list of table rows",
+        "action": "Get rows",
+        "value": "getRows",
+        "displayName": "Get Rows"
+      },
+      {
+        "name": "Lookup",
+        "description": "Look for rows that match a given value in a column",
+        "action": "Lookup a column",
+        "value": "lookup",
+        "displayName": "Lookup"
+      }
+    ],
+    "workbook": [
+      {
+        "name": "Add Sheet",
+        "description": "Add a new sheet to the workbook",
+        "action": "Add a sheet to a workbook",
+        "value": "addWorksheet",
+        "displayName": "Add Sheet"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete workbook",
+        "action": "Delete workbook",
+        "value": "deleteWorkbook",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get workbooks",
+        "action": "Get workbooks",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "worksheet": [
+      {
+        "name": "Append",
+        "description": "Append data to sheet",
+        "action": "Append data to sheet",
+        "value": "append",
+        "displayName": "Append"
+      },
+      {
+        "name": "Append or Update",
+        "description": "Append a new row or update the current one if it already exists (upsert)",
+        "action": "Append or update a sheet",
+        "value": "upsert",
+        "displayName": "Append Or Update"
+      },
+      {
+        "name": "Clear",
+        "description": "Clear sheet",
+        "action": "Clear sheet",
+        "value": "clear",
+        "displayName": "Clear"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete sheet",
+        "action": "Delete sheet",
+        "value": "deleteWorksheet",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get a list of sheets",
+        "action": "Get sheets",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Get Rows",
+        "description": "Retrieve a list of sheet rows",
+        "action": "Get rows from sheet",
+        "value": "readRows",
+        "displayName": "Get Rows"
+      },
+      {
+        "name": "Update",
+        "description": "Update rows of a sheet or sheet range",
+        "action": "Update sheet",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "microsoftExcelOAuth2Api",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "worksheet"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "notice": {
+      "type": "notice",
+      "displayName": "This node connects to the Microsoft 365 cloud platform. Use the 'Extract from File' and 'Convert to File' nodes to directly manipulate spreadsheet files (.xls, .csv, etc). <a href=\"https://n8n.io/workflows/890-read-in-an-excel-spreadsheet-file/\" target=\"_blank\">More info</a>.",
+      "name": "notice"
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "table",
+          "name": "Table",
+          "description": "Represents an Excel table"
+        },
+        {
+          "value": "workbook",
+          "name": "Workbook",
+          "description": "A workbook is the top level object which contains one or more worksheets"
+        },
+        {
+          "value": "worksheet",
+          "name": "Sheet",
+          "description": "A sheet is a grid of cells which can contain data, tables, charts, etc"
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "append",
+          "name": "Append",
+          "description": "Append data to sheet"
+        },
+        {
+          "value": "upsert",
+          "name": "Append or Update",
+          "description": "Append a new row or update the current one if it already exists (upsert)"
+        },
+        {
+          "value": "clear",
+          "name": "Clear",
+          "description": "Clear sheet"
+        },
+        {
+          "value": "deleteWorksheet",
+          "name": "Delete",
+          "description": "Delete sheet"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get a list of sheets"
+        },
+        {
+          "value": "readRows",
+          "name": "Get Rows",
+          "description": "Retrieve a list of sheet rows"
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": "Update rows of a sheet or sheet range"
+        }
+      ]
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [
+      {
+        "name": "notice",
+        "text": "This node connects to the Microsoft 365 cloud platform. Use the 'Extract from File' and 'Convert to File' nodes to directly manipulate spreadsheet files (.xls, .csv, etc). <a href=\"https://n8n.io/workflows/890-read-in-an-excel-spreadsheet-file/\" target=\"_blank\">More info</a>.",
+        "conditions": null
+      }
+    ],
+    "tooltips": [],
+    "placeholders": [],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

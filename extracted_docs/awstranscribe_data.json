@@ -1,0 +1,992 @@
+{
+  "node_info": {
+    "icon": "file:transcribe.svg",
+    "defaults": {
+      "name": "AWS Transcribe"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "aws",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "AWS Transcribe",
+    "name": "awsTranscribe",
+    "description": "Sends data to AWS Transcribe",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.awsTranscribe",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/aws/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.awstranscribe/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "transcriptionJob",
+      "default": "transcriptionJob",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Transcription Job",
+          "value": "transcriptionJob",
+          "displayName": "Transcription Job"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a transcription job",
+      "action": "Create a transcription job",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a transcription job",
+          "action": "Create a transcription job",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a transcription job",
+          "action": "Delete a transcription job",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get a transcription job",
+          "action": "Get a transcription job",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many transcription jobs",
+          "action": "Get many transcription jobs",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ]
+    },
+    {
+      "displayName": "Job Name",
+      "name": "transcriptionJobName",
+      "type": "string",
+      "description": "The name of the job",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "create",
+            "get",
+            "delete"
+          ]
+        }
+      },
+      "_operation": "create,get,delete"
+    },
+    {
+      "displayName": "Media File URI",
+      "name": "mediaFileUri",
+      "type": "string",
+      "description": "The S3 object location of the input media file",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Detect Language",
+      "name": "detectLanguage",
+      "type": "boolean",
+      "description": "Whether to set this field to true to enable automatic language identification",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Language",
+      "name": "languageCode",
+      "type": "options",
+      "description": "Language used in the input media file",
+      "value": "en-US",
+      "default": "en-US",
+      "options": [
+        {
+          "name": "American English",
+          "value": "en-US",
+          "displayName": "American English"
+        },
+        {
+          "name": "British English",
+          "value": "en-GB",
+          "displayName": "British English"
+        },
+        {
+          "name": "German",
+          "value": "de-DE",
+          "displayName": "German"
+        },
+        {
+          "name": "Indian English",
+          "value": "en-IN",
+          "displayName": "Indian English"
+        },
+        {
+          "name": "Irish English",
+          "value": "en-IE",
+          "displayName": "Irish English"
+        },
+        {
+          "name": "Russian",
+          "value": "ru-RU",
+          "displayName": "Russian"
+        },
+        {
+          "name": "Spanish",
+          "value": "es-ES",
+          "displayName": "Spanish"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "create"
+          ],
+          "detectLanguage": [
+            false
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Instructs Amazon Transcribe to process each audiochannel separately and then merge the transcription output of each channel into a single transcription. You can't set both Max Speaker Labels and Channel Identification in the same request. If you set both, your request returns a BadRequestException.",
+      "placeholder": "Add option",
+      "value": "remove",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Channel Identification",
+          "name": "channelIdentification",
+          "type": "boolean",
+          "description": "Instructs Amazon Transcribe to process each audiochannel separately and then merge the transcription output of each channel into a single transcription. You can't set both Max Speaker Labels and Channel Identification in the same request. If you set both, your request returns a BadRequestException.",
+          "default": false
+        },
+        {
+          "displayName": "Max Alternatives",
+          "name": "maxAlternatives",
+          "type": "number",
+          "description": "The number of alternative transcriptions that the service should return",
+          "default": 2,
+          "typeOptions": {
+            "minValue": 2,
+            "maxValue": 10
+          }
+        },
+        {
+          "displayName": "Max Speaker Labels",
+          "name": "maxSpeakerLabels",
+          "type": "number",
+          "description": "The maximum number of speakers to identify in the input audio. If there are more speakers in the audio than this number, multiple speakers are identified as a single speaker.",
+          "default": 2,
+          "typeOptions": {
+            "minValue": 2,
+            "maxValue": 10
+          }
+        },
+        {
+          "displayName": "Vocabulary Name",
+          "name": "vocabularyName",
+          "type": "string",
+          "description": "Name of vocabulary to use when processing the transcription job",
+          "default": ""
+        },
+        {
+          "displayName": "Vocabulary Filter Name",
+          "name": "vocabularyFilterName",
+          "type": "string",
+          "description": "The name of the vocabulary filter to use when transcribing the audio. The filter that you specify must have the same language code as the transcription job.",
+          "default": ""
+        },
+        {
+          "displayName": "Vocabulary Filter Method",
+          "name": "vocabularyFilterMethod",
+          "type": "options",
+          "description": "<p>Set to mask to remove filtered text from the transcript and replace it with three asterisks (\"***\") as placeholder text.</p><p>Set to remove to remove filtered text from the transcript without using placeholder text. Set to tag to mark the word in the transcription output that matches the vocabulary filter. When you set the filter method to tag, the words matching your vocabulary filter are not masked or removed.</p>",
+          "value": "remove",
+          "default": "remove",
+          "options": [
+            {
+              "name": "Remove",
+              "value": "remove",
+              "displayName": "Remove"
+            },
+            {
+              "name": "Mask",
+              "value": "mask",
+              "displayName": "Mask"
+            },
+            {
+              "name": "Tag",
+              "value": "tag",
+              "displayName": "Tag"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "minValue": 2,
+        "maxValue": 10
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Return Transcript",
+      "name": "returnTranscript",
+      "type": "boolean",
+      "description": "By default, the response only contains metadata about the transcript. Enable this option to retrieve the transcript instead.",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "get"
+          ],
+          "returnTranscript": [
+            true
+          ]
+        }
+      },
+      "_operation": "get"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 20,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Return only transcription jobs whose name contains the specified string",
+      "placeholder": "Add Filter",
+      "value": "COMPLETED",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Job Name Contains",
+          "name": "jobNameContains",
+          "type": "string",
+          "description": "Return only transcription jobs whose name contains the specified string",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Return only transcription jobs with the specified status",
+          "value": "COMPLETED",
+          "default": "COMPLETED",
+          "options": [
+            {
+              "name": "Completed",
+              "value": "COMPLETED",
+              "displayName": "Completed"
+            },
+            {
+              "name": "Failed",
+              "value": "FAILED",
+              "displayName": "Failed"
+            },
+            {
+              "name": "In Progress",
+              "value": "IN_PROGRESS",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Queued",
+              "value": "QUEUED",
+              "displayName": "Queued"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a transcription job",
+      "action": "Create a transcription job",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a transcription job",
+      "action": "Delete a transcription job",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Get a transcription job",
+      "action": "Get a transcription job",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many transcription jobs",
+      "action": "Get many transcription jobs",
+      "value": "getAll",
+      "displayName": "Get Many"
+    }
+  ],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "aws",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "transcriptionJobName": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "create",
+            "get",
+            "delete"
+          ]
+        }
+      }
+    },
+    "mediaFileUri": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "detectLanguage": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "languageCode": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "create"
+          ],
+          "detectLanguage": [
+            false
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "returnTranscript": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "simple": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "get"
+          ],
+          "returnTranscript": [
+            true
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "transcriptionJob"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "transcriptionJob",
+          "name": "Transcription Job",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a transcription job"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a transcription job"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a transcription job"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get many transcription jobs"
+        }
+      ]
+    },
+    "transcriptionJobName": {
+      "type": "string",
+      "displayName": "Job Name",
+      "name": "transcriptionJobName"
+    },
+    "mediaFileUri": {
+      "type": "string",
+      "displayName": "Media File URI",
+      "name": "mediaFileUri"
+    },
+    "detectLanguage": {
+      "type": "boolean",
+      "displayName": "Detect Language",
+      "name": "detectLanguage"
+    },
+    "languageCode": {
+      "type": "options",
+      "displayName": "Language",
+      "name": "languageCode",
+      "possibleValues": [
+        {
+          "value": "en-US",
+          "name": "American English",
+          "description": ""
+        },
+        {
+          "value": "en-GB",
+          "name": "British English",
+          "description": ""
+        },
+        {
+          "value": "de-DE",
+          "name": "German",
+          "description": ""
+        },
+        {
+          "value": "en-IN",
+          "name": "Indian English",
+          "description": ""
+        },
+        {
+          "value": "en-IE",
+          "name": "Irish English",
+          "description": ""
+        },
+        {
+          "value": "ru-RU",
+          "name": "Russian",
+          "description": ""
+        },
+        {
+          "value": "es-ES",
+          "name": "Spanish",
+          "description": ""
+        }
+      ]
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "minValue": 2,
+        "maxValue": 10
+      },
+      "subProperties": [
+        {
+          "displayName": "Channel Identification",
+          "name": "channelIdentification",
+          "type": "boolean",
+          "description": "Instructs Amazon Transcribe to process each audiochannel separately and then merge the transcription output of each channel into a single transcription. You can't set both Max Speaker Labels and Channel Identification in the same request. If you set both, your request returns a BadRequestException.",
+          "default": false
+        },
+        {
+          "displayName": "Max Alternatives",
+          "name": "maxAlternatives",
+          "type": "number",
+          "description": "The number of alternative transcriptions that the service should return",
+          "default": 2,
+          "typeOptions": {
+            "minValue": 2,
+            "maxValue": 10
+          }
+        },
+        {
+          "displayName": "Max Speaker Labels",
+          "name": "maxSpeakerLabels",
+          "type": "number",
+          "description": "The maximum number of speakers to identify in the input audio. If there are more speakers in the audio than this number, multiple speakers are identified as a single speaker.",
+          "default": 2,
+          "typeOptions": {
+            "minValue": 2,
+            "maxValue": 10
+          }
+        },
+        {
+          "displayName": "Vocabulary Name",
+          "name": "vocabularyName",
+          "type": "string",
+          "description": "Name of vocabulary to use when processing the transcription job",
+          "default": ""
+        },
+        {
+          "displayName": "Vocabulary Filter Name",
+          "name": "vocabularyFilterName",
+          "type": "string",
+          "description": "The name of the vocabulary filter to use when transcribing the audio. The filter that you specify must have the same language code as the transcription job.",
+          "default": ""
+        },
+        {
+          "displayName": "Vocabulary Filter Method",
+          "name": "vocabularyFilterMethod",
+          "type": "options",
+          "description": "<p>Set to mask to remove filtered text from the transcript and replace it with three asterisks (\"***\") as placeholder text.</p><p>Set to remove to remove filtered text from the transcript without using placeholder text. Set to tag to mark the word in the transcription output that matches the vocabulary filter. When you set the filter method to tag, the words matching your vocabulary filter are not masked or removed.</p>",
+          "value": "remove",
+          "default": "remove",
+          "options": [
+            {
+              "name": "Remove",
+              "value": "remove",
+              "displayName": "Remove"
+            },
+            {
+              "name": "Mask",
+              "value": "mask",
+              "displayName": "Mask"
+            },
+            {
+              "name": "Tag",
+              "value": "tag",
+              "displayName": "Tag"
+            }
+          ]
+        }
+      ]
+    },
+    "returnTranscript": {
+      "type": "boolean",
+      "displayName": "Return Transcript",
+      "name": "returnTranscript"
+    },
+    "simple": {
+      "type": "boolean",
+      "displayName": "Simplify",
+      "name": "simple"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1
+      }
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "subProperties": [
+        {
+          "displayName": "Job Name Contains",
+          "name": "jobNameContains",
+          "type": "string",
+          "description": "Return only transcription jobs whose name contains the specified string",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Return only transcription jobs with the specified status",
+          "value": "COMPLETED",
+          "default": "COMPLETED",
+          "options": [
+            {
+              "name": "Completed",
+              "value": "COMPLETED",
+              "displayName": "Completed"
+            },
+            {
+              "name": "Failed",
+              "value": "FAILED",
+              "displayName": "Failed"
+            },
+            {
+              "name": "In Progress",
+              "value": "IN_PROGRESS",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Queued",
+              "value": "QUEUED",
+              "displayName": "Queued"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

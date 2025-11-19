@@ -1,0 +1,493 @@
+{
+  "node_info": {
+    "icon": "file:postgres.svg",
+    "defaults": {
+      "name": "Postgres Trigger"
+    },
+    "inputs": [],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "trigger"
+    ],
+    "authentication": [
+      {
+        "name": "postgres",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {
+      "executionsHelp": "{\n\t\t\t\tinactive:\n\t\t\t\t\t\"<b>While building your workflow</b>, click the 'execute step' button, then trigger a Postgres event. This will trigger an execution, which will show up in this editor.<br /> <br /><b>Once you're happy with your workflow</b>, <a data-key='activate'>activate</a> it. Then every time a change is detected, the workflow will execute. These executions will show up in the <a data-key='executions'>executions list</a>, but not in the editor.\",\n\t\t\t\tactive:\n\t\t\t\t\t\"<b>While building your workflow</b>, click the 'execute step' button, then trigger a Postgres event. This will trigger an execution, which will show up in this editor.<br /> <br /><b>Your workflow will also execute automatically</b>, since it's activated. Every time a change is detected, this node will trigger an execution. These executions will show up in the <a data-key='executions'>executions list</a>, but not in the editor.\",\n\t\t\t}",
+      "activationHint": "Once you"
+    },
+    "supportsCORS": false,
+    "displayName": "Postgres Trigger",
+    "name": "postgresTrigger",
+    "description": "Listens to Postgres messages",
+    "subtitle": "",
+    "version": "1",
+    "node_type": "trigger"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.postgresTrigger",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/postgres/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.postgrestrigger/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Listen For",
+      "name": "triggerMode",
+      "type": "options",
+      "description": "Insert, update or delete",
+      "value": "createTrigger",
+      "default": "createTrigger",
+      "options": [
+        {
+          "name": "Table Row Change Events",
+          "description": "Insert, update or delete",
+          "value": "createTrigger",
+          "displayName": "Table Row Change Events"
+        },
+        {
+          "name": "Advanced",
+          "description": "Listen to existing Postgres channel",
+          "value": "listenTrigger",
+          "displayName": "Advanced"
+        }
+      ]
+    },
+    {
+      "displayName": "Schema Name",
+      "name": "schema",
+      "type": "resourceLocator",
+      "placeholder": "Select a schema",
+      "value": "public",
+      "required": true,
+      "modes": [
+        {
+          "displayName": "From List",
+          "name": "list",
+          "type": "list",
+          "placeholder": "Select a schema",
+          "typeOptions": {}
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "placeholder": "e.g. public"
+        }
+      ],
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "triggerMode": [
+            "createTrigger"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Table Name",
+      "name": "tableName",
+      "type": "resourceLocator",
+      "placeholder": "Select a table",
+      "required": true,
+      "modes": [
+        {
+          "displayName": "From List",
+          "name": "list",
+          "type": "list",
+          "placeholder": "Select a table",
+          "typeOptions": {}
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "placeholder": "e.g. table_name"
+        }
+      ],
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "triggerMode": [
+            "createTrigger"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Channel Name",
+      "name": "channelName",
+      "type": "string",
+      "description": "Name of the channel to listen to",
+      "placeholder": "e.g. n8n_channel",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "triggerMode": [
+            "listenTrigger"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Event to listen for",
+      "name": "firesOn",
+      "type": "options",
+      "value": "INSERT",
+      "default": "INSERT",
+      "options": [
+        {
+          "name": "Insert",
+          "value": "INSERT",
+          "displayName": "Insert"
+        },
+        {
+          "name": "Update",
+          "value": "UPDATE",
+          "displayName": "Update"
+        },
+        {
+          "name": "Delete",
+          "value": "DELETE",
+          "displayName": "Delete"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "triggerMode": [
+            "createTrigger"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Name of the channel to listen to",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Channel Name",
+          "name": "channelName",
+          "type": "string",
+          "description": "Name of the channel to listen to",
+          "placeholder": "e.g. n8n_channel",
+          "default": ""
+        },
+        {
+          "displayName": "Function Name",
+          "name": "functionName",
+          "type": "string",
+          "description": "Name of the function to create",
+          "placeholder": "e.g. n8n_trigger_function()",
+          "default": ""
+        },
+        {
+          "displayName": "Replace if Exists",
+          "name": "replaceIfExists",
+          "type": "boolean",
+          "description": "Whether to replace an existing function and trigger with the same name",
+          "default": false
+        },
+        {
+          "displayName": "Trigger Name",
+          "name": "triggerName",
+          "type": "string",
+          "description": "Name of the trigger to create",
+          "placeholder": "e.g. n8n_trigger",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "triggerMode": [
+            "createTrigger"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Number of seconds reserved for connecting to the database",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Connection Timeout",
+          "name": "connectionTimeout",
+          "type": "number",
+          "description": "Number of seconds reserved for connecting to the database",
+          "default": 30
+        },
+        {
+          "displayName": "Delay Closing Idle Connection",
+          "name": "delayClosingIdleConnection",
+          "type": "number",
+          "description": "Number of seconds to wait before idle connection would be eligible for closing",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0
+          }
+        }
+      ],
+      "typeOptions": {
+        "minValue": 0
+      }
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "postgres",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [],
+  "validation_rules": {
+    "schema": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "triggerMode": [
+            "createTrigger"
+          ]
+        }
+      }
+    },
+    "tableName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "triggerMode": [
+            "createTrigger"
+          ]
+        }
+      }
+    },
+    "channelName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "triggerMode": [
+            "listenTrigger"
+          ]
+        }
+      }
+    },
+    "firesOn": {
+      "displayOptions": {
+        "show": {
+          "triggerMode": [
+            "createTrigger"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "triggerMode": [
+            "createTrigger"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "triggerMode": {
+      "type": "options",
+      "displayName": "Listen For",
+      "name": "triggerMode",
+      "possibleValues": [
+        {
+          "value": "createTrigger",
+          "name": "Table Row Change Events",
+          "description": "Insert, update or delete"
+        },
+        {
+          "value": "listenTrigger",
+          "name": "Advanced",
+          "description": "Listen to existing Postgres channel"
+        }
+      ]
+    },
+    "schema": {
+      "type": "resourceLocator",
+      "displayName": "Schema Name",
+      "name": "schema"
+    },
+    "tableName": {
+      "type": "resourceLocator",
+      "displayName": "Table Name",
+      "name": "tableName"
+    },
+    "channelName": {
+      "type": "string",
+      "displayName": "Channel Name",
+      "name": "channelName"
+    },
+    "firesOn": {
+      "type": "options",
+      "displayName": "Event to listen for",
+      "name": "firesOn",
+      "possibleValues": [
+        {
+          "value": "INSERT",
+          "name": "Insert",
+          "description": ""
+        },
+        {
+          "value": "UPDATE",
+          "name": "Update",
+          "description": ""
+        },
+        {
+          "value": "DELETE",
+          "name": "Delete",
+          "description": ""
+        }
+      ]
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Channel Name",
+          "name": "channelName",
+          "type": "string",
+          "description": "Name of the channel to listen to",
+          "placeholder": "e.g. n8n_channel",
+          "default": ""
+        },
+        {
+          "displayName": "Function Name",
+          "name": "functionName",
+          "type": "string",
+          "description": "Name of the function to create",
+          "placeholder": "e.g. n8n_trigger_function()",
+          "default": ""
+        },
+        {
+          "displayName": "Replace if Exists",
+          "name": "replaceIfExists",
+          "type": "boolean",
+          "description": "Whether to replace an existing function and trigger with the same name",
+          "default": false
+        },
+        {
+          "displayName": "Trigger Name",
+          "name": "triggerName",
+          "type": "string",
+          "description": "Name of the trigger to create",
+          "placeholder": "e.g. n8n_trigger",
+          "default": ""
+        }
+      ]
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "minValue": 0
+      },
+      "subProperties": [
+        {
+          "displayName": "Connection Timeout",
+          "name": "connectionTimeout",
+          "type": "number",
+          "description": "Number of seconds reserved for connecting to the database",
+          "default": 30
+        },
+        {
+          "displayName": "Delay Closing Idle Connection",
+          "name": "delayClosingIdleConnection",
+          "type": "number",
+          "description": "Number of seconds to wait before idle connection would be eligible for closing",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0
+          }
+        }
+      ]
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "schema",
+        "text": "Select a schema"
+      },
+      {
+        "field": "tableName",
+        "text": "Select a table"
+      },
+      {
+        "field": "channelName",
+        "text": "e.g. n8n_channel"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

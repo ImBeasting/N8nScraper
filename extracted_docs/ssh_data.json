@@ -1,0 +1,681 @@
+{
+  "node_info": {
+    "icon": "fa:terminal",
+    "defaults": {
+      "name": "SSH"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "sshPassword",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "password"
+            ]
+          }
+        }
+      },
+      {
+        "name": "sshPrivateKey",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "privateKey"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "SSH",
+    "name": "ssh",
+    "description": "Execute commands via SSH",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "iconColor": "black",
+    "version": "1",
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.ssh",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Core Nodes",
+      "Development"
+    ],
+    "resources": {
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.ssh/"
+        }
+      ]
+    },
+    "alias": [
+      "remote"
+    ],
+    "subcategories": [
+      "Helpers"
+    ]
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "password",
+      "default": "password",
+      "options": [
+        {
+          "name": "Password",
+          "value": "password",
+          "displayName": "Password"
+        },
+        {
+          "name": "Private Key",
+          "value": "privateKey",
+          "displayName": "Private Key"
+        }
+      ]
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "command",
+      "default": "command",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Command",
+          "value": "command",
+          "displayName": "Command"
+        },
+        {
+          "name": "File",
+          "value": "file",
+          "displayName": "File"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Execute a command",
+      "action": "Execute a command",
+      "value": "execute",
+      "default": "execute",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Execute",
+          "description": "Execute a command",
+          "action": "Execute a command",
+          "value": "execute",
+          "displayName": "Execute"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "command"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Command",
+      "name": "command",
+      "type": "string",
+      "description": "The command to be executed on a remote device",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "command"
+          ],
+          "operation": [
+            "execute"
+          ]
+        }
+      },
+      "_operation": "execute"
+    },
+    {
+      "displayName": "Working Directory",
+      "name": "cwd",
+      "type": "string",
+      "default": "/",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "command"
+          ],
+          "operation": [
+            "execute"
+          ]
+        }
+      },
+      "_operation": "execute"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Download a file",
+      "action": "Download a file",
+      "value": "download",
+      "default": "upload",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Download",
+          "description": "Download a file",
+          "action": "Download a file",
+          "value": "download",
+          "displayName": "Download"
+        },
+        {
+          "name": "Upload",
+          "description": "Upload a file",
+          "action": "Upload a file",
+          "value": "upload",
+          "displayName": "Upload"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Input Binary Field",
+      "name": "binaryPropertyName",
+      "type": "string",
+      "hint": "The name of the input binary field containing the file to be uploaded",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "upload"
+          ],
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_operation": "upload"
+    },
+    {
+      "displayName": "Target Directory",
+      "name": "path",
+      "type": "string",
+      "description": "The directory to upload the file to. The name of the file does not need to be specified, it's taken from the binary data file name. To override this behavior, set the parameter \"File Name\" under options.",
+      "placeholder": "/home/user",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ],
+          "operation": [
+            "upload"
+          ]
+        }
+      },
+      "_operation": "upload"
+    },
+    {
+      "displayName": "Path",
+      "name": "path",
+      "type": "string",
+      "description": "The file path of the file to download. Has to contain the full path including file name.",
+      "placeholder": "/home/user/invoice.txt",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ],
+          "operation": [
+            "download"
+          ]
+        }
+      },
+      "_operation": "download"
+    },
+    {
+      "displayName": "File Property",
+      "name": "binaryPropertyName",
+      "type": "string",
+      "description": "Object property name which holds binary data",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ],
+          "operation": [
+            "download"
+          ]
+        }
+      },
+      "_operation": "download"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Overrides the binary data file name",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "File Name",
+          "name": "fileName",
+          "type": "string",
+          "description": "Overrides the binary data file name",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ],
+          "operation": [
+            "upload",
+            "download"
+          ]
+        }
+      },
+      "_operation": "upload,download"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Execute",
+      "description": "Execute a command",
+      "action": "Execute a command",
+      "value": "execute",
+      "displayName": "Execute"
+    },
+    {
+      "name": "Download",
+      "description": "Download a file",
+      "action": "Download a file",
+      "value": "download",
+      "displayName": "Download"
+    },
+    {
+      "name": "Upload",
+      "description": "Upload a file",
+      "action": "Upload a file",
+      "value": "upload",
+      "displayName": "Upload"
+    }
+  ],
+  "operations_by_resource": {
+    "command": [
+      {
+        "name": "Execute",
+        "description": "Execute a command",
+        "action": "Execute a command",
+        "value": "execute",
+        "displayName": "Execute"
+      }
+    ],
+    "file": [
+      {
+        "name": "Download",
+        "description": "Download a file",
+        "action": "Download a file",
+        "value": "download",
+        "displayName": "Download"
+      },
+      {
+        "name": "Upload",
+        "description": "Upload a file",
+        "action": "Upload a file",
+        "value": "upload",
+        "displayName": "Upload"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "sshPassword",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "password"
+          ]
+        }
+      }
+    },
+    {
+      "name": "sshPrivateKey",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "privateKey"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ]
+        }
+      }
+    },
+    "command": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "command"
+          ],
+          "operation": [
+            "execute"
+          ]
+        }
+      }
+    },
+    "cwd": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "command"
+          ],
+          "operation": [
+            "execute"
+          ]
+        }
+      }
+    },
+    "binaryPropertyName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ],
+          "operation": [
+            "download"
+          ]
+        }
+      }
+    },
+    "path": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ],
+          "operation": [
+            "download"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ],
+          "operation": [
+            "upload",
+            "download"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "password",
+          "name": "Password",
+          "description": ""
+        },
+        {
+          "value": "privateKey",
+          "name": "Private Key",
+          "description": ""
+        }
+      ]
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "command",
+          "name": "Command",
+          "description": ""
+        },
+        {
+          "value": "file",
+          "name": "File",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "download",
+          "name": "Download",
+          "description": "Download a file"
+        },
+        {
+          "value": "upload",
+          "name": "Upload",
+          "description": "Upload a file"
+        }
+      ]
+    },
+    "command": {
+      "type": "string",
+      "displayName": "Command",
+      "name": "command"
+    },
+    "cwd": {
+      "type": "string",
+      "displayName": "Working Directory",
+      "name": "cwd"
+    },
+    "binaryPropertyName": {
+      "type": "string",
+      "displayName": "File Property",
+      "name": "binaryPropertyName"
+    },
+    "path": {
+      "type": "string",
+      "displayName": "Path",
+      "name": "path"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "File Name",
+          "name": "fileName",
+          "type": "string",
+          "description": "Overrides the binary data file name",
+          "default": ""
+        }
+      ]
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "path",
+        "text": "/home/user"
+      },
+      {
+        "field": "path",
+        "text": "/home/user/invoice.txt"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": [
+      {
+        "field": "binaryPropertyName",
+        "text": "The name of the input binary field containing the file to be uploaded"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

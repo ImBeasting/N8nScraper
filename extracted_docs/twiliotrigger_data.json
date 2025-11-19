@@ -1,0 +1,201 @@
+{
+  "node_info": {
+    "icon": "file:twilio.svg",
+    "defaults": {
+      "name": "Twilio Trigger"
+    },
+    "inputs": [],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "trigger"
+    ],
+    "authentication": [
+      {
+        "name": "twilioApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Twilio Trigger",
+    "name": "twilioTrigger",
+    "description": "Starts the workflow on a Twilio update",
+    "subtitle": "=Updates: {{$parameter[\"updates\"].join(\", \")}}",
+    "version": [
+      "1"
+    ],
+    "node_type": "trigger",
+    "webhooks": [
+      {
+        "name": "default",
+        "httpMethod": "POST",
+        "responseMode": "onReceived",
+        "path": "webhook"
+      }
+    ]
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.twilioTrigger",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication",
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/twilio/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.twiliotrigger/"
+        }
+      ]
+    },
+    "alias": [
+      "SMS",
+      "Phone",
+      "Voice"
+    ]
+  },
+  "properties": [
+    {
+      "displayName": "Trigger On",
+      "name": "updates",
+      "type": "multiOptions",
+      "description": "When an SMS message is received",
+      "value": "com.twilio.messaging.inbound-message.received",
+      "default": [],
+      "required": true,
+      "options": [
+        {
+          "name": "New SMS",
+          "description": "When an SMS message is received",
+          "value": "com.twilio.messaging.inbound-message.received",
+          "displayName": "New Sms"
+        },
+        {
+          "name": "New Call",
+          "description": "When a call is received",
+          "value": "com.twilio.voice.insights.call-summary.complete",
+          "displayName": "New Call"
+        }
+      ]
+    },
+    {
+      "displayName": "The 'New Call' event may take up to thirty minutes to be triggered",
+      "name": "callTriggerNotice",
+      "type": "notice",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "updates": [
+            "com.twilio.voice.insights.call-summary.complete"
+          ]
+        }
+      }
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "twilioApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [],
+  "validation_rules": {
+    "updates": {
+      "required": true
+    },
+    "callTriggerNotice": {
+      "displayOptions": {
+        "show": {
+          "updates": [
+            "com.twilio.voice.insights.call-summary.complete"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "updates": {
+      "type": "multiOptions",
+      "displayName": "Trigger On",
+      "name": "updates",
+      "possibleValues": [
+        {
+          "value": "com.twilio.messaging.inbound-message.received",
+          "name": "New SMS",
+          "description": "When an SMS message is received"
+        },
+        {
+          "value": "com.twilio.voice.insights.call-summary.complete",
+          "name": "New Call",
+          "description": "When a call is received"
+        }
+      ]
+    },
+    "callTriggerNotice": {
+      "type": "notice",
+      "displayName": "The 'New Call' event may take up to thirty minutes to be triggered",
+      "name": "callTriggerNotice"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [
+      "https://events.twilio.com/v1/{endpoint}"
+    ],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [
+      {
+        "name": "callTriggerNotice",
+        "text": "The 'New Call' event may take up to thirty minutes to be triggered",
+        "conditions": {
+          "show": {
+            "updates": [
+              "com.twilio.voice.insights.call-summary.complete"
+            ]
+          }
+        }
+      }
+    ],
+    "tooltips": [],
+    "placeholders": [],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

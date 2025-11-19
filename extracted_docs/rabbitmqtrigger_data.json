@@ -1,0 +1,421 @@
+{
+  "node_info": {
+    "icon": "file:rabbitmq.svg",
+    "defaults": {
+      "name": "RabbitMQ Trigger"
+    },
+    "inputs": [],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "trigger"
+    ],
+    "authentication": [
+      {
+        "name": "rabbitmq",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {
+      "executionsHelp": "{\n\t\t\t\tinactive:\n\t\t\t\t\t\"<b>While building your workflow</b>, click the 'execute step' button, then trigger a Rabbit MQ event. This will trigger an execution, which will show up in this editor.<br /> <br /><b>Once you're happy with your workflow</b>, <a data-key='activate'>activate</a> it. Then every time a change is detected, the workflow will execute. These executions will show up in the <a data-key='executions'>executions list</a>, but not in the editor.\",\n\t\t\t\tactive:\n\t\t\t\t\t\"<b>While building your workflow</b>, click the 'execute step' button, then trigger a Rabbit MQ event. This will trigger an execution, which will show up in this editor.<br /> <br /><b>Your workflow will also execute automatically</b>, since it's activated. Every time a change is detected, this node will trigger an execution. These executions will show up in the <a data-key='executions'>executions list</a>, but not in the editor.\",\n\t\t\t}",
+      "activationHint": "Once you\u2019ve finished building your workflow, <a data-key="
+    },
+    "supportsCORS": false,
+    "displayName": "RabbitMQ Trigger",
+    "name": "rabbitmqTrigger",
+    "description": "Listens to RabbitMQ messages",
+    "subtitle": "",
+    "version": "1",
+    "node_type": "trigger"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.rabbitmqTrigger",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/rabbitmq/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.rabbitmqtrigger/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Queue / Topic",
+      "name": "queue",
+      "type": "string",
+      "description": "The name of the queue to read from",
+      "placeholder": "queue-name",
+      "default": ""
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to save the content as binary",
+      "placeholder": "Add option",
+      "value": "executionFinishes",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Content Is Binary",
+          "name": "contentIsBinary",
+          "type": "boolean",
+          "description": "Whether to save the content as binary",
+          "default": false
+        },
+        {
+          "displayName": "Delete From Queue When",
+          "name": "acknowledge",
+          "type": "options",
+          "description": "After the workflow execution finished. No matter if the execution was successful or not.",
+          "value": "executionFinishes",
+          "default": "immediately",
+          "options": [
+            {
+              "name": "Execution Finishes",
+              "description": "After the workflow execution finished. No matter if the execution was successful or not.",
+              "value": "executionFinishes",
+              "displayName": "Execution Finishes"
+            },
+            {
+              "name": "Execution Finishes Successfully",
+              "description": "After the workflow execution finished successfully",
+              "value": "executionFinishesSuccessfully",
+              "displayName": "Execution Finishes Successfully"
+            },
+            {
+              "name": "Immediately",
+              "description": "As soon as the message got received",
+              "value": "immediately",
+              "displayName": "Immediately"
+            },
+            {
+              "name": "Specified Later in Workflow",
+              "description": "Using a RabbitMQ node to remove the item from the queue",
+              "value": "laterMessageNode",
+              "displayName": "Specified Later In Workflow"
+            }
+          ]
+        },
+        {
+          "displayName": "JSON Parse Body",
+          "name": "jsonParseBody",
+          "type": "boolean",
+          "description": "Whether to parse the body to an object",
+          "default": false,
+          "displayOptions": {
+            "hide": {
+              "contentIsBinary": [
+                true
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Only Content",
+          "name": "onlyContent",
+          "type": "boolean",
+          "description": "Whether to return only the content property",
+          "default": false,
+          "displayOptions": {
+            "hide": {
+              "contentIsBinary": [
+                true
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Parallel Message Processing Limit",
+          "name": "parallelMessages",
+          "type": "number",
+          "description": "Max number of executions at a time. Use -1 for no limit.",
+          "displayOptions": {
+            "hide": {
+              "acknowledge": [
+                "immediately"
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Binding",
+          "name": "binding",
+          "type": "fixedCollection",
+          "description": "Add binding to queu",
+          "placeholder": "Add Binding",
+          "default": {},
+          "options": [
+            {
+              "name": "bindings",
+              "displayName": "Binding",
+              "values": [
+                {
+                  "displayName": "Exchange",
+                  "name": "exchange",
+                  "type": "string",
+                  "placeholder": "exchange",
+                  "default": ""
+                },
+                {
+                  "displayName": "RoutingKey",
+                  "name": "routingKey",
+                  "type": "string",
+                  "placeholder": "routing-key",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "hide": {
+          "contentIsBinary": [
+            true
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "To delete an item from the queue, insert a RabbitMQ node later in the workflow and use the 'Delete from queue' operation",
+      "name": "laterMessageNode",
+      "type": "notice",
+      "default": "",
+      "displayOptions": {
+        "show": {}
+      }
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "rabbitmq",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [],
+  "validation_rules": {
+    "options": {
+      "displayOptions": {
+        "hide": {
+          "contentIsBinary": [
+            true
+          ]
+        }
+      }
+    },
+    "laterMessageNode": {
+      "displayOptions": {
+        "show": {}
+      }
+    }
+  },
+  "type_info": {
+    "queue": {
+      "type": "string",
+      "displayName": "Queue / Topic",
+      "name": "queue"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Content Is Binary",
+          "name": "contentIsBinary",
+          "type": "boolean",
+          "description": "Whether to save the content as binary",
+          "default": false
+        },
+        {
+          "displayName": "Delete From Queue When",
+          "name": "acknowledge",
+          "type": "options",
+          "description": "After the workflow execution finished. No matter if the execution was successful or not.",
+          "value": "executionFinishes",
+          "default": "immediately",
+          "options": [
+            {
+              "name": "Execution Finishes",
+              "description": "After the workflow execution finished. No matter if the execution was successful or not.",
+              "value": "executionFinishes",
+              "displayName": "Execution Finishes"
+            },
+            {
+              "name": "Execution Finishes Successfully",
+              "description": "After the workflow execution finished successfully",
+              "value": "executionFinishesSuccessfully",
+              "displayName": "Execution Finishes Successfully"
+            },
+            {
+              "name": "Immediately",
+              "description": "As soon as the message got received",
+              "value": "immediately",
+              "displayName": "Immediately"
+            },
+            {
+              "name": "Specified Later in Workflow",
+              "description": "Using a RabbitMQ node to remove the item from the queue",
+              "value": "laterMessageNode",
+              "displayName": "Specified Later In Workflow"
+            }
+          ]
+        },
+        {
+          "displayName": "JSON Parse Body",
+          "name": "jsonParseBody",
+          "type": "boolean",
+          "description": "Whether to parse the body to an object",
+          "default": false,
+          "displayOptions": {
+            "hide": {
+              "contentIsBinary": [
+                true
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Only Content",
+          "name": "onlyContent",
+          "type": "boolean",
+          "description": "Whether to return only the content property",
+          "default": false,
+          "displayOptions": {
+            "hide": {
+              "contentIsBinary": [
+                true
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Parallel Message Processing Limit",
+          "name": "parallelMessages",
+          "type": "number",
+          "description": "Max number of executions at a time. Use -1 for no limit.",
+          "displayOptions": {
+            "hide": {
+              "acknowledge": [
+                "immediately"
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Binding",
+          "name": "binding",
+          "type": "fixedCollection",
+          "description": "Add binding to queu",
+          "placeholder": "Add Binding",
+          "default": {},
+          "options": [
+            {
+              "name": "bindings",
+              "displayName": "Binding",
+              "values": [
+                {
+                  "displayName": "Exchange",
+                  "name": "exchange",
+                  "type": "string",
+                  "placeholder": "exchange",
+                  "default": ""
+                },
+                {
+                  "displayName": "RoutingKey",
+                  "name": "routingKey",
+                  "type": "string",
+                  "placeholder": "routing-key",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        }
+      ]
+    },
+    "laterMessageNode": {
+      "type": "notice",
+      "displayName": "To delete an item from the queue, insert a RabbitMQ node later in the workflow and use the 'Delete from queue' operation",
+      "name": "laterMessageNode"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [
+      {
+        "name": "laterMessageNode",
+        "text": "To delete an item from the queue, insert a RabbitMQ node later in the workflow and use the 'Delete from queue' operation",
+        "conditions": {
+          "show": {}
+        }
+      }
+    ],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "queue",
+        "text": "queue-name"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

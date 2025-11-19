@@ -1,0 +1,1959 @@
+{
+  "node_info": {
+    "icon": "file:dynamodb.svg",
+    "defaults": {
+      "name": "AWS DynamoDB"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "aws",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getTables"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "AWS DynamoDB",
+    "name": "awsDynamoDb",
+    "description": "Consume the AWS DynamoDB API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.awsDynamoDb",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Data & Storage",
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/aws/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.awsdynamodb/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "item",
+      "default": "item",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Item",
+          "value": "item",
+          "displayName": "Item"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new record, or update the current one if it already exists (upsert)",
+      "action": "Create or update an item",
+      "value": "upsert",
+      "default": "upsert",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create or Update",
+          "description": "Create a new record, or update the current one if it already exists (upsert)",
+          "action": "Create or update an item",
+          "value": "upsert",
+          "displayName": "Create Or Update"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete an item",
+          "action": "Delete an item",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get an item",
+          "action": "Get an item",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many items",
+          "action": "Get many items",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ]
+        }
+      },
+      "_source": "Item_itemOperations"
+    },
+    {
+      "displayName": "Table Name or ID",
+      "name": "tableName",
+      "type": "options",
+      "description": "Table to operate on. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": [],
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTables"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ]
+        }
+      },
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Data to Send",
+      "name": "dataToSend",
+      "type": "options",
+      "description": "Use when node input properties match destination column names",
+      "value": "autoMapInputData",
+      "default": "defineBelow",
+      "options": [
+        {
+          "name": "Auto-Map Input Data to Columns",
+          "description": "Use when node input properties match destination column names",
+          "value": "autoMapInputData",
+          "displayName": "Auto-map Input Data To Columns"
+        },
+        {
+          "name": "Define Below for Each Column",
+          "description": "Set the value for each destination column",
+          "value": "defineBelow",
+          "displayName": "Define Below For Each Column"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "upsert"
+          ]
+        }
+      },
+      "_operation": "upsert",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Inputs to Ignore",
+      "name": "inputsToIgnore",
+      "type": "string",
+      "description": "List of input properties to avoid sending, separated by commas. Leave empty to send all properties.",
+      "placeholder": "Enter properties...",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "upsert"
+          ],
+          "dataToSend": [
+            "autoMapInputData"
+          ]
+        }
+      },
+      "_operation": "upsert",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Fields to Send",
+      "name": "fieldsUi",
+      "type": "fixedCollection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "name": "fieldValues",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Field ID",
+              "name": "fieldId",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Field Value",
+              "name": "fieldValue",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "upsert"
+          ],
+          "dataToSend": [
+            "defineBelow"
+          ]
+        }
+      },
+      "_operation": "upsert",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Substitution tokens for attribute names in an expression. Only needed when the parameter \"condition expression\" is set.",
+      "placeholder": "Add Field",
+      "value": "N",
+      "default": {},
+      "required": true,
+      "options": [
+        {
+          "displayName": "Expression Attribute Values",
+          "name": "eavUi",
+          "type": "fixedCollection",
+          "description": "Substitution tokens for attribute names in an expression. Only needed when the parameter \"condition expression\" is set.",
+          "placeholder": "Add Attribute Value",
+          "value": "N",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "eavValues",
+              "displayName": "Expression Attribute Vaue",
+              "values": [
+                {
+                  "displayName": "Attribute",
+                  "name": "attribute",
+                  "type": "string",
+                  "default": ""
+                },
+                {
+                  "displayName": "Type",
+                  "name": "type",
+                  "type": "options",
+                  "value": "N",
+                  "default": "S",
+                  "options": [
+                    {
+                      "name": "Number",
+                      "value": "N",
+                      "displayName": "Number"
+                    },
+                    {
+                      "name": "String",
+                      "value": "S",
+                      "displayName": "String"
+                    }
+                  ]
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "minValue": 1,
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Condition Expression",
+          "name": "conditionExpression",
+          "type": "string",
+          "description": "A condition that must be satisfied in order for a conditional upsert to succeed. <a href=\"https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_PutItem.html\">View details</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Expression Attribute Names",
+          "name": "eanUi",
+          "type": "fixedCollection",
+          "description": "One or more substitution tokens for attribute names in an expression. <a href=\"https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_PutItem.html\">View details</a>.",
+          "placeholder": "Add Expression",
+          "default": {},
+          "options": [
+            {
+              "name": "eanValues",
+              "displayName": "Expression",
+              "values": [
+                {
+                  "displayName": "Key",
+                  "name": "key",
+                  "type": "string",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        }
+      ],
+      "typeOptions": {
+        "minValue": 1,
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "upsert"
+          ]
+        }
+      },
+      "_operation": "upsert",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Return",
+      "name": "returnValues",
+      "type": "options",
+      "description": "The content of the old item is returned",
+      "value": "ALL_OLD",
+      "default": "NONE",
+      "options": [
+        {
+          "name": "Attribute Values",
+          "description": "The content of the old item is returned",
+          "value": "ALL_OLD",
+          "displayName": "Attribute Values"
+        },
+        {
+          "name": "Nothing",
+          "description": "Nothing is returned",
+          "value": "NONE",
+          "displayName": "Nothing"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Keys",
+      "name": "keysUi",
+      "type": "fixedCollection",
+      "description": "Item's primary key. For example, with a simple primary key, you only need to provide a value for the partition key. For a composite primary key, you must provide values for both the partition key and the sort key.",
+      "placeholder": "Add Key",
+      "value": "B",
+      "default": {},
+      "options": [
+        {
+          "name": "keyValues",
+          "displayName": "Key",
+          "values": [
+            {
+              "displayName": "Key",
+              "name": "key",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Type",
+              "name": "type",
+              "type": "options",
+              "value": "B",
+              "default": "S",
+              "options": [
+                {
+                  "name": "Binary",
+                  "value": "B",
+                  "displayName": "Binary"
+                },
+                {
+                  "name": "Number",
+                  "value": "N",
+                  "displayName": "Number"
+                },
+                {
+                  "name": "String",
+                  "value": "S",
+                  "displayName": "String"
+                }
+              ]
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "delete"
+          ],
+          "returnValues": [
+            "ALL_OLD"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "A condition that must be satisfied in order for a conditional delete to succeed",
+      "placeholder": "Add Field",
+      "value": "N",
+      "default": {},
+      "required": true,
+      "options": [
+        {
+          "displayName": "Condition Expression",
+          "name": "conditionExpression",
+          "type": "string",
+          "description": "A condition that must be satisfied in order for a conditional delete to succeed",
+          "default": ""
+        },
+        {
+          "displayName": "Expression Attribute Names",
+          "name": "eanUi",
+          "type": "fixedCollection",
+          "description": "One or more substitution tokens for attribute names in an expression. Check <a href=\"https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_PutItem.html\">Info</a>.",
+          "placeholder": "Add Expression",
+          "default": {},
+          "options": [
+            {
+              "name": "eanValues",
+              "displayName": "Expression",
+              "values": [
+                {
+                  "displayName": "Key",
+                  "name": "key",
+                  "type": "string",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Expression Attribute Values",
+          "name": "expressionAttributeUi",
+          "type": "fixedCollection",
+          "description": "Substitution tokens for attribute names in an expression. Only needed when the parameter \"condition expression\" is set.",
+          "placeholder": "Add Attribute Value",
+          "value": "N",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "expressionAttributeValues",
+              "displayName": "Expression Attribute Value",
+              "values": [
+                {
+                  "displayName": "Attribute",
+                  "name": "attribute",
+                  "type": "string",
+                  "default": ""
+                },
+                {
+                  "displayName": "Type",
+                  "name": "type",
+                  "type": "options",
+                  "value": "N",
+                  "default": "S",
+                  "options": [
+                    {
+                      "name": "Number",
+                      "value": "N",
+                      "displayName": "Number"
+                    },
+                    {
+                      "name": "String",
+                      "value": "S",
+                      "displayName": "String"
+                    }
+                  ]
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "minValue": 1,
+            "multipleValues": true
+          }
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Select",
+      "name": "select",
+      "type": "options",
+      "description": "Select them in Attributes to Select under Additional Fields",
+      "value": "ALL_ATTRIBUTES",
+      "default": "ALL_ATTRIBUTES",
+      "options": [
+        {
+          "name": "All Attributes",
+          "value": "ALL_ATTRIBUTES",
+          "displayName": "All Attributes"
+        },
+        {
+          "name": "All Projected Attributes",
+          "value": "ALL_PROJECTED_ATTRIBUTES",
+          "displayName": "All Projected Attributes"
+        },
+        {
+          "name": "Specific Attributes",
+          "description": "Select them in Attributes to Select under Additional Fields",
+          "value": "SPECIFIC_ATTRIBUTES",
+          "displayName": "Specific Attributes"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "get"
+          ],
+          "select": [
+            "ALL_PROJECTED_ATTRIBUTES",
+            "ALL_ATTRIBUTES"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Keys",
+      "name": "keysUi",
+      "type": "fixedCollection",
+      "description": "Item's primary key. For example, with a simple primary key, you only need to provide a value for the partition key. For a composite primary key, you must provide values for both the partition key and the sort key.",
+      "placeholder": "Add Key",
+      "value": "B",
+      "default": {},
+      "options": [
+        {
+          "name": "keyValues",
+          "displayName": "Key",
+          "values": [
+            {
+              "displayName": "Key",
+              "name": "key",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Type",
+              "name": "type",
+              "type": "options",
+              "value": "B",
+              "default": "S",
+              "options": [
+                {
+                  "name": "Binary",
+                  "value": "B",
+                  "displayName": "Binary"
+                },
+                {
+                  "name": "Number",
+                  "value": "N",
+                  "displayName": "Number"
+                },
+                {
+                  "name": "String",
+                  "value": "S",
+                  "displayName": "String"
+                }
+              ]
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "One or more substitution tokens for attribute names in an expression. <a href=\"https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_PutItem.html\">View details</a>.",
+      "placeholder": "Add Field",
+      "value": "stronglyConsistentRead",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Attributes to Select",
+          "name": "projectionExpression",
+          "type": "string",
+          "placeholder": "id, name",
+          "default": ""
+        },
+        {
+          "displayName": "Expression Attribute Names",
+          "name": "eanUi",
+          "type": "fixedCollection",
+          "description": "One or more substitution tokens for attribute names in an expression. <a href=\"https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_PutItem.html\">View details</a>.",
+          "placeholder": "Add Expression",
+          "default": {},
+          "options": [
+            {
+              "name": "eanValues",
+              "displayName": "Expression",
+              "values": [
+                {
+                  "displayName": "Key",
+                  "name": "key",
+                  "type": "string",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Read Type",
+          "name": "readType",
+          "type": "options",
+          "description": "Type of read to perform on the table. <a href=\"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadConsistency.html\">View details</a>.",
+          "value": "stronglyConsistentRead",
+          "default": "eventuallyConsistentRead",
+          "options": [
+            {
+              "name": "Strongly Consistent Read",
+              "value": "stronglyConsistentRead",
+              "displayName": "Strongly Consistent Read"
+            },
+            {
+              "name": "Eventually Consistent Read",
+              "value": "eventuallyConsistentRead",
+              "displayName": "Eventually Consistent Read"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Scan",
+      "name": "scan",
+      "type": "boolean",
+      "description": "Whether to do an scan or query. Check <a href=\"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-query-scan.html\" >differences</a>.",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Filter Expression",
+      "name": "filterExpression",
+      "type": "string",
+      "description": "A filter expression determines which items within the Scan results should be returned to you. All of the other results are discarded. Empty value will return all Scan results.",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "scan": [
+            true
+          ]
+        }
+      },
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Key Condition Expression",
+      "name": "keyConditionExpression",
+      "type": "string",
+      "description": "Condition to determine the items to be retrieved. The condition must perform an equality test on a single partition key value, in this format: <code>partitionKeyName = :partitionkeyval</code>",
+      "placeholder": "id = :id",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "scan": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Expression Attribute Values",
+      "name": "eavUi",
+      "type": "fixedCollection",
+      "description": "Substitution tokens for attribute names in an expression",
+      "placeholder": "Add Attribute Value",
+      "value": "N",
+      "default": {},
+      "required": true,
+      "options": [
+        {
+          "name": "eavValues",
+          "displayName": "Expression Attribute Vaue",
+          "values": [
+            {
+              "displayName": "Attribute",
+              "name": "attribute",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Type",
+              "name": "type",
+              "type": "options",
+              "value": "N",
+              "default": "S",
+              "options": [
+                {
+                  "name": "Number",
+                  "value": "N",
+                  "displayName": "Number"
+                },
+                {
+                  "name": "String",
+                  "value": "S",
+                  "displayName": "String"
+                }
+              ]
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "minValue": 1,
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Select",
+      "name": "select",
+      "type": "options",
+      "description": "Select them in Attributes to Select under Additional Fields",
+      "value": "ALL_ATTRIBUTES",
+      "default": "ALL_ATTRIBUTES",
+      "options": [
+        {
+          "name": "All Attributes",
+          "value": "ALL_ATTRIBUTES",
+          "displayName": "All Attributes"
+        },
+        {
+          "name": "All Projected Attributes",
+          "value": "ALL_PROJECTED_ATTRIBUTES",
+          "displayName": "All Projected Attributes"
+        },
+        {
+          "name": "Count",
+          "value": "COUNT",
+          "displayName": "Count"
+        },
+        {
+          "name": "Specific Attributes",
+          "description": "Select them in Attributes to Select under Additional Fields",
+          "value": "SPECIFIC_ATTRIBUTES",
+          "displayName": "Specific Attributes"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "select": [
+            "ALL_PROJECTED_ATTRIBUTES",
+            "ALL_ATTRIBUTES",
+            "SPECIFIC_ATTRIBUTES"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Item_itemFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Name of the index to query. It can be any secondary local or global index on the table.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Index Name",
+          "name": "indexName",
+          "type": "string",
+          "description": "Name of the index to query. It can be any secondary local or global index on the table.",
+          "default": ""
+        },
+        {
+          "displayName": "Attributes to Select",
+          "name": "projectionExpression",
+          "type": "string",
+          "description": "Text that identifies one or more attributes to retrieve from the table. These attributes can include scalars, sets, or elements of a JSON document. The attributes in the expression must be separated by commas.",
+          "default": ""
+        },
+        {
+          "displayName": "Filter Expression",
+          "name": "filterExpression",
+          "type": "string",
+          "description": "Text that contains conditions that DynamoDB applies after the Query operation, but before the data is returned. Items that do not satisfy the FilterExpression criteria are not returned.",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Expression Attribute Names",
+          "name": "eanUi",
+          "type": "fixedCollection",
+          "description": "One or more substitution tokens for attribute names in an expression. Check <a href=\"https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_PutItem.html\">Info</a>.",
+          "placeholder": "Add Expression",
+          "default": {},
+          "options": [
+            {
+              "name": "eanValues",
+              "displayName": "Expression",
+              "values": [
+                {
+                  "displayName": "Key",
+                  "name": "key",
+                  "type": "string",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Item_itemFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create or Update",
+      "description": "Create a new record, or update the current one if it already exists (upsert)",
+      "action": "Create or update an item",
+      "value": "upsert",
+      "displayName": "Create Or Update"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete an item",
+      "action": "Delete an item",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Get an item",
+      "action": "Get an item",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many items",
+      "action": "Get many items",
+      "value": "getAll",
+      "displayName": "Get Many"
+    }
+  ],
+  "operations_by_resource": {
+    "item": [
+      {
+        "name": "Create or Update",
+        "description": "Create a new record, or update the current one if it already exists (upsert)",
+        "action": "Create or update an item",
+        "value": "upsert",
+        "displayName": "Create Or Update"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete an item",
+        "action": "Delete an item",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get an item",
+        "action": "Get an item",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many items",
+        "action": "Get many items",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "aws",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ]
+        }
+      }
+    },
+    "tableName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ]
+        }
+      }
+    },
+    "dataToSend": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "upsert"
+          ]
+        }
+      }
+    },
+    "inputsToIgnore": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "upsert"
+          ],
+          "dataToSend": [
+            "autoMapInputData"
+          ]
+        }
+      }
+    },
+    "fieldsUi": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "upsert"
+          ],
+          "dataToSend": [
+            "defineBelow"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "returnValues": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      }
+    },
+    "keysUi": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "simple": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "select": [
+            "ALL_PROJECTED_ATTRIBUTES",
+            "ALL_ATTRIBUTES",
+            "SPECIFIC_ATTRIBUTES"
+          ]
+        }
+      }
+    },
+    "select": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "scan": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "filterExpression": {
+      "displayOptions": {
+        "show": {
+          "scan": [
+            true
+          ]
+        }
+      }
+    },
+    "keyConditionExpression": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "scan": [
+            false
+          ]
+        }
+      }
+    },
+    "eavUi": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "item"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "item",
+          "name": "Item",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "upsert",
+          "name": "Create or Update",
+          "description": "Create a new record, or update the current one if it already exists (upsert)"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete an item"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get an item"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get many items"
+        }
+      ]
+    },
+    "tableName": {
+      "type": "options",
+      "displayName": "Table Name or ID",
+      "name": "tableName",
+      "typeOptions": {
+        "loadOptionsMethod": "getTables"
+      },
+      "possibleValues": []
+    },
+    "dataToSend": {
+      "type": "options",
+      "displayName": "Data to Send",
+      "name": "dataToSend",
+      "possibleValues": [
+        {
+          "value": "autoMapInputData",
+          "name": "Auto-Map Input Data to Columns",
+          "description": "Use when node input properties match destination column names"
+        },
+        {
+          "value": "defineBelow",
+          "name": "Define Below for Each Column",
+          "description": "Set the value for each destination column"
+        }
+      ]
+    },
+    "inputsToIgnore": {
+      "type": "string",
+      "displayName": "Inputs to Ignore",
+      "name": "inputsToIgnore"
+    },
+    "fieldsUi": {
+      "type": "fixedCollection",
+      "displayName": "Fields to Send",
+      "name": "fieldsUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "fieldValues",
+          "displayName": "Field",
+          "values": [
+            {
+              "displayName": "Field ID",
+              "name": "fieldId",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Field Value",
+              "name": "fieldValue",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Attributes to Select",
+          "name": "projectionExpression",
+          "type": "string",
+          "placeholder": "id, name",
+          "default": ""
+        },
+        {
+          "displayName": "Expression Attribute Names",
+          "name": "eanUi",
+          "type": "fixedCollection",
+          "description": "One or more substitution tokens for attribute names in an expression. <a href=\"https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_PutItem.html\">View details</a>.",
+          "placeholder": "Add Expression",
+          "default": {},
+          "options": [
+            {
+              "name": "eanValues",
+              "displayName": "Expression",
+              "values": [
+                {
+                  "displayName": "Key",
+                  "name": "key",
+                  "type": "string",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Read Type",
+          "name": "readType",
+          "type": "options",
+          "description": "Type of read to perform on the table. <a href=\"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadConsistency.html\">View details</a>.",
+          "value": "stronglyConsistentRead",
+          "default": "eventuallyConsistentRead",
+          "options": [
+            {
+              "name": "Strongly Consistent Read",
+              "value": "stronglyConsistentRead",
+              "displayName": "Strongly Consistent Read"
+            },
+            {
+              "name": "Eventually Consistent Read",
+              "value": "eventuallyConsistentRead",
+              "displayName": "Eventually Consistent Read"
+            }
+          ]
+        }
+      ]
+    },
+    "returnValues": {
+      "type": "options",
+      "displayName": "Return",
+      "name": "returnValues",
+      "possibleValues": [
+        {
+          "value": "ALL_OLD",
+          "name": "Attribute Values",
+          "description": "The content of the old item is returned"
+        },
+        {
+          "value": "NONE",
+          "name": "Nothing",
+          "description": "Nothing is returned"
+        }
+      ]
+    },
+    "keysUi": {
+      "type": "fixedCollection",
+      "displayName": "Keys",
+      "name": "keysUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "keyValues",
+          "displayName": "Key",
+          "values": [
+            {
+              "displayName": "Key",
+              "name": "key",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Type",
+              "name": "type",
+              "type": "options",
+              "value": "B",
+              "default": "S",
+              "options": [
+                {
+                  "name": "Binary",
+                  "value": "B",
+                  "displayName": "Binary"
+                },
+                {
+                  "name": "Number",
+                  "value": "N",
+                  "displayName": "Number"
+                },
+                {
+                  "name": "String",
+                  "value": "S",
+                  "displayName": "String"
+                }
+              ]
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "simple": {
+      "type": "boolean",
+      "displayName": "Simplify",
+      "name": "simple"
+    },
+    "select": {
+      "type": "options",
+      "displayName": "Select",
+      "name": "select",
+      "possibleValues": [
+        {
+          "value": "ALL_ATTRIBUTES",
+          "name": "All Attributes",
+          "description": ""
+        },
+        {
+          "value": "ALL_PROJECTED_ATTRIBUTES",
+          "name": "All Projected Attributes",
+          "description": ""
+        },
+        {
+          "value": "COUNT",
+          "name": "Count",
+          "description": ""
+        },
+        {
+          "value": "SPECIFIC_ATTRIBUTES",
+          "name": "Specific Attributes",
+          "description": "Select them in Attributes to Select under Additional Fields"
+        }
+      ]
+    },
+    "scan": {
+      "type": "boolean",
+      "displayName": "Scan",
+      "name": "scan"
+    },
+    "filterExpression": {
+      "type": "string",
+      "displayName": "Filter Expression",
+      "name": "filterExpression"
+    },
+    "keyConditionExpression": {
+      "type": "string",
+      "displayName": "Key Condition Expression",
+      "name": "keyConditionExpression"
+    },
+    "eavUi": {
+      "type": "fixedCollection",
+      "displayName": "Expression Attribute Values",
+      "name": "eavUi",
+      "typeOptions": {
+        "minValue": 1,
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "eavValues",
+          "displayName": "Expression Attribute Vaue",
+          "values": [
+            {
+              "displayName": "Attribute",
+              "name": "attribute",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Type",
+              "name": "type",
+              "type": "options",
+              "value": "N",
+              "default": "S",
+              "options": [
+                {
+                  "name": "Number",
+                  "value": "N",
+                  "displayName": "Number"
+                },
+                {
+                  "name": "String",
+                  "value": "S",
+                  "displayName": "String"
+                }
+              ]
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      }
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Index Name",
+          "name": "indexName",
+          "type": "string",
+          "description": "Name of the index to query. It can be any secondary local or global index on the table.",
+          "default": ""
+        },
+        {
+          "displayName": "Attributes to Select",
+          "name": "projectionExpression",
+          "type": "string",
+          "description": "Text that identifies one or more attributes to retrieve from the table. These attributes can include scalars, sets, or elements of a JSON document. The attributes in the expression must be separated by commas.",
+          "default": ""
+        },
+        {
+          "displayName": "Filter Expression",
+          "name": "filterExpression",
+          "type": "string",
+          "description": "Text that contains conditions that DynamoDB applies after the Query operation, but before the data is returned. Items that do not satisfy the FilterExpression criteria are not returned.",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Expression Attribute Names",
+          "name": "eanUi",
+          "type": "fixedCollection",
+          "description": "One or more substitution tokens for attribute names in an expression. Check <a href=\"https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_PutItem.html\">Info</a>.",
+          "placeholder": "Add Expression",
+          "default": {},
+          "options": [
+            {
+              "name": "eanValues",
+              "displayName": "Expression",
+              "values": [
+                {
+                  "displayName": "Key",
+                  "name": "key",
+                  "type": "string",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "inputsToIgnore",
+        "text": "Enter properties..."
+      },
+      {
+        "field": "fieldsUi",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "keysUi",
+        "text": "Add Key"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "keysUi",
+        "text": "Add Key"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "keyConditionExpression",
+        "text": "id = :id"
+      },
+      {
+        "field": "eavUi",
+        "text": "Add Attribute Value"
+      },
+      {
+        "field": "options",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

@@ -1,0 +1,835 @@
+{
+  "node_info": {
+    "icon": "file:linkedin.svg",
+    "defaults": {
+      "name": "LinkedIn"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "linkedInOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "standard"
+            ]
+          }
+        }
+      },
+      {
+        "name": "linkedInCommunityManagementOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "communityManagement"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getPersonUrn",
+      "if"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "LinkedIn",
+    "name": "linkedIn",
+    "description": "Consume LinkedIn API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.linkedIn",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Marketing",
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/linkedin/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.linkedin/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "Why business process automation with n8n can change your daily life",
+          "icon": "\ud83e\uddec",
+          "url": "https://n8n.io/blog/why-business-process-automation-with-n8n-can-change-your-daily-life/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "standard",
+      "default": "standard",
+      "options": [
+        {
+          "name": "Standard",
+          "value": "standard",
+          "displayName": "Standard"
+        },
+        {
+          "name": "Community Management",
+          "value": "communityManagement",
+          "displayName": "Community Management"
+        }
+      ]
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "post",
+      "default": "post",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Post",
+          "value": "post",
+          "displayName": "Post"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new post",
+      "action": "Create a post",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a new post",
+          "action": "Create a post",
+          "value": "create",
+          "displayName": "Create"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "post"
+          ]
+        }
+      },
+      "_source": "Post_postOperations"
+    },
+    {
+      "displayName": "Post As",
+      "name": "postAs",
+      "type": "options",
+      "description": "If to post on behalf of a user or an organization",
+      "value": "person",
+      "default": "person",
+      "options": [
+        {
+          "name": "Person",
+          "value": "person",
+          "displayName": "Person"
+        },
+        {
+          "name": "Organization",
+          "value": "organization",
+          "displayName": "Organization"
+        }
+      ],
+      "_source": "Post_postFields"
+    },
+    {
+      "displayName": "Person Name or ID",
+      "name": "person",
+      "type": "options",
+      "description": "Person as which the post should be posted as. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getPersonUrn"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "postAs": [
+            "person"
+          ],
+          "resource": [
+            "post"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Post_postFields"
+    },
+    {
+      "displayName": "Organization URN",
+      "name": "organization",
+      "type": "string",
+      "description": "URN of Organization as which the post should be posted as",
+      "placeholder": "1234567",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "postAs": [
+            "organization"
+          ],
+          "resource": [
+            "post"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Post_postFields"
+    },
+    {
+      "displayName": "Text",
+      "name": "text",
+      "type": "string",
+      "description": "The primary content of the post",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "post"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Post_postFields"
+    },
+    {
+      "displayName": "Media Category",
+      "name": "shareMediaCategory",
+      "type": "options",
+      "description": "The post does not contain any media, and will only consist of text",
+      "value": "NONE",
+      "default": "NONE",
+      "options": [
+        {
+          "name": "None",
+          "description": "The post does not contain any media, and will only consist of text",
+          "value": "NONE",
+          "displayName": "None"
+        },
+        {
+          "name": "Article",
+          "description": "The post contains an article URL",
+          "value": "ARTICLE",
+          "displayName": "Article"
+        },
+        {
+          "name": "Image",
+          "description": "The post contains an image",
+          "value": "IMAGE",
+          "displayName": "Image"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "post"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Post_postFields"
+    },
+    {
+      "displayName": "Input Binary Field",
+      "name": "binaryPropertyName",
+      "type": "string",
+      "hint": "The name of the input binary field containing the file to be written",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "post"
+          ],
+          "shareMediaCategory": [
+            "IMAGE"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Post_postFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Provide a short description for your image or article",
+      "placeholder": "Add Field",
+      "hint": "The name of the input binary field containing the file for the article thumbnail",
+      "value": "CONNECTIONS",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Provide a short description for your image or article",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Original URL",
+          "name": "originalUrl",
+          "type": "string",
+          "description": "Provide the URL of the article you would like to share here",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Input Binary Field",
+          "name": "thumbnailBinaryPropertyName",
+          "type": "string",
+          "hint": "The name of the input binary field containing the file for the article thumbnail",
+          "default": "data",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Customize the title of your image or article",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Visibility",
+          "name": "visibility",
+          "type": "options",
+          "description": "Dictate if post will be seen by the public or only connections",
+          "value": "CONNECTIONS",
+          "default": "PUBLIC",
+          "options": [
+            {
+              "name": "Connections",
+              "value": "CONNECTIONS",
+              "displayName": "Connections"
+            },
+            {
+              "name": "Public",
+              "value": "PUBLIC",
+              "displayName": "Public"
+            }
+          ],
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "post"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Post_postFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a new post",
+      "action": "Create a post",
+      "value": "create",
+      "displayName": "Create"
+    }
+  ],
+  "operations_by_resource": {
+    "post": [
+      {
+        "name": "Create",
+        "description": "Create a new post",
+        "action": "Create a post",
+        "value": "create",
+        "displayName": "Create"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "linkedInOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "standard"
+          ]
+        }
+      }
+    },
+    {
+      "name": "linkedInCommunityManagementOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "communityManagement"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "post"
+          ]
+        }
+      }
+    },
+    "person": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "postAs": [
+            "person"
+          ],
+          "resource": [
+            "post"
+          ]
+        }
+      }
+    },
+    "organization": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "postAs": [
+            "organization"
+          ],
+          "resource": [
+            "post"
+          ]
+        }
+      }
+    },
+    "text": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "post"
+          ]
+        }
+      }
+    },
+    "shareMediaCategory": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "post"
+          ]
+        }
+      }
+    },
+    "binaryPropertyName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "post"
+          ],
+          "shareMediaCategory": [
+            "IMAGE"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "post"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "standard",
+          "name": "Standard",
+          "description": ""
+        },
+        {
+          "value": "communityManagement",
+          "name": "Community Management",
+          "description": ""
+        }
+      ]
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "post",
+          "name": "Post",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a new post"
+        }
+      ]
+    },
+    "postAs": {
+      "type": "options",
+      "displayName": "Post As",
+      "name": "postAs",
+      "possibleValues": [
+        {
+          "value": "person",
+          "name": "Person",
+          "description": ""
+        },
+        {
+          "value": "organization",
+          "name": "Organization",
+          "description": ""
+        }
+      ]
+    },
+    "person": {
+      "type": "options",
+      "displayName": "Person Name or ID",
+      "name": "person",
+      "typeOptions": {
+        "loadOptionsMethod": "getPersonUrn"
+      },
+      "possibleValues": []
+    },
+    "organization": {
+      "type": "string",
+      "displayName": "Organization URN",
+      "name": "organization"
+    },
+    "text": {
+      "type": "string",
+      "displayName": "Text",
+      "name": "text"
+    },
+    "shareMediaCategory": {
+      "type": "options",
+      "displayName": "Media Category",
+      "name": "shareMediaCategory",
+      "possibleValues": [
+        {
+          "value": "NONE",
+          "name": "None",
+          "description": "The post does not contain any media, and will only consist of text"
+        },
+        {
+          "value": "ARTICLE",
+          "name": "Article",
+          "description": "The post contains an article URL"
+        },
+        {
+          "value": "IMAGE",
+          "name": "Image",
+          "description": "The post contains an image"
+        }
+      ]
+    },
+    "binaryPropertyName": {
+      "type": "string",
+      "displayName": "Input Binary Field",
+      "name": "binaryPropertyName"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Provide a short description for your image or article",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Original URL",
+          "name": "originalUrl",
+          "type": "string",
+          "description": "Provide the URL of the article you would like to share here",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Input Binary Field",
+          "name": "thumbnailBinaryPropertyName",
+          "type": "string",
+          "hint": "The name of the input binary field containing the file for the article thumbnail",
+          "default": "data",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Customize the title of your image or article",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Visibility",
+          "name": "visibility",
+          "type": "options",
+          "description": "Dictate if post will be seen by the public or only connections",
+          "value": "CONNECTIONS",
+          "default": "PUBLIC",
+          "options": [
+            {
+              "name": "Connections",
+              "value": "CONNECTIONS",
+              "displayName": "Connections"
+            },
+            {
+              "name": "Public",
+              "value": "PUBLIC",
+              "displayName": "Public"
+            }
+          ],
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "LinkedIn-Version",
+      "X-Restli-Protocol-Version"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "organization",
+        "text": "1234567"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": [
+      {
+        "field": "binaryPropertyName",
+        "text": "The name of the input binary field containing the file to be written"
+      },
+      {
+        "field": "additionalFields",
+        "text": "The name of the input binary field containing the file for the article thumbnail"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

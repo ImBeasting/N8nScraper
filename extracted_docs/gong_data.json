@@ -1,0 +1,737 @@
+{
+  "node_info": {
+    "icon": "file:gong.svg",
+    "defaults": {
+      "name": "Gong"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "gongApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "accessToken"
+            ]
+          }
+        }
+      },
+      {
+        "name": "gongOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Gong",
+    "name": "gong",
+    "description": "Interact with Gong API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "listSearchMethods": [
+      "getCalls",
+      "this"
+    ],
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.gong",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development",
+      "Developer Tools"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.gong/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.gong/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "accessToken",
+      "default": "accessToken",
+      "options": [
+        {
+          "name": "Access Token",
+          "value": "accessToken",
+          "displayName": "Access Token"
+        },
+        {
+          "name": "OAuth2",
+          "value": "oAuth2",
+          "displayName": "Oauth2"
+        }
+      ]
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "call",
+      "default": "call",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Call",
+          "value": "call",
+          "displayName": "Call"
+        },
+        {
+          "name": "User",
+          "value": "user",
+          "displayName": "User"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Retrieve data for a specific user",
+      "action": "Get user",
+      "value": "get",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/v2/users/extensive',\n\t\t\t\t\t\tignoreHttpStatusErrors: true,\n\t\t\t\t\t",
+      "_source": "User_userOperations"
+    },
+    {
+      "displayName": "User to Get",
+      "name": "user",
+      "type": "list",
+      "placeholder": "e.g. 7782342274025937895",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'filter.userIds',\n\t\t\t\tpropertyInDotNotation: true,\n\t\t\t\tvalue: '={{ [$value] ",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "validateType": "boolean",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpaginate: '={{ $value ",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "rootProperty",
+      "description": "Max number of results to return",
+      "validateType": "number",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\toutput: {\n\t\t\t\tpostReceive: [\n\t\t\t\t\t{\n\t\t\t\t\t\ttype: 'rootProperty',\n\t\t\t\t\t\tproperties: {\n\t\t\t\t\t\t\tproperty: 'users',\n\t\t\t\t\t\t",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "body",
+      "description": "An optional user creation time lower limit, if supplied the API will return only the users created at or after this time",
+      "placeholder": "e.g. 2018-02-18T02:30:00-07:00 or 2018-02-18T08:00:00Z",
+      "hint": "Comma separated list of IDs, array of strings can be set in expression",
+      "validateType": "dateTime",
+      "value": "={{ new Date($value).toISOString() }}",
+      "default": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'filter.createdFromDateTime',\n\t\t\t\t\t\tpropertyInDotNotation: true,\n\t\t\t\t\t\tvalue: '={{ new Date($value).toISOString() ",
+      "_source": "User_userFields"
+    },
+    {
+      "displayName": "Call to Get",
+      "name": "call",
+      "type": "list",
+      "placeholder": "e.g. 7782342274025937895",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'filter.callIds',\n\t\t\t\tpropertyInDotNotation: true,\n\t\t\t\tvalue: '={{ [$value] ",
+      "_source": "Call_callFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "multiOptions",
+      "description": "The Call properties to include in the returned results. Choose from a list, or specify IDs using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>.",
+      "placeholder": "Add Option",
+      "value": "pointsOfInterest",
+      "default": {},
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "routing": "\n\t\t\t\t\t\t\tsend: {\n\t\t\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\t\t\tproperty: 'contentSelector.exposedFields.content.brief',\n\t\t\t\t\t\t\t\tpropertyInDotNotation: true,\n\t\t\t\t\t\t\t\tvalue: '={{ $value ",
+      "_source": "Call_callFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpaginate: '={{ $value ",
+      "_source": "Call_callFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "limit",
+      "description": "Max number of results to return",
+      "validateType": "number",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\toutput: {\n\t\t\t\tpostReceive: [\n\t\t\t\t\tasync function (\n\t\t\t\t\t\tthis: IExecuteSingleFunctions,\n\t\t\t\t\t\titems: INodeExecutionData[],\n\t\t\t\t\t\t_response: IN8nHttpFullResponse,\n\t\t\t\t\t): Promise<INodeExecutionData[]> {\n\t\t\t\t\t\treturn extractCalls(items);\n\t\t\t\t\t",
+      "_source": "Call_callFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "body",
+      "description": "Returns calls that started on or after the specified date and time. If not provided, list starts with earliest call. For web-conference calls recorded by Gong, the date denotes its scheduled time, otherwise, it denotes its actual start time.",
+      "placeholder": "e.g. 2018-02-18T02:30:00-07:00 or 2018-02-18T08:00:00Z",
+      "hint": "Comma separated list of IDs, array of strings can be set in expression",
+      "validateType": "dateTime",
+      "value": "={{ new Date($value).toISOString() }}",
+      "default": {},
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'filter.fromDateTime',\n\t\t\t\t\t\tpropertyInDotNotation: true,\n\t\t\t\t\t\tvalue: '={{ new Date($value).toISOString() ",
+      "_source": "Call_callFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "multiOptions",
+      "description": "The Call properties to include in the returned results. Choose from a list, or specify IDs using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>.",
+      "placeholder": "Add Option",
+      "value": "parties",
+      "default": {},
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\tpreSend: [\n\t\t\t\t\t\t\tasync function (\n\t\t\t\t\t\t\t\tthis: IExecuteSingleFunctions,\n\t\t\t\t\t\t\t\trequestOptions: IHttpRequestOptions,\n\t\t\t\t\t\t\t): Promise<IHttpRequestOptions> {\n\t\t\t\t\t\t\t\tconst contentProperties = ['topics'];\n\t\t\t\t\t\t\t\tconst exposedFieldsProperties = ['parties'];\n\n\t\t\t\t\t\t\t\tconst properties = this.getNodeParameter('options.properties') as string[];\n\t\t\t\t\t\t\t\tconst contentSelector = { exposedFields: {",
+      "_source": "Call_callFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Retrieve data for a specific call",
+      "action": "Get call",
+      "value": "get",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/v2/calls/extensive',\n\t\t\t\t\t\tignoreHttpStatusErrors: true,\n\t\t\t\t\t",
+      "_source": "Call_callOperations"
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {
+    "user": [],
+    "call": []
+  },
+  "credentials": [
+    {
+      "name": "gongApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "accessToken"
+          ]
+        }
+      }
+    },
+    {
+      "name": "gongOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{ $credentials.baseUrl.replace(new RegExp(\"/$\"), \"\") }}",
+    "={{ $if($response.body?.records.cursor, { cursor: $response.body.records.cursor }, {}) }}",
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "={{ $response.body.records.cursor }}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ]
+        }
+      }
+    },
+    "user": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "call": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "call"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "accessToken",
+          "name": "Access Token",
+          "description": ""
+        },
+        {
+          "value": "oAuth2",
+          "name": "OAuth2",
+          "description": ""
+        }
+      ]
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "call",
+          "name": "Call",
+          "description": ""
+        },
+        {
+          "value": "user",
+          "name": "User",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": []
+    },
+    "user": {
+      "type": "list",
+      "displayName": "User to Get",
+      "name": "user"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "limit",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1
+      }
+    },
+    "filters": {
+      "type": "body",
+      "displayName": "Filters",
+      "name": "filters"
+    },
+    "call": {
+      "type": "list",
+      "displayName": "Call to Get",
+      "name": "call"
+    },
+    "options": {
+      "type": "multiOptions",
+      "displayName": "Options",
+      "name": "options",
+      "possibleValues": []
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "user",
+        "text": "e.g. 7782342274025937895"
+      },
+      {
+        "field": "filters",
+        "text": "e.g. 2018-02-18T02:30:00-07:00 or 2018-02-18T08:00:00Z"
+      },
+      {
+        "field": "call",
+        "text": "e.g. 7782342274025937895"
+      },
+      {
+        "field": "options",
+        "text": "Add Option"
+      },
+      {
+        "field": "filters",
+        "text": "e.g. 2018-02-18T02:30:00-07:00 or 2018-02-18T08:00:00Z"
+      },
+      {
+        "field": "options",
+        "text": "Add Option"
+      }
+    ],
+    "hints": [
+      {
+        "field": "filters",
+        "text": "Comma separated list of IDs, array of strings can be set in expression"
+      },
+      {
+        "field": "filters",
+        "text": "Comma separated list of IDs, array of strings can be set in expression"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

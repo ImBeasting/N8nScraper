@@ -1,0 +1,1010 @@
+{
+  "node_info": {
+    "icon": "file:jwt.svg",
+    "defaults": {
+      "name": "JWT"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "jwtAuth",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "JWT",
+    "name": "jwt",
+    "description": "JWT",
+    "subtitle": "={{((template: prettifyOperation))($parameter.operation)}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.jwt",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development"
+    ],
+    "alias": [
+      "Token",
+      "Key",
+      "JSON",
+      "Payload",
+      "Sign",
+      "Verify",
+      "Decode"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/jwt/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.jwt/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Decode a JWT",
+      "value": "decode",
+      "default": "sign",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Decode",
+          "action": "Decode a JWT",
+          "value": "decode",
+          "displayName": "Decode"
+        },
+        {
+          "name": "Sign",
+          "action": "Sign a JWT",
+          "value": "sign",
+          "displayName": "Sign"
+        },
+        {
+          "name": "Verify",
+          "action": "Verify a JWT",
+          "value": "verify",
+          "displayName": "Verify"
+        }
+      ]
+    },
+    {
+      "displayName": "Use JSON to Build Payload",
+      "name": "useJson",
+      "type": "boolean",
+      "description": "Whether to use JSON to build the claims",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sign"
+          ]
+        }
+      },
+      "_operation": "sign"
+    },
+    {
+      "displayName": "Payload Claims",
+      "name": "claims",
+      "type": "collection",
+      "description": "Identifies the recipients that the JWT is intended for",
+      "placeholder": "Add Claim",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Audience",
+          "name": "audience",
+          "type": "string",
+          "description": "Identifies the recipients that the JWT is intended for",
+          "placeholder": "e.g. https://example.com",
+          "default": ""
+        },
+        {
+          "displayName": "Expires In",
+          "name": "expiresIn",
+          "type": "number",
+          "description": "The lifetime of the token in seconds",
+          "placeholder": "e.g. 3600",
+          "default": 3600,
+          "typeOptions": {
+            "minValue": 0
+          }
+        },
+        {
+          "displayName": "Issuer",
+          "name": "issuer",
+          "type": "string",
+          "description": "Identifies the principal that issued the JWT",
+          "placeholder": "e.g. https://example.com",
+          "default": ""
+        },
+        {
+          "displayName": "JWT ID",
+          "name": "jwtid",
+          "type": "string",
+          "description": "Unique identifier for the JWT",
+          "placeholder": "e.g. 123456",
+          "default": ""
+        },
+        {
+          "displayName": "Not Before",
+          "name": "notBefore",
+          "type": "number",
+          "description": "The time before which the JWT must not be accepted for processing",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0
+          }
+        },
+        {
+          "displayName": "Subject",
+          "name": "subject",
+          "type": "string",
+          "description": "Identifies the principal that is the subject of the JWT",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "minValue": 0
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sign"
+          ],
+          "useJson": [
+            false
+          ]
+        }
+      },
+      "_operation": "sign"
+    },
+    {
+      "displayName": "Payload Claims (JSON)",
+      "name": "claimsJson",
+      "type": "json",
+      "description": "Claims to add to the token in JSON format",
+      "validateType": "object",
+      "default": "{\\n  ",
+      "typeOptions": {
+        "rows": 5
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sign"
+          ],
+          "useJson": [
+            true
+          ]
+        }
+      },
+      "_operation": "sign"
+    },
+    {
+      "displayName": "Token",
+      "name": "token",
+      "type": "string",
+      "description": "The token to verify or decode",
+      "validateType": "jwt",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "password": true
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "verify",
+            "decode"
+          ]
+        }
+      },
+      "_operation": "verify,decode"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to return the complete decoded token with information about the header and signature or just the payload",
+      "placeholder": "Add option",
+      "value": "ES256",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Return Additional Info",
+          "name": "complete",
+          "type": "boolean",
+          "description": "Whether to return the complete decoded token with information about the header and signature or just the payload",
+          "default": false,
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Ignore Expiration",
+          "name": "ignoreExpiration",
+          "type": "boolean",
+          "description": "Whether to ignore the expiration of the token",
+          "default": false,
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Ignore Not Before Claim",
+          "name": "ignoreNotBefore",
+          "type": "boolean",
+          "description": "Whether to ignore the not before claim of the token",
+          "default": false,
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Clock Tolerance",
+          "name": "clockTolerance",
+          "type": "number",
+          "description": "Number of seconds to tolerate when checking the nbf and exp claims, to deal with small clock differences among different servers",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Key ID",
+          "name": "kid",
+          "type": "string",
+          "description": "The kid (key ID) claim is an optional header claim, used to specify the key for validating the signature",
+          "placeholder": "e.g. 123456",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Override Algorithm",
+          "name": "algorithm",
+          "type": "options",
+          "description": "The algorithm to use for signing or verifying the token, overrides algorithm in credentials",
+          "value": "ES256",
+          "default": "HS256",
+          "options": [
+            {
+              "name": "ES256",
+              "value": "ES256",
+              "displayName": "Es256"
+            },
+            {
+              "name": "ES384",
+              "value": "ES384",
+              "displayName": "Es384"
+            },
+            {
+              "name": "ES512",
+              "value": "ES512",
+              "displayName": "Es512"
+            },
+            {
+              "name": "HS256",
+              "value": "HS256",
+              "displayName": "Hs256"
+            },
+            {
+              "name": "HS384",
+              "value": "HS384",
+              "displayName": "Hs384"
+            },
+            {
+              "name": "HS512",
+              "value": "HS512",
+              "displayName": "Hs512"
+            },
+            {
+              "name": "PS256",
+              "value": "PS256",
+              "displayName": "Ps256"
+            },
+            {
+              "name": "PS384",
+              "value": "PS384",
+              "displayName": "Ps384"
+            },
+            {
+              "name": "PS512",
+              "value": "PS512",
+              "displayName": "Ps512"
+            },
+            {
+              "name": "RS256",
+              "value": "RS256",
+              "displayName": "Rs256"
+            },
+            {
+              "name": "RS384",
+              "value": "RS384",
+              "displayName": "Rs384"
+            },
+            {
+              "name": "RS512",
+              "value": "RS512",
+              "displayName": "Rs512"
+            }
+          ],
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ],
+      "typeOptions": {
+        "minValue": 0
+      },
+      "displayOptions": {
+        "show": {}
+      }
+    }
+  ],
+  "operations": [
+    {
+      "name": "Decode",
+      "action": "Decode a JWT",
+      "value": "decode",
+      "displayName": "Decode"
+    },
+    {
+      "name": "Sign",
+      "action": "Sign a JWT",
+      "value": "sign",
+      "displayName": "Sign"
+    },
+    {
+      "name": "Verify",
+      "action": "Verify a JWT",
+      "value": "verify",
+      "displayName": "Verify"
+    }
+  ],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "jwtAuth",
+      "required": true
+    }
+  ],
+  "workflow_examples": [
+    {
+      "name": "Sign with claims",
+      "parameters": {
+        "claims": {
+          "audience": "test",
+          "issuer": "test",
+          "jwtid": "123",
+          "subject": "test"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "jwtAuth": {
+          "id": "kDnfvqrCBJvtlX3o",
+          "name": "JWT Auth account"
+        }
+      },
+      "position": [
+        120,
+        400
+      ],
+      "workflow_file": "jwt.workflow.json",
+      "workflow_name": "JWT Test Workflow"
+    },
+    {
+      "name": "Sign with JSON Payload",
+      "parameters": {
+        "useJson": true,
+        "options": {}
+      },
+      "credentials": {
+        "jwtAuth": {
+          "id": "kDnfvqrCBJvtlX3o",
+          "name": "JWT Auth account"
+        }
+      },
+      "position": [
+        120,
+        840
+      ],
+      "workflow_file": "jwt.workflow.json",
+      "workflow_name": "JWT Test Workflow"
+    },
+    {
+      "name": "Verify1",
+      "parameters": {
+        "operation": "verify",
+        "token": "={{ $json.token }}",
+        "options": {
+          "complete": true,
+          "ignoreExpiration": true,
+          "ignoreNotBefore": true
+        }
+      },
+      "credentials": {
+        "jwtAuth": {
+          "id": "kDnfvqrCBJvtlX3o",
+          "name": "JWT Auth account"
+        }
+      },
+      "position": [
+        380,
+        480
+      ],
+      "workflow_file": "jwt.workflow.json",
+      "workflow_name": "JWT Test Workflow"
+    },
+    {
+      "name": "Decode2",
+      "parameters": {
+        "operation": "decode",
+        "token": "={{ $json.token }}",
+        "options": {}
+      },
+      "credentials": {
+        "jwtAuth": {
+          "id": "kDnfvqrCBJvtlX3o",
+          "name": "JWT Auth account"
+        }
+      },
+      "position": [
+        380,
+        740
+      ],
+      "workflow_file": "jwt.workflow.json",
+      "workflow_name": "JWT Test Workflow"
+    },
+    {
+      "name": "Decode1",
+      "parameters": {
+        "operation": "decode",
+        "token": "={{ $json.token }}",
+        "options": {}
+      },
+      "credentials": {
+        "jwtAuth": {
+          "id": "kDnfvqrCBJvtlX3o",
+          "name": "JWT Auth account"
+        }
+      },
+      "position": [
+        380,
+        300
+      ],
+      "workflow_file": "jwt.workflow.json",
+      "workflow_name": "JWT Test Workflow"
+    },
+    {
+      "name": "Verify2",
+      "parameters": {
+        "operation": "verify",
+        "token": "={{ $json.token }}",
+        "options": {}
+      },
+      "credentials": {
+        "jwtAuth": {
+          "id": "kDnfvqrCBJvtlX3o",
+          "name": "JWT Auth account"
+        }
+      },
+      "position": [
+        380,
+        920
+      ],
+      "workflow_file": "jwt.workflow.json",
+      "workflow_name": "JWT Test Workflow"
+    },
+    {
+      "name": "Sign with kid",
+      "parameters": {
+        "claims": {
+          "audience": "test",
+          "issuer": "test",
+          "jwtid": "123",
+          "subject": "test"
+        },
+        "options": {
+          "kid": "custom-kid"
+        }
+      },
+      "credentials": {
+        "jwtAuth": {
+          "id": "kDnfvqrCBJvtlX3o",
+          "name": "JWT Auth account"
+        }
+      },
+      "position": [
+        120,
+        1280
+      ],
+      "workflow_file": "jwt.workflow.json",
+      "workflow_name": "JWT Test Workflow"
+    },
+    {
+      "name": "Decode3",
+      "parameters": {
+        "operation": "decode",
+        "token": "={{ $json.token }}",
+        "options": {
+          "complete": true
+        }
+      },
+      "credentials": {
+        "jwtAuth": {
+          "id": "kDnfvqrCBJvtlX3o",
+          "name": "JWT Auth account"
+        }
+      },
+      "position": [
+        380,
+        1180
+      ],
+      "workflow_file": "jwt.workflow.json",
+      "workflow_name": "JWT Test Workflow"
+    },
+    {
+      "name": "Verify3",
+      "parameters": {
+        "operation": "verify",
+        "token": "={{ $json.token }}",
+        "options": {
+          "complete": true
+        }
+      },
+      "credentials": {
+        "jwtAuth": {
+          "id": "kDnfvqrCBJvtlX3o",
+          "name": "JWT Auth account"
+        }
+      },
+      "position": [
+        380,
+        1360
+      ],
+      "workflow_file": "jwt.workflow.json",
+      "workflow_name": "JWT Test Workflow"
+    }
+  ],
+  "expressions": [],
+  "validation_rules": {
+    "useJson": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sign"
+          ]
+        }
+      }
+    },
+    "claims": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sign"
+          ],
+          "useJson": [
+            false
+          ]
+        }
+      }
+    },
+    "claimsJson": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "sign"
+          ],
+          "useJson": [
+            true
+          ]
+        }
+      }
+    },
+    "token": {
+      "required": true,
+      "format": "validated",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "verify",
+            "decode"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {}
+      }
+    }
+  },
+  "type_info": {
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "decode",
+          "name": "Decode",
+          "description": ""
+        },
+        {
+          "value": "sign",
+          "name": "Sign",
+          "description": ""
+        },
+        {
+          "value": "verify",
+          "name": "Verify",
+          "description": ""
+        }
+      ]
+    },
+    "useJson": {
+      "type": "boolean",
+      "displayName": "Use JSON to Build Payload",
+      "name": "useJson"
+    },
+    "claims": {
+      "type": "collection",
+      "displayName": "Payload Claims",
+      "name": "claims",
+      "typeOptions": {
+        "minValue": 0
+      },
+      "subProperties": [
+        {
+          "displayName": "Audience",
+          "name": "audience",
+          "type": "string",
+          "description": "Identifies the recipients that the JWT is intended for",
+          "placeholder": "e.g. https://example.com",
+          "default": ""
+        },
+        {
+          "displayName": "Expires In",
+          "name": "expiresIn",
+          "type": "number",
+          "description": "The lifetime of the token in seconds",
+          "placeholder": "e.g. 3600",
+          "default": 3600,
+          "typeOptions": {
+            "minValue": 0
+          }
+        },
+        {
+          "displayName": "Issuer",
+          "name": "issuer",
+          "type": "string",
+          "description": "Identifies the principal that issued the JWT",
+          "placeholder": "e.g. https://example.com",
+          "default": ""
+        },
+        {
+          "displayName": "JWT ID",
+          "name": "jwtid",
+          "type": "string",
+          "description": "Unique identifier for the JWT",
+          "placeholder": "e.g. 123456",
+          "default": ""
+        },
+        {
+          "displayName": "Not Before",
+          "name": "notBefore",
+          "type": "number",
+          "description": "The time before which the JWT must not be accepted for processing",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0
+          }
+        },
+        {
+          "displayName": "Subject",
+          "name": "subject",
+          "type": "string",
+          "description": "Identifies the principal that is the subject of the JWT",
+          "default": ""
+        }
+      ]
+    },
+    "claimsJson": {
+      "type": "json",
+      "displayName": "Payload Claims (JSON)",
+      "name": "claimsJson",
+      "typeOptions": {
+        "rows": 5
+      }
+    },
+    "token": {
+      "type": "string",
+      "displayName": "Token",
+      "name": "token",
+      "typeOptions": {
+        "password": true
+      }
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "minValue": 0
+      },
+      "subProperties": [
+        {
+          "displayName": "Return Additional Info",
+          "name": "complete",
+          "type": "boolean",
+          "description": "Whether to return the complete decoded token with information about the header and signature or just the payload",
+          "default": false,
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Ignore Expiration",
+          "name": "ignoreExpiration",
+          "type": "boolean",
+          "description": "Whether to ignore the expiration of the token",
+          "default": false,
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Ignore Not Before Claim",
+          "name": "ignoreNotBefore",
+          "type": "boolean",
+          "description": "Whether to ignore the not before claim of the token",
+          "default": false,
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Clock Tolerance",
+          "name": "clockTolerance",
+          "type": "number",
+          "description": "Number of seconds to tolerate when checking the nbf and exp claims, to deal with small clock differences among different servers",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Key ID",
+          "name": "kid",
+          "type": "string",
+          "description": "The kid (key ID) claim is an optional header claim, used to specify the key for validating the signature",
+          "placeholder": "e.g. 123456",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Override Algorithm",
+          "name": "algorithm",
+          "type": "options",
+          "description": "The algorithm to use for signing or verifying the token, overrides algorithm in credentials",
+          "value": "ES256",
+          "default": "HS256",
+          "options": [
+            {
+              "name": "ES256",
+              "value": "ES256",
+              "displayName": "Es256"
+            },
+            {
+              "name": "ES384",
+              "value": "ES384",
+              "displayName": "Es384"
+            },
+            {
+              "name": "ES512",
+              "value": "ES512",
+              "displayName": "Es512"
+            },
+            {
+              "name": "HS256",
+              "value": "HS256",
+              "displayName": "Hs256"
+            },
+            {
+              "name": "HS384",
+              "value": "HS384",
+              "displayName": "Hs384"
+            },
+            {
+              "name": "HS512",
+              "value": "HS512",
+              "displayName": "Hs512"
+            },
+            {
+              "name": "PS256",
+              "value": "PS256",
+              "displayName": "Ps256"
+            },
+            {
+              "name": "PS384",
+              "value": "PS384",
+              "displayName": "Ps384"
+            },
+            {
+              "name": "PS512",
+              "value": "PS512",
+              "displayName": "Ps512"
+            },
+            {
+              "name": "RS256",
+              "value": "RS256",
+              "displayName": "Rs256"
+            },
+            {
+              "name": "RS384",
+              "value": "RS384",
+              "displayName": "Rs384"
+            },
+            {
+              "name": "RS512",
+              "value": "RS512",
+              "displayName": "Rs512"
+            }
+          ],
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ]
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "claims",
+        "text": "Add Claim"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

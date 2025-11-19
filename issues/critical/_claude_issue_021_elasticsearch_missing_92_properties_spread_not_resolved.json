@@ -1,0 +1,54 @@
+{
+  "issue_id": "_claude_issue_021",
+  "title": "Elasticsearch node missing 92+ properties (99% loss) - spread operators from imports not resolved",
+  "severity": "critical",
+  "status": "resolved",
+  "priority": 1,
+  "metadata": {
+    "created_at": "2025-11-07T00:00:00Z",
+    "created_by": "claude_code",
+    "affected_nodes": "Elasticsearch (1 extracted, 92+ expected) - likely affects all nodes using spread operators from imported description files",
+    "validation_session": "comprehensive_cross_reference_2025-11-07"
+  },
+  "description": {
+    "problem": "Elasticsearch node extracts only 1 property (resource selector) but source contains 92+ properties spread across documentOperations, documentFields, indexOperations, and indexFields imports",
+    "impact": "CRITICAL - 99% property loss (1/93 extracted). Documentation completely unusable. AI models cannot learn node capabilities. Pattern likely affects dozens of nodes using description file imports.",
+    "root_cause": "Extractor fails to resolve spread operators that reference imported arrays from separate description files. In Elasticsearch.node.ts line 59-62:\n\nproperties: [\n  { displayName: 'Resource', ... },\n  ...documentOperations,  // \u274c NOT RESOLVED\n  ...documentFields,      // \u274c NOT RESOLVED  \n  ...indexOperations,     // \u274c NOT RESOLVED\n  ...indexFields          // \u274c NOT RESOLVED\n]\n\nImports at line 12:\nimport { documentFields, documentOperations, indexFields, indexOperations } from './descriptions';\n\nThe extractor's spread resolution only handles spreads within the same file, not imported arrays.",
+    "evidence": [
+      "SOURCE: n8n/packages/nodes-base/nodes/Elastic/Elasticsearch/Elasticsearch.node.ts",
+      "  - Line 41-63: properties array with 4 spread operators from imports",
+      "  - Line 12: Imports from './descriptions' (index.ts)",
+      "SOURCE: n8n/packages/nodes-base/nodes/Elastic/Elasticsearch/descriptions/DocumentDescription.ts",
+      "  - Contains documentOperations (1 operation property)",
+      "  - Contains documentFields (70 displayName entries = 70 properties)",
+      "SOURCE: n8n/packages/nodes-base/nodes/Elastic/Elasticsearch/descriptions/IndexDescription.ts",
+      "  - Contains indexOperations (1 operation property)",
+      "  - Contains indexFields (22 displayName entries = 22 properties)",
+      "TOTAL SOURCE: 1 + 70 + 1 + 22 = 94 properties minimum",
+      "",
+      "EXTRACTED: extracted_docs/elasticsearch_data.json",
+      "  - properties.length = 1 (only the resource selector)",
+      "  - Missing: All 4 spread-imported arrays (93 properties)",
+      "",
+      "COMMAND VERIFICATION:",
+      "  $ jq '.properties | length' extracted_docs/elasticsearch_data.json",
+      "  Output: 1",
+      "",
+      "  $ grep -c 'displayName:' n8n/packages/nodes-base/nodes/Elastic/Elasticsearch/descriptions/DocumentDescription.ts",
+      "  Output: 70",
+      "",
+      "  $ grep -c 'displayName:' n8n/packages/nodes-base/nodes/Elastic/Elasticsearch/descriptions/IndexDescription.ts",
+      "  Output: 22"
+    ],
+    "fix_approach": "Enhance TypeScriptParser.resolve_spreads() to handle imported arrays:\n\n1. When encountering ...identifier in properties array:\n   a) Check if identifier is in the imports dictionary\n   b) If imported, read the source file from the import path\n   c) Extract the exported array using extract_exported_array()\n   d) Resolve any nested spreads recursively\n   e) Return resolved properties\n\n2. Update _resolve_spreads() around line 641-687 in n8n_node_extractor.py:\n   - Add parameter: imports (Dict from parse_imports())\n   - Check: if spread_name in imports.values()\n   - Read: import file path and extract array\n   - Recursively resolve nested spreads\n\n3. Test with:\n   - python3 n8n_node_extractor.py extract Elasticsearch\n   - Verify: jq '.properties | length' shows 90+ not 1\n   - Verify: All operation-specific fields present\n\n4. Regression test similar nodes:\n   - Check other nodes using spread from './descriptions'\n   - Likely pattern in many complex nodes (Salesforce, ActiveCampaign, etc.)\n\nExpected result: 94 properties extracted (vs current 1)"
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  },
+  "resolved_by": "claude_code",
+  "resolved_at": "2025-11-12T01:41:55.292847Z"
+}

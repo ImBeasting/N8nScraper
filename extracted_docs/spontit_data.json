@@ -1,0 +1,529 @@
+{
+  "node_info": {
+    "icon": "file:spontit.png",
+    "defaults": {
+      "name": "Spontit"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "spontitApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Spontit",
+    "name": "spontit",
+    "description": "Consume Spontit API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.spontit",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/spontit/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.spontit/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "push",
+      "default": "push",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Push",
+          "value": "push",
+          "displayName": "Push"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a push notification",
+      "action": "Create a push notification",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a push notification",
+          "action": "Create a push notification",
+          "value": "create",
+          "displayName": "Create"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "push"
+          ]
+        }
+      },
+      "_source": "Push_pushOperations"
+    },
+    {
+      "displayName": "Content",
+      "name": "content",
+      "type": "string",
+      "description": "To provide text in a push, supply one of either \"content\" or \"pushContent\" (or both). Limited to 2500 characters. (Required if a value for \"pushContent\" is not provided).",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "push"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Push_pushFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The name of a channel you created. If you have not yet created a channel, simply don't provide this value and the push will be sent to your main account.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Channel Name",
+          "name": "channelName",
+          "type": "string",
+          "description": "The name of a channel you created. If you have not yet created a channel, simply don't provide this value and the push will be sent to your main account.",
+          "default": ""
+        },
+        {
+          "displayName": "Expiration Stamp",
+          "name": "expirationStamp",
+          "type": "dateTime",
+          "description": "A Unix timestamp. When to automatically expire your push notification. The default is 10 days after pushing. The push will become unaccessible within 15-30 minutes of the selected time, but will remain on all device screens until dismissed or clicked.",
+          "default": ""
+        },
+        {
+          "displayName": "iOS DeepLink",
+          "name": "iOSDeepLink",
+          "type": "string",
+          "description": "An iOS deep link. Use this to deep link into other apps. Alternatively, you can provide a universal link in the link attribute and set openLinkInApp to false.",
+          "default": ""
+        },
+        {
+          "displayName": "Link",
+          "name": "link",
+          "type": "string",
+          "description": "A link that can be attached to your push. Must be a valid URL.",
+          "default": ""
+        },
+        {
+          "displayName": "Open In Home Feed",
+          "name": "openInHomeFeed",
+          "type": "boolean",
+          "description": "Whether the notification opens to the home feed or to a standalone page with the notification. The default (openInHomeFeed=False) is to open the notification on a standalone page.",
+          "default": false
+        },
+        {
+          "displayName": "Open Link In App",
+          "name": "openLinkInApp",
+          "type": "boolean",
+          "description": "Whether to open the provided link within the iOS app or in Safari. Android PWA opens all links in the default web browser.",
+          "default": false
+        },
+        {
+          "displayName": "Push To Emails",
+          "name": "pushToEmails",
+          "type": "string",
+          "description": "<p>Emails (strings) to whom to send the notification. If all three attributes 'pushToFollowers', 'pushToPhoneNumbers' and 'pushToEmails' are not supplied, then everyone who follows the channel will receive the push notification.</p><p>If 'pushToFollowers' is supplied, only those listed in the array will receive the push notification.</p><p>If one of the userIds supplied does not follow the specified channel, then that userId value will be ignored.</p><p>See the \"Followers\" section to learn how to list the userIds of those who follow one of your channels.</p>.",
+          "default": ""
+        },
+        {
+          "displayName": "Push To Followers",
+          "name": "pushToFollowers",
+          "type": "string",
+          "description": "<p>User IDs (strings) to whom to send the notification. If all three attributes 'pushToFollowers', 'pushToPhoneNumbers' and 'pushToEmails' are not supplied, then everyone who follows the channel will receive the push notification.</p><p>If 'pushToFollowers' is supplied, only those listed in the array will receive the push notification.</p><p>If one of the userIds supplied does not follow the specified channel, then that userId value will be ignored.</p><p>See the \"Followers\" section to learn how to list the userIds of those who follow one of your channels.</p>.",
+          "default": ""
+        },
+        {
+          "displayName": "Push To Phone Numbers",
+          "name": "pushToPhoneNumbers",
+          "type": "string",
+          "description": "<p>Phone numbers (strings) to whom to send the notification. If all three attributes 'pushToFollowers', 'pushToPhoneNumbers' and 'pushToEmails' are not supplied, then everyone who follows the channel will receive the push notification.</p><p>If 'pushToFollowers' is supplied, only those listed in the array will receive the push notification.</p><p>If one of the userIds supplied does not follow the specified channel, then that userId value will be ignored.</p><p>See the \"Followers\" section to learn how to list the userIds of those who follow one of your channels.</p>.",
+          "default": ""
+        },
+        {
+          "displayName": "Schedule",
+          "name": "schedule",
+          "type": "dateTime",
+          "description": "A Unix timestamp. Schedule a push to be sent at a later date and time.",
+          "default": ""
+        },
+        {
+          "displayName": "Subtitle",
+          "name": "subtitle",
+          "type": "string",
+          "description": "The subtitle of your push. Limited to 20 characters. Only appears on iOS devices.",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "pushTitle",
+          "type": "string",
+          "description": "The title of push. Appears in bold at the top. Limited to 100 characters.",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "push"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Push_pushFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a push notification",
+      "action": "Create a push notification",
+      "value": "create",
+      "displayName": "Create"
+    }
+  ],
+  "operations_by_resource": {
+    "push": [
+      {
+        "name": "Create",
+        "description": "Create a push notification",
+        "action": "Create a push notification",
+        "value": "create",
+        "displayName": "Create"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "spontitApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "push"
+          ]
+        }
+      }
+    },
+    "content": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "push"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "push"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "push",
+          "name": "Push",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a push notification"
+        }
+      ]
+    },
+    "content": {
+      "type": "string",
+      "displayName": "Content",
+      "name": "content"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Channel Name",
+          "name": "channelName",
+          "type": "string",
+          "description": "The name of a channel you created. If you have not yet created a channel, simply don't provide this value and the push will be sent to your main account.",
+          "default": ""
+        },
+        {
+          "displayName": "Expiration Stamp",
+          "name": "expirationStamp",
+          "type": "dateTime",
+          "description": "A Unix timestamp. When to automatically expire your push notification. The default is 10 days after pushing. The push will become unaccessible within 15-30 minutes of the selected time, but will remain on all device screens until dismissed or clicked.",
+          "default": ""
+        },
+        {
+          "displayName": "iOS DeepLink",
+          "name": "iOSDeepLink",
+          "type": "string",
+          "description": "An iOS deep link. Use this to deep link into other apps. Alternatively, you can provide a universal link in the link attribute and set openLinkInApp to false.",
+          "default": ""
+        },
+        {
+          "displayName": "Link",
+          "name": "link",
+          "type": "string",
+          "description": "A link that can be attached to your push. Must be a valid URL.",
+          "default": ""
+        },
+        {
+          "displayName": "Open In Home Feed",
+          "name": "openInHomeFeed",
+          "type": "boolean",
+          "description": "Whether the notification opens to the home feed or to a standalone page with the notification. The default (openInHomeFeed=False) is to open the notification on a standalone page.",
+          "default": false
+        },
+        {
+          "displayName": "Open Link In App",
+          "name": "openLinkInApp",
+          "type": "boolean",
+          "description": "Whether to open the provided link within the iOS app or in Safari. Android PWA opens all links in the default web browser.",
+          "default": false
+        },
+        {
+          "displayName": "Push To Emails",
+          "name": "pushToEmails",
+          "type": "string",
+          "description": "<p>Emails (strings) to whom to send the notification. If all three attributes 'pushToFollowers', 'pushToPhoneNumbers' and 'pushToEmails' are not supplied, then everyone who follows the channel will receive the push notification.</p><p>If 'pushToFollowers' is supplied, only those listed in the array will receive the push notification.</p><p>If one of the userIds supplied does not follow the specified channel, then that userId value will be ignored.</p><p>See the \"Followers\" section to learn how to list the userIds of those who follow one of your channels.</p>.",
+          "default": ""
+        },
+        {
+          "displayName": "Push To Followers",
+          "name": "pushToFollowers",
+          "type": "string",
+          "description": "<p>User IDs (strings) to whom to send the notification. If all three attributes 'pushToFollowers', 'pushToPhoneNumbers' and 'pushToEmails' are not supplied, then everyone who follows the channel will receive the push notification.</p><p>If 'pushToFollowers' is supplied, only those listed in the array will receive the push notification.</p><p>If one of the userIds supplied does not follow the specified channel, then that userId value will be ignored.</p><p>See the \"Followers\" section to learn how to list the userIds of those who follow one of your channels.</p>.",
+          "default": ""
+        },
+        {
+          "displayName": "Push To Phone Numbers",
+          "name": "pushToPhoneNumbers",
+          "type": "string",
+          "description": "<p>Phone numbers (strings) to whom to send the notification. If all three attributes 'pushToFollowers', 'pushToPhoneNumbers' and 'pushToEmails' are not supplied, then everyone who follows the channel will receive the push notification.</p><p>If 'pushToFollowers' is supplied, only those listed in the array will receive the push notification.</p><p>If one of the userIds supplied does not follow the specified channel, then that userId value will be ignored.</p><p>See the \"Followers\" section to learn how to list the userIds of those who follow one of your channels.</p>.",
+          "default": ""
+        },
+        {
+          "displayName": "Schedule",
+          "name": "schedule",
+          "type": "dateTime",
+          "description": "A Unix timestamp. Schedule a push to be sent at a later date and time.",
+          "default": ""
+        },
+        {
+          "displayName": "Subtitle",
+          "name": "subtitle",
+          "type": "string",
+          "description": "The subtitle of your push. Limited to 20 characters. Only appears on iOS devices.",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "pushTitle",
+          "type": "string",
+          "description": "The title of push. Appears in bold at the top. Limited to 100 characters.",
+          "default": ""
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "X-Authorization",
+      "X-UserId"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

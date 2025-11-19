@@ -1,0 +1,1138 @@
+{
+  "node_info": {
+    "icon": "file:googleTasks.svg",
+    "defaults": {
+      "name": "Google Tasks"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "googleTasksOAuth2Api",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getTasks",
+      "for",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Google Tasks",
+    "name": "googleTasks",
+    "description": "Consume Google Tasks API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.googleTasks",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Productivity"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/google/oauth-single-service/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.googletasks/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "task",
+      "default": "task",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Task",
+          "value": "task",
+          "displayName": "Task"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Add a task to tasklist",
+      "action": "Create a task",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Add a task to tasklist",
+          "action": "Create a task",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a task",
+          "action": "Delete a task",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Retrieve a task",
+          "action": "Get a task",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Retrieve many tasks from a tasklist",
+          "action": "Get many tasks",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update a task",
+          "action": "Update a task",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_source": "Task_taskOperations"
+    },
+    {
+      "displayName": "TaskList Name or ID",
+      "name": "task",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTasks"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Title",
+      "name": "title",
+      "type": "string",
+      "description": "Title of the task",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Completion date of the task (as a RFC 3339 timestamp). This field is omitted if the task has not been completed.",
+      "placeholder": "Add Field",
+      "value": "needsAction",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Completion Date",
+          "name": "completed",
+          "type": "dateTime",
+          "description": "Completion date of the task (as a RFC 3339 timestamp). This field is omitted if the task has not been completed.",
+          "default": ""
+        },
+        {
+          "displayName": "Deleted",
+          "name": "deleted",
+          "type": "boolean",
+          "description": "Whether the task has been deleted",
+          "default": false
+        },
+        {
+          "displayName": "Due Date",
+          "name": "dueDate",
+          "type": "dateTime",
+          "description": "Due date of the task",
+          "default": ""
+        },
+        {
+          "displayName": "Notes",
+          "name": "notes",
+          "type": "string",
+          "description": "Additional Notes",
+          "default": ""
+        },
+        {
+          "displayName": "Parent",
+          "name": "parent",
+          "type": "string",
+          "description": "Parent task identifier. If the task is created at the top level, this parameter is omitted.",
+          "default": ""
+        },
+        {
+          "displayName": "Previous",
+          "name": "previous",
+          "type": "string",
+          "description": "Previous sibling task identifier. If the task is created at the first position among its siblings, this parameter is omitted.",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Current status of the task",
+          "value": "needsAction",
+          "default": "",
+          "options": [
+            {
+              "name": "Needs Action",
+              "value": "needsAction",
+              "displayName": "Needs Action"
+            },
+            {
+              "name": "Completed",
+              "value": "completed",
+              "displayName": "Completed"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "TaskList Name or ID",
+      "name": "task",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTasks"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Task ID",
+      "name": "taskId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "TaskList Name or ID",
+      "name": "task",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTasks"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Task ID",
+      "name": "taskId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "TaskList Name or ID",
+      "name": "task",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTasks"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 20,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Upper bound for a task completion date (as a RFC 3339 timestamp) to filter by",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Completed Max",
+          "name": "completedMax",
+          "type": "dateTime",
+          "description": "Upper bound for a task completion date (as a RFC 3339 timestamp) to filter by",
+          "default": ""
+        },
+        {
+          "displayName": "Completed Min",
+          "name": "completedMin",
+          "type": "dateTime",
+          "description": "Lower bound for a task completion date (as a RFC 3339 timestamp) to filter by",
+          "default": ""
+        },
+        {
+          "displayName": "Due Min",
+          "name": "dueMin",
+          "type": "dateTime",
+          "description": "Lower bound for a task due date (as a RFC 3339 timestamp) to filter by",
+          "default": ""
+        },
+        {
+          "displayName": "Due Max",
+          "name": "dueMax",
+          "type": "dateTime",
+          "description": "Upper bound for a task due date (as a RFC 3339 timestamp) to filter by",
+          "default": ""
+        },
+        {
+          "displayName": "Show Completed",
+          "name": "showCompleted",
+          "type": "boolean",
+          "description": "Whether completed tasks are returned in the result. <strong>Show Hidden</strong> must also be True to show tasks completed in first party clients such as the web UI or Google's mobile apps.",
+          "default": true
+        },
+        {
+          "displayName": "Show Deleted",
+          "name": "showDeleted",
+          "type": "boolean",
+          "description": "Whether deleted tasks are returned in the result",
+          "default": false
+        },
+        {
+          "displayName": "Show Hidden",
+          "name": "showHidden",
+          "type": "boolean",
+          "description": "Whether hidden tasks are returned in the result",
+          "default": false
+        },
+        {
+          "displayName": "Updated Min",
+          "name": "updatedMin",
+          "type": "dateTime",
+          "description": "Lower bound for a task last modification time (as a RFC 3339 timestamp) to filter by",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "TaskList Name or ID",
+      "name": "task",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTasks"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Task ID",
+      "name": "taskId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Completion date of the task (as a RFC 3339 timestamp). This field is omitted if the task has not been completed.",
+      "placeholder": "Update Field",
+      "value": "needsAction",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Completion Date",
+          "name": "completed",
+          "type": "dateTime",
+          "description": "Completion date of the task (as a RFC 3339 timestamp). This field is omitted if the task has not been completed.",
+          "default": ""
+        },
+        {
+          "displayName": "Deleted",
+          "name": "deleted",
+          "type": "boolean",
+          "description": "Whether the task has been deleted",
+          "default": false
+        },
+        {
+          "displayName": "Due Date",
+          "name": "dueDate",
+          "type": "dateTime",
+          "description": "Due date of the task",
+          "default": ""
+        },
+        {
+          "displayName": "Notes",
+          "name": "notes",
+          "type": "string",
+          "description": "Additional Notes",
+          "default": ""
+        },
+        {
+          "displayName": "Previous",
+          "name": "previous",
+          "type": "string",
+          "description": "Previous sibling task identifier. If the task is created at the first position among its siblings, this parameter is omitted.",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Current status of the task",
+          "value": "needsAction",
+          "default": "",
+          "options": [
+            {
+              "name": "Needs Update",
+              "value": "needsAction",
+              "displayName": "Needs Update"
+            },
+            {
+              "name": "Completed",
+              "value": "completed",
+              "displayName": "Completed"
+            }
+          ]
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Title of the task",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Task_taskFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Add a task to tasklist",
+      "action": "Create a task",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a task",
+      "action": "Delete a task",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Retrieve a task",
+      "action": "Get a task",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Retrieve many tasks from a tasklist",
+      "action": "Get many tasks",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "description": "Update a task",
+      "action": "Update a task",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "task": [
+      {
+        "name": "Create",
+        "description": "Add a task to tasklist",
+        "action": "Create a task",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a task",
+        "action": "Delete a task",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Retrieve a task",
+        "action": "Get a task",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Retrieve many tasks from a tasklist",
+        "action": "Get many tasks",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update a task",
+        "action": "Update a task",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "googleTasksOAuth2Api",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "task": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "title": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "taskId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "task",
+          "name": "Task",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Add a task to tasklist"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a task"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Retrieve a task"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Retrieve many tasks from a tasklist"
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": "Update a task"
+        }
+      ]
+    },
+    "task": {
+      "type": "options",
+      "displayName": "TaskList Name or ID",
+      "name": "task",
+      "typeOptions": {
+        "loadOptionsMethod": "getTasks"
+      },
+      "possibleValues": []
+    },
+    "title": {
+      "type": "string",
+      "displayName": "Title",
+      "name": "title"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Completed Max",
+          "name": "completedMax",
+          "type": "dateTime",
+          "description": "Upper bound for a task completion date (as a RFC 3339 timestamp) to filter by",
+          "default": ""
+        },
+        {
+          "displayName": "Completed Min",
+          "name": "completedMin",
+          "type": "dateTime",
+          "description": "Lower bound for a task completion date (as a RFC 3339 timestamp) to filter by",
+          "default": ""
+        },
+        {
+          "displayName": "Due Min",
+          "name": "dueMin",
+          "type": "dateTime",
+          "description": "Lower bound for a task due date (as a RFC 3339 timestamp) to filter by",
+          "default": ""
+        },
+        {
+          "displayName": "Due Max",
+          "name": "dueMax",
+          "type": "dateTime",
+          "description": "Upper bound for a task due date (as a RFC 3339 timestamp) to filter by",
+          "default": ""
+        },
+        {
+          "displayName": "Show Completed",
+          "name": "showCompleted",
+          "type": "boolean",
+          "description": "Whether completed tasks are returned in the result. <strong>Show Hidden</strong> must also be True to show tasks completed in first party clients such as the web UI or Google's mobile apps.",
+          "default": true
+        },
+        {
+          "displayName": "Show Deleted",
+          "name": "showDeleted",
+          "type": "boolean",
+          "description": "Whether deleted tasks are returned in the result",
+          "default": false
+        },
+        {
+          "displayName": "Show Hidden",
+          "name": "showHidden",
+          "type": "boolean",
+          "description": "Whether hidden tasks are returned in the result",
+          "default": false
+        },
+        {
+          "displayName": "Updated Min",
+          "name": "updatedMin",
+          "type": "dateTime",
+          "description": "Lower bound for a task last modification time (as a RFC 3339 timestamp) to filter by",
+          "default": ""
+        }
+      ]
+    },
+    "taskId": {
+      "type": "string",
+      "displayName": "Task ID",
+      "name": "taskId"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      }
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "subProperties": [
+        {
+          "displayName": "Completion Date",
+          "name": "completed",
+          "type": "dateTime",
+          "description": "Completion date of the task (as a RFC 3339 timestamp). This field is omitted if the task has not been completed.",
+          "default": ""
+        },
+        {
+          "displayName": "Deleted",
+          "name": "deleted",
+          "type": "boolean",
+          "description": "Whether the task has been deleted",
+          "default": false
+        },
+        {
+          "displayName": "Due Date",
+          "name": "dueDate",
+          "type": "dateTime",
+          "description": "Due date of the task",
+          "default": ""
+        },
+        {
+          "displayName": "Notes",
+          "name": "notes",
+          "type": "string",
+          "description": "Additional Notes",
+          "default": ""
+        },
+        {
+          "displayName": "Previous",
+          "name": "previous",
+          "type": "string",
+          "description": "Previous sibling task identifier. If the task is created at the first position among its siblings, this parameter is omitted.",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Current status of the task",
+          "value": "needsAction",
+          "default": "",
+          "options": [
+            {
+              "name": "Needs Update",
+              "value": "needsAction",
+              "displayName": "Needs Update"
+            },
+            {
+              "name": "Completed",
+              "value": "completed",
+              "displayName": "Completed"
+            }
+          ]
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Title of the task",
+          "default": ""
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Update Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

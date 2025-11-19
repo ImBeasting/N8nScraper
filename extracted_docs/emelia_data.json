@@ -1,0 +1,1304 @@
+{
+  "node_info": {
+    "icon": "file:emelia.svg",
+    "defaults": {
+      "name": "Emelia"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "emeliaApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getCampaigns"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Emelia",
+    "name": "emelia",
+    "description": "Consume the Emelia API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.emelia",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication",
+      "Marketing"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/emelia/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.emelia/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "campaign",
+      "default": "campaign",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Campaign",
+          "value": "campaign",
+          "displayName": "Campaign"
+        },
+        {
+          "name": "Contact List",
+          "value": "contactList",
+          "displayName": "Contact List"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Add a contact to a campaign",
+      "value": "addContact",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Add Contact",
+          "action": "Add a contact to a campaign",
+          "value": "addContact",
+          "displayName": "Add Contact"
+        },
+        {
+          "name": "Create",
+          "action": "Create a campaign",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Duplicate",
+          "action": "Duplicate a campaign",
+          "value": "duplicate",
+          "displayName": "Duplicate"
+        },
+        {
+          "name": "Get",
+          "action": "Get a campaign",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many campaigns",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Pause",
+          "action": "Pause a campaign",
+          "value": "pause",
+          "displayName": "Pause"
+        },
+        {
+          "name": "Start",
+          "action": "Start a campaign",
+          "value": "start",
+          "displayName": "Start"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ]
+        }
+      },
+      "_source": "Campaign_campaignOperations"
+    },
+    {
+      "displayName": "Campaign Name or ID",
+      "name": "campaignId",
+      "type": "options",
+      "description": "The ID of the campaign to add the contact to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": [],
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getCampaigns"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "addContact"
+          ]
+        }
+      },
+      "_operation": "addContact",
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Contact Email",
+      "name": "contactEmail",
+      "type": "string",
+      "description": "The email of the contact to add to the campaign",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "addContact"
+          ]
+        }
+      },
+      "_operation": "addContact",
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Filter by custom fields",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Custom Fields",
+          "name": "customFieldsUi",
+          "type": "fixedCollection",
+          "description": "Filter by custom fields",
+          "placeholder": "Add Custom Field",
+          "default": {},
+          "options": [
+            {
+              "name": "customFieldsValues",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Field Name",
+                  "name": "fieldName",
+                  "type": "string",
+                  "description": "The name of the field to add custom field to",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "The value to set on custom field",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "First Name",
+          "name": "firstName",
+          "type": "string",
+          "description": "First name of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Last Contacted",
+          "name": "lastContacted",
+          "type": "dateTime",
+          "description": "Last contacted date of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Last Name",
+          "name": "lastName",
+          "type": "string",
+          "description": "Last name of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Last Open",
+          "name": "lastOpen",
+          "type": "dateTime",
+          "description": "Last opened date of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Last Replied",
+          "name": "lastReplied",
+          "type": "dateTime",
+          "description": "Last replied date of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Mails Sent",
+          "name": "mailsSent",
+          "type": "number",
+          "description": "Number of emails sent to the contact to add",
+          "default": 0
+        },
+        {
+          "displayName": "Phone Number",
+          "name": "phoneNumber",
+          "type": "string",
+          "description": "Phone number of the contact to add",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "addContact"
+          ]
+        }
+      },
+      "_operation": "addContact",
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Campaign Name",
+      "name": "campaignName",
+      "type": "string",
+      "description": "The name of the campaign to create",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Campaign ID",
+      "name": "campaignId",
+      "type": "string",
+      "description": "The ID of the campaign to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Campaign ID",
+      "name": "campaignId",
+      "type": "string",
+      "description": "The ID of the campaign to pause. The campaign must be in RUNNING mode.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "pause"
+          ]
+        }
+      },
+      "_operation": "pause",
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Campaign ID",
+      "name": "campaignId",
+      "type": "string",
+      "description": "The ID of the campaign to start. Email provider and contacts must be set.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "start"
+          ]
+        }
+      },
+      "_operation": "start",
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Campaign Name or ID",
+      "name": "campaignId",
+      "type": "options",
+      "description": "The ID of the campaign to duplicate. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getCampaigns"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "duplicate"
+          ]
+        }
+      },
+      "_operation": "duplicate",
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "New Campaign Name",
+      "name": "campaignName",
+      "type": "string",
+      "description": "The name of the new campaign to create",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "duplicate"
+          ]
+        }
+      },
+      "_operation": "duplicate",
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to copy all the contacts from the original campaign",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Copy Contacts",
+          "name": "copyContacts",
+          "type": "boolean",
+          "description": "Whether to copy all the contacts from the original campaign",
+          "default": false
+        },
+        {
+          "displayName": "Copy Email Provider",
+          "name": "copyProvider",
+          "type": "boolean",
+          "description": "Whether to set the same email provider than the original campaign",
+          "default": true
+        },
+        {
+          "displayName": "Copy Email Sequence",
+          "name": "copyMails",
+          "type": "boolean",
+          "description": "Whether to copy all the steps of the email sequence from the original campaign",
+          "default": true
+        },
+        {
+          "displayName": "Copy Global Settings",
+          "name": "copySettings",
+          "type": "boolean",
+          "description": "Whether to copy all the general settings from the original campaign",
+          "default": true
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "duplicate"
+          ],
+          "resource": [
+            "campaign"
+          ]
+        }
+      },
+      "_operation": "duplicate",
+      "_source": "Campaign_campaignFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Add a contact list",
+      "value": "add",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Add",
+          "action": "Add a contact list",
+          "value": "add",
+          "displayName": "Add"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many contact lists",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contactList"
+          ]
+        }
+      },
+      "_source": "ContactList_contactListOperations"
+    },
+    {
+      "displayName": "Contact List Name or ID",
+      "name": "contactListId",
+      "type": "options",
+      "description": "The ID of the contact list to add the contact to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": [],
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getContactLists"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contactList"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "ContactList_contactListFields"
+    },
+    {
+      "displayName": "Contact Email",
+      "name": "contactEmail",
+      "type": "string",
+      "description": "The email of the contact to add to the contact list",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contactList"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "ContactList_contactListFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Filter by custom fields",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Custom Fields",
+          "name": "customFieldsUi",
+          "type": "fixedCollection",
+          "description": "Filter by custom fields",
+          "placeholder": "Add Custom Field",
+          "default": {},
+          "options": [
+            {
+              "name": "customFieldsValues",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Field Name",
+                  "name": "fieldName",
+                  "type": "string",
+                  "description": "The name of the field to add custom field to",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "The value to set on custom field",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "First Name",
+          "name": "firstName",
+          "type": "string",
+          "description": "First name of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Last Contacted",
+          "name": "lastContacted",
+          "type": "dateTime",
+          "description": "Last contacted date of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Last Name",
+          "name": "lastName",
+          "type": "string",
+          "description": "Last name of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Last Open",
+          "name": "lastOpen",
+          "type": "dateTime",
+          "description": "Last opened date of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Last Replied",
+          "name": "lastReplied",
+          "type": "dateTime",
+          "description": "Last replied date of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Mails Sent",
+          "name": "mailsSent",
+          "type": "number",
+          "description": "Number of emails sent to the contact to add",
+          "default": 0
+        },
+        {
+          "displayName": "Phone Number",
+          "name": "phoneNumber",
+          "type": "string",
+          "description": "Phone number of the contact to add",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contactList"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "ContactList_contactListFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contactList"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "ContactList_contactListFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contactList"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "ContactList_contactListFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Add Contact",
+      "action": "Add a contact to a campaign",
+      "value": "addContact",
+      "displayName": "Add Contact"
+    },
+    {
+      "name": "Create",
+      "action": "Create a campaign",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Duplicate",
+      "action": "Duplicate a campaign",
+      "value": "duplicate",
+      "displayName": "Duplicate"
+    },
+    {
+      "name": "Get",
+      "action": "Get a campaign",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "action": "Get many campaigns",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Pause",
+      "action": "Pause a campaign",
+      "value": "pause",
+      "displayName": "Pause"
+    },
+    {
+      "name": "Start",
+      "action": "Start a campaign",
+      "value": "start",
+      "displayName": "Start"
+    },
+    {
+      "name": "Add",
+      "action": "Add a contact list",
+      "value": "add",
+      "displayName": "Add"
+    }
+  ],
+  "operations_by_resource": {
+    "campaign": [
+      {
+        "name": "Add Contact",
+        "action": "Add a contact to a campaign",
+        "value": "addContact",
+        "displayName": "Add Contact"
+      },
+      {
+        "name": "Create",
+        "action": "Create a campaign",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Duplicate",
+        "action": "Duplicate a campaign",
+        "value": "duplicate",
+        "displayName": "Duplicate"
+      },
+      {
+        "name": "Get",
+        "action": "Get a campaign",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many campaigns",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Pause",
+        "action": "Pause a campaign",
+        "value": "pause",
+        "displayName": "Pause"
+      },
+      {
+        "name": "Start",
+        "action": "Start a campaign",
+        "value": "start",
+        "displayName": "Start"
+      }
+    ],
+    "contactList": [
+      {
+        "name": "Add",
+        "action": "Add a contact list",
+        "value": "add",
+        "displayName": "Add"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many contact lists",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "emeliaApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "resource": {
+      "required": true
+    },
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contactList"
+          ]
+        }
+      }
+    },
+    "campaignId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "duplicate"
+          ]
+        }
+      }
+    },
+    "contactEmail": {
+      "required": true,
+      "format": "email",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contactList"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contactList"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      }
+    },
+    "campaignName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "campaign"
+          ],
+          "operation": [
+            "duplicate"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contactList"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contactList"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "duplicate"
+          ],
+          "resource": [
+            "campaign"
+          ]
+        }
+      }
+    },
+    "contactListId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contactList"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "campaign",
+          "name": "Campaign",
+          "description": ""
+        },
+        {
+          "value": "contactList",
+          "name": "Contact List",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "add",
+          "name": "Add",
+          "description": ""
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": ""
+        }
+      ]
+    },
+    "campaignId": {
+      "type": "options",
+      "displayName": "Campaign Name or ID",
+      "name": "campaignId",
+      "typeOptions": {
+        "loadOptionsMethod": "getCampaigns"
+      },
+      "possibleValues": []
+    },
+    "contactEmail": {
+      "type": "string",
+      "displayName": "Contact Email",
+      "name": "contactEmail"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Custom Fields",
+          "name": "customFieldsUi",
+          "type": "fixedCollection",
+          "description": "Filter by custom fields",
+          "placeholder": "Add Custom Field",
+          "default": {},
+          "options": [
+            {
+              "name": "customFieldsValues",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Field Name",
+                  "name": "fieldName",
+                  "type": "string",
+                  "description": "The name of the field to add custom field to",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "The value to set on custom field",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "First Name",
+          "name": "firstName",
+          "type": "string",
+          "description": "First name of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Last Contacted",
+          "name": "lastContacted",
+          "type": "dateTime",
+          "description": "Last contacted date of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Last Name",
+          "name": "lastName",
+          "type": "string",
+          "description": "Last name of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Last Open",
+          "name": "lastOpen",
+          "type": "dateTime",
+          "description": "Last opened date of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Last Replied",
+          "name": "lastReplied",
+          "type": "dateTime",
+          "description": "Last replied date of the contact to add",
+          "default": ""
+        },
+        {
+          "displayName": "Mails Sent",
+          "name": "mailsSent",
+          "type": "number",
+          "description": "Number of emails sent to the contact to add",
+          "default": 0
+        },
+        {
+          "displayName": "Phone Number",
+          "name": "phoneNumber",
+          "type": "string",
+          "description": "Phone number of the contact to add",
+          "default": ""
+        }
+      ]
+    },
+    "campaignName": {
+      "type": "string",
+      "displayName": "New Campaign Name",
+      "name": "campaignName"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      }
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Copy Contacts",
+          "name": "copyContacts",
+          "type": "boolean",
+          "description": "Whether to copy all the contacts from the original campaign",
+          "default": false
+        },
+        {
+          "displayName": "Copy Email Provider",
+          "name": "copyProvider",
+          "type": "boolean",
+          "description": "Whether to set the same email provider than the original campaign",
+          "default": true
+        },
+        {
+          "displayName": "Copy Email Sequence",
+          "name": "copyMails",
+          "type": "boolean",
+          "description": "Whether to copy all the steps of the email sequence from the original campaign",
+          "default": true
+        },
+        {
+          "displayName": "Copy Global Settings",
+          "name": "copySettings",
+          "type": "boolean",
+          "description": "Whether to copy all the general settings from the original campaign",
+          "default": true
+        }
+      ]
+    },
+    "contactListId": {
+      "type": "options",
+      "displayName": "Contact List Name or ID",
+      "name": "contactListId",
+      "typeOptions": {
+        "loadOptionsMethod": "getContactLists"
+      },
+      "possibleValues": []
+    }
+  },
+  "api_patterns": {
+    "http_methods": [
+      "POST"
+    ],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

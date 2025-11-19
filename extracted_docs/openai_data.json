@@ -1,0 +1,1456 @@
+{
+  "node_info": {
+    "icon": {
+      "light": "file:openAi.svg",
+      "dark": "file:openAi.dark.svg"
+    },
+    "defaults": {
+      "name": "OpenAI"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "openAiApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "OpenAI",
+    "name": "openAi",
+    "description": "Consume Open AI",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": [
+      "1",
+      "1.1"
+    ],
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.openAi",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Utility"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/openai/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-langchain.openai/"
+        }
+      ]
+    },
+    "alias": [
+      "ChatGPT",
+      "DallE"
+    ]
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "chat",
+      "default": "text",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Chat",
+          "value": "chat",
+          "displayName": "Chat"
+        },
+        {
+          "name": "Image",
+          "value": "image",
+          "displayName": "Image"
+        },
+        {
+          "name": "Text",
+          "value": "text",
+          "displayName": "Text"
+        }
+      ]
+    },
+    {
+      "displayName": "<strong>New node version available:</strong> get the latest version with added features from the nodes panel.",
+      "name": "oldVersionNotice",
+      "type": "notice",
+      "default": ""
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create one or more completions for a given text",
+      "action": "Create a Completion",
+      "value": "complete",
+      "default": "complete",
+      "noDataExpression": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/v1/chat/completions',\n\t\t\t\t\t",
+      "_source": "Chat_chatOperations"
+    },
+    {
+      "displayName": "Model",
+      "name": "model",
+      "type": "options",
+      "description": "The model which will generate the completion. <a href=\"https://beta.openai.com/docs/models/overview\">Learn more</a>.",
+      "value": "={{$responseItem.id}}",
+      "default": "gpt-3.5-turbo",
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "complete"
+          ],
+          "resource": [
+            "chat"
+          ]
+        }
+      },
+      "_operation": "complete",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/v1/models',\n\t\t\t\t\t",
+      "_source": "Chat_chatFields"
+    },
+    {
+      "displayName": "Model",
+      "name": "chatModel",
+      "type": "options",
+      "description": "The model which will generate the completion. <a href=\"https://beta.openai.com/docs/models/overview\">Learn more</a>.",
+      "value": "={{$responseItem.id}}",
+      "default": "gpt-3.5-turbo",
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "complete"
+          ],
+          "resource": [
+            "chat"
+          ]
+        },
+        "hide": {}
+      },
+      "_operation": "complete",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/v1/models',\n\t\t\t\t\t",
+      "_source": "Chat_chatFields"
+    },
+    {
+      "displayName": "Prompt",
+      "name": "prompt",
+      "type": "fixedCollection",
+      "placeholder": "Add Message",
+      "value": "assistant",
+      "default": {},
+      "options": [
+        {
+          "name": "messages",
+          "displayName": "Messages",
+          "values": [
+            {
+              "displayName": "Role",
+              "name": "role",
+              "type": "options",
+              "value": "assistant",
+              "default": "user",
+              "options": [
+                {
+                  "name": "Assistant",
+                  "value": "assistant",
+                  "displayName": "Assistant"
+                },
+                {
+                  "name": "System",
+                  "value": "system",
+                  "displayName": "System"
+                },
+                {
+                  "name": "User",
+                  "value": "user",
+                  "displayName": "User"
+                }
+              ]
+            },
+            {
+              "displayName": "Content",
+              "name": "content",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chat"
+          ],
+          "operation": [
+            "complete"
+          ]
+        }
+      },
+      "_operation": "complete",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'messages',\n\t\t\t\tvalue: '={{ $value.messages ",
+      "_source": "Chat_chatFields"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simplifyOutput",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "value": "={{ { \"data\": $response.body.choices } }}",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "complete"
+          ],
+          "resource": [
+            "chat"
+          ]
+        }
+      },
+      "_operation": "complete",
+      "routing": "\n\t\t\toutput: {\n\t\t\t\tpostReceive: [\n\t\t\t\t\t{\n\t\t\t\t\t\ttype: 'set',\n\t\t\t\t\t\tenabled: '={{$value",
+      "_source": "Chat_chatFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Additional options to add",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Echo Prompt",
+          "name": "echo",
+          "type": "boolean",
+          "description": "Whether the prompt should be echo back in addition to the completion",
+          "default": false,
+          "displayOptions": {
+            "show": {}
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'echo',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Frequency Penalty",
+          "name": "frequency_penalty",
+          "type": "number",
+          "description": "Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim",
+          "default": 0,
+          "typeOptions": {
+            "maxValue": 2,
+            "numberPrecision": 1
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'frequency_penalty',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Maximum Number of Tokens",
+          "name": "maxTokens",
+          "type": "number",
+          "description": "The maximum number of tokens to generate in the completion. Most models have a context length of 2048 tokens (except for the newest models, which support 32,768).",
+          "default": 16,
+          "typeOptions": {
+            "maxValue": 32768
+          },
+          "displayOptions": {
+            "show": {}
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'max_tokens',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Number of Completions",
+          "name": "n",
+          "type": "number",
+          "description": "How many completions to generate for each prompt. Note: Because this parameter generates many completions, it can quickly consume your token quota. Use carefully and ensure that you have reasonable settings for max_tokens and stop.",
+          "default": 1,
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'n',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Presence Penalty",
+          "name": "presence_penalty",
+          "type": "number",
+          "description": "Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics",
+          "default": 0,
+          "typeOptions": {
+            "maxValue": 2,
+            "numberPrecision": 1
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'presence_penalty',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Sampling Temperature",
+          "name": "temperature",
+          "type": "number",
+          "description": "Controls randomness: Lowering results in less random completions. As the temperature approaches zero, the model will become deterministic and repetitive.",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 0,
+            "maxValue": 1,
+            "numberPrecision": 1
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'temperature',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Top P",
+          "name": "topP",
+          "type": "number",
+          "description": "Controls diversity via nucleus sampling: 0.5 means half of all likelihood-weighted options are considered. We generally recommend altering this or temperature but not both.",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 0,
+            "maxValue": 1,
+            "numberPrecision": 1
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'top_p',\n\t\t\t\t\t"
+        }
+      ],
+      "typeOptions": {
+        "maxValue": 2,
+        "numberPrecision": 1
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "complete"
+          ],
+          "resource": [
+            "chat"
+          ]
+        }
+      },
+      "_operation": "complete",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'echo',\n\t\t\t\t\t",
+      "_source": "Chat_chatFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create an image for a given text",
+      "action": "Create an Image",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "image"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/v1/images/generations',\n\t\t\t\t\t",
+      "_source": "Image_imageOperations"
+    },
+    {
+      "displayName": "Prompt",
+      "name": "prompt",
+      "type": "string",
+      "description": "A text description of the desired image(s). The maximum length is 1000 characters.",
+      "placeholder": "e.g. A cute cat eating a dinosaur",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "image"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'prompt',\n\t\t\t",
+      "_source": "Image_imageFields"
+    },
+    {
+      "displayName": "Model",
+      "name": "model",
+      "type": "options",
+      "description": "The model to use for image generation",
+      "value": "={{$responseItem.id}}",
+      "default": "dall-e-2",
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "image"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/v1/models',\n\t\t\t\t\t",
+      "_source": "Image_imageFields"
+    },
+    {
+      "displayName": "Model",
+      "name": "imageModel",
+      "type": "options",
+      "description": "The model to use for image generation",
+      "value": "={{$responseItem.id}}",
+      "default": "dall-e-2",
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "image"
+          ],
+          "operation": [
+            "create"
+          ]
+        },
+        "hide": {}
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/v1/models',\n\t\t\t\t\t",
+      "_source": "Image_imageFields"
+    },
+    {
+      "displayName": "Response Format",
+      "name": "responseFormat",
+      "type": "options",
+      "description": "The format in which to return the image(s)",
+      "value": "binaryData",
+      "default": "binaryData",
+      "options": [
+        {
+          "name": "Binary File",
+          "value": "binaryData",
+          "displayName": "Binary File"
+        },
+        {
+          "name": "Image Url",
+          "value": "imageUrl",
+          "displayName": "Image Url"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "image"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'response_format',\n\t\t\t\tvalue: '={{ $value === \"imageUrl\" ? \"url\" : \"b64_json\" ",
+      "_source": "Image_imageFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Additional options to add",
+      "placeholder": "Add option",
+      "value": "hd",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Number of Images",
+          "name": "n",
+          "type": "number",
+          "description": "Number of images to generate",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1,
+            "maxValue": 10
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'n',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Quality",
+          "name": "quality",
+          "type": "options",
+          "value": "hd",
+          "default": "standard",
+          "options": [
+            {
+              "name": "HD",
+              "value": "hd",
+              "displayName": "Hd"
+            },
+            {
+              "name": "Standard",
+              "value": "standard",
+              "displayName": "Standard"
+            }
+          ],
+          "displayOptions": {
+            "show": {}
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'quality',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Resolution",
+          "name": "size",
+          "type": "options",
+          "value": "256x256",
+          "default": "1024x1024",
+          "options": [
+            {
+              "name": "256x256",
+              "value": "256x256",
+              "displayName": "256x256"
+            },
+            {
+              "name": "512x512",
+              "value": "512x512",
+              "displayName": "512x512"
+            },
+            {
+              "name": "1024x1024",
+              "value": "1024x1024",
+              "displayName": "1024x1024"
+            }
+          ],
+          "displayOptions": {
+            "show": {}
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'size',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Resolution",
+          "name": "size",
+          "type": "options",
+          "value": "1024x1024",
+          "default": "1024x1024",
+          "options": [
+            {
+              "name": "1024x1024",
+              "value": "1024x1024",
+              "displayName": "1024x1024"
+            },
+            {
+              "name": "1792x1024",
+              "value": "1792x1024",
+              "displayName": "1792x1024"
+            },
+            {
+              "name": "1024x1792",
+              "value": "1024x1792",
+              "displayName": "1024x1792"
+            }
+          ],
+          "displayOptions": {
+            "show": {}
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'size',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Style",
+          "name": "style",
+          "type": "options",
+          "value": "natural",
+          "default": "vivid",
+          "options": [
+            {
+              "name": "Natural",
+              "value": "natural",
+              "displayName": "Natural"
+            },
+            {
+              "name": "Vivid",
+              "value": "vivid",
+              "displayName": "Vivid"
+            }
+          ],
+          "displayOptions": {
+            "show": {}
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'style',\n\t\t\t\t\t"
+        }
+      ],
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 10
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "image"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'n',\n\t\t\t\t\t",
+      "_source": "Image_imageFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create one or more completions for a given text",
+      "action": "Create a Completion",
+      "value": "complete",
+      "default": "complete",
+      "noDataExpression": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "text"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/v1/completions',\n\t\t\t\t\t",
+      "_source": "Text_textOperations"
+    },
+    {
+      "displayName": "Model",
+      "name": "model",
+      "type": "options",
+      "description": "The model which will generate the completion. <a href=\"https://beta.openai.com/docs/models/overview\">Learn more</a>.",
+      "value": "={{$responseItem.id}}",
+      "default": "gpt-3.5-turbo-instruct",
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "complete"
+          ],
+          "resource": [
+            "text"
+          ]
+        }
+      },
+      "_operation": "complete",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/v1/models',\n\t\t\t\t\t",
+      "_source": "Text_textFields"
+    },
+    {
+      "displayName": "Prompt",
+      "name": "prompt",
+      "type": "string",
+      "description": "The prompt to generate completion(s) for",
+      "placeholder": "e.g. Say this is a test",
+      "default": "",
+      "typeOptions": {
+        "rows": 2
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "text"
+          ],
+          "operation": [
+            "complete"
+          ]
+        }
+      },
+      "_operation": "complete",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'prompt',\n\t\t\t",
+      "_source": "Text_textFields"
+    },
+    {
+      "displayName": "Model",
+      "name": "model",
+      "type": "options",
+      "description": "The model which will generate the edited version. <a href=\"https://beta.openai.com/docs/models/overview\">Learn more</a>.",
+      "value": "code-davinci-edit-001",
+      "default": "text-davinci-edit-001",
+      "options": [
+        {
+          "name": "code-davinci-edit-001",
+          "value": "code-davinci-edit-001",
+          "displayName": "Code-davinci-edit-001"
+        },
+        {
+          "name": "text-davinci-edit-001",
+          "value": "text-davinci-edit-001",
+          "displayName": "Text-davinci-edit-001"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "edit"
+          ],
+          "resource": [
+            "text"
+          ]
+        }
+      },
+      "_operation": "edit",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'model',\n\t\t\t",
+      "_source": "Text_textFields"
+    },
+    {
+      "displayName": "Input",
+      "name": "input",
+      "type": "string",
+      "description": "The input text to be edited",
+      "placeholder": "e.g. What day of the wek is it?",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "text"
+          ],
+          "operation": [
+            "edit"
+          ]
+        }
+      },
+      "_operation": "edit",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'input',\n\t\t\t",
+      "_source": "Text_textFields"
+    },
+    {
+      "displayName": "Instruction",
+      "name": "instruction",
+      "type": "string",
+      "description": "The instruction that tells the model how to edit the input text",
+      "placeholder": "e.g. Fix the spelling mistakes",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "text"
+          ],
+          "operation": [
+            "edit"
+          ]
+        }
+      },
+      "_operation": "edit",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'instruction',\n\t\t\t",
+      "_source": "Text_textFields"
+    },
+    {
+      "displayName": "Model",
+      "name": "model",
+      "type": "options",
+      "description": "The model which will classify the text. <a href=\"https://beta.openai.com/docs/models/overview\">Learn more</a>.",
+      "value": "text-moderation-stable",
+      "default": "text-moderation-latest",
+      "options": [
+        {
+          "name": "text-moderation-stable",
+          "value": "text-moderation-stable",
+          "displayName": "Text-moderation-stable"
+        },
+        {
+          "name": "text-moderation-latest",
+          "value": "text-moderation-latest",
+          "displayName": "Text-moderation-latest"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "text"
+          ],
+          "operation": [
+            "moderate"
+          ]
+        }
+      },
+      "_operation": "moderate",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'model',\n\t\t\t",
+      "_source": "Text_textFields"
+    },
+    {
+      "displayName": "Input",
+      "name": "input",
+      "type": "string",
+      "description": "The input text to classify",
+      "placeholder": "e.g. My cat is adorable \u2764\ufe0f\u2764\ufe0f",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "text"
+          ],
+          "operation": [
+            "moderate"
+          ]
+        }
+      },
+      "_operation": "moderate",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\ttype: 'body',\n\t\t\t\tproperty: 'input',\n\t\t\t",
+      "_source": "Text_textFields"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simplifyOutput",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "value": "={{ { \"data\": $response.body.results } }}",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "moderate"
+          ],
+          "resource": [
+            "text"
+          ]
+        }
+      },
+      "_operation": "moderate",
+      "routing": "\n\t\t\toutput: {\n\t\t\t\tpostReceive: [\n\t\t\t\t\t{\n\t\t\t\t\t\ttype: 'set',\n\t\t\t\t\t\tenabled: '={{$value",
+      "_source": "Text_textFields"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simplifyOutput",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "value": "={{ { \"data\": $response.body.choices } }}",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "complete",
+            "edit"
+          ],
+          "resource": [
+            "text"
+          ]
+        }
+      },
+      "_operation": "complete,edit",
+      "routing": "\n\t\t\toutput: {\n\t\t\t\tpostReceive: [\n\t\t\t\t\t{\n\t\t\t\t\t\ttype: 'set',\n\t\t\t\t\t\tenabled: '={{$value",
+      "_source": "Text_textFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Additional options to add",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Echo Prompt",
+          "name": "echo",
+          "type": "boolean",
+          "description": "Whether the prompt should be echo back in addition to the completion",
+          "default": false,
+          "displayOptions": {
+            "show": {}
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'echo',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Frequency Penalty",
+          "name": "frequency_penalty",
+          "type": "number",
+          "description": "Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim",
+          "default": 0,
+          "typeOptions": {
+            "maxValue": 2,
+            "numberPrecision": 1
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'frequency_penalty',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Maximum Number of Tokens",
+          "name": "maxTokens",
+          "type": "number",
+          "description": "The maximum number of tokens to generate in the completion. Most models have a context length of 2048 tokens (except for the newest models, which support 32,768).",
+          "default": 16,
+          "typeOptions": {
+            "maxValue": 32768
+          },
+          "displayOptions": {
+            "show": {}
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'max_tokens',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Number of Completions",
+          "name": "n",
+          "type": "number",
+          "description": "How many completions to generate for each prompt. Note: Because this parameter generates many completions, it can quickly consume your token quota. Use carefully and ensure that you have reasonable settings for max_tokens and stop.",
+          "default": 1,
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'n',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Presence Penalty",
+          "name": "presence_penalty",
+          "type": "number",
+          "description": "Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics",
+          "default": 0,
+          "typeOptions": {
+            "maxValue": 2,
+            "numberPrecision": 1
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'presence_penalty',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Sampling Temperature",
+          "name": "temperature",
+          "type": "number",
+          "description": "Controls randomness: Lowering results in less random completions. As the temperature approaches zero, the model will become deterministic and repetitive.",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 0,
+            "maxValue": 1,
+            "numberPrecision": 1
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'temperature',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Top P",
+          "name": "topP",
+          "type": "number",
+          "description": "Controls diversity via nucleus sampling: 0.5 means half of all likelihood-weighted options are considered. We generally recommend altering this or temperature but not both.",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 0,
+            "maxValue": 1,
+            "numberPrecision": 1
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'top_p',\n\t\t\t\t\t"
+        }
+      ],
+      "typeOptions": {
+        "maxValue": 2,
+        "numberPrecision": 1
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "complete",
+            "edit"
+          ],
+          "resource": [
+            "text"
+          ]
+        }
+      },
+      "_operation": "complete,edit",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'echo',\n\t\t\t\t\t",
+      "_source": "Text_textFields"
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {
+    "chat": [],
+    "image": [],
+    "text": []
+  },
+  "credentials": [
+    {
+      "name": "openAiApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{ $credentials.url?.split(\"/\").slice(0,-1).join(\"/\") ?? \"https://api.openai.com\" }}",
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "text"
+          ]
+        }
+      }
+    },
+    "model": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "text"
+          ],
+          "operation": [
+            "moderate"
+          ]
+        }
+      }
+    },
+    "chatModel": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "complete"
+          ],
+          "resource": [
+            "chat"
+          ]
+        },
+        "hide": {}
+      }
+    },
+    "prompt": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "text"
+          ],
+          "operation": [
+            "complete"
+          ]
+        }
+      }
+    },
+    "simplifyOutput": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "complete",
+            "edit"
+          ],
+          "resource": [
+            "text"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "complete",
+            "edit"
+          ],
+          "resource": [
+            "text"
+          ]
+        }
+      }
+    },
+    "imageModel": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "image"
+          ],
+          "operation": [
+            "create"
+          ]
+        },
+        "hide": {}
+      }
+    },
+    "responseFormat": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "image"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "input": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "text"
+          ],
+          "operation": [
+            "moderate"
+          ]
+        }
+      }
+    },
+    "instruction": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "text"
+          ],
+          "operation": [
+            "edit"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "chat",
+          "name": "Chat",
+          "description": ""
+        },
+        {
+          "value": "image",
+          "name": "Image",
+          "description": ""
+        },
+        {
+          "value": "text",
+          "name": "Text",
+          "description": ""
+        }
+      ]
+    },
+    "oldVersionNotice": {
+      "type": "notice",
+      "displayName": "<strong>New node version available:</strong> get the latest version with added features from the nodes panel.",
+      "name": "oldVersionNotice"
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": []
+    },
+    "model": {
+      "type": "options",
+      "displayName": "Model",
+      "name": "model",
+      "possibleValues": [
+        {
+          "value": "text-moderation-stable",
+          "name": "text-moderation-stable",
+          "description": ""
+        },
+        {
+          "value": "text-moderation-latest",
+          "name": "text-moderation-latest",
+          "description": ""
+        }
+      ]
+    },
+    "chatModel": {
+      "type": "options",
+      "displayName": "Model",
+      "name": "chatModel",
+      "possibleValues": []
+    },
+    "prompt": {
+      "type": "string",
+      "displayName": "Prompt",
+      "name": "prompt",
+      "typeOptions": {
+        "rows": 2
+      }
+    },
+    "simplifyOutput": {
+      "type": "boolean",
+      "displayName": "Simplify",
+      "name": "simplifyOutput"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "maxValue": 2,
+        "numberPrecision": 1
+      },
+      "subProperties": [
+        {
+          "displayName": "Echo Prompt",
+          "name": "echo",
+          "type": "boolean",
+          "description": "Whether the prompt should be echo back in addition to the completion",
+          "default": false,
+          "displayOptions": {
+            "show": {}
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'echo',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Frequency Penalty",
+          "name": "frequency_penalty",
+          "type": "number",
+          "description": "Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim",
+          "default": 0,
+          "typeOptions": {
+            "maxValue": 2,
+            "numberPrecision": 1
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'frequency_penalty',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Maximum Number of Tokens",
+          "name": "maxTokens",
+          "type": "number",
+          "description": "The maximum number of tokens to generate in the completion. Most models have a context length of 2048 tokens (except for the newest models, which support 32,768).",
+          "default": 16,
+          "typeOptions": {
+            "maxValue": 32768
+          },
+          "displayOptions": {
+            "show": {}
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'max_tokens',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Number of Completions",
+          "name": "n",
+          "type": "number",
+          "description": "How many completions to generate for each prompt. Note: Because this parameter generates many completions, it can quickly consume your token quota. Use carefully and ensure that you have reasonable settings for max_tokens and stop.",
+          "default": 1,
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'n',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Presence Penalty",
+          "name": "presence_penalty",
+          "type": "number",
+          "description": "Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics",
+          "default": 0,
+          "typeOptions": {
+            "maxValue": 2,
+            "numberPrecision": 1
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'presence_penalty',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Sampling Temperature",
+          "name": "temperature",
+          "type": "number",
+          "description": "Controls randomness: Lowering results in less random completions. As the temperature approaches zero, the model will become deterministic and repetitive.",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 0,
+            "maxValue": 1,
+            "numberPrecision": 1
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'temperature',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Top P",
+          "name": "topP",
+          "type": "number",
+          "description": "Controls diversity via nucleus sampling: 0.5 means half of all likelihood-weighted options are considered. We generally recommend altering this or temperature but not both.",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 0,
+            "maxValue": 1,
+            "numberPrecision": 1
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'top_p',\n\t\t\t\t\t"
+        }
+      ]
+    },
+    "imageModel": {
+      "type": "options",
+      "displayName": "Model",
+      "name": "imageModel",
+      "possibleValues": []
+    },
+    "responseFormat": {
+      "type": "options",
+      "displayName": "Response Format",
+      "name": "responseFormat",
+      "possibleValues": [
+        {
+          "value": "binaryData",
+          "name": "Binary File",
+          "description": ""
+        },
+        {
+          "value": "imageUrl",
+          "name": "Image Url",
+          "description": ""
+        }
+      ]
+    },
+    "input": {
+      "type": "string",
+      "displayName": "Input",
+      "name": "input"
+    },
+    "instruction": {
+      "type": "string",
+      "displayName": "Instruction",
+      "name": "instruction"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [
+      {
+        "name": "oldVersionNotice",
+        "text": "<strong>New node version available:</strong> get the latest version with added features from the nodes panel.",
+        "conditions": null
+      }
+    ],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "prompt",
+        "text": "Add Message"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "prompt",
+        "text": "e.g. A cute cat eating a dinosaur"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "prompt",
+        "text": "e.g. Say this is a test"
+      },
+      {
+        "field": "input",
+        "text": "e.g. What day of the wek is it?"
+      },
+      {
+        "field": "instruction",
+        "text": "e.g. Fix the spelling mistakes"
+      },
+      {
+        "field": "input",
+        "text": "e.g. My cat is adorable \u2764\ufe0f\u2764\ufe0f"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

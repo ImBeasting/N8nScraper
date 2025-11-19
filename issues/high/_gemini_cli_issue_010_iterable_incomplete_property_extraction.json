@@ -1,0 +1,38 @@
+{
+  "issue_id": "_gemini_cli_issue_010",
+  "title": "Iterable node: Incomplete property extraction due to unresolved spread operators and/or parsing issues in imported description files",
+  "severity": "high",
+  "status": "new",
+  "priority": 2,
+  "metadata": {
+    "created_at": "2025-11-13T18:20:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "Iterable, Intercom (potentially other multi-resource nodes using spread operators and external description files)",
+    "validation_session": "comprehensive_audit_2025-11-13"
+  },
+  "description": {
+    "problem": "Multiple multi-resource nodes (e.g., Iterable, Intercom) are experiencing incomplete property extraction. For Iterable, 'iterable_data.json' is missing a significant number of properties (23 extracted vs 38 expected). For Intercom, 'intercom_data.json' is missing properties (46 extracted vs 86 expected). This is likely due to the extractor failing to fully resolve spread operators (...eventOperations, ...eventFields, etc.) and/or not correctly parsing all properties within the imported description files (UserDescription.ts, EventDescription.ts, UserListDescription.ts, LeadDescription.ts, CompanyDescription.ts).",
+    "impact": "HIGH - For Iterable, 15/38 properties missing (39% loss). For Intercom, 40/86 properties missing (47% loss). This leads to incomplete documentation for various operations and resources within these nodes, making it difficult for users to understand and utilize their full functionality.",
+    "root_cause": "The extractor's logic for handling spread operators within the 'properties' array and for parsing properties from imported INodeProperties[] arrays is insufficient. It either fails to expand the spread operators or does not correctly extract all individual properties from the referenced arrays.",
+    "evidence": [
+      "Source file: n8n/packages/nodes-base/nodes/Iterable/Iterable.node.ts (main node file with spread operators)",
+      "Source files: n8n/packages/nodes-base/nodes/Iterable/UserDescription.ts, EventDescription.ts, UserListDescription.ts (external description files for Iterable)",
+      "Iterable.node.ts properties array contains: ...eventOperations, ...eventFields, ...userOperations, ...userFields, ...userListOperations, ...userListFields",
+      "Calculated expected properties for Iterable: 38 (1 resource + 1 eventOperations + 12 eventFields + 1 userOperations + 14 userFields + 1 userListOperations + 8 userListFields)",
+      "Extracted properties count for Iterable: 23",
+      "Source file: n8n/packages/nodes-base/nodes/Intercom/Intercom.node.ts (main node file with spread operators)",
+      "Source files: n8n/packages/nodes-base/nodes/Intercom/UserDescription.ts, LeadDescription.ts, CompanyDescription.ts (external description files for Intercom)",
+      "Intercom.node.ts properties array contains: ...leadOperations, ...userOperations, ...companyOperations, ...userFields, ...leadFields, ...companyFields",
+      "Calculated expected properties for Intercom: 86 (1 resource + 1 leadOperations + 1 userOperations + 1 companyOperations + 33 userFields + 28 leadFields + 21 companyFields)",
+      "Extracted properties count for Intercom: 46",
+      "Command used to verify: jq '.properties | length' extracted_docs/iterable_data.json, jq '.properties | length' extracted_docs/intercom_data.json and manual calculation from source files."
+    ],
+    "fix_approach": "1. Enhance the extractor to recursively resolve spread operators within INodeProperties[] arrays. \n2. Ensure that all properties from imported description files are correctly parsed and merged into the main node's properties. \n3. This might involve a more robust AST parsing approach to handle imports and array destructuring. \n4. Test with: Iterable, Intercom nodes. \n5. Expected result: 'iterable_data.json' should contain all 38 properties, and 'intercom_data.json' should contain all 86 properties, including those from the spread operators and imported files. \n6. Validation command: jq '.properties | length' extracted_docs/iterable_data.json should return 38, and jq '.properties | length' extracted_docs/intercom_data.json should return 86."
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

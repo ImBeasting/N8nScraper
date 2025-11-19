@@ -1,0 +1,33 @@
+{
+  "issue_id": "_openai_codex_issue_007",
+  "title": "Namespace spread descriptors skipped \u2013 versioned nodes lose 80\u201395% of properties",
+  "severity": "critical",
+  "status": "resolved",
+  "priority": 1,
+  "metadata": {
+    "created_at": "2025-11-12T01:35:00Z",
+    "created_by": "openai_codex",
+    "affected_nodes": "Google Sheets, Airtable, Postgres, SeaTable (namespace-imported descriptions) \u2013 4 confirmed, 20+ likely"
+  },
+  "description": {
+    "problem": "Nodes that spread properties from namespace imports (e.g., `...sheet.descriptions`) only output the inline selectors; every field defined inside the namespace is silently dropped.",
+    "impact": "CRITICAL \u2013 Google Sheets ships only 23 properties instead of ~100, Airtable only 6 instead of ~40, Postgres 4 instead of ~30, and SeaTable 14 instead of ~60. These are flagship integrations, so the extractor is publishing <20% of their schemas.",
+    "root_cause": "The spread resolver in `n8n_node_extractor.py` only handles bare identifiers (`...resourceFields`). Versioned nodes such as Google Sheets and Postgres import description modules via namespace imports (`import * as sheet from './sheet/Sheet.resource'`) and spread `...sheet.descriptions`. Because the resolver never follows `namespace.property`, the exported arrays are never read.",
+    "evidence": [
+      "Google Sheets (namespace spreads):\n  - Source: n8n/packages/nodes-base/nodes/Google/Sheet/v2/actions/versionDescription.ts lines 32-70 (`...sheet.descriptions`, `...spreadsheet.descriptions`).\n  - Extracted: `jq '.properties | length' extracted_docs/googlesheets_data.json` \u2192 **23** properties.\n  - Source reality: `rg -o \"displayName\" -g\"*.ts\" n8n/.../Google/Sheet/v2/actions/sheet | wc -l` \u2192 **88** display names, `rg .../spreadsheet | wc -l` \u2192 **13** more \u21d2 ~101 properties expected.",
+      "Postgres:\n  - Source: n8n/packages/nodes-base/nodes/Postgres/v2/actions/versionDescription.ts spreads `...database.description` (lines 26-45).\n  - Extracted: `jq '.properties | length' extracted_docs/postgres_data.json` \u2192 **4** (only resource/table pickers).\n  - Source reality: `rg -o \"displayName\" n8n/.../Postgres/v2/actions/database -g\"*.ts\" | wc -l` \u2192 **31**.",
+      "Airtable:\n  - Source: n8n/packages/nodes-base/nodes/Airtable/v2/actions/versionDescription.ts spreads `...record.description` and `...base.description`.\n  - Extracted: `jq '.properties | length' extracted_docs/airtable_data.json` \u2192 **6**.\n  - Source reality: `rg -o \"displayName\" n8n/.../Airtable/v2/actions -g\"*.ts\" | wc -l` \u2192 **42**.",
+      "SeaTable:\n  - Source: n8n/packages/nodes-base/nodes/SeaTable/v2/actions/SeaTable.node.ts spreads `...row.descriptions`, `...asset.descriptions`, etc.\n  - Extracted: `jq '.properties | length' extracted_docs/seatable_data.json` \u2192 **14**.\n  - Source reality: `rg -o \"displayName\" n8n/.../SeaTable/v2/actions -g\"*.ts\" | wc -l` \u2192 **61**."
+    ],
+    "fix_approach": "Extend the spread resolver to follow namespace members.\n1. When encountering a spread token that contains a dot (e.g., `sheet.descriptions`), split it into namespace (`sheet`) and export name (`descriptions`).\n2. Use the existing import map to resolve the namespace identifier (from `import * as sheet from './sheet/Sheet.resource'`).\n3. Load the target module, parse its exported arrays (reusing `extract_exported_array`), and recurse so nested spreads resolve as well.\n4. Cache parsed modules to avoid re-reading the same description files for every node.\n5. Add regression tests by re-extracting Google Sheets, Airtable, Postgres, and SeaTable \u2013 their property counts should jump back to the 40\u2013100 range.\n6. After implementing, rerun `python3 validate_extraction.py` to confirm the \"zero/low property\" outliers disappear for namespace-based nodes."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  },
+  "resolved_by": "claude_code",
+  "resolved_at": "2025-11-12T01:41:55.337485Z"
+}

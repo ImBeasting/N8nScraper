@@ -1,0 +1,583 @@
+{
+  "node_info": {
+    "icon": "file:seven.svg",
+    "defaults": {
+      "name": "seven"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "sms77Api",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "seven",
+    "name": "sms77",
+    "description": "Send SMS and make text-to-speech calls",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.sms77",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/sms77/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.sms77/"
+        }
+      ]
+    },
+    "alias": [
+      "SMS",
+      "Sms77"
+    ]
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "sms",
+      "default": "sms",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "SMS",
+          "value": "sms",
+          "displayName": "Sms"
+        },
+        {
+          "name": "Voice Call",
+          "value": "voice",
+          "displayName": "Voice Call"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Send SMS",
+      "action": "Send an SMS",
+      "value": "send",
+      "default": "send",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Send",
+          "description": "Send SMS",
+          "action": "Send an SMS",
+          "value": "send",
+          "displayName": "Send"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "sms"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Converts text to voice and calls a given number",
+      "action": "Convert text to voice",
+      "value": "send",
+      "default": "send",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Send",
+          "description": "Converts text to voice and calls a given number",
+          "action": "Convert text to voice",
+          "value": "send",
+          "displayName": "Send"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "voice"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "From",
+      "name": "from",
+      "type": "string",
+      "description": "The caller ID displayed in the receivers display. Max 16 numeric or 11 alphanumeric characters.",
+      "placeholder": "+4901234567890",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      },
+      "_operation": "send"
+    },
+    {
+      "displayName": "To",
+      "name": "to",
+      "type": "string",
+      "description": "The number of your recipient(s) separated by comma. Can be regular numbers or contact/groups from seven.",
+      "placeholder": "+49876543210, MyGroup",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms",
+            "voice"
+          ]
+        }
+      },
+      "_operation": "send"
+    },
+    {
+      "displayName": "Message",
+      "name": "message",
+      "type": "string",
+      "description": "The message to send. Max. 1520 characters",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms",
+            "voice"
+          ]
+        }
+      },
+      "_operation": "send"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Pick a date for time delayed dispatch",
+      "placeholder": "Add Option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Delay",
+          "name": "delay",
+          "type": "dateTime",
+          "description": "Pick a date for time delayed dispatch",
+          "default": ""
+        },
+        {
+          "displayName": "Foreign ID",
+          "name": "foreign_id",
+          "type": "string",
+          "description": "Custom foreign ID returned in DLR callbacks",
+          "placeholder": "MyCustomForeignID",
+          "default": ""
+        },
+        {
+          "displayName": "Flash",
+          "name": "flash",
+          "type": "boolean",
+          "description": "Send as flash message being displayed directly the receiver's display",
+          "default": false
+        },
+        {
+          "displayName": "Label",
+          "name": "label",
+          "type": "string",
+          "description": "Custom label used to group analytics",
+          "placeholder": "MyCustomLabel",
+          "default": ""
+        },
+        {
+          "displayName": "Performance Tracking",
+          "name": "performance_tracking",
+          "type": "boolean",
+          "description": "Whether to enable performance tracking for URLs found in the message text",
+          "default": false
+        },
+        {
+          "displayName": "TTL",
+          "name": "ttl",
+          "type": "number",
+          "description": "Custom time to live specifying the validity period of a message in minutes",
+          "default": 2880,
+          "typeOptions": {
+            "minValue": 1
+          }
+        }
+      ],
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      },
+      "_operation": "send"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "The caller ID. Please use only verified sender IDs, one of your virtual inbound numbers or one of our shared virtual numbers.",
+      "placeholder": "Add Option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "From",
+          "name": "from",
+          "type": "string",
+          "description": "The caller ID. Please use only verified sender IDs, one of your virtual inbound numbers or one of our shared virtual numbers.",
+          "placeholder": "+4901234567890",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "voice"
+          ]
+        }
+      },
+      "_operation": "send"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Send",
+      "description": "Send SMS",
+      "action": "Send an SMS",
+      "value": "send",
+      "displayName": "Send"
+    }
+  ],
+  "operations_by_resource": {
+    "sms": [
+      {
+        "name": "Send",
+        "description": "Send SMS",
+        "action": "Send an SMS",
+        "value": "send",
+        "displayName": "Send"
+      }
+    ],
+    "voice": [
+      {
+        "name": "Send",
+        "description": "Converts text to voice and calls a given number",
+        "action": "Convert text to voice",
+        "value": "send",
+        "displayName": "Send"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "sms77Api",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "voice"
+          ]
+        }
+      }
+    },
+    "from": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms"
+          ]
+        }
+      }
+    },
+    "to": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms",
+            "voice"
+          ]
+        }
+      }
+    },
+    "message": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "sms",
+            "voice"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "send"
+          ],
+          "resource": [
+            "voice"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "sms",
+          "name": "SMS",
+          "description": ""
+        },
+        {
+          "value": "voice",
+          "name": "Voice Call",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "send",
+          "name": "Send",
+          "description": "Converts text to voice and calls a given number"
+        }
+      ]
+    },
+    "from": {
+      "type": "string",
+      "displayName": "From",
+      "name": "from"
+    },
+    "to": {
+      "type": "string",
+      "displayName": "To",
+      "name": "to"
+    },
+    "message": {
+      "type": "string",
+      "displayName": "Message",
+      "name": "message"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "From",
+          "name": "from",
+          "type": "string",
+          "description": "The caller ID. Please use only verified sender IDs, one of your virtual inbound numbers or one of our shared virtual numbers.",
+          "placeholder": "+4901234567890",
+          "default": ""
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "from",
+        "text": "+4901234567890"
+      },
+      {
+        "field": "to",
+        "text": "+49876543210, MyGroup"
+      },
+      {
+        "field": "options",
+        "text": "Add Option"
+      },
+      {
+        "field": "options",
+        "text": "Add Option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

@@ -1,0 +1,985 @@
+{
+  "node_info": {
+    "icon": "file:googleslides.svg",
+    "defaults": {
+      "name": "Google Slides"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input",
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "googleApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "serviceAccount"
+            ]
+          }
+        }
+      },
+      {
+        "name": "googleSlidesOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getPages"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Google Slides",
+    "name": "googleSlides",
+    "description": "Consume the Google Slides API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": [
+      "1",
+      "2"
+    ],
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.googleSlides",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Marketing"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/google/oauth-single-service/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.googleslides/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "How to get started with CRM automation (with 3 no-code workflow ideas",
+          "icon": "\ud83d\udc65",
+          "url": "https://n8n.io/blog/how-to-get-started-with-crm-automation-and-no-code-workflow-ideas/"
+        },
+        {
+          "label": "15 Google apps you can combine and automate to increase productivity",
+          "icon": "\ud83d\udca1",
+          "url": "https://n8n.io/blog/automate-google-apps-for-productivity/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "oAuth2",
+      "default": "serviceAccount",
+      "options": [
+        {
+          "name": "OAuth2",
+          "value": "oAuth2",
+          "displayName": "Oauth2"
+        },
+        {
+          "name": "Service Account",
+          "value": "serviceAccount",
+          "displayName": "Service Account"
+        }
+      ],
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "page",
+      "default": "presentation",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Page",
+          "value": "page",
+          "displayName": "Page"
+        },
+        {
+          "name": "Presentation",
+          "value": "presentation",
+          "displayName": "Presentation"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a presentation",
+      "action": "Create a presentation",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a presentation",
+          "action": "Create a presentation",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Get",
+          "description": "Get a presentation",
+          "action": "Get a presentation",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Slides",
+          "description": "Get presentation slides",
+          "action": "Get slides from a presentation",
+          "value": "getSlides",
+          "displayName": "Get Slides"
+        },
+        {
+          "name": "Replace Text",
+          "description": "Replace text in a presentation",
+          "action": "Replace text in a presentation",
+          "value": "replaceText",
+          "displayName": "Replace Text"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "presentation"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Get a page",
+      "action": "Get a page",
+      "value": "get",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "description": "Get a page",
+          "action": "Get a page",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Thumbnail",
+          "description": "Get a thumbnail",
+          "action": "Get the thumbnail for a page",
+          "value": "getThumbnail",
+          "displayName": "Get Thumbnail"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "page"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Title",
+      "name": "title",
+      "type": "string",
+      "description": "Title of the presentation to create",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "presentation"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Presentation ID",
+      "name": "presentationId",
+      "type": "string",
+      "description": "ID of the presentation to retrieve. Found in the presentation URL: <code>https://docs.google.com/presentation/d/PRESENTATION_ID/edit</code>",
+      "placeholder": "1wZtNFZ8MO-WKrxhYrOLMvyiqSgFwdSz5vn8_l_7eNqw",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "presentation",
+            "page"
+          ],
+          "operation": [
+            "get",
+            "getThumbnail",
+            "getSlides",
+            "replaceText"
+          ]
+        }
+      },
+      "_operation": "get,getThumbnail,getSlides,replaceText"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getSlides"
+          ],
+          "resource": [
+            "presentation"
+          ]
+        }
+      },
+      "_operation": "getSlides"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getSlides"
+          ],
+          "resource": [
+            "presentation"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getSlides"
+    },
+    {
+      "displayName": "Page Object ID",
+      "name": "pageObjectId",
+      "type": "string",
+      "description": "ID of the page object to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "page"
+          ],
+          "operation": [
+            "get",
+            "getThumbnail"
+          ]
+        }
+      },
+      "_operation": "get,getThumbnail"
+    },
+    {
+      "displayName": "Texts To Replace",
+      "name": "textUi",
+      "type": "fixedCollection",
+      "description": "Whether the search should respect case. True : the search is case sensitive. False : the search is case insensitive.",
+      "placeholder": "Add Text",
+      "default": {},
+      "options": [
+        {
+          "name": "textValues",
+          "displayName": "Text",
+          "values": [
+            {
+              "displayName": "Match Case",
+              "name": "matchCase",
+              "type": "boolean",
+              "description": "Whether the search should respect case. True : the search is case sensitive. False : the search is case insensitive.",
+              "default": false
+            },
+            {
+              "displayName": "Slide Names or IDs",
+              "name": "pageObjectIds",
+              "type": "multiOptions",
+              "description": "If non-empty, limits the matches to slide elements only on the given slides. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getPages"
+              }
+            },
+            {
+              "displayName": "Search For",
+              "name": "text",
+              "type": "string",
+              "description": "The text to search for in the slide",
+              "default": ""
+            },
+            {
+              "displayName": "Replace With",
+              "name": "replaceText",
+              "type": "string",
+              "description": "The text that will replace the matched text",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "presentation"
+          ],
+          "operation": [
+            "replaceText"
+          ]
+        }
+      },
+      "_operation": "replaceText"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "The revision ID of the presentation required for the write request. If specified and the requiredRevisionId doesn't exactly match the presentation's current revisionId, the request will not be processed and will return a 400 bad request error.",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Revision ID",
+          "name": "revisionId",
+          "type": "string",
+          "description": "The revision ID of the presentation required for the write request. If specified and the requiredRevisionId doesn't exactly match the presentation's current revisionId, the request will not be processed and will return a 400 bad request error.",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "replaceText"
+          ],
+          "resource": [
+            "presentation"
+          ]
+        }
+      },
+      "_operation": "replaceText"
+    },
+    {
+      "displayName": "Download",
+      "name": "download",
+      "type": "boolean",
+      "description": "Name of the binary property to which to write the data of the read page",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "page"
+          ],
+          "operation": [
+            "getThumbnail"
+          ]
+        }
+      },
+      "_operation": "getThumbnail"
+    },
+    {
+      "displayName": "Put Output File in Field",
+      "name": "binaryProperty",
+      "type": "string",
+      "hint": "The name of the output binary field to put the file in",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "page"
+          ],
+          "operation": [
+            "getThumbnail"
+          ],
+          "download": [
+            true
+          ]
+        }
+      },
+      "_operation": "getThumbnail"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a presentation",
+      "action": "Create a presentation",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Get",
+      "description": "Get a presentation",
+      "action": "Get a presentation",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Slides",
+      "description": "Get presentation slides",
+      "action": "Get slides from a presentation",
+      "value": "getSlides",
+      "displayName": "Get Slides"
+    },
+    {
+      "name": "Replace Text",
+      "description": "Replace text in a presentation",
+      "action": "Replace text in a presentation",
+      "value": "replaceText",
+      "displayName": "Replace Text"
+    },
+    {
+      "name": "Get Thumbnail",
+      "description": "Get a thumbnail",
+      "action": "Get the thumbnail for a page",
+      "value": "getThumbnail",
+      "displayName": "Get Thumbnail"
+    }
+  ],
+  "operations_by_resource": {
+    "presentation": [
+      {
+        "name": "Create",
+        "description": "Create a presentation",
+        "action": "Create a presentation",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Get",
+        "description": "Get a presentation",
+        "action": "Get a presentation",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Slides",
+        "description": "Get presentation slides",
+        "action": "Get slides from a presentation",
+        "value": "getSlides",
+        "displayName": "Get Slides"
+      },
+      {
+        "name": "Replace Text",
+        "description": "Replace text in a presentation",
+        "action": "Replace text in a presentation",
+        "value": "replaceText",
+        "displayName": "Replace Text"
+      }
+    ],
+    "page": [
+      {
+        "name": "Get",
+        "description": "Get a page",
+        "action": "Get a page",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Thumbnail",
+        "description": "Get a thumbnail",
+        "action": "Get the thumbnail for a page",
+        "value": "getThumbnail",
+        "displayName": "Get Thumbnail"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "googleApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "serviceAccount"
+          ]
+        }
+      }
+    },
+    {
+      "name": "googleSlidesOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "authentication": {
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "page"
+          ]
+        }
+      }
+    },
+    "title": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "presentation"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "presentationId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "presentation",
+            "page"
+          ],
+          "operation": [
+            "get",
+            "getThumbnail",
+            "getSlides",
+            "replaceText"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getSlides"
+          ],
+          "resource": [
+            "presentation"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getSlides"
+          ],
+          "resource": [
+            "presentation"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "pageObjectId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "page"
+          ],
+          "operation": [
+            "get",
+            "getThumbnail"
+          ]
+        }
+      }
+    },
+    "textUi": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "presentation"
+          ],
+          "operation": [
+            "replaceText"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "replaceText"
+          ],
+          "resource": [
+            "presentation"
+          ]
+        }
+      }
+    },
+    "download": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "page"
+          ],
+          "operation": [
+            "getThumbnail"
+          ]
+        }
+      }
+    },
+    "binaryProperty": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "page"
+          ],
+          "operation": [
+            "getThumbnail"
+          ],
+          "download": [
+            true
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "oAuth2",
+          "name": "OAuth2",
+          "description": ""
+        },
+        {
+          "value": "serviceAccount",
+          "name": "Service Account",
+          "description": ""
+        }
+      ]
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "page",
+          "name": "Page",
+          "description": ""
+        },
+        {
+          "value": "presentation",
+          "name": "Presentation",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a page"
+        },
+        {
+          "value": "getThumbnail",
+          "name": "Get Thumbnail",
+          "description": "Get a thumbnail"
+        }
+      ]
+    },
+    "title": {
+      "type": "string",
+      "displayName": "Title",
+      "name": "title"
+    },
+    "presentationId": {
+      "type": "string",
+      "displayName": "Presentation ID",
+      "name": "presentationId"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      }
+    },
+    "pageObjectId": {
+      "type": "string",
+      "displayName": "Page Object ID",
+      "name": "pageObjectId"
+    },
+    "textUi": {
+      "type": "fixedCollection",
+      "displayName": "Texts To Replace",
+      "name": "textUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "textValues",
+          "displayName": "Text",
+          "values": [
+            {
+              "displayName": "Match Case",
+              "name": "matchCase",
+              "type": "boolean",
+              "description": "Whether the search should respect case. True : the search is case sensitive. False : the search is case insensitive.",
+              "default": false
+            },
+            {
+              "displayName": "Slide Names or IDs",
+              "name": "pageObjectIds",
+              "type": "multiOptions",
+              "description": "If non-empty, limits the matches to slide elements only on the given slides. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+              "default": [],
+              "typeOptions": {
+                "loadOptionsMethod": "getPages"
+              }
+            },
+            {
+              "displayName": "Search For",
+              "name": "text",
+              "type": "string",
+              "description": "The text to search for in the slide",
+              "default": ""
+            },
+            {
+              "displayName": "Replace With",
+              "name": "replaceText",
+              "type": "string",
+              "description": "The text that will replace the matched text",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Revision ID",
+          "name": "revisionId",
+          "type": "string",
+          "description": "The revision ID of the presentation required for the write request. If specified and the requiredRevisionId doesn't exactly match the presentation's current revisionId, the request will not be processed and will return a 400 bad request error.",
+          "default": ""
+        }
+      ]
+    },
+    "download": {
+      "type": "boolean",
+      "displayName": "Download",
+      "name": "download"
+    },
+    "binaryProperty": {
+      "type": "string",
+      "displayName": "Put Output File in Field",
+      "name": "binaryProperty"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "presentationId",
+        "text": "1wZtNFZ8MO-WKrxhYrOLMvyiqSgFwdSz5vn8_l_7eNqw"
+      },
+      {
+        "field": "textUi",
+        "text": "Add Text"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": [
+      {
+        "field": "binaryProperty",
+        "text": "The name of the output binary field to put the file in"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

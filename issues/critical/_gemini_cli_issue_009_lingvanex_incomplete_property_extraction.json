@@ -1,0 +1,38 @@
+{
+  "issue_id": "_gemini_cli_issue_009",
+  "title": "LingvaNex node: Incomplete property extraction, missing resource-specific properties from ActivityDescription.ts",
+  "severity": "critical",
+  "status": "source_code_bug",
+  "priority": 1,
+  "metadata": {
+    "created_at": "2025-11-13T18:05:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "LingvaNex (potentially other multi-resource nodes with properties defined in separate description files)",
+    "validation_session": "comprehensive_audit_2025-11-13"
+  },
+  "description": {
+    "problem": "The 'lingvanex_data.json' only extracts properties directly defined in 'LingvaNex.node.ts', completely missing resource-specific properties from 'ActivityDescription.ts'. The node's subtitle '={{$parameter[\"operation\"] + ": " + $parameter[\"resource\"]}}' indicates a 'resource' parameter, but its properties are not included.",
+    "impact": "CRITICAL - The extracted node definition is severely incomplete. Users will not see any documentation for the 'activity' resource and its operations (create, getAll) and associated fields, rendering a significant portion of the node's functionality undocumented.",
+    "root_cause": "The extractor fails to identify and incorporate properties defined in external description files (e.g., ActivityDescription.ts) that are intended to be part of a multi-resource node. It likely only parses the main .node.ts file and does not follow imports or infer resource-specific property definitions.",
+    "evidence": [
+      "Source file 1: n8n/packages/nodes-base/nodes/LingvaNex/LingvaNex.node.ts (defines main node structure and 'translate' operation properties)",
+      "Source file 2: n8n/packages/nodes-base/nodes/LingvaNex/ActivityDescription.ts (defines 'activityOperations' and 'activityFields' for 'activity' resource)",
+      "LingvaNex.node.ts subtitle: '={{$parameter[\"operation\"] + ": " + $parameter[\"resource\"]}}' (implies a 'resource' parameter)",
+      "Extracted file: extracted_docs/lingvanex_data.json",
+      "Extracted properties count: 4 (only from LingvaNex.node.ts)",
+      "Expected properties count: 4 (from LingvaNex.node.ts) + 1 (activityOperations) + 10 (activityFields) = 15 properties (approximately, after resolving spreads and collections)",
+      "Command used to verify: jq '.properties | length' extracted_docs/lingvanex_data.json and manual comparison with both source files."
+    ],
+    "fix_approach": "1. Enhance the extractor to identify and parse all relevant description files (e.g., *Description.ts) associated with a node. \n2. Implement logic to correctly associate resource-specific properties with the main node definition, potentially by analyzing the 'resource' parameter in the subtitle or other indicators. \n3. Resolve spread operators (e.g., ...activityOperations, ...activityFields) to combine properties from different files. \n4. Test with: LingvaNex node. \n5. Expected result: 'lingvanex_data.json' should contain properties from both 'LingvaNex.node.ts' and 'ActivityDescription.ts', including the 'activity' resource operations and fields."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  },
+  "investigated_by": "claude_code",
+  "investigated_at": "2025-11-13T19:00:00Z",
+  "investigation_note": "ActivityDescription.ts file exists but is NEVER imported into LingvaNex.node.ts. The extractor is working correctly - this is a bug in the n8n source code. The file exports activityOperations and activityFields but they are orphaned and never spread into the properties array. The subtitle references $parameter['resource'] which also doesn't exist. This is a source code bug, not an extraction bug."
+}

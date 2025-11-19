@@ -1,0 +1,1544 @@
+{
+  "node_info": {
+    "icon": "file:n8n.svg",
+    "defaults": {
+      "name": "n8n"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "n8nApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "n8n",
+    "name": "n8n",
+    "description": "Handle events and perform actions on your n8n instance",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.n8n",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development",
+      "Core Nodes"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/api/authentication/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.n8n/"
+        }
+      ]
+    },
+    "alias": [
+      "Workflow",
+      "Execution"
+    ],
+    "subcategories": {
+      "Core Nodes": [
+        "Helpers",
+        "Other Trigger Nodes"
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "audit",
+      "default": "workflow",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Audit",
+          "value": "audit",
+          "displayName": "Audit"
+        },
+        {
+          "name": "Credential",
+          "value": "credential",
+          "displayName": "Credential"
+        },
+        {
+          "name": "Execution",
+          "value": "execution",
+          "displayName": "Execution"
+        },
+        {
+          "name": "Workflow",
+          "value": "workflow",
+          "displayName": "Workflow"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Generate a security audit for this n8n instance",
+      "action": "Generate a security audit",
+      "value": "generate",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Generate",
+          "description": "Generate a security audit for this n8n instance",
+          "action": "Generate a security audit",
+          "value": "generate",
+          "displayName": "Generate",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/audit',\n\t\t\t\t\t"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "audit"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/audit',\n\t\t\t\t\t",
+      "_source": "Audit_auditOperations"
+    },
+    {
+      "displayName": "Additional Options",
+      "name": "additionalOptions",
+      "type": "collection",
+      "description": "Risk categories to include in the audit",
+      "placeholder": "Add Filter",
+      "value": "credentials",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Categories",
+          "name": "categories",
+          "type": "multiOptions",
+          "description": "Risk categories to include in the audit",
+          "value": "credentials",
+          "default": [],
+          "options": [
+            {
+              "name": "Credentials",
+              "value": "credentials",
+              "displayName": "Credentials"
+            },
+            {
+              "name": "Database",
+              "value": "database",
+              "displayName": "Database"
+            },
+            {
+              "name": "Filesystem",
+              "value": "filesystem",
+              "displayName": "Filesystem"
+            },
+            {
+              "name": "Instance",
+              "value": "instance",
+              "displayName": "Instance"
+            },
+            {
+              "name": "Nodes",
+              "value": "nodes",
+              "displayName": "Nodes"
+            }
+          ]
+        },
+        {
+          "displayName": "Days Abandoned Workflow",
+          "name": "daysAbandonedWorkflow",
+          "type": "number",
+          "description": "Days for a workflow to be considered abandoned if not executed",
+          "default": 90
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "audit"
+          ]
+        }
+      },
+      "routing": "\n\t\t\trequest: {\n\t\t\t\tbody: {\n\t\t\t\t\tadditionalOptions: '={{ $value ",
+      "_source": "Audit_auditFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a credential",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a credential",
+          "value": "create",
+          "displayName": "Create",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/credentials',\n\t\t\t\t\t"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a credential",
+          "value": "delete",
+          "displayName": "Delete",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'DELETE',\n\t\t\t\t\t\turl: '=/credentials/{{ $parameter.credentialId "
+        },
+        {
+          "name": "Get Schema",
+          "action": "Get credential data schema for type",
+          "value": "getSchema",
+          "displayName": "Get Schema",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/credentials/schema/{{ $parameter.credentialTypeName "
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "credential"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/credentials',\n\t\t\t\t\t",
+      "_source": "Credential_credentialOperations"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "Name of the new credential",
+      "placeholder": "e.g. n8n account",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "credential"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\trequest: {\n\t\t\t\tbody: {\n\t\t\t\t\tname: '={{ $value ",
+      "_source": "Credential_credentialFields"
+    },
+    {
+      "displayName": "Credential Type",
+      "name": "credentialTypeName",
+      "type": "string",
+      "description": "The available types depend on nodes installed on the n8n instance. Some built-in types include e.g. 'githubApi', 'notionApi', and 'slackApi'.",
+      "placeholder": "e.g. n8nApi",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "credential"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\trequest: {\n\t\t\t\tbody: {\n\t\t\t\t\ttype: '={{ $value ",
+      "_source": "Credential_credentialFields"
+    },
+    {
+      "displayName": "Data",
+      "name": "data",
+      "type": "json",
+      "description": "A valid JSON object with properties required for this Credential Type. To see the expected format, you can use 'Get Schema' operation.",
+      "placeholder": "// e.g. for n8nApi n{n  \"apiKey\": \"my-n8n-api-key\",n  \"baseUrl\": \"https://<name>.app.n8n.cloud/api/v1\",n}",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "credential"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\t// Validate that the 'data' property is parseable as JSON and\n\t\t\t\t// set it into the request as body.data.\n\t\t\t\tpreSend: [parseAndSetBodyJson('data', 'data')],\n\t\t\t",
+      "_source": "Credential_credentialFields"
+    },
+    {
+      "displayName": "Credential ID",
+      "name": "credentialId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "credential"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Credential_credentialFields"
+    },
+    {
+      "displayName": "Credential Type",
+      "name": "credentialTypeName",
+      "type": "string",
+      "description": "The available types depend on nodes installed on the n8n instance. Some built-in types include e.g. 'githubApi', 'notionApi', and 'slackApi'.",
+      "placeholder": "e.g. n8nApi",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "credential"
+          ],
+          "operation": [
+            "getSchema"
+          ]
+        }
+      },
+      "_operation": "getSchema",
+      "_source": "Credential_credentialFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Get an execution",
+      "value": "get",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "action": "Get an execution",
+          "value": "get",
+          "displayName": "Get",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/executions/{{ $parameter.executionId "
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many executions",
+          "value": "getAll",
+          "displayName": "Get Many",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/executions',\n\t\t\t\t\t"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete an execution",
+          "value": "delete",
+          "displayName": "Delete",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'DELETE',\n\t\t\t\t\t\turl: '=/executions/{{ $parameter.executionId "
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "execution"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/executions/{{ $parameter.executionId ",
+      "_source": "Execution_executionOperations"
+    },
+    {
+      "displayName": "Execution ID",
+      "name": "executionId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "execution"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Execution_executionFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "execution"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Execution_executionFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 250
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "execution"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\trequest: {\n\t\t\t\tqs: {\n\t\t\t\t\tlimit: '={{ $value ",
+      "_source": "Execution_executionFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Workflow to filter the executions by",
+      "placeholder": "Add Filter",
+      "value": "={{ $value || undefined }}",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "description": "Status to filter the executions by",
+          "value": "error",
+          "default": "success",
+          "options": [
+            {
+              "name": "Error",
+              "value": "error",
+              "displayName": "Error"
+            },
+            {
+              "name": "Success",
+              "value": "success",
+              "displayName": "Success"
+            },
+            {
+              "name": "Waiting",
+              "value": "waiting",
+              "displayName": "Waiting"
+            }
+          ],
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tproperty: 'status',\n\t\t\t\t\t\tvalue: '={{ $value "
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "execution"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tproperty: 'workflowId',\n\t\t\t\t\t\tvalue: '={{ $value || undefined ",
+      "_source": "Execution_executionFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to include the detailed execution data",
+      "placeholder": "Add option",
+      "value": "={{ $value }}",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include Execution Details",
+          "name": "activeWorkflows",
+          "type": "boolean",
+          "description": "Whether to include the detailed execution data",
+          "value": "={{ $value }}",
+          "default": false,
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tproperty: 'includeData',\n\t\t\t\t\t\tvalue: '={{ $value "
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "execution"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tproperty: 'includeData',\n\t\t\t\t\t\tvalue: '={{ $value ",
+      "_source": "Execution_executionFields"
+    },
+    {
+      "displayName": "Workflow",
+      "name": "workflowId",
+      "type": "resourceLocator",
+      "description": "Workflow to filter the executions by",
+      "placeholder": "Select a Workflow...",
+      "modes": [
+        {
+          "displayName": "From List",
+          "name": "list",
+          "type": "list",
+          "placeholder": "Select a Workflow...",
+          "typeOptions": {}
+        }
+      ],
+      "typeOptions": {},
+      "_source": "Execution_executionFields"
+    },
+    {
+      "displayName": "Execution ID",
+      "name": "executionId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "execution"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Execution_executionFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to include the detailed execution data",
+      "placeholder": "Add option",
+      "value": "={{ $value }}",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include Execution Details",
+          "name": "activeWorkflows",
+          "type": "boolean",
+          "description": "Whether to include the detailed execution data",
+          "value": "={{ $value }}",
+          "default": false,
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tproperty: 'includeData',\n\t\t\t\t\t\tvalue: '={{ $value "
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "execution"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tproperty: 'includeData',\n\t\t\t\t\t\tvalue: '={{ $value ",
+      "_source": "Execution_executionFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Activate a workflow",
+      "value": "activate",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Activate",
+          "action": "Activate a workflow",
+          "value": "activate",
+          "displayName": "Activate"
+        },
+        {
+          "name": "Create",
+          "action": "Create a workflow",
+          "value": "create",
+          "displayName": "Create",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/workflows',\n\t\t\t\t\t"
+        },
+        {
+          "name": "Deactivate",
+          "action": "Deactivate a workflow",
+          "value": "deactivate",
+          "displayName": "Deactivate"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a workflow",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a workflow",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many workflows",
+          "value": "getAll",
+          "displayName": "Get Many",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/workflows',\n\t\t\t\t\t"
+        },
+        {
+          "name": "Update",
+          "action": "Update a workflow",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/workflows',\n\t\t\t\t\t",
+      "_source": "Workflow_workflowOperations"
+    },
+    {
+      "displayName": "Workflow Object",
+      "name": "workflowObject",
+      "type": "json",
+      "description": "A valid JSON object with required fields: 'name', 'nodes', 'connections' and 'settings'. More information can be found in the <a href=\"https://docs.n8n.io/api/api-reference/#tag/workflow/paths/~1workflows/post\">documentation</a>.",
+      "placeholder": "{n  \"name\": \"My workflow\",n  \"nodes\": [],n  \"connections\": {},n  \"settings\": {}n}",
+      "default": "{ ",
+      "required": true,
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpreSend: [parseAndSetBodyJson('workflowObject'), prepareWorkflowCreateBody],\n\t\t\t",
+      "_source": "Workflow_workflowFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Workflow_workflowFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 250
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\trequest: {\n\t\t\t\tqs: {\n\t\t\t\t\tlimit: '={{ $value ",
+      "_source": "Workflow_workflowFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Include only workflows with these tags",
+      "hint": "Comma separated list of tags (empty value is ignored)",
+      "value": "={{ $value !== \"\" ? $value : undefined }}",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Return Only Active Workflows",
+          "name": "activeWorkflows",
+          "type": "boolean",
+          "default": true,
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tactive: '={{ $value "
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "Include only workflows with these tags",
+          "hint": "Comma separated list of tags (empty value is ignored)",
+          "value": "={{ $value !== \"\" ? $value : undefined }}",
+          "default": "",
+          "routing": "\n\t\t\t\t\t// Only include the 'tags' query parameter if it's non-empty\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tproperty: 'tags',\n\t\t\t\t\t\tvalue: '={{ $value !== \"\" ? $value : undefined "
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "default": "",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tname: '={{ $value "
+        },
+        {
+          "displayName": "Project ID",
+          "name": "projectId",
+          "type": "string",
+          "default": "",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tprojectId: '={{ $value "
+        },
+        {
+          "displayName": "Exclude Pinned Data",
+          "name": "excludePinnedData",
+          "type": "boolean",
+          "description": "Whether to exclude pinned data from the response",
+          "default": false,
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\texcludePinnedData: '={{ $value "
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tactive: '={{ $value ",
+      "_source": "Workflow_workflowFields"
+    },
+    {
+      "displayName": "Workflow Object",
+      "name": "workflowObject",
+      "type": "json",
+      "description": "A valid JSON object with required fields: 'name', 'nodes', 'connections' and 'settings'. More information can be found in the <a href=\"https://docs.n8n.io/api/api-reference/#tag/workflow/paths/~1workflows~1%7bid%7d/put\">documentation</a>.",
+      "placeholder": "{n  \"name\": \"My workflow\",n  \"nodes\": [],n  \"connections\": {},n  \"settings\": {}n}",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpreSend: [parseAndSetBodyJson('workflowObject'), prepareWorkflowUpdateBody],\n\t\t\t",
+      "_source": "Workflow_workflowFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Generate",
+      "description": "Generate a security audit for this n8n instance",
+      "action": "Generate a security audit",
+      "value": "generate",
+      "displayName": "Generate",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/audit',\n\t\t\t\t\t"
+    },
+    {
+      "name": "Create",
+      "action": "Create a credential",
+      "value": "create",
+      "displayName": "Create",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/credentials',\n\t\t\t\t\t"
+    },
+    {
+      "name": "Delete",
+      "action": "Delete a credential",
+      "value": "delete",
+      "displayName": "Delete",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'DELETE',\n\t\t\t\t\t\turl: '=/credentials/{{ $parameter.credentialId "
+    },
+    {
+      "name": "Get Schema",
+      "action": "Get credential data schema for type",
+      "value": "getSchema",
+      "displayName": "Get Schema",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/credentials/schema/{{ $parameter.credentialTypeName "
+    },
+    {
+      "name": "Get",
+      "action": "Get an execution",
+      "value": "get",
+      "displayName": "Get",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/executions/{{ $parameter.executionId "
+    },
+    {
+      "name": "Get Many",
+      "action": "Get many executions",
+      "value": "getAll",
+      "displayName": "Get Many",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/executions',\n\t\t\t\t\t"
+    },
+    {
+      "name": "Activate",
+      "action": "Activate a workflow",
+      "value": "activate",
+      "displayName": "Activate"
+    },
+    {
+      "name": "Deactivate",
+      "action": "Deactivate a workflow",
+      "value": "deactivate",
+      "displayName": "Deactivate"
+    },
+    {
+      "name": "Update",
+      "action": "Update a workflow",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "audit": [
+      {
+        "name": "Generate",
+        "description": "Generate a security audit for this n8n instance",
+        "action": "Generate a security audit",
+        "value": "generate",
+        "displayName": "Generate",
+        "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/audit',\n\t\t\t\t\t"
+      }
+    ],
+    "credential": [
+      {
+        "name": "Create",
+        "action": "Create a credential",
+        "value": "create",
+        "displayName": "Create",
+        "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/credentials',\n\t\t\t\t\t"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a credential",
+        "value": "delete",
+        "displayName": "Delete",
+        "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'DELETE',\n\t\t\t\t\t\turl: '=/credentials/{{ $parameter.credentialId "
+      },
+      {
+        "name": "Get Schema",
+        "action": "Get credential data schema for type",
+        "value": "getSchema",
+        "displayName": "Get Schema",
+        "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/credentials/schema/{{ $parameter.credentialTypeName "
+      }
+    ],
+    "execution": [
+      {
+        "name": "Get",
+        "action": "Get an execution",
+        "value": "get",
+        "displayName": "Get",
+        "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '=/executions/{{ $parameter.executionId "
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many executions",
+        "value": "getAll",
+        "displayName": "Get Many",
+        "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/executions',\n\t\t\t\t\t"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete an execution",
+        "value": "delete",
+        "displayName": "Delete",
+        "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'DELETE',\n\t\t\t\t\t\turl: '=/executions/{{ $parameter.executionId "
+      }
+    ],
+    "workflow": [
+      {
+        "name": "Activate",
+        "action": "Activate a workflow",
+        "value": "activate",
+        "displayName": "Activate"
+      },
+      {
+        "name": "Create",
+        "action": "Create a workflow",
+        "value": "create",
+        "displayName": "Create",
+        "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/workflows',\n\t\t\t\t\t"
+      },
+      {
+        "name": "Deactivate",
+        "action": "Deactivate a workflow",
+        "value": "deactivate",
+        "displayName": "Deactivate"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a workflow",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a workflow",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many workflows",
+        "value": "getAll",
+        "displayName": "Get Many",
+        "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/workflows',\n\t\t\t\t\t"
+      },
+      {
+        "name": "Update",
+        "action": "Update a workflow",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "n8nApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{ $credentials.baseUrl.replace(new RegExp(\"/$\"), \"\") }}",
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ]
+        }
+      }
+    },
+    "additionalOptions": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "audit"
+          ]
+        }
+      }
+    },
+    "name": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "credential"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "credentialTypeName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "credential"
+          ],
+          "operation": [
+            "getSchema"
+          ]
+        }
+      }
+    },
+    "data": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "credential"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "credentialId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "credential"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      }
+    },
+    "executionId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "execution"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "execution"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "workflowObject": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "audit",
+          "name": "Audit",
+          "description": ""
+        },
+        {
+          "value": "credential",
+          "name": "Credential",
+          "description": ""
+        },
+        {
+          "value": "execution",
+          "name": "Execution",
+          "description": ""
+        },
+        {
+          "value": "workflow",
+          "name": "Workflow",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "activate",
+          "name": "Activate",
+          "description": ""
+        },
+        {
+          "value": "create",
+          "name": "Create",
+          "description": ""
+        },
+        {
+          "value": "deactivate",
+          "name": "Deactivate",
+          "description": ""
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": ""
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": ""
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": ""
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": ""
+        }
+      ]
+    },
+    "additionalOptions": {
+      "type": "collection",
+      "displayName": "Additional Options",
+      "name": "additionalOptions",
+      "subProperties": [
+        {
+          "displayName": "Categories",
+          "name": "categories",
+          "type": "multiOptions",
+          "description": "Risk categories to include in the audit",
+          "value": "credentials",
+          "default": [],
+          "options": [
+            {
+              "name": "Credentials",
+              "value": "credentials",
+              "displayName": "Credentials"
+            },
+            {
+              "name": "Database",
+              "value": "database",
+              "displayName": "Database"
+            },
+            {
+              "name": "Filesystem",
+              "value": "filesystem",
+              "displayName": "Filesystem"
+            },
+            {
+              "name": "Instance",
+              "value": "instance",
+              "displayName": "Instance"
+            },
+            {
+              "name": "Nodes",
+              "value": "nodes",
+              "displayName": "Nodes"
+            }
+          ]
+        },
+        {
+          "displayName": "Days Abandoned Workflow",
+          "name": "daysAbandonedWorkflow",
+          "type": "number",
+          "description": "Days for a workflow to be considered abandoned if not executed",
+          "default": 90
+        }
+      ]
+    },
+    "name": {
+      "type": "string",
+      "displayName": "Name",
+      "name": "name"
+    },
+    "credentialTypeName": {
+      "type": "string",
+      "displayName": "Credential Type",
+      "name": "credentialTypeName"
+    },
+    "data": {
+      "type": "json",
+      "displayName": "Data",
+      "name": "data",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      }
+    },
+    "credentialId": {
+      "type": "string",
+      "displayName": "Credential ID",
+      "name": "credentialId"
+    },
+    "executionId": {
+      "type": "string",
+      "displayName": "Execution ID",
+      "name": "executionId"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 250
+      }
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "subProperties": [
+        {
+          "displayName": "Return Only Active Workflows",
+          "name": "activeWorkflows",
+          "type": "boolean",
+          "default": true,
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tactive: '={{ $value "
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "Include only workflows with these tags",
+          "hint": "Comma separated list of tags (empty value is ignored)",
+          "value": "={{ $value !== \"\" ? $value : undefined }}",
+          "default": "",
+          "routing": "\n\t\t\t\t\t// Only include the 'tags' query parameter if it's non-empty\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tproperty: 'tags',\n\t\t\t\t\t\tvalue: '={{ $value !== \"\" ? $value : undefined "
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "default": "",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tname: '={{ $value "
+        },
+        {
+          "displayName": "Project ID",
+          "name": "projectId",
+          "type": "string",
+          "default": "",
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tprojectId: '={{ $value "
+        },
+        {
+          "displayName": "Exclude Pinned Data",
+          "name": "excludePinnedData",
+          "type": "boolean",
+          "description": "Whether to exclude pinned data from the response",
+          "default": false,
+          "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\texcludePinnedData: '={{ $value "
+        }
+      ]
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Include Execution Details",
+          "name": "activeWorkflows",
+          "type": "boolean",
+          "description": "Whether to include the detailed execution data",
+          "value": "={{ $value }}",
+          "default": false,
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tproperty: 'includeData',\n\t\t\t\t\t\tvalue: '={{ $value "
+        }
+      ]
+    },
+    "workflowId": {
+      "type": "resourceLocator",
+      "displayName": "Workflow",
+      "name": "workflowId"
+    },
+    "workflowObject": {
+      "type": "json",
+      "displayName": "Workflow Object",
+      "name": "workflowObject",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      }
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalOptions",
+        "text": "Add Filter"
+      },
+      {
+        "field": "name",
+        "text": "e.g. n8n account"
+      },
+      {
+        "field": "credentialTypeName",
+        "text": "e.g. n8nApi"
+      },
+      {
+        "field": "data",
+        "text": "// e.g. for n8nApi n{n  \"apiKey\": \"my-n8n-api-key\",n  \"baseUrl\": \"https://<name>.app.n8n.cloud/api/v1\",n}"
+      },
+      {
+        "field": "credentialTypeName",
+        "text": "e.g. n8nApi"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "workflowId",
+        "text": "Select a Workflow..."
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "workflowObject",
+        "text": "{n  \"name\": \"My workflow\",n  \"nodes\": [],n  \"connections\": {},n  \"settings\": {}n}"
+      },
+      {
+        "field": "workflowObject",
+        "text": "{n  \"name\": \"My workflow\",n  \"nodes\": [],n  \"connections\": {},n  \"settings\": {}n}"
+      }
+    ],
+    "hints": [
+      {
+        "field": "filters",
+        "text": "Comma separated list of tags (empty value is ignored)"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

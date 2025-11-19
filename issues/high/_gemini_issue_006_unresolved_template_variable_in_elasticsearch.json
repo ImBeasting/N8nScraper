@@ -1,0 +1,30 @@
+{
+  "issue_id": "_gemini_issue_006",
+  "title": "Unresolved template variable in `elasticsearch_documentation.md`",
+  "severity": "high",
+  "status": "new",
+  "priority": 4,
+  "metadata": {
+    "created_at": "2025-11-11T11:00:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "Elasticsearch"
+  },
+  "description": {
+    "problem": "The final markdown for the Elasticsearch node contains an unresolved and malformed template variable.",
+    "impact": "HIGH - The documentation for API endpoints is unreadable and incorrect. This prevents a user or an AI from understanding how to interact with the node's API. It also indicates a systemic issue in the template rendering logic that might affect other nodes.",
+    "root_cause": "The `n8n_node_extractor.py` script's template substitution logic is failing to correctly process a complex template variable that includes a regex and a backtick. The problematic string is not being evaluated and is instead being partially rendered as a literal string into the final markdown file.",
+    "evidence": [
+      "File: `extracted_docs/elasticsearch_documentation.md`",
+      "Corrupted Snippet under 'API Patterns':\n```markdown\n**Common Endpoints:**\n- `${baseUrl.replace(///$/, '`')}\n- `${baseUrl.replace(///$/, '`')}\n```",
+      "The `validation_report.json` also flagged this file as containing template variables."
+    ],
+    "fix_approach": "The fix needs to be applied in the markdown generation part of `n8n_node_extractor.py`.\n1. Identify the function responsible for replacing template variables when generating the markdown file.\n2. The current replacement logic is likely too simple and does not correctly handle escaped characters, backticks, or complex JavaScript expressions within the templates.\n3. The logic should be improved to properly evaluate these expressions before writing the content to the `.md` file. This might involve using a more robust templating engine or carefully escaping the content before substitution.\n4. A potential quick fix could be to identify this specific problematic variable and replace it with a placeholder like '[base_url]' if full evaluation is too complex to implement immediately."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

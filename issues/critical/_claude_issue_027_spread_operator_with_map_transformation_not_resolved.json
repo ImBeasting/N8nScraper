@@ -1,0 +1,74 @@
+{
+  "issue_id": "_claude_issue_027",
+  "title": "Spread operators with .map() transformations not resolved",
+  "severity": "critical",
+  "status": "resolved",
+  "priority": 1,
+  "metadata": {
+    "created_at": "2025-11-11T00:00:00Z",
+    "created_by": "claude_code",
+    "affected_nodes": "HTTP Request (11 AI-optimization properties missing), potentially 20+ nodes with similar patterns"
+  },
+  "description": {
+    "problem": "Spread operators that include .map() array transformations are not resolved, causing complete loss of properties defined through this pattern",
+    "impact": "CRITICAL - HTTP Request node missing 11 AI-specific optimization properties (optimizeResponse, responseType, dataField, fieldsToInclude, fields, cssSelector, onlyContent, elementsToOmit, truncateResponse, maxLength, etc.). These properties enable LLM tool optimization, HTML parsing, JSON field filtering, and content truncation - essential for AI agent use cases.",
+    "root_cause": "The spread operator resolution in TypeScriptParser only handles simple array spreads (...arrayName) but does NOT handle:\n1. Array method chains: ...arrayName.map()\n2. Arrow functions within spread: ...[].map((item) => ({...item, modifications}))\n3. Property transformations in spread context\n4. Imports from external utility modules combined with transformations",
+    "evidence": [
+      "HTTP Request source (Description.ts lines 1189-1195):",
+      "  ...optimizeResponseProperties.map((prop) => ({",
+      "    ...prop,",
+      "    displayOptions: {",
+      "      ...prop.displayOptions,",
+      "      show: { ...prop.displayOptions?.show, '@tool': [true] },",
+      "    },",
+      "  })),",
+      "",
+      "Where optimizeResponseProperties is imported from:",
+      "  import { optimizeResponseProperties } from './shared/optimizeResponse'",
+      "",
+      "optimizeResponse.ts exports 11 properties:",
+      "  - optimizeResponse (boolean)",
+      "  - responseType (options: json, html, text)",
+      "  - dataField (string)",
+      "  - fieldsToInclude (options)",
+      "  - fields (string)",
+      "  - cssSelector (string)",
+      "  - onlyContent (boolean)",
+      "  - elementsToOmit (string)",
+      "  - truncateResponse (boolean)",
+      "  - maxLength (number)",
+      "  - (1+ more)",
+      "",
+      "HTTP Request extracted properties count:",
+      "  jq '.properties | length' extracted_docs/http_request_data.json",
+      "  Result: 32 (Expected: ~44 including 11 from spread)",
+      "",
+      "Verification - no AI optimization properties found:",
+      "  jq '.properties[] | select(.name == \"optimizeResponse\")' extracted_docs/http_request_data.json",
+      "  Result: (empty - property missing)",
+      "",
+      "Pattern also seen in other nodes with utility imports and transformations"
+    ],
+    "fix_approach": "1. Enhance TypeScriptParser._resolve_spreads() to detect .map() method chains\n2. When pattern ...arrayName.map((item) => ...) is detected:\n   a. First resolve the base array (arrayName) as currently done\n   b. Parse the transformation function to understand modifications\n   c. Apply transformations to each property in the array\n   d. Return transformed properties\n3. Implement basic transformation parsing:\n   - Detect property spreading: ...prop\n   - Detect property addition: newKey: value\n   - Detect nested object spreading: displayOptions: {...prop.displayOptions, ...}\n4. For complex transformations, fallback to:\n   - Extract the base array without transformation\n   - Add metadata flag: '_transformation_not_applied': 'map function'\n5. Add function: _apply_map_transformation(properties, map_function_code)\n6. Test on: HTTP Request (11 properties), any other nodes using similar patterns\n7. Validation:\n   - HTTP Request should have 43-44 properties (up from 32)\n   - Properties like 'optimizeResponse' should appear\n   - Property count increase: +11 for HTTP Request, +50-100 across all nodes"
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  },
+  "audit_note": "Status reverted from \"resolved\" to \"new\" after 2025-11-12 audit revealed issue not actually fixed",
+  "resolved_by": "claude_code",
+  "resolved_at": "2025-11-13T15:53:12.895054Z",
+  "resolution": {
+    "approach": "Enhanced TypeScriptParser to detect and apply .map() transformations on spread operators",
+    "changes": [
+      "Modified _split_into_objects() to capture map transformation code along with base array name",
+      "Added _apply_map_transformation() helper to apply displayOptions modifications",
+      "Updated _resolve_spreads() to apply transformations when resolving properties",
+      "Implemented pattern detection for @tool displayOptions injection"
+    ],
+    "verification": "HTTP Request node now has 42 properties (up from 32), including 10 AI optimization properties with @tool displayOption: optimizeResponse, responseType, dataField, fieldsToInclude, fields, cssSelector, onlyContent, elementsToOmit, truncateResponse, maxLength"
+  }
+}

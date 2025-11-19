@@ -1,0 +1,361 @@
+{
+  "node_info": {
+    "icon": {
+      "light": "file:mailchimp.svg",
+      "dark": "file:mailchimp.dark.svg"
+    },
+    "defaults": {
+      "name": "Mailchimp Trigger"
+    },
+    "inputs": [],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "trigger"
+    ],
+    "authentication": [
+      {
+        "name": "mailchimpApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "apiKey"
+            ]
+          }
+        }
+      },
+      {
+        "name": "mailchimpOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getLists",
+      "for",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Mailchimp Trigger",
+    "name": "mailchimpTrigger",
+    "description": "Handle Mailchimp events via webhooks",
+    "subtitle": "",
+    "version": "1",
+    "node_type": "trigger",
+    "webhooks": [
+      {
+        "name": "setup",
+        "httpMethod": "GET",
+        "responseMode": "onReceived",
+        "path": "webhook"
+      },
+      {
+        "name": "default",
+        "httpMethod": "POST",
+        "responseMode": "onReceived",
+        "path": "webhook"
+      }
+    ]
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.mailchimpTrigger",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Marketing",
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/mailchimp/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.mailchimptrigger/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "apiKey",
+      "default": "apiKey",
+      "options": [
+        {
+          "name": "API Key",
+          "value": "apiKey",
+          "displayName": "Api Key"
+        },
+        {
+          "name": "OAuth2",
+          "value": "oAuth2",
+          "displayName": "Oauth2"
+        }
+      ]
+    },
+    {
+      "displayName": "List Name or ID",
+      "name": "list",
+      "type": "options",
+      "description": "The list that is gonna fire the event. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "options": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getLists"
+      }
+    },
+    {
+      "displayName": "Events",
+      "name": "events",
+      "type": "multiOptions",
+      "description": "The events that can trigger the webhook and whether they are enabled",
+      "value": "campaign",
+      "default": [],
+      "required": true,
+      "options": [
+        {
+          "name": "Campaign Sent",
+          "description": "Whether the webhook is triggered when a campaign is sent or cancelled",
+          "value": "campaign",
+          "displayName": "Campaign Sent"
+        },
+        {
+          "name": "Cleaned",
+          "description": "Whether the webhook is triggered when a subscriber's email address is cleaned from the list",
+          "value": "cleaned",
+          "displayName": "Cleaned"
+        },
+        {
+          "name": "Email Address Updated",
+          "description": "Whether the webhook is triggered when a subscriber's email address is changed",
+          "value": "upemail",
+          "displayName": "Email Address Updated"
+        },
+        {
+          "name": "Profile Updated",
+          "description": "Whether the webhook is triggered when a subscriber's profile is updated",
+          "value": "profile",
+          "displayName": "Profile Updated"
+        },
+        {
+          "name": "Subscribe",
+          "description": "Whether the webhook is triggered when a list subscriber is added",
+          "value": "subscribe",
+          "displayName": "Subscribe"
+        },
+        {
+          "name": "Unsubscribe",
+          "description": "Whether the webhook is triggered when a list member unsubscribes",
+          "value": "unsubscribe",
+          "displayName": "Unsubscribe"
+        }
+      ]
+    },
+    {
+      "displayName": "Sources",
+      "name": "sources",
+      "type": "multiOptions",
+      "description": "The possible sources of any events that can trigger the webhook and whether they are enabled",
+      "value": "user",
+      "default": [],
+      "required": true,
+      "options": [
+        {
+          "name": "User",
+          "description": "Whether the webhook is triggered by subscriber-initiated actions",
+          "value": "user",
+          "displayName": "User"
+        },
+        {
+          "name": "Admin",
+          "description": "Whether the webhook is triggered by admin-initiated actions in the web interface",
+          "value": "admin",
+          "displayName": "Admin"
+        },
+        {
+          "name": "API",
+          "description": "Whether the webhook is triggered by actions initiated via the API",
+          "value": "api",
+          "displayName": "Api"
+        }
+      ]
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "mailchimpApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "apiKey"
+          ]
+        }
+      }
+    },
+    {
+      "name": "mailchimpOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [],
+  "validation_rules": {
+    "list": {
+      "required": true
+    },
+    "events": {
+      "required": true
+    },
+    "sources": {
+      "required": true
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "apiKey",
+          "name": "API Key",
+          "description": ""
+        },
+        {
+          "value": "oAuth2",
+          "name": "OAuth2",
+          "description": ""
+        }
+      ]
+    },
+    "list": {
+      "type": "options",
+      "displayName": "List Name or ID",
+      "name": "list",
+      "typeOptions": {
+        "loadOptionsMethod": "getLists"
+      },
+      "possibleValues": []
+    },
+    "events": {
+      "type": "multiOptions",
+      "displayName": "Events",
+      "name": "events",
+      "possibleValues": [
+        {
+          "value": "campaign",
+          "name": "Campaign Sent",
+          "description": "Whether the webhook is triggered when a campaign is sent or cancelled"
+        },
+        {
+          "value": "cleaned",
+          "name": "Cleaned",
+          "description": "Whether the webhook is triggered when a subscriber's email address is cleaned from the list"
+        },
+        {
+          "value": "upemail",
+          "name": "Email Address Updated",
+          "description": "Whether the webhook is triggered when a subscriber's email address is changed"
+        },
+        {
+          "value": "profile",
+          "name": "Profile Updated",
+          "description": "Whether the webhook is triggered when a subscriber's profile is updated"
+        },
+        {
+          "value": "subscribe",
+          "name": "Subscribe",
+          "description": "Whether the webhook is triggered when a list subscriber is added"
+        },
+        {
+          "value": "unsubscribe",
+          "name": "Unsubscribe",
+          "description": "Whether the webhook is triggered when a list member unsubscribes"
+        }
+      ]
+    },
+    "sources": {
+      "type": "multiOptions",
+      "displayName": "Sources",
+      "name": "sources",
+      "possibleValues": [
+        {
+          "value": "user",
+          "name": "User",
+          "description": "Whether the webhook is triggered by subscriber-initiated actions"
+        },
+        {
+          "value": "admin",
+          "name": "Admin",
+          "description": "Whether the webhook is triggered by admin-initiated actions in the web interface"
+        },
+        {
+          "value": "api",
+          "name": "API",
+          "description": "Whether the webhook is triggered by actions initiated via the API"
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [
+      "GET"
+    ],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

@@ -1,0 +1,1622 @@
+{
+  "node_info": {
+    "icon": "file:zoom.svg",
+    "defaults": {
+      "name": "Zoom"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "zoomApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "accessToken"
+            ]
+          }
+        }
+      },
+      {
+        "name": "zoomOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getTimezones",
+      "for",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Zoom",
+    "name": "zoom",
+    "description": "Consume Zoom API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.zoom",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/zoom/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.zoom/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "accessToken",
+      "default": "accessToken",
+      "options": [
+        {
+          "name": "Access Token",
+          "value": "accessToken",
+          "displayName": "Access Token"
+        },
+        {
+          "name": "OAuth2",
+          "value": "oAuth2",
+          "displayName": "Oauth2"
+        }
+      ]
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "meeting",
+      "default": "meeting",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Meeting",
+          "value": "meeting",
+          "displayName": "Meeting"
+        },
+        {
+          "name": "Meeting Registrant",
+          "value": "meetingRegistrant",
+          "displayName": "Meeting Registrant"
+        },
+        {
+          "name": "Webinar",
+          "value": "webinar",
+          "displayName": "Webinar"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a meeting",
+      "action": "Create a meeting",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a meeting",
+          "action": "Create a meeting",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a meeting",
+          "action": "Delete a meeting",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Retrieve a meeting",
+          "action": "Get a meeting",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Retrieve many meetings",
+          "action": "Get many meetings",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update a meeting",
+          "action": "Update a meeting",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ]
+        }
+      },
+      "_source": "Meeting_meetingOperations"
+    },
+    {
+      "displayName": "Topic",
+      "name": "topic",
+      "type": "string",
+      "description": "Topic of the meeting",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Meeting agenda",
+      "placeholder": "Add Field",
+      "value": "both",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Agenda",
+          "name": "agenda",
+          "type": "string",
+          "description": "Meeting agenda",
+          "default": ""
+        },
+        {
+          "displayName": "Duration",
+          "name": "duration",
+          "type": "number",
+          "description": "Meeting duration (minutes)",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0
+          }
+        },
+        {
+          "displayName": "Password",
+          "name": "password",
+          "type": "string",
+          "description": "Password to join the meeting with maximum 10 characters",
+          "default": "",
+          "typeOptions": {
+            "password": true
+          }
+        },
+        {
+          "displayName": "Schedule For",
+          "name": "scheduleFor",
+          "type": "string",
+          "description": "Schedule meeting for someone else from your account, provide their email ID",
+          "default": ""
+        },
+        {
+          "displayName": "Settings",
+          "name": "settings",
+          "type": "collection",
+          "description": "Determine how participants can join audio portion of the meeting",
+          "placeholder": "Add Setting",
+          "value": "both",
+          "default": {},
+          "options": [
+            {
+              "displayName": "Audio",
+              "name": "audio",
+              "type": "options",
+              "description": "Determine how participants can join audio portion of the meeting",
+              "value": "both",
+              "default": "both",
+              "options": [
+                {
+                  "name": "Both Telephony and VoiP",
+                  "value": "both",
+                  "displayName": "Both Telephony And Voi P"
+                },
+                {
+                  "name": "Telephony",
+                  "value": "telephony",
+                  "displayName": "Telephony"
+                },
+                {
+                  "name": "VOIP",
+                  "value": "voip",
+                  "displayName": "Voip"
+                }
+              ]
+            },
+            {
+              "displayName": "Alternative Hosts",
+              "name": "alternativeHosts",
+              "type": "string",
+              "description": "Alternative hosts email IDs",
+              "default": ""
+            },
+            {
+              "displayName": "Auto Recording",
+              "name": "autoRecording",
+              "type": "options",
+              "value": "local",
+              "default": "none",
+              "options": [
+                {
+                  "name": "Record on Local",
+                  "value": "local",
+                  "displayName": "Record On Local"
+                },
+                {
+                  "name": "Record on Cloud",
+                  "value": "cloud",
+                  "displayName": "Record On Cloud"
+                },
+                {
+                  "name": "Disabled",
+                  "value": "none",
+                  "displayName": "Disabled"
+                }
+              ]
+            },
+            {
+              "displayName": "Host Meeting in China",
+              "name": "cnMeeting",
+              "type": "boolean",
+              "default": false
+            },
+            {
+              "displayName": "Host Meeting in India",
+              "name": "inMeeting",
+              "type": "boolean",
+              "default": false
+            },
+            {
+              "displayName": "Host Video",
+              "name": "hostVideo",
+              "type": "boolean",
+              "description": "Whether to start a video when host joins the meeting",
+              "default": false
+            },
+            {
+              "displayName": "Join Before Host",
+              "name": "joinBeforeHost",
+              "type": "boolean",
+              "description": "Whether to allow participants to join the meeting before host starts it",
+              "default": false
+            },
+            {
+              "displayName": "Muting Upon Entry",
+              "name": "muteUponEntry",
+              "type": "boolean",
+              "description": "Whether to mute participants upon entry",
+              "default": false
+            },
+            {
+              "displayName": "Participant Video",
+              "name": "participantVideo",
+              "type": "boolean",
+              "description": "Whether to start a video when participant joins the meeting",
+              "default": false
+            },
+            {
+              "displayName": "Registration Type",
+              "name": "registrationType",
+              "type": "options",
+              "description": "Registration type. Used for recurring meetings with fixed time only.",
+              "default": 1,
+              "options": [
+                {
+                  "name": "Attendees register once and can attend any of the occurrences",
+                  "displayName": "Attendees Register Once And Can Attend Any Of The Occurrences"
+                },
+                {
+                  "name": "Attendees need to register for every occurrence",
+                  "displayName": "Attendees Need To Register For Every Occurrence"
+                },
+                {
+                  "name": "Attendees register once and can choose one or more occurrences to attend",
+                  "displayName": "Attendees Register Once And Can Choose One Or More Occurrences To Attend"
+                }
+              ]
+            },
+            {
+              "displayName": "Watermark",
+              "name": "watermark",
+              "type": "boolean",
+              "description": "Whether to add a watermark when viewing a shared screen",
+              "default": false
+            }
+          ]
+        },
+        {
+          "displayName": "Start Time",
+          "name": "startTime",
+          "type": "dateTime",
+          "description": "Start time should be used only for scheduled or recurring meetings with fixed time",
+          "default": ""
+        },
+        {
+          "displayName": "Timezone Name or ID",
+          "name": "timeZone",
+          "type": "options",
+          "description": "Time zone used in the response. The default is the time zone of the calendar. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getTimezones"
+          }
+        },
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "options",
+          "description": "Meeting type",
+          "default": 2,
+          "options": [
+            {
+              "name": "Instant Meeting",
+              "displayName": "Instant Meeting"
+            },
+            {
+              "name": "Scheduled Meeting",
+              "displayName": "Scheduled Meeting"
+            },
+            {
+              "name": "Recurring Meeting with No Fixed Time",
+              "displayName": "Recurring Meeting With No Fixed Time"
+            },
+            {
+              "name": "Recurring Meeting with Fixed Time",
+              "displayName": "Recurring Meeting With Fixed Time"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "minValue": 0
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "ID",
+      "name": "meetingId",
+      "type": "string",
+      "description": "Meeting ID",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "To view meeting details of a particular occurrence of the recurring meeting",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Occurrence ID",
+          "name": "occurrenceId",
+          "type": "string",
+          "description": "To view meeting details of a particular occurrence of the recurring meeting",
+          "default": ""
+        },
+        {
+          "displayName": "Show Previous Occurrences",
+          "name": "showPreviousOccurrences",
+          "type": "boolean",
+          "description": "Whether to view meeting details of all previous occurrences of the recurring meeting",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 30,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 300
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "meeting"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "This includes all valid past meetings, live meetings and upcoming scheduled meetings",
+      "placeholder": "Add Filter",
+      "value": "scheduled",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "options",
+          "description": "This includes all valid past meetings, live meetings and upcoming scheduled meetings",
+          "value": "scheduled",
+          "default": "live",
+          "options": [
+            {
+              "name": "Scheduled",
+              "description": "This includes all valid past meetings, live meetings and upcoming scheduled meetings",
+              "value": "scheduled",
+              "displayName": "Scheduled"
+            },
+            {
+              "name": "Live",
+              "description": "All ongoing meetings",
+              "value": "live",
+              "displayName": "Live"
+            },
+            {
+              "name": "Upcoming",
+              "description": "All upcoming meetings including live meetings",
+              "value": "upcoming",
+              "displayName": "Upcoming"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "ID",
+      "name": "meetingId",
+      "type": "string",
+      "description": "Meeting ID",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Meeting occurrence ID",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Occurrence ID",
+          "name": "occurrenceId",
+          "type": "string",
+          "description": "Meeting occurrence ID",
+          "default": ""
+        },
+        {
+          "displayName": "Schedule Reminder",
+          "name": "scheduleForReminder",
+          "type": "boolean",
+          "description": "Whether to notify hosts and alternative hosts about meeting cancellation via email",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "ID",
+      "name": "meetingId",
+      "type": "string",
+      "description": "Meeting ID",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Meeting agenda",
+      "placeholder": "Add Field",
+      "value": "both",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Agenda",
+          "name": "agenda",
+          "type": "string",
+          "description": "Meeting agenda",
+          "default": ""
+        },
+        {
+          "displayName": "Duration",
+          "name": "duration",
+          "type": "number",
+          "description": "Meeting duration (minutes)",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0
+          }
+        },
+        {
+          "displayName": "Password",
+          "name": "password",
+          "type": "string",
+          "description": "Password to join the meeting with maximum 10 characters",
+          "default": "",
+          "typeOptions": {
+            "password": true
+          }
+        },
+        {
+          "displayName": "Schedule For",
+          "name": "scheduleFor",
+          "type": "string",
+          "description": "Schedule meeting for someone else from your account, provide their email ID",
+          "default": ""
+        },
+        {
+          "displayName": "Settings",
+          "name": "settings",
+          "type": "collection",
+          "description": "Determine how participants can join audio portion of the meeting",
+          "placeholder": "Add Setting",
+          "value": "both",
+          "default": {},
+          "options": [
+            {
+              "displayName": "Audio",
+              "name": "audio",
+              "type": "options",
+              "description": "Determine how participants can join audio portion of the meeting",
+              "value": "both",
+              "default": "both",
+              "options": [
+                {
+                  "name": "Both Telephony and VoiP",
+                  "value": "both",
+                  "displayName": "Both Telephony And Voi P"
+                },
+                {
+                  "name": "Telephony",
+                  "value": "telephony",
+                  "displayName": "Telephony"
+                },
+                {
+                  "name": "VOIP",
+                  "value": "voip",
+                  "displayName": "Voip"
+                }
+              ]
+            },
+            {
+              "displayName": "Alternative Hosts",
+              "name": "alternativeHosts",
+              "type": "string",
+              "description": "Alternative hosts email IDs",
+              "default": ""
+            },
+            {
+              "displayName": "Auto Recording",
+              "name": "autoRecording",
+              "type": "options",
+              "value": "local",
+              "default": "none",
+              "options": [
+                {
+                  "name": "Record on Local",
+                  "value": "local",
+                  "displayName": "Record On Local"
+                },
+                {
+                  "name": "Record on Cloud",
+                  "value": "cloud",
+                  "displayName": "Record On Cloud"
+                },
+                {
+                  "name": "Disabled",
+                  "value": "none",
+                  "displayName": "Disabled"
+                }
+              ]
+            },
+            {
+              "displayName": "Host Meeting in China",
+              "name": "cnMeeting",
+              "type": "boolean",
+              "default": false
+            },
+            {
+              "displayName": "Host Meeting in India",
+              "name": "inMeeting",
+              "type": "boolean",
+              "default": false
+            },
+            {
+              "displayName": "Host Video",
+              "name": "hostVideo",
+              "type": "boolean",
+              "description": "Whether to start a video when host joins the meeting",
+              "default": false
+            },
+            {
+              "displayName": "Join Before Host",
+              "name": "joinBeforeHost",
+              "type": "boolean",
+              "description": "Whether to allow participants to join the meeting before host starts it",
+              "default": false
+            },
+            {
+              "displayName": "Muting Upon Entry",
+              "name": "muteUponEntry",
+              "type": "boolean",
+              "description": "Whether to mute participants upon entry",
+              "default": false
+            },
+            {
+              "displayName": "Participant Video",
+              "name": "participantVideo",
+              "type": "boolean",
+              "description": "Whether to start a video when participant joins the meeting",
+              "default": false
+            },
+            {
+              "displayName": "Registration Type",
+              "name": "registrationType",
+              "type": "options",
+              "description": "Registration type. Used for recurring meetings with fixed time only.",
+              "default": 1,
+              "options": [
+                {
+                  "name": "Attendees Register Once and Can Attend Any of the Occurrences",
+                  "displayName": "Attendees Register Once And Can Attend Any Of The Occurrences"
+                },
+                {
+                  "name": "Attendees Need to Register for Every Occurrence",
+                  "displayName": "Attendees Need To Register For Every Occurrence"
+                },
+                {
+                  "name": "Attendees Register Once and Can Choose One or More Occurrences to Attend",
+                  "displayName": "Attendees Register Once And Can Choose One Or More Occurrences To Attend"
+                }
+              ]
+            },
+            {
+              "displayName": "Watermark",
+              "name": "watermark",
+              "type": "boolean",
+              "description": "Whether to add watermark when viewing a shared screen",
+              "default": false
+            }
+          ]
+        },
+        {
+          "displayName": "Start Time",
+          "name": "startTime",
+          "type": "dateTime",
+          "description": "Start time should be used only for scheduled or recurring meetings with fixed time",
+          "default": ""
+        },
+        {
+          "displayName": "Timezone Name or ID",
+          "name": "timeZone",
+          "type": "options",
+          "description": "Time zone used in the response. The default is the time zone of the calendar. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getTimezones"
+          }
+        },
+        {
+          "displayName": "Topic",
+          "name": "topic",
+          "type": "string",
+          "description": "Meeting topic",
+          "default": ""
+        },
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "options",
+          "description": "Meeting type",
+          "default": 2,
+          "options": [
+            {
+              "name": "Instant Meeting",
+              "displayName": "Instant Meeting"
+            },
+            {
+              "name": "Scheduled Meeting",
+              "displayName": "Scheduled Meeting"
+            },
+            {
+              "name": "Recurring Meeting with No Fixed Time",
+              "displayName": "Recurring Meeting With No Fixed Time"
+            },
+            {
+              "name": "Recurring Meeting with Fixed Time",
+              "displayName": "Recurring Meeting With Fixed Time"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "minValue": 0
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Meeting_meetingFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a meeting",
+      "action": "Create a meeting",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a meeting",
+      "action": "Delete a meeting",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Retrieve a meeting",
+      "action": "Get a meeting",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Retrieve many meetings",
+      "action": "Get many meetings",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "description": "Update a meeting",
+      "action": "Update a meeting",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "meeting": [
+      {
+        "name": "Create",
+        "description": "Create a meeting",
+        "action": "Create a meeting",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a meeting",
+        "action": "Delete a meeting",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Retrieve a meeting",
+        "action": "Get a meeting",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Retrieve many meetings",
+        "action": "Get many meetings",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update a meeting",
+        "action": "Update a meeting",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "zoomApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "accessToken"
+          ]
+        }
+      }
+    },
+    {
+      "name": "zoomOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ]
+        }
+      }
+    },
+    "topic": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      }
+    },
+    "meetingId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "meeting"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "meeting"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "accessToken",
+          "name": "Access Token",
+          "description": ""
+        },
+        {
+          "value": "oAuth2",
+          "name": "OAuth2",
+          "description": ""
+        }
+      ]
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "meeting",
+          "name": "Meeting",
+          "description": ""
+        },
+        {
+          "value": "meetingRegistrant",
+          "name": "Meeting Registrant",
+          "description": ""
+        },
+        {
+          "value": "webinar",
+          "name": "Webinar",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a meeting"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a meeting"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Retrieve a meeting"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Retrieve many meetings"
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": "Update a meeting"
+        }
+      ]
+    },
+    "topic": {
+      "type": "string",
+      "displayName": "Topic",
+      "name": "topic"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Occurrence ID",
+          "name": "occurrenceId",
+          "type": "string",
+          "description": "Meeting occurrence ID",
+          "default": ""
+        },
+        {
+          "displayName": "Schedule Reminder",
+          "name": "scheduleForReminder",
+          "type": "boolean",
+          "description": "Whether to notify hosts and alternative hosts about meeting cancellation via email",
+          "default": false
+        }
+      ]
+    },
+    "meetingId": {
+      "type": "string",
+      "displayName": "ID",
+      "name": "meetingId"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 300
+      }
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "subProperties": [
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "options",
+          "description": "This includes all valid past meetings, live meetings and upcoming scheduled meetings",
+          "value": "scheduled",
+          "default": "live",
+          "options": [
+            {
+              "name": "Scheduled",
+              "description": "This includes all valid past meetings, live meetings and upcoming scheduled meetings",
+              "value": "scheduled",
+              "displayName": "Scheduled"
+            },
+            {
+              "name": "Live",
+              "description": "All ongoing meetings",
+              "value": "live",
+              "displayName": "Live"
+            },
+            {
+              "name": "Upcoming",
+              "description": "All upcoming meetings including live meetings",
+              "value": "upcoming",
+              "displayName": "Upcoming"
+            }
+          ]
+        }
+      ]
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "typeOptions": {
+        "minValue": 0
+      },
+      "subProperties": [
+        {
+          "displayName": "Agenda",
+          "name": "agenda",
+          "type": "string",
+          "description": "Meeting agenda",
+          "default": ""
+        },
+        {
+          "displayName": "Duration",
+          "name": "duration",
+          "type": "number",
+          "description": "Meeting duration (minutes)",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0
+          }
+        },
+        {
+          "displayName": "Password",
+          "name": "password",
+          "type": "string",
+          "description": "Password to join the meeting with maximum 10 characters",
+          "default": "",
+          "typeOptions": {
+            "password": true
+          }
+        },
+        {
+          "displayName": "Schedule For",
+          "name": "scheduleFor",
+          "type": "string",
+          "description": "Schedule meeting for someone else from your account, provide their email ID",
+          "default": ""
+        },
+        {
+          "displayName": "Settings",
+          "name": "settings",
+          "type": "collection",
+          "description": "Determine how participants can join audio portion of the meeting",
+          "placeholder": "Add Setting",
+          "value": "both",
+          "default": {},
+          "options": [
+            {
+              "displayName": "Audio",
+              "name": "audio",
+              "type": "options",
+              "description": "Determine how participants can join audio portion of the meeting",
+              "value": "both",
+              "default": "both",
+              "options": [
+                {
+                  "name": "Both Telephony and VoiP",
+                  "value": "both",
+                  "displayName": "Both Telephony And Voi P"
+                },
+                {
+                  "name": "Telephony",
+                  "value": "telephony",
+                  "displayName": "Telephony"
+                },
+                {
+                  "name": "VOIP",
+                  "value": "voip",
+                  "displayName": "Voip"
+                }
+              ]
+            },
+            {
+              "displayName": "Alternative Hosts",
+              "name": "alternativeHosts",
+              "type": "string",
+              "description": "Alternative hosts email IDs",
+              "default": ""
+            },
+            {
+              "displayName": "Auto Recording",
+              "name": "autoRecording",
+              "type": "options",
+              "value": "local",
+              "default": "none",
+              "options": [
+                {
+                  "name": "Record on Local",
+                  "value": "local",
+                  "displayName": "Record On Local"
+                },
+                {
+                  "name": "Record on Cloud",
+                  "value": "cloud",
+                  "displayName": "Record On Cloud"
+                },
+                {
+                  "name": "Disabled",
+                  "value": "none",
+                  "displayName": "Disabled"
+                }
+              ]
+            },
+            {
+              "displayName": "Host Meeting in China",
+              "name": "cnMeeting",
+              "type": "boolean",
+              "default": false
+            },
+            {
+              "displayName": "Host Meeting in India",
+              "name": "inMeeting",
+              "type": "boolean",
+              "default": false
+            },
+            {
+              "displayName": "Host Video",
+              "name": "hostVideo",
+              "type": "boolean",
+              "description": "Whether to start a video when host joins the meeting",
+              "default": false
+            },
+            {
+              "displayName": "Join Before Host",
+              "name": "joinBeforeHost",
+              "type": "boolean",
+              "description": "Whether to allow participants to join the meeting before host starts it",
+              "default": false
+            },
+            {
+              "displayName": "Muting Upon Entry",
+              "name": "muteUponEntry",
+              "type": "boolean",
+              "description": "Whether to mute participants upon entry",
+              "default": false
+            },
+            {
+              "displayName": "Participant Video",
+              "name": "participantVideo",
+              "type": "boolean",
+              "description": "Whether to start a video when participant joins the meeting",
+              "default": false
+            },
+            {
+              "displayName": "Registration Type",
+              "name": "registrationType",
+              "type": "options",
+              "description": "Registration type. Used for recurring meetings with fixed time only.",
+              "default": 1,
+              "options": [
+                {
+                  "name": "Attendees Register Once and Can Attend Any of the Occurrences",
+                  "displayName": "Attendees Register Once And Can Attend Any Of The Occurrences"
+                },
+                {
+                  "name": "Attendees Need to Register for Every Occurrence",
+                  "displayName": "Attendees Need To Register For Every Occurrence"
+                },
+                {
+                  "name": "Attendees Register Once and Can Choose One or More Occurrences to Attend",
+                  "displayName": "Attendees Register Once And Can Choose One Or More Occurrences To Attend"
+                }
+              ]
+            },
+            {
+              "displayName": "Watermark",
+              "name": "watermark",
+              "type": "boolean",
+              "description": "Whether to add watermark when viewing a shared screen",
+              "default": false
+            }
+          ]
+        },
+        {
+          "displayName": "Start Time",
+          "name": "startTime",
+          "type": "dateTime",
+          "description": "Start time should be used only for scheduled or recurring meetings with fixed time",
+          "default": ""
+        },
+        {
+          "displayName": "Timezone Name or ID",
+          "name": "timeZone",
+          "type": "options",
+          "description": "Time zone used in the response. The default is the time zone of the calendar. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getTimezones"
+          }
+        },
+        {
+          "displayName": "Topic",
+          "name": "topic",
+          "type": "string",
+          "description": "Meeting topic",
+          "default": ""
+        },
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "options",
+          "description": "Meeting type",
+          "default": 2,
+          "options": [
+            {
+              "name": "Instant Meeting",
+              "displayName": "Instant Meeting"
+            },
+            {
+              "name": "Scheduled Meeting",
+              "displayName": "Scheduled Meeting"
+            },
+            {
+              "name": "Recurring Meeting with No Fixed Time",
+              "displayName": "Recurring Meeting With No Fixed Time"
+            },
+            {
+              "name": "Recurring Meeting with Fixed Time",
+              "displayName": "Recurring Meeting With Fixed Time"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

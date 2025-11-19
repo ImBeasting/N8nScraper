@@ -1,0 +1,60 @@
+{
+  "issue_id": "_claude_issue_020",
+  "title": "PATTERN: VersionedNodeType nodes missing baseDescription metadata (displayName, icon, group)",
+  "severity": "critical",
+  "status": "resolved",
+  "priority": 1,
+  "metadata": {
+    "created_at": "2025-11-06T21:51:54Z",
+    "created_by": "claude_code",
+    "affected_nodes": "All VersionedNodeType nodes including Slack, Google Sheets, Notion, Microsoft Teams, etc. - estimated 50+ nodes"
+  },
+  "description": {
+    "problem": "Nodes using the VersionedNodeType pattern have incorrect metadata extraction. The extractor reads version-specific files (e.g., SlackV2.node.ts) but misses the baseDescription defined in the parent file (Slack.node.ts), resulting in wrong displayName, missing icon, and empty group array.",
+    "impact": "CRITICAL - Affects all VersionedNodeType nodes (estimated 50+ nodes). Evidence from Slack node:\n\nEXTRACTED (WRONG):\n- displayName: 'Authentication' (first property name, not node name!)\n- icon: '' (empty string)\n- group: [] (empty array)\n- properties: 212 (correct)\n\nSOURCE (CORRECT - Slack.node.ts baseDescription):\n- displayName: 'Slack'\n- icon: 'file:slack.svg'\n- group: ['output']\n\nThis makes documentation misleading - users see 'Authentication' as the node name instead of 'Slack'. Icon and group classification are lost. This affects node discoverability and visual identification.",
+    "root_cause": "The VersionedNodeType pattern used by n8n organizes nodes like this:\n\n```\nSlack/\n\u251c\u2500\u2500 Slack.node.ts         \u2190 Main file with baseDescription (displayName, icon, group)\n\u251c\u2500\u2500 V1/\n\u2502   \u2514\u2500\u2500 SlackV1.node.ts   \u2190 Version 1 implementation\n\u2514\u2500\u2500 V2/\n    \u2514\u2500\u2500 SlackV2.node.ts   \u2190 Version 2 implementation\n```\n\nSlack.node.ts:\n```typescript\nconst baseDescription: INodeTypeBaseDescription = {\n  displayName: 'Slack',\n  name: 'slack',\n  icon: 'file:slack.svg',\n  group: ['output'],\n  ...\n};\n\nconst nodeVersions = {\n  2: new SlackV2(baseDescription),\n  2.1: new SlackV2(baseDescription),\n  ...\n};\n```\n\nSlackV2.node.ts:\n```typescript\nconstructor(baseDescription: INodeTypeBaseDescription) {\n  this.description = {\n    ...baseDescription,  // \u2190 Spreads parent metadata\n    version: [2, 2.1, 2.2, 2.3],\n    properties: [\n      { displayName: 'Authentication', ... },  // \u2190 Extractor wrongly uses this\n      ...\n    ]\n  };\n}\n```\n\nThe extractor currently:\n1. Finds SlackV2.node.ts\n2. Reads the INodeTypeDescription\n3. Sees `...baseDescription` spread but doesn't resolve it\n4. Misses displayName, icon, group from parent\n5. Defaults to first property displayName ('Authentication')\n6. Sets icon and group to empty values",
+    "evidence": [
+      "Slack node analysis:",
+      "",
+      "SOURCE - Slack.node.ts (baseDescription):",
+      "  displayName: 'Slack'",
+      "  name: 'slack'",
+      "  icon: 'file:slack.svg'",
+      "  group: ['output']",
+      "  subtitle: '={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}'",
+      "  description: 'Consume Slack API'",
+      "",
+      "EXTRACTED - slack_data.json:",
+      "  jq '.node_info' extracted_docs/slack_data.json:",
+      "  {",
+      "    \"displayName\": \"Authentication\",  \u2190 WRONG (first property name)",
+      "    \"name\": \"Slack\",                  \u2190 Correct",
+      "    \"icon\": \"\",                        \u2190 WRONG (empty)",
+      "    \"group\": [],                       \u2190 WRONG (empty array)",
+      "    \"inputs\": [\"Main\"],               \u2190 Correct",
+      "    \"outputs\": [\"Main\"]                \u2190 Correct",
+      "  }",
+      "",
+      "File size: slack_data.json is 197KB with 212 properties - properties ARE extracted correctly",
+      "",
+      "Pattern identification:",
+      "  grep -r 'VersionedNodeType' n8n/packages/nodes-base/nodes/ --include='*.node.ts' | wc -l",
+      "  Expected: 50+ nodes using this pattern",
+      "",
+      "Related to Issue 016 but DIFFERENT:",
+      "  Issue 016: versionDescription import not followed (0 properties)",
+      "  Issue 020: baseDescription spread not resolved (wrong metadata, properties OK)"
+    ],
+    "fix_approach": "Two-phase fix in NodeExtractor class:\n\nPhase 1 - Detect VersionedNodeType Pattern:\n\nStep 1.1 - Add VersionedNodeType detection:\n```python\n# In NodeExtractor or TypeScriptParser\n@staticmethod\ndef is_versioned_node(node_file: Path) -> bool:\n    \"\"\"Check if node uses VersionedNodeType pattern.\"\"\"\n    content = node_file.read_text()\n    \n    # Pattern 1: extends VersionedNodeType\n    if 'extends VersionedNodeType' in content:\n        return True\n    \n    # Pattern 2: implements IVersionedNodeType\n    if 'implements IVersionedNodeType' in content:\n        return True\n    \n    # Pattern 3: Has version subdirectories (V1/, V2/, v1/, v2/)\n    parent_dir = node_file.parent\n    version_dirs = [d for d in parent_dir.iterdir() \n                   if d.is_dir() and d.name in ['V1', 'V2', 'v1', 'v2']]\n    if version_dirs:\n        return True\n    \n    return False\n```\n\nStep 1.2 - Extract baseDescription:\n```python\n@staticmethod\ndef extract_base_description(node_file: Path) -> Dict[str, Any]:\n    \"\"\"Extract baseDescription from main versioned node file.\"\"\"\n    content = node_file.read_text()\n    \n    # Find baseDescription object\n    # Pattern: const baseDescription: INodeTypeBaseDescription = {...}\n    pattern = r'const\\s+baseDescription\\s*:\\s*INodeTypeBaseDescription\\s*=\\s*\\{'\n    match = re.search(pattern, content)\n    \n    if not match:\n        return {}\n    \n    # Extract object using bracket-depth counting\n    start_pos = match.end()\n    depth = 1\n    i = start_pos\n    \n    while i < len(content) and depth > 0:\n        if content[i] == '{': depth += 1\n        elif content[i] == '}': depth -= 1\n        i += 1\n    \n    obj_content = content[start_pos:i-1]\n    \n    # Parse fields: displayName, name, icon, group, subtitle, description\n    base_desc = {}\n    \n    # Extract displayName\n    if m := re.search(r\"displayName:\\s*['\\\"]([^'\\\"]+)['\\\"]\", obj_content):\n        base_desc['displayName'] = m.group(1)\n    \n    # Extract icon (string or object)\n    if m := re.search(r\"icon:\\s*['\\\"]([^'\\\"]+)['\\\"]\", obj_content):\n        base_desc['icon'] = m.group(1)\n    elif 'icon:' in obj_content and '{' in obj_content:\n        # Object format { light: '...', dark: '...' }\n        # More complex parsing needed\n        pass\n    \n    # Extract group (array)\n    if m := re.search(r\"group:\\s*\\[([^\\]]+)\\]\", obj_content):\n        groups = [g.strip().strip(\"'\\\"\") for g in m.group(1).split(',')]\n        base_desc['group'] = groups\n    \n    # Extract subtitle, description\n    if m := re.search(r\"subtitle:\\s*['\\\"]([^'\\\"]+)['\\\"]\", obj_content):\n        base_desc['subtitle'] = m.group(1)\n    \n    if m := re.search(r\"description:\\s*['\\\"]([^'\\\"]+)['\\\"]\", obj_content):\n        base_desc['description'] = m.group(1)\n    \n    return base_desc\n```\n\nPhase 2 - Apply baseDescription During Extraction:\n\nStep 2.1 - Modify extract_info() method:\n```python\n# In NodeExtractor.extract_info()\ndef extract_info(self, node_file: Path):\n    # Check if this is a versioned node\n    if TypeScriptParser.is_versioned_node(node_file):\n        # Get base description from parent file\n        # Find main .node.ts file (not V1/V2 subdirectory)\n        parent_node_file = self.find_parent_node_file(node_file)\n        if parent_node_file:\n            base_desc = TypeScriptParser.extract_base_description(parent_node_file)\n            \n            # Apply base description (don't override if already set)\n            if 'displayName' in base_desc and not self.display_name:\n                self.display_name = base_desc['displayName']\n            if 'icon' in base_desc:\n                self.icon = base_desc['icon']\n            if 'group' in base_desc:\n                self.group = base_desc['group']\n            if 'subtitle' in base_desc:\n                self.subtitle = base_desc['subtitle']\n            # description may be overridden by version-specific description\n    \n    # Continue with normal extraction...\n```\n\nStep 2.2 - Add helper to find parent node file:\n```python\ndef find_parent_node_file(self, version_file: Path) -> Optional[Path]:\n    \"\"\"Find parent .node.ts file for versioned node.\"\"\"\n    # If we're in V1/V2/v1/v2 subdirectory, go up one level\n    if version_file.parent.name in ['V1', 'V2', 'v1', 'v2']:\n        parent_dir = version_file.parent.parent\n        # Find main .node.ts file (not in version subdirs)\n        for f in parent_dir.glob('*.node.ts'):\n            if f.parent == parent_dir:  # Not in subdirectory\n                return f\n    return None\n```\n\nPhase 3 - Testing:\n\nStep 3.1 - Test on Slack:\n```bash\npython3 n8n_node_extractor.py extract Slack\njq '.node_info | {displayName, icon, group}' extracted_docs/slack_data.json\n```\nExpected output:\n```json\n{\n  \"displayName\": \"Slack\",\n  \"icon\": \"file:slack.svg\",\n  \"group\": [\"output\"]\n}\n```\n\nStep 3.2 - Test on other VersionedNodeType nodes:\n- Google Sheets\n- Notion\n- Microsoft Teams\n- Postgres\n- HTTP Request\n\nStep 3.3 - Bulk re-extraction and validation:\n```bash\npython3 n8n_node_extractor.py extract-all\npython3 validate_extraction.py\n```\nExpect:\n- missing_group to drop significantly (347 \u2192 <100)\n- missing_icon to drop significantly (129 \u2192 <50)\n- No more \"Authentication\" as displayName\n\nPhase 4 - Documentation:\n1. Document VersionedNodeType pattern in CLAUDE.md\n2. Add to FIXES_SUMMARY.md\n3. Note the difference from versionDescription pattern (Issue 016)"
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  },
+  "resolved_by": "claude_code",
+  "resolved_at": "2025-11-12T07:23:01.203566Z",
+  "audit_note": "Status updated from \"new\" to \"resolved\" after 2025-11-12 audit confirmed fix working (metadata extraction 99%+ improved)"
+}

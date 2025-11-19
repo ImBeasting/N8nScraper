@@ -1,0 +1,1803 @@
+{
+  "node_info": {
+    "icon": "file:bitwarden.svg",
+    "defaults": {
+      "name": "Bitwarden"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "bitwardenApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getGroups"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Bitwarden",
+    "name": "bitwarden",
+    "description": "Consume the Bitwarden API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.bitwarden",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Data & Storage"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/bitwarden/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.bitwarden/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "collection",
+      "default": "collection",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Collection",
+          "value": "collection",
+          "displayName": "Collection"
+        },
+        {
+          "name": "Event",
+          "value": "event",
+          "displayName": "Event"
+        },
+        {
+          "name": "Group",
+          "value": "group",
+          "displayName": "Group"
+        },
+        {
+          "name": "Member",
+          "value": "member",
+          "displayName": "Member"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Delete a collection",
+      "value": "delete",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Delete",
+          "action": "Delete a collection",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a collection",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many collections",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update a collection",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ]
+        }
+      },
+      "_source": "Collection_collectionOperations"
+    },
+    {
+      "displayName": "Collection ID",
+      "name": "collectionId",
+      "type": "string",
+      "description": "The identifier of the collection",
+      "placeholder": "5e59c8c7-e05a-4d17-8e85-acc301343926",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ],
+          "operation": [
+            "delete",
+            "get",
+            "update"
+          ]
+        }
+      },
+      "_operation": "delete,get,update",
+      "_source": "Collection_collectionFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Collection_collectionFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 10,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Collection_collectionFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "The group to assign this collection to. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add Field",
+      "default": {},
+      "required": true,
+      "options": [
+        {
+          "displayName": "Group Names or IDs",
+          "name": "groups",
+          "type": "multiOptions",
+          "description": "The group to assign this collection to. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getGroups"
+          }
+        },
+        {
+          "displayName": "External ID",
+          "name": "externalId",
+          "type": "string",
+          "description": "The external identifier to set to this collection",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getGroups"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Collection_collectionFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Get many events",
+      "value": "getAll",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get Many",
+          "action": "Get many events",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ]
+        }
+      },
+      "_source": "Event_eventOperations"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 10,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "The unique identifier of the acting user",
+      "placeholder": "Add Filter",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Acting User ID",
+          "name": "actingUserId",
+          "type": "string",
+          "description": "The unique identifier of the acting user",
+          "placeholder": "4a59c8c7-e05a-4d17-8e85-acc301343926",
+          "default": ""
+        },
+        {
+          "displayName": "End Date",
+          "name": "end",
+          "type": "dateTime",
+          "description": "The end date for the search",
+          "default": ""
+        },
+        {
+          "displayName": "Item ID",
+          "name": "itemID",
+          "type": "string",
+          "description": "The unique identifier of the item that the event describes",
+          "placeholder": "5e59c8c7-e05a-4d17-8e85-acc301343926",
+          "default": ""
+        },
+        {
+          "displayName": "Start Date",
+          "name": "start",
+          "type": "dateTime",
+          "description": "The start date for the search",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Event_eventFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a group",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a group",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a group",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a group",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many groups",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Get Members",
+          "action": "Get group members",
+          "value": "getMembers",
+          "displayName": "Get Members"
+        },
+        {
+          "name": "Update",
+          "action": "Update a group",
+          "value": "update",
+          "displayName": "Update"
+        },
+        {
+          "name": "Update Members",
+          "action": "Update group members",
+          "value": "updateMembers",
+          "displayName": "Update Members"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ]
+        }
+      },
+      "_source": "Group_groupOperations"
+    },
+    {
+      "displayName": "Group ID",
+      "name": "groupId",
+      "type": "string",
+      "description": "The identifier of the group",
+      "placeholder": "5e59c8c7-e05a-4d17-8e85-acc301343926",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "delete",
+            "get",
+            "getMembers",
+            "update",
+            "updateMembers"
+          ]
+        }
+      },
+      "_operation": "delete,get,getMembers,update,updateMembers",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 10,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "The name of the group to create",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Access All",
+      "name": "accessAll",
+      "type": "boolean",
+      "description": "Whether to allow this group to access all collections within the organization, instead of only its associated collections. If set to true, this option overrides any collection assignments.",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The collections to assign to this group. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Collection Names or IDs",
+          "name": "collections",
+          "type": "multiOptions",
+          "description": "The collections to assign to this group. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getCollections"
+          }
+        },
+        {
+          "displayName": "External ID",
+          "name": "externalId",
+          "type": "string",
+          "description": "The external identifier to set to this group",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getCollections"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Whether to allow this group to access all collections within the organization, instead of only its associated collections. If set to true, this option overrides any collection assignments.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Access All",
+          "name": "accessAll",
+          "type": "boolean",
+          "description": "Whether to allow this group to access all collections within the organization, instead of only its associated collections. If set to true, this option overrides any collection assignments.",
+          "default": false
+        },
+        {
+          "displayName": "Collection Names or IDs",
+          "name": "collections",
+          "type": "multiOptions",
+          "description": "The collections to assign to this group. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getCollections"
+          }
+        },
+        {
+          "displayName": "External ID",
+          "name": "externalId",
+          "type": "string",
+          "description": "The external identifier to set to this group",
+          "default": ""
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "The name of the group to update",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getCollections"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Member IDs",
+      "name": "memberIds",
+      "type": "string",
+      "description": "Comma-separated list of IDs of members to set in a group",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "updateMembers"
+          ]
+        }
+      },
+      "_operation": "updateMembers",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a member",
+      "value": "create",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a member",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a member",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a member",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Groups",
+          "action": "Get groups for a member",
+          "value": "getGroups",
+          "displayName": "Get Groups"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many members",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update a member",
+          "value": "update",
+          "displayName": "Update"
+        },
+        {
+          "name": "Update Groups",
+          "action": "Update groups for a member",
+          "value": "updateGroups",
+          "displayName": "Update Groups"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ]
+        }
+      },
+      "_source": "Member_memberOperations"
+    },
+    {
+      "displayName": "Member ID",
+      "name": "memberId",
+      "type": "string",
+      "description": "The identifier of the member",
+      "placeholder": "5e59c8c7-e05a-4d17-8e85-acc301343926",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "delete",
+            "get",
+            "getGroups",
+            "update",
+            "updateGroups"
+          ]
+        }
+      },
+      "_operation": "delete,get,getGroups,update,updateGroups",
+      "_source": "Member_memberFields"
+    },
+    {
+      "displayName": "Type",
+      "name": "type",
+      "type": "options",
+      "default": 2,
+      "required": true,
+      "options": [
+        {
+          "name": "Owner",
+          "displayName": "Owner"
+        },
+        {
+          "name": "Admin",
+          "displayName": "Admin"
+        },
+        {
+          "name": "User",
+          "displayName": "User"
+        },
+        {
+          "name": "Manager",
+          "displayName": "Manager"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Member_memberFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Member_memberFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 10,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Member_memberFields"
+    },
+    {
+      "displayName": "Email",
+      "name": "email",
+      "type": "string",
+      "description": "The email of the member to update",
+      "placeholder": "name@email.com",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Member_memberFields"
+    },
+    {
+      "displayName": "Access All",
+      "name": "accessAll",
+      "type": "boolean",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Member_memberFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The collections to assign to this member. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Collection Names or IDs",
+          "name": "collections",
+          "type": "multiOptions",
+          "description": "The collections to assign to this member. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getCollections"
+          }
+        },
+        {
+          "displayName": "External ID",
+          "name": "externalId",
+          "type": "string",
+          "description": "The external identifier to set to this member",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getCollections"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Member_memberFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "The collections to assign to this member. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "options",
+          "default": {},
+          "options": [
+            {
+              "name": "Owner",
+              "displayName": "Owner"
+            },
+            {
+              "name": "Admin",
+              "displayName": "Admin"
+            },
+            {
+              "name": "User",
+              "displayName": "User"
+            },
+            {
+              "name": "Manager",
+              "displayName": "Manager"
+            }
+          ]
+        },
+        {
+          "displayName": "Collection Names or IDs",
+          "name": "collections",
+          "type": "multiOptions",
+          "description": "The collections to assign to this member. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getCollections"
+          }
+        },
+        {
+          "displayName": "External ID",
+          "name": "externalId",
+          "type": "string",
+          "description": "The external identifier to set to this member",
+          "default": ""
+        },
+        {
+          "displayName": "Access All",
+          "name": "accessAll",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getCollections"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Member_memberFields"
+    },
+    {
+      "displayName": "Group IDs",
+      "name": "groupIds",
+      "type": "string",
+      "description": "Comma-separated list of IDs of groups to set for a member",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "updateGroups"
+          ]
+        }
+      },
+      "_operation": "updateGroups",
+      "_source": "Member_memberFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Delete",
+      "action": "Delete a collection",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "action": "Get a collection",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "action": "Get many collections",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "action": "Update a collection",
+      "value": "update",
+      "displayName": "Update"
+    },
+    {
+      "name": "Create",
+      "action": "Create a group",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Get Members",
+      "action": "Get group members",
+      "value": "getMembers",
+      "displayName": "Get Members"
+    },
+    {
+      "name": "Update Members",
+      "action": "Update group members",
+      "value": "updateMembers",
+      "displayName": "Update Members"
+    },
+    {
+      "name": "Get Groups",
+      "action": "Get groups for a member",
+      "value": "getGroups",
+      "displayName": "Get Groups"
+    },
+    {
+      "name": "Update Groups",
+      "action": "Update groups for a member",
+      "value": "updateGroups",
+      "displayName": "Update Groups"
+    }
+  ],
+  "operations_by_resource": {
+    "collection": [
+      {
+        "name": "Delete",
+        "action": "Delete a collection",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a collection",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many collections",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update a collection",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "event": [
+      {
+        "name": "Get Many",
+        "action": "Get many events",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "group": [
+      {
+        "name": "Create",
+        "action": "Create a group",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a group",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a group",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many groups",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Get Members",
+        "action": "Get group members",
+        "value": "getMembers",
+        "displayName": "Get Members"
+      },
+      {
+        "name": "Update",
+        "action": "Update a group",
+        "value": "update",
+        "displayName": "Update"
+      },
+      {
+        "name": "Update Members",
+        "action": "Update group members",
+        "value": "updateMembers",
+        "displayName": "Update Members"
+      }
+    ],
+    "member": [
+      {
+        "name": "Create",
+        "action": "Create a member",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a member",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a member",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Groups",
+        "action": "Get groups for a member",
+        "value": "getGroups",
+        "displayName": "Get Groups"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many members",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update a member",
+        "value": "update",
+        "displayName": "Update"
+      },
+      {
+        "name": "Update Groups",
+        "action": "Update groups for a member",
+        "value": "updateGroups",
+        "displayName": "Update Groups"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "bitwardenApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ]
+        }
+      }
+    },
+    "collectionId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "collection"
+          ],
+          "operation": [
+            "delete",
+            "get",
+            "update"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "event"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "groupId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "delete",
+            "get",
+            "getMembers",
+            "update",
+            "updateMembers"
+          ]
+        }
+      }
+    },
+    "name": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "accessAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "memberIds": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "updateMembers"
+          ]
+        }
+      }
+    },
+    "memberId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "delete",
+            "get",
+            "getGroups",
+            "update",
+            "updateGroups"
+          ]
+        }
+      }
+    },
+    "type": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "email": {
+      "format": "email",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "groupIds": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "member"
+          ],
+          "operation": [
+            "updateGroups"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "collection",
+          "name": "Collection",
+          "description": ""
+        },
+        {
+          "value": "event",
+          "name": "Event",
+          "description": ""
+        },
+        {
+          "value": "group",
+          "name": "Group",
+          "description": ""
+        },
+        {
+          "value": "member",
+          "name": "Member",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": ""
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": ""
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": ""
+        },
+        {
+          "value": "getGroups",
+          "name": "Get Groups",
+          "description": ""
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": ""
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": ""
+        },
+        {
+          "value": "updateGroups",
+          "name": "Update Groups",
+          "description": ""
+        }
+      ]
+    },
+    "collectionId": {
+      "type": "string",
+      "displayName": "Collection ID",
+      "name": "collectionId"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1
+      }
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "typeOptions": {
+        "loadOptionsMethod": "getCollections"
+      },
+      "subProperties": [
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "options",
+          "default": {},
+          "options": [
+            {
+              "name": "Owner",
+              "displayName": "Owner"
+            },
+            {
+              "name": "Admin",
+              "displayName": "Admin"
+            },
+            {
+              "name": "User",
+              "displayName": "User"
+            },
+            {
+              "name": "Manager",
+              "displayName": "Manager"
+            }
+          ]
+        },
+        {
+          "displayName": "Collection Names or IDs",
+          "name": "collections",
+          "type": "multiOptions",
+          "description": "The collections to assign to this member. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getCollections"
+          }
+        },
+        {
+          "displayName": "External ID",
+          "name": "externalId",
+          "type": "string",
+          "description": "The external identifier to set to this member",
+          "default": ""
+        },
+        {
+          "displayName": "Access All",
+          "name": "accessAll",
+          "type": "boolean",
+          "default": false
+        }
+      ]
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "subProperties": [
+        {
+          "displayName": "Acting User ID",
+          "name": "actingUserId",
+          "type": "string",
+          "description": "The unique identifier of the acting user",
+          "placeholder": "4a59c8c7-e05a-4d17-8e85-acc301343926",
+          "default": ""
+        },
+        {
+          "displayName": "End Date",
+          "name": "end",
+          "type": "dateTime",
+          "description": "The end date for the search",
+          "default": ""
+        },
+        {
+          "displayName": "Item ID",
+          "name": "itemID",
+          "type": "string",
+          "description": "The unique identifier of the item that the event describes",
+          "placeholder": "5e59c8c7-e05a-4d17-8e85-acc301343926",
+          "default": ""
+        },
+        {
+          "displayName": "Start Date",
+          "name": "start",
+          "type": "dateTime",
+          "description": "The start date for the search",
+          "default": ""
+        }
+      ]
+    },
+    "groupId": {
+      "type": "string",
+      "displayName": "Group ID",
+      "name": "groupId"
+    },
+    "name": {
+      "type": "string",
+      "displayName": "Name",
+      "name": "name"
+    },
+    "accessAll": {
+      "type": "boolean",
+      "displayName": "Access All",
+      "name": "accessAll"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "typeOptions": {
+        "loadOptionsMethod": "getCollections"
+      },
+      "subProperties": [
+        {
+          "displayName": "Collection Names or IDs",
+          "name": "collections",
+          "type": "multiOptions",
+          "description": "The collections to assign to this member. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getCollections"
+          }
+        },
+        {
+          "displayName": "External ID",
+          "name": "externalId",
+          "type": "string",
+          "description": "The external identifier to set to this member",
+          "default": ""
+        }
+      ]
+    },
+    "memberIds": {
+      "type": "string",
+      "displayName": "Member IDs",
+      "name": "memberIds"
+    },
+    "memberId": {
+      "type": "string",
+      "displayName": "Member ID",
+      "name": "memberId"
+    },
+    "type": {
+      "type": "options",
+      "displayName": "Type",
+      "name": "type",
+      "possibleValues": [
+        {
+          "value": "Owner",
+          "name": "Owner",
+          "description": ""
+        },
+        {
+          "value": "Admin",
+          "name": "Admin",
+          "description": ""
+        },
+        {
+          "value": "User",
+          "name": "User",
+          "description": ""
+        },
+        {
+          "value": "Manager",
+          "name": "Manager",
+          "description": ""
+        }
+      ]
+    },
+    "email": {
+      "type": "string",
+      "displayName": "Email",
+      "name": "email"
+    },
+    "groupIds": {
+      "type": "string",
+      "displayName": "Group IDs",
+      "name": "groupIds"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [
+      "POST"
+    ],
+    "endpoints": [],
+    "headers": [
+      "Content-Type",
+      "user-agent"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "collectionId",
+        "text": "5e59c8c7-e05a-4d17-8e85-acc301343926"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "groupId",
+        "text": "5e59c8c7-e05a-4d17-8e85-acc301343926"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "memberId",
+        "text": "5e59c8c7-e05a-4d17-8e85-acc301343926"
+      },
+      {
+        "field": "email",
+        "text": "name@email.com"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

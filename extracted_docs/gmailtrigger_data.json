@@ -1,0 +1,493 @@
+{
+  "node_info": {
+    "icon": "file:gmail.svg",
+    "defaults": {
+      "name": "Gmail Trigger"
+    },
+    "inputs": [],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "trigger"
+    ],
+    "authentication": [
+      {
+        "name": "googleApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "serviceAccount"
+            ]
+          }
+        }
+      },
+      {
+        "name": "gmailOAuth2",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getLabels",
+      "for",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Gmail Trigger",
+    "name": "gmailTrigger",
+    "description": "Fetches emails from Gmail and starts the workflow on specified polling intervals.",
+    "subtitle": "={{\"Gmail Trigger\"}}",
+    "version": [
+      "1",
+      "1.1",
+      "1.2",
+      "1.3"
+    ],
+    "node_type": "trigger",
+    "polling": true
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.gmailTrigger",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/google/oauth-single-service/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.gmailtrigger/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "Why business process automation with n8n can change your daily life",
+          "icon": "\ud83e\uddec",
+          "url": "https://n8n.io/blog/why-business-process-automation-with-n8n-can-change-your-daily-life/"
+        },
+        {
+          "label": "Supercharging your conference registration process with n8n",
+          "icon": "\ud83c\udfab",
+          "url": "https://n8n.io/blog/supercharging-your-conference-registration-process-with-n8n/"
+        },
+        {
+          "label": "6 e-commerce workflows to power up your Shopify s",
+          "icon": "store",
+          "url": "https://n8n.io/blog/no-code-ecommerce-workflow-automations/"
+        },
+        {
+          "label": "How to get started with CRM automation (with 3 no-code workflow ideas",
+          "icon": "\ud83d\udc65",
+          "url": "https://n8n.io/blog/how-to-get-started-with-crm-automation-and-no-code-workflow-ideas/"
+        },
+        {
+          "label": "15 Google apps you can combine and automate to increase productivity",
+          "icon": "\ud83d\udca1",
+          "url": "https://n8n.io/blog/automate-google-apps-for-productivity/"
+        },
+        {
+          "label": "Hey founders! Your business doesn't need you to operate",
+          "icon": " \ud83d\udda5\ufe0f",
+          "url": "https://n8n.io/blog/your-business-doesnt-need-you-to-operate/"
+        },
+        {
+          "label": "Using Automation to Boost Productivity in the Workplace",
+          "icon": "\ud83d\udcaa",
+          "url": "https://n8n.io/blog/using-automation-to-boost-productivity-in-the-workplace/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "oAuth2",
+      "default": "oAuth2",
+      "options": [
+        {
+          "name": "OAuth2 (recommended)",
+          "value": "oAuth2",
+          "displayName": "Oauth2 (recommended)"
+        },
+        {
+          "name": "Service Account",
+          "value": "serviceAccount",
+          "displayName": "Service Account"
+        }
+      ]
+    },
+    {
+      "displayName": "Event",
+      "name": "event",
+      "type": "options",
+      "value": "messageReceived",
+      "default": "messageReceived",
+      "options": [
+        {
+          "name": "Message Received",
+          "value": "messageReceived",
+          "displayName": "Message Received"
+        }
+      ]
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Whether to include messages from SPAM and TRASH in the results",
+      "placeholder": "Add Filter",
+      "hint": "Use the same format as in the Gmail search box. <a href=\"https://support.google.com/mail/answer/7190?hl=en\">More info</a>.",
+      "value": "both",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include Spam and Trash",
+          "name": "includeSpamTrash",
+          "type": "boolean",
+          "description": "Whether to include messages from SPAM and TRASH in the results",
+          "default": false
+        },
+        {
+          "displayName": "Include Drafts",
+          "name": "includeDrafts",
+          "type": "boolean",
+          "description": "Whether to include email drafts in the results",
+          "default": false
+        },
+        {
+          "displayName": "Label Names or IDs",
+          "name": "labelIds",
+          "type": "multiOptions",
+          "description": "Only return messages with labels that match all of the specified label IDs. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          }
+        },
+        {
+          "displayName": "Search",
+          "name": "q",
+          "type": "string",
+          "description": "Only return messages matching the specified query",
+          "placeholder": "has:attachment",
+          "hint": "Use the same format as in the Gmail search box. <a href=\"https://support.google.com/mail/answer/7190?hl=en\">More info</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Read Status",
+          "name": "readStatus",
+          "type": "options",
+          "hint": "Filter emails by whether they have been read or not",
+          "value": "both",
+          "default": "unread",
+          "options": [
+            {
+              "name": "Unread and read emails",
+              "value": "both",
+              "displayName": "Unread And Read Emails"
+            },
+            {
+              "name": "Unread emails only",
+              "value": "unread",
+              "displayName": "Unread Emails Only"
+            },
+            {
+              "name": "Read emails only",
+              "value": "read",
+              "displayName": "Read Emails Only"
+            }
+          ]
+        },
+        {
+          "displayName": "Sender",
+          "name": "sender",
+          "type": "string",
+          "description": "Sender name or email to filter by",
+          "hint": "Enter an email or part of a sender name",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getLabels"
+      }
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'.",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Attachment Prefix",
+          "name": "dataPropertyAttachmentsPrefixName",
+          "type": "string",
+          "description": "Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'.",
+          "default": "attachment_"
+        },
+        {
+          "displayName": "Download Attachments",
+          "name": "downloadAttachments",
+          "type": "boolean",
+          "description": "Whether the email's attachments will be downloaded",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "hide": {
+          "simple": [
+            true
+          ]
+        }
+      }
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "googleApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "serviceAccount"
+          ]
+        }
+      }
+    },
+    {
+      "name": "gmailOAuth2",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{\"Gmail Trigger\"}}"
+  ],
+  "validation_rules": {
+    "options": {
+      "displayOptions": {
+        "hide": {
+          "simple": [
+            true
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "oAuth2",
+          "name": "OAuth2 (recommended)",
+          "description": ""
+        },
+        {
+          "value": "serviceAccount",
+          "name": "Service Account",
+          "description": ""
+        }
+      ]
+    },
+    "event": {
+      "type": "options",
+      "displayName": "Event",
+      "name": "event",
+      "possibleValues": [
+        {
+          "value": "messageReceived",
+          "name": "Message Received",
+          "description": ""
+        }
+      ]
+    },
+    "simple": {
+      "type": "boolean",
+      "displayName": "Simplify",
+      "name": "simple"
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "typeOptions": {
+        "loadOptionsMethod": "getLabels"
+      },
+      "subProperties": [
+        {
+          "displayName": "Include Spam and Trash",
+          "name": "includeSpamTrash",
+          "type": "boolean",
+          "description": "Whether to include messages from SPAM and TRASH in the results",
+          "default": false
+        },
+        {
+          "displayName": "Include Drafts",
+          "name": "includeDrafts",
+          "type": "boolean",
+          "description": "Whether to include email drafts in the results",
+          "default": false
+        },
+        {
+          "displayName": "Label Names or IDs",
+          "name": "labelIds",
+          "type": "multiOptions",
+          "description": "Only return messages with labels that match all of the specified label IDs. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          }
+        },
+        {
+          "displayName": "Search",
+          "name": "q",
+          "type": "string",
+          "description": "Only return messages matching the specified query",
+          "placeholder": "has:attachment",
+          "hint": "Use the same format as in the Gmail search box. <a href=\"https://support.google.com/mail/answer/7190?hl=en\">More info</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Read Status",
+          "name": "readStatus",
+          "type": "options",
+          "hint": "Filter emails by whether they have been read or not",
+          "value": "both",
+          "default": "unread",
+          "options": [
+            {
+              "name": "Unread and read emails",
+              "value": "both",
+              "displayName": "Unread And Read Emails"
+            },
+            {
+              "name": "Unread emails only",
+              "value": "unread",
+              "displayName": "Unread Emails Only"
+            },
+            {
+              "name": "Read emails only",
+              "value": "read",
+              "displayName": "Read Emails Only"
+            }
+          ]
+        },
+        {
+          "displayName": "Sender",
+          "name": "sender",
+          "type": "string",
+          "description": "Sender name or email to filter by",
+          "hint": "Enter an email or part of a sender name",
+          "default": ""
+        }
+      ]
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Attachment Prefix",
+          "name": "dataPropertyAttachmentsPrefixName",
+          "type": "string",
+          "description": "Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'.",
+          "default": "attachment_"
+        },
+        {
+          "displayName": "Download Attachments",
+          "name": "downloadAttachments",
+          "type": "boolean",
+          "description": "Whether the email's attachments will be downloaded",
+          "default": false
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": [
+      {
+        "field": "filters",
+        "text": "Use the same format as in the Gmail search box. <a href=\"https://support.google.com/mail/answer/7190?hl=en\">More info</a>."
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

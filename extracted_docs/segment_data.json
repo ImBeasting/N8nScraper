@@ -1,0 +1,2138 @@
+{
+  "node_info": {
+    "icon": "file:segment.svg",
+    "defaults": {
+      "name": "Segment"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "segmentApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Segment",
+    "name": "segment",
+    "description": "Consume Segment API",
+    "subtitle": "={{$parameter[\"operation\"] + \":\" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.segment",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Analytics",
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/segment/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.segment/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "description": "Group lets you associate an identified user with a group",
+      "value": "group",
+      "default": "identify",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Group",
+          "description": "Group lets you associate an identified user with a group",
+          "value": "group",
+          "displayName": "Group"
+        },
+        {
+          "name": "Identify",
+          "description": "Identify lets you tie a user to their actions",
+          "value": "identify",
+          "displayName": "Identify"
+        },
+        {
+          "name": "Track",
+          "description": "Track lets you record events",
+          "value": "track",
+          "displayName": "Track"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Add a user to a group",
+      "action": "Add a user to a group",
+      "value": "add",
+      "default": "add",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Add",
+          "description": "Add a user to a group",
+          "action": "Add a user to a group",
+          "value": "add",
+          "displayName": "Add"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ]
+        }
+      },
+      "_source": "Group_groupOperations"
+    },
+    {
+      "displayName": "User ID",
+      "name": "userId",
+      "type": "string",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Group ID",
+      "name": "groupId",
+      "type": "string",
+      "description": "A Group ID is the unique identifier which you recognize a group by in your own database",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Traits",
+      "name": "traits",
+      "type": "fixedCollection",
+      "placeholder": "Add Trait",
+      "default": {},
+      "options": [
+        {
+          "name": "traitsUi",
+          "displayName": "Trait",
+          "values": [
+            {
+              "displayName": "Key",
+              "name": "key",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Context",
+      "name": "context",
+      "type": "fixedCollection",
+      "description": "Whether a user is active",
+      "placeholder": "Add Context",
+      "default": {},
+      "options": [
+        {
+          "name": "contextUi",
+          "displayName": "Context",
+          "values": [
+            {
+              "displayName": "Active",
+              "name": "active",
+              "type": "boolean",
+              "description": "Whether a user is active",
+              "default": false
+            },
+            {
+              "displayName": "IP",
+              "name": "ip",
+              "type": "string",
+              "description": "Current user\u2019s IP address",
+              "default": ""
+            },
+            {
+              "displayName": "Locale",
+              "name": "locate",
+              "type": "string",
+              "description": "Locale string for the current user, for example en-US",
+              "default": ""
+            },
+            {
+              "displayName": "Page",
+              "name": "page",
+              "type": "string",
+              "description": "Dictionary of information about the current page in the browser, containing hash, path, referrer, search, title and URL",
+              "default": ""
+            },
+            {
+              "displayName": "Timezone",
+              "name": "timezone",
+              "type": "string",
+              "description": "Timezones are sent as tzdata strings to add user timezone information which might be stripped from the timestamp, for example America/New_York",
+              "default": ""
+            },
+            {
+              "displayName": "App",
+              "name": "app",
+              "type": "fixedCollection",
+              "placeholder": "Add App",
+              "default": {},
+              "options": [
+                {
+                  "name": "appUi",
+                  "displayName": "App",
+                  "values": [
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Version",
+                      "name": "version",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Build",
+                      "name": "build",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            },
+            {
+              "displayName": "Campaign",
+              "name": "campaign",
+              "type": "fixedCollection",
+              "placeholder": "Campaign App",
+              "default": {},
+              "options": [
+                {
+                  "name": "campaignUi",
+                  "displayName": "Campaign",
+                  "values": [
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Source",
+                      "name": "source",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Medium",
+                      "name": "medium",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Term",
+                      "name": "term",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Content",
+                      "name": "content",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            },
+            {
+              "displayName": "Device",
+              "name": "device",
+              "type": "fixedCollection",
+              "placeholder": "Add Device",
+              "default": {},
+              "options": [
+                {
+                  "name": "deviceUi",
+                  "displayName": "Device",
+                  "values": [
+                    {
+                      "displayName": "ID",
+                      "name": "id",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Manufacturer",
+                      "name": "manufacturer",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Model",
+                      "name": "model",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Type",
+                      "name": "type",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Version",
+                      "name": "version",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Integration",
+      "name": "integrations",
+      "type": "fixedCollection",
+      "placeholder": "Add Integration",
+      "default": {},
+      "options": [
+        {
+          "name": "integrationsUi",
+          "displayName": "Integration",
+          "values": [
+            {
+              "displayName": "All",
+              "name": "all",
+              "type": "boolean",
+              "default": true
+            },
+            {
+              "displayName": "Salesforce",
+              "name": "salesforce",
+              "type": "boolean",
+              "default": false
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "Group_groupFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create an identity",
+      "action": "Create an identity",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create an identity",
+          "action": "Create an identity",
+          "value": "create",
+          "displayName": "Create"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "identify"
+          ]
+        }
+      },
+      "_source": "Identify_identifyOperations"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Record the actions your users perform. Every action triggers an event, which can also have associated properties.",
+      "action": "Track an event",
+      "value": "event",
+      "default": "event",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Event",
+          "description": "Record the actions your users perform. Every action triggers an event, which can also have associated properties.",
+          "action": "Track an event",
+          "value": "event",
+          "displayName": "Event"
+        },
+        {
+          "name": "Page",
+          "description": "Record page views on your website, along with optional extra information about the page being viewed",
+          "action": "Track a page",
+          "value": "page",
+          "displayName": "Page"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ]
+        }
+      },
+      "_source": "Track_trackOperations"
+    },
+    {
+      "displayName": "User ID",
+      "name": "userId",
+      "type": "string",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "identify"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Identify_identifyFields"
+    },
+    {
+      "displayName": "Traits",
+      "name": "traits",
+      "type": "fixedCollection",
+      "placeholder": "Add Trait",
+      "default": {},
+      "options": [
+        {
+          "name": "traitsUi",
+          "displayName": "Trait",
+          "values": [
+            {
+              "displayName": "Key",
+              "name": "key",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "identify"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Identify_identifyFields"
+    },
+    {
+      "displayName": "Context",
+      "name": "context",
+      "type": "fixedCollection",
+      "description": "Whether a user is active",
+      "placeholder": "Add Context",
+      "default": {},
+      "options": [
+        {
+          "name": "contextUi",
+          "displayName": "Context",
+          "values": [
+            {
+              "displayName": "Active",
+              "name": "active",
+              "type": "boolean",
+              "description": "Whether a user is active",
+              "default": false
+            },
+            {
+              "displayName": "IP",
+              "name": "ip",
+              "type": "string",
+              "description": "Current user\u2019s IP address",
+              "default": ""
+            },
+            {
+              "displayName": "Locale",
+              "name": "locate",
+              "type": "string",
+              "description": "Locale string for the current user, for example en-US",
+              "default": ""
+            },
+            {
+              "displayName": "Page",
+              "name": "page",
+              "type": "string",
+              "description": "Dictionary of information about the current page in the browser, containing hash, path, referrer, search, title and URL",
+              "default": ""
+            },
+            {
+              "displayName": "Timezone",
+              "name": "timezone",
+              "type": "string",
+              "description": "Timezones are sent as tzdata strings to add user timezone information which might be stripped from the timestamp, for example America/New_York",
+              "default": ""
+            },
+            {
+              "displayName": "App",
+              "name": "app",
+              "type": "fixedCollection",
+              "placeholder": "Add App",
+              "default": {},
+              "options": [
+                {
+                  "name": "appUi",
+                  "displayName": "App",
+                  "values": [
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Version",
+                      "name": "version",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Build",
+                      "name": "build",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            },
+            {
+              "displayName": "Campaign",
+              "name": "campaign",
+              "type": "fixedCollection",
+              "placeholder": "Campaign App",
+              "default": {},
+              "options": [
+                {
+                  "name": "campaignUi",
+                  "displayName": "Campaign",
+                  "values": [
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Source",
+                      "name": "source",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Medium",
+                      "name": "medium",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Term",
+                      "name": "term",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Content",
+                      "name": "content",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            },
+            {
+              "displayName": "Device",
+              "name": "device",
+              "type": "fixedCollection",
+              "placeholder": "Add Device",
+              "default": {},
+              "options": [
+                {
+                  "name": "deviceUi",
+                  "displayName": "Device",
+                  "values": [
+                    {
+                      "displayName": "ID",
+                      "name": "id",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Manufacturer",
+                      "name": "manufacturer",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Model",
+                      "name": "model",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Type",
+                      "name": "type",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Version",
+                      "name": "version",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "identify"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Identify_identifyFields"
+    },
+    {
+      "displayName": "Integration",
+      "name": "integrations",
+      "type": "fixedCollection",
+      "placeholder": "Add Integration",
+      "default": {},
+      "options": [
+        {
+          "name": "integrationsUi",
+          "displayName": "Integration",
+          "values": [
+            {
+              "displayName": "All",
+              "name": "all",
+              "type": "boolean",
+              "default": true
+            },
+            {
+              "displayName": "Salesforce",
+              "name": "salesforce",
+              "type": "boolean",
+              "default": false
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "identify"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Identify_identifyFields"
+    },
+    {
+      "displayName": "User ID",
+      "name": "userId",
+      "type": "string",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "event",
+      "_source": "Track_trackFields"
+    },
+    {
+      "displayName": "Event",
+      "name": "event",
+      "type": "string",
+      "description": "Name of the action that a user has performed",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "event",
+      "_source": "Track_trackFields"
+    },
+    {
+      "displayName": "Context",
+      "name": "context",
+      "type": "fixedCollection",
+      "description": "Whether a user is active",
+      "placeholder": "Add Context",
+      "default": {},
+      "options": [
+        {
+          "name": "contextUi",
+          "displayName": "Context",
+          "values": [
+            {
+              "displayName": "Active",
+              "name": "active",
+              "type": "boolean",
+              "description": "Whether a user is active",
+              "default": false
+            },
+            {
+              "displayName": "IP",
+              "name": "ip",
+              "type": "string",
+              "description": "Current user\u2019s IP address",
+              "default": ""
+            },
+            {
+              "displayName": "Locale",
+              "name": "locate",
+              "type": "string",
+              "description": "Locale string for the current user, for example en-US",
+              "default": ""
+            },
+            {
+              "displayName": "Page",
+              "name": "page",
+              "type": "string",
+              "description": "Dictionary of information about the current page in the browser, containing hash, path, referrer, search, title and URL",
+              "default": ""
+            },
+            {
+              "displayName": "Timezone",
+              "name": "timezone",
+              "type": "string",
+              "description": "Timezones are sent as tzdata strings to add user timezone information which might be stripped from the timestamp, for example America/New_York",
+              "default": ""
+            },
+            {
+              "displayName": "App",
+              "name": "app",
+              "type": "fixedCollection",
+              "placeholder": "Add App",
+              "default": {},
+              "options": [
+                {
+                  "name": "appUi",
+                  "displayName": "App",
+                  "values": [
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Version",
+                      "name": "version",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Build",
+                      "name": "build",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            },
+            {
+              "displayName": "Campaign",
+              "name": "campaign",
+              "type": "fixedCollection",
+              "placeholder": "Campaign App",
+              "default": {},
+              "options": [
+                {
+                  "name": "campaignUi",
+                  "displayName": "Campaign",
+                  "values": [
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Source",
+                      "name": "source",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Medium",
+                      "name": "medium",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Term",
+                      "name": "term",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Content",
+                      "name": "content",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            },
+            {
+              "displayName": "Device",
+              "name": "device",
+              "type": "fixedCollection",
+              "placeholder": "Add Device",
+              "default": {},
+              "options": [
+                {
+                  "name": "deviceUi",
+                  "displayName": "Device",
+                  "values": [
+                    {
+                      "displayName": "ID",
+                      "name": "id",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Manufacturer",
+                      "name": "manufacturer",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Model",
+                      "name": "model",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Type",
+                      "name": "type",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Version",
+                      "name": "version",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "event",
+      "_source": "Track_trackFields"
+    },
+    {
+      "displayName": "Integration",
+      "name": "integrations",
+      "type": "fixedCollection",
+      "placeholder": "Add Integration",
+      "default": {},
+      "options": [
+        {
+          "name": "integrationsUi",
+          "displayName": "Integration",
+          "values": [
+            {
+              "displayName": "All",
+              "name": "all",
+              "type": "boolean",
+              "default": true
+            },
+            {
+              "displayName": "Salesforce",
+              "name": "salesforce",
+              "type": "boolean",
+              "default": false
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "event",
+      "_source": "Track_trackFields"
+    },
+    {
+      "displayName": "Properties",
+      "name": "properties",
+      "type": "fixedCollection",
+      "placeholder": "Add Properties",
+      "default": {},
+      "options": [
+        {
+          "name": "propertiesUi",
+          "displayName": "Property",
+          "values": [
+            {
+              "displayName": "Key",
+              "name": "key",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "event"
+          ]
+        }
+      },
+      "_operation": "event",
+      "_source": "Track_trackFields"
+    },
+    {
+      "displayName": "User ID",
+      "name": "userId",
+      "type": "string",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "page"
+          ]
+        }
+      },
+      "_operation": "page",
+      "_source": "Track_trackFields"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "Name of the page For example, most sites have a \u201cSignup\u201d page that can be useful to tag, so you can see users as they move through your funnel",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "page"
+          ]
+        }
+      },
+      "_operation": "page",
+      "_source": "Track_trackFields"
+    },
+    {
+      "displayName": "Context",
+      "name": "context",
+      "type": "fixedCollection",
+      "description": "Whether a user is active",
+      "placeholder": "Add Context",
+      "default": {},
+      "options": [
+        {
+          "name": "contextUi",
+          "displayName": "Context",
+          "values": [
+            {
+              "displayName": "Active",
+              "name": "active",
+              "type": "boolean",
+              "description": "Whether a user is active",
+              "default": false
+            },
+            {
+              "displayName": "IP",
+              "name": "ip",
+              "type": "string",
+              "description": "Current user\u2019s IP address",
+              "default": ""
+            },
+            {
+              "displayName": "Locale",
+              "name": "locate",
+              "type": "string",
+              "description": "Locale string for the current user, for example en-US",
+              "default": ""
+            },
+            {
+              "displayName": "Page",
+              "name": "page",
+              "type": "string",
+              "description": "Dictionary of information about the current page in the browser, containing hash, path, referrer, search, title and URL",
+              "default": ""
+            },
+            {
+              "displayName": "Timezone",
+              "name": "timezone",
+              "type": "string",
+              "description": "Timezones are sent as tzdata strings to add user timezone information which might be stripped from the timestamp, for example America/New_York",
+              "default": ""
+            },
+            {
+              "displayName": "App",
+              "name": "app",
+              "type": "fixedCollection",
+              "placeholder": "Add App",
+              "default": {},
+              "options": [
+                {
+                  "name": "appUi",
+                  "displayName": "App",
+                  "values": [
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Version",
+                      "name": "version",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Build",
+                      "name": "build",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            },
+            {
+              "displayName": "Campaign",
+              "name": "campaign",
+              "type": "fixedCollection",
+              "placeholder": "Campaign App",
+              "default": {},
+              "options": [
+                {
+                  "name": "campaignUi",
+                  "displayName": "Campaign",
+                  "values": [
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Source",
+                      "name": "source",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Medium",
+                      "name": "medium",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Term",
+                      "name": "term",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Content",
+                      "name": "content",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            },
+            {
+              "displayName": "Device",
+              "name": "device",
+              "type": "fixedCollection",
+              "placeholder": "Add Device",
+              "default": {},
+              "options": [
+                {
+                  "name": "deviceUi",
+                  "displayName": "Device",
+                  "values": [
+                    {
+                      "displayName": "ID",
+                      "name": "id",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Manufacturer",
+                      "name": "manufacturer",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Model",
+                      "name": "model",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Type",
+                      "name": "type",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Version",
+                      "name": "version",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "page"
+          ]
+        }
+      },
+      "_operation": "page",
+      "_source": "Track_trackFields"
+    },
+    {
+      "displayName": "Integration",
+      "name": "integrations",
+      "type": "fixedCollection",
+      "placeholder": "Add Integration",
+      "default": {},
+      "options": [
+        {
+          "name": "integrationsUi",
+          "displayName": "Integration",
+          "values": [
+            {
+              "displayName": "All",
+              "name": "all",
+              "type": "boolean",
+              "default": true
+            },
+            {
+              "displayName": "Salesforce",
+              "name": "salesforce",
+              "type": "boolean",
+              "default": false
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "page"
+          ]
+        }
+      },
+      "_operation": "page",
+      "_source": "Track_trackFields"
+    },
+    {
+      "displayName": "Properties",
+      "name": "properties",
+      "type": "fixedCollection",
+      "placeholder": "Add Properties",
+      "default": {},
+      "options": [
+        {
+          "name": "propertiesUi",
+          "displayName": "Property",
+          "values": [
+            {
+              "displayName": "Key",
+              "name": "key",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "page"
+          ]
+        }
+      },
+      "_operation": "page",
+      "_source": "Track_trackFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Add",
+      "description": "Add a user to a group",
+      "action": "Add a user to a group",
+      "value": "add",
+      "displayName": "Add"
+    },
+    {
+      "name": "Create",
+      "description": "Create an identity",
+      "action": "Create an identity",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Event",
+      "description": "Record the actions your users perform. Every action triggers an event, which can also have associated properties.",
+      "action": "Track an event",
+      "value": "event",
+      "displayName": "Event"
+    },
+    {
+      "name": "Page",
+      "description": "Record page views on your website, along with optional extra information about the page being viewed",
+      "action": "Track a page",
+      "value": "page",
+      "displayName": "Page"
+    }
+  ],
+  "operations_by_resource": {
+    "group": [
+      {
+        "name": "Add",
+        "description": "Add a user to a group",
+        "action": "Add a user to a group",
+        "value": "add",
+        "displayName": "Add"
+      }
+    ],
+    "identify": [
+      {
+        "name": "Create",
+        "description": "Create an identity",
+        "action": "Create an identity",
+        "value": "create",
+        "displayName": "Create"
+      }
+    ],
+    "track": [
+      {
+        "name": "Event",
+        "description": "Record the actions your users perform. Every action triggers an event, which can also have associated properties.",
+        "action": "Track an event",
+        "value": "event",
+        "displayName": "Event"
+      },
+      {
+        "name": "Page",
+        "description": "Record page views on your website, along with optional extra information about the page being viewed",
+        "action": "Track a page",
+        "value": "page",
+        "displayName": "Page"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "segmentApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \":\" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ]
+        }
+      }
+    },
+    "userId": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "page"
+          ]
+        }
+      }
+    },
+    "groupId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "group"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      }
+    },
+    "traits": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "identify"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "context": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "page"
+          ]
+        }
+      }
+    },
+    "integrations": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "page"
+          ]
+        }
+      }
+    },
+    "event": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "event"
+          ]
+        }
+      }
+    },
+    "properties": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "page"
+          ]
+        }
+      }
+    },
+    "name": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "track"
+          ],
+          "operation": [
+            "page"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "group",
+          "name": "Group",
+          "description": "Group lets you associate an identified user with a group"
+        },
+        {
+          "value": "identify",
+          "name": "Identify",
+          "description": "Identify lets you tie a user to their actions"
+        },
+        {
+          "value": "track",
+          "name": "Track",
+          "description": "Track lets you record events"
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "event",
+          "name": "Event",
+          "description": "Record the actions your users perform. Every action triggers an event, which can also have associated properties."
+        },
+        {
+          "value": "page",
+          "name": "Page",
+          "description": "Record page views on your website, along with optional extra information about the page being viewed"
+        }
+      ]
+    },
+    "userId": {
+      "type": "string",
+      "displayName": "User ID",
+      "name": "userId"
+    },
+    "groupId": {
+      "type": "string",
+      "displayName": "Group ID",
+      "name": "groupId"
+    },
+    "traits": {
+      "type": "fixedCollection",
+      "displayName": "Traits",
+      "name": "traits",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "traitsUi",
+          "displayName": "Trait",
+          "values": [
+            {
+              "displayName": "Key",
+              "name": "key",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "context": {
+      "type": "fixedCollection",
+      "displayName": "Context",
+      "name": "context",
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "subProperties": [
+        {
+          "name": "contextUi",
+          "displayName": "Context",
+          "values": [
+            {
+              "displayName": "Active",
+              "name": "active",
+              "type": "boolean",
+              "description": "Whether a user is active",
+              "default": false
+            },
+            {
+              "displayName": "IP",
+              "name": "ip",
+              "type": "string",
+              "description": "Current user\u2019s IP address",
+              "default": ""
+            },
+            {
+              "displayName": "Locale",
+              "name": "locate",
+              "type": "string",
+              "description": "Locale string for the current user, for example en-US",
+              "default": ""
+            },
+            {
+              "displayName": "Page",
+              "name": "page",
+              "type": "string",
+              "description": "Dictionary of information about the current page in the browser, containing hash, path, referrer, search, title and URL",
+              "default": ""
+            },
+            {
+              "displayName": "Timezone",
+              "name": "timezone",
+              "type": "string",
+              "description": "Timezones are sent as tzdata strings to add user timezone information which might be stripped from the timestamp, for example America/New_York",
+              "default": ""
+            },
+            {
+              "displayName": "App",
+              "name": "app",
+              "type": "fixedCollection",
+              "placeholder": "Add App",
+              "default": {},
+              "options": [
+                {
+                  "name": "appUi",
+                  "displayName": "App",
+                  "values": [
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Version",
+                      "name": "version",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Build",
+                      "name": "build",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            },
+            {
+              "displayName": "Campaign",
+              "name": "campaign",
+              "type": "fixedCollection",
+              "placeholder": "Campaign App",
+              "default": {},
+              "options": [
+                {
+                  "name": "campaignUi",
+                  "displayName": "Campaign",
+                  "values": [
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Source",
+                      "name": "source",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Medium",
+                      "name": "medium",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Term",
+                      "name": "term",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Content",
+                      "name": "content",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            },
+            {
+              "displayName": "Device",
+              "name": "device",
+              "type": "fixedCollection",
+              "placeholder": "Add Device",
+              "default": {},
+              "options": [
+                {
+                  "name": "deviceUi",
+                  "displayName": "Device",
+                  "values": [
+                    {
+                      "displayName": "ID",
+                      "name": "id",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Manufacturer",
+                      "name": "manufacturer",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Model",
+                      "name": "model",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Name",
+                      "name": "name",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Type",
+                      "name": "type",
+                      "type": "string",
+                      "default": ""
+                    },
+                    {
+                      "displayName": "Version",
+                      "name": "version",
+                      "type": "string",
+                      "default": ""
+                    }
+                  ]
+                }
+              ],
+              "typeOptions": {
+                "multipleValues": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "integrations": {
+      "type": "fixedCollection",
+      "displayName": "Integration",
+      "name": "integrations",
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "subProperties": [
+        {
+          "name": "integrationsUi",
+          "displayName": "Integration",
+          "values": [
+            {
+              "displayName": "All",
+              "name": "all",
+              "type": "boolean",
+              "default": true
+            },
+            {
+              "displayName": "Salesforce",
+              "name": "salesforce",
+              "type": "boolean",
+              "default": false
+            }
+          ]
+        }
+      ]
+    },
+    "event": {
+      "type": "string",
+      "displayName": "Event",
+      "name": "event"
+    },
+    "properties": {
+      "type": "fixedCollection",
+      "displayName": "Properties",
+      "name": "properties",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "propertiesUi",
+          "displayName": "Property",
+          "values": [
+            {
+              "displayName": "Key",
+              "name": "key",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "name": {
+      "type": "string",
+      "displayName": "Name",
+      "name": "name"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "traits",
+        "text": "Add Trait"
+      },
+      {
+        "field": "context",
+        "text": "Add Context"
+      },
+      {
+        "field": "integrations",
+        "text": "Add Integration"
+      },
+      {
+        "field": "traits",
+        "text": "Add Trait"
+      },
+      {
+        "field": "context",
+        "text": "Add Context"
+      },
+      {
+        "field": "integrations",
+        "text": "Add Integration"
+      },
+      {
+        "field": "context",
+        "text": "Add Context"
+      },
+      {
+        "field": "integrations",
+        "text": "Add Integration"
+      },
+      {
+        "field": "properties",
+        "text": "Add Properties"
+      },
+      {
+        "field": "context",
+        "text": "Add Context"
+      },
+      {
+        "field": "integrations",
+        "text": "Add Integration"
+      },
+      {
+        "field": "properties",
+        "text": "Add Properties"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

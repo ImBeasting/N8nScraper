@@ -1,0 +1,2957 @@
+{
+  "node_info": {
+    "icon": "file:airtop.svg",
+    "defaults": {
+      "name": "Airtop"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "airtopApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Airtop",
+    "name": "airtop",
+    "description": "Scrape and control any site with Airtop",
+    "subtitle": "={{ $parameter[\"operation\"] + \": \" + $parameter[\"resource\"] }}",
+    "version": [
+      "1"
+    ],
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.airtop",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Productivity",
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/airtop/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.airtop/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "extraction",
+      "default": "session",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Extraction",
+          "value": "extraction",
+          "displayName": "Extraction"
+        },
+        {
+          "name": "File",
+          "value": "file",
+          "displayName": "File"
+        },
+        {
+          "name": "Interaction",
+          "value": "interaction",
+          "displayName": "Interaction"
+        },
+        {
+          "name": "Session",
+          "value": "session",
+          "displayName": "Session"
+        },
+        {
+          "name": "Window",
+          "value": "window",
+          "displayName": "Window"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create an Airtop browser session",
+      "action": "Create a session",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create Session",
+          "description": "Create an Airtop browser session",
+          "action": "Create a session",
+          "value": "create",
+          "displayName": "Create Session"
+        },
+        {
+          "name": "Save Profile on Termination",
+          "description": "Save in a profile changes made in your browsing session such as cookies and local storage",
+          "action": "Save a profile on session termination",
+          "value": "save",
+          "displayName": "Save Profile On Termination"
+        },
+        {
+          "name": "Terminate Session",
+          "description": "Terminate a session",
+          "action": "Terminate a session",
+          "value": "terminate",
+          "displayName": "Terminate Session"
+        },
+        {
+          "name": "Wait for Download",
+          "description": "Wait for a file download to become available",
+          "action": "Wait for a download",
+          "value": "waitForDownload",
+          "displayName": "Wait For Download"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "session"
+          ]
+        }
+      },
+      "_source": "session"
+    },
+    {
+      "displayName": "Save Profile",
+      "name": "saveProfileOnTermination",
+      "type": "boolean",
+      "description": "Whether to automatically save the <a href=\"https://docs.airtop.ai/guides/how-to/saving-a-profile\" target=\"_blank\">Airtop profile</a> for this session upon termination",
+      "default": false,
+      "_source": "action_session_Session.resource"
+    },
+    {
+      "displayName": "Record Session",
+      "name": "record",
+      "type": "boolean",
+      "description": "Whether to record the browser session. <a href=\"https://docs.airtop.ai/guides/how-to/recording-a-session\" target=\"_blank\">More details</a>.",
+      "default": false,
+      "_source": "action_session_Session.resource"
+    },
+    {
+      "displayName": "Idle Timeout",
+      "name": "timeoutMinutes",
+      "type": "number",
+      "description": "Minutes to wait before the session is terminated due to inactivity",
+      "validateType": "number",
+      "default": 10,
+      "_source": "action_session_Session.resource"
+    },
+    {
+      "displayName": "Proxy",
+      "name": "proxy",
+      "type": "options",
+      "description": "Choose how to configure the proxy for this session",
+      "value": "none",
+      "default": "none",
+      "options": [
+        {
+          "name": "None",
+          "description": "No proxy will be used",
+          "value": "none",
+          "displayName": "None"
+        },
+        {
+          "name": "Integrated",
+          "description": "Use Airtop-provided proxy",
+          "value": "integrated",
+          "displayName": "Integrated"
+        },
+        {
+          "name": "Proxy URL",
+          "description": "Use a proxy URL to configure the proxy",
+          "value": "proxyUrl",
+          "displayName": "Proxy Url"
+        }
+      ],
+      "_source": "action_session_Session.resource"
+    },
+    {
+      "displayName": "Proxy Configuration",
+      "name": "proxyConfig",
+      "type": "collection",
+      "description": "The Airtop-provided configuration to use for the proxy",
+      "placeholder": "Add Attribute",
+      "default": "US",
+      "options": [
+        {
+          "displayName": "Country",
+          "name": "country",
+          "type": "options",
+          "description": "The country to use for the proxy. Not all countries are guaranteed to provide a proxy. Learn more <a href=\"https://docs.airtop.ai/api-reference/airtop-api/sessions/create#request.body.configuration.proxy.Proxy.Airtop-Proxy-Configuration.country\" target=\"_blank\">here</a>.",
+          "default": "US"
+        },
+        {
+          "displayName": "Keep Same IP",
+          "name": "sticky",
+          "type": "boolean",
+          "description": "Whether to try to maintain the same IP address for the duration of the session. Airtop can guarantee that the same IP address will be available for up to a maximum of 30 minutes.",
+          "default": true
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "proxy": [
+            "integrated"
+          ]
+        }
+      },
+      "_source": "action_session_Session.resource"
+    },
+    {
+      "displayName": "Proxy URL",
+      "name": "proxyUrl",
+      "type": "string",
+      "description": "The URL of the proxy to use",
+      "validateType": "string",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "proxy": [
+            "proxyUrl"
+          ]
+        }
+      },
+      "_source": "action_session_Session.resource"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether to automatically solve <a href=\"https://docs.airtop.ai/guides/how-to/solving-captchas\" target=\"_blank\">captcha challenges</a>",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Auto Solve Captchas",
+          "name": "solveCaptcha",
+          "type": "boolean",
+          "description": "Whether to automatically solve <a href=\"https://docs.airtop.ai/guides/how-to/solving-captchas\" target=\"_blank\">captcha challenges</a>",
+          "default": false
+        },
+        {
+          "displayName": "Extension IDs",
+          "name": "extensionIds",
+          "type": "string",
+          "description": "Comma-separated extension IDs from the Google Web Store to be loaded into the session. Learn more <a href=\"https://docs.airtop.ai/guides/how-to/using-chrome-extensions\" target=\"_blank\">here</a>.",
+          "placeholder": "e.g. extId1, extId2, ...",
+          "default": ""
+        }
+      ],
+      "_source": "action_session_Session.resource"
+    },
+    {
+      "displayName": "Profile Name",
+      "name": "profileName",
+      "type": "string",
+      "description": "The name of the Airtop profile to load or create",
+      "placeholder": "e.g. my-x-profile",
+      "hint": "<a href=\"https://docs.airtop.ai/guides/how-to/saving-a-profile\" target=\"_blank\">Learn more</a> about Airtop profiles",
+      "default": "",
+      "_source": "action_session_save.operation"
+    },
+    {
+      "displayName": "Note: This operation is not needed if you enabled 'Save Profile' in the 'Create Session' operation",
+      "name": "notice",
+      "type": "notice",
+      "default": "This operation will save the profile on session termination",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "session"
+          ],
+          "operation": [
+            "save"
+          ]
+        }
+      },
+      "_operation": "save",
+      "_source": "action_session_save.operation"
+    },
+    {
+      "displayName": "Session ID",
+      "name": "sessionId",
+      "type": "string",
+      "description": "The ID of the <a href=\"https://docs.airtop.ai/guides/how-to/creating-a-session\" target=\"_blank\">Session</a> to use",
+      "default": "={{ $json[",
+      "required": true,
+      "_source": "action_file_load.operation"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Close a window inside a session",
+      "action": "Close a window",
+      "value": "close",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Close Window",
+          "description": "Close a window inside a session",
+          "action": "Close a window",
+          "value": "close",
+          "displayName": "Close Window"
+        },
+        {
+          "name": "Create a New Browser Window",
+          "description": "Create a new browser window inside a session. Can load a URL when created.",
+          "action": "Create a window",
+          "value": "create",
+          "displayName": "Create A New Browser Window"
+        },
+        {
+          "name": "Get Live View",
+          "description": "Get information about a browser window, including the live view URL",
+          "action": "Get live view",
+          "value": "getLiveView",
+          "displayName": "Get Live View"
+        },
+        {
+          "name": "List Windows",
+          "description": "List all browser windows in a session",
+          "action": "List windows",
+          "value": "list",
+          "displayName": "List Windows"
+        },
+        {
+          "name": "Load URL",
+          "description": "Load a URL in an existing window",
+          "action": "Load a page",
+          "value": "load",
+          "displayName": "Load Url"
+        },
+        {
+          "name": "Take Screenshot",
+          "description": "Take a screenshot of the current window",
+          "action": "Take screenshot",
+          "value": "takeScreenshot",
+          "displayName": "Take Screenshot"
+        }
+      ],
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ]
+        }
+      },
+      "_source": "window"
+    },
+    {
+      "displayName": "Window ID",
+      "name": "windowId",
+      "type": "string",
+      "description": "The ID of the <a href=\"https://docs.airtop.ai/guides/how-to/creating-a-session#windows\" target=\"_blank\">Window</a> to use",
+      "default": "={{ $json[",
+      "required": true,
+      "_source": "action_file_load.operation"
+    },
+    {
+      "displayName": "Get Live View",
+      "name": "getLiveView",
+      "type": "boolean",
+      "description": "Whether to get the URL of the window's <a href=\"https://docs.airtop.ai/guides/how-to/creating-a-live-view\" target=\"_blank\">Live View</a>",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "action_window_Window.resource"
+    },
+    {
+      "displayName": "Include Navigation Bar",
+      "name": "includeNavigationBar",
+      "type": "boolean",
+      "description": "Whether to include the navigation bar in the Live View. When enabled, the navigation bar will be visible allowing you to navigate between pages.",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ],
+          "operation": [
+            "create"
+          ],
+          "getLiveView": [
+            true
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "action_window_Window.resource"
+    },
+    {
+      "displayName": "Screen Resolution",
+      "name": "screenResolution",
+      "type": "string",
+      "description": "The screen resolution of the Live View. Setting a resolution will force the window to open at that specific size.",
+      "placeholder": "e.g. 1280x720",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ],
+          "operation": [
+            "create"
+          ],
+          "getLiveView": [
+            true
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "action_window_Window.resource"
+    },
+    {
+      "displayName": "Disable Resize",
+      "name": "disableResize",
+      "type": "boolean",
+      "description": "Whether to disable the window from being resized in the Live View",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ],
+          "operation": [
+            "create"
+          ],
+          "getLiveView": [
+            true
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "action_window_Window.resource"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Wait until the specified loading event occurs",
+      "placeholder": "Add Field",
+      "value": "load",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Wait Until",
+          "name": "waitUntil",
+          "type": "options",
+          "description": "Wait until the specified loading event occurs",
+          "value": "load",
+          "default": "load",
+          "options": [
+            {
+              "name": "Load",
+              "description": "Wait until the page dom and its assets have loaded",
+              "value": "load",
+              "displayName": "Load"
+            },
+            {
+              "name": "DOM Content Loaded",
+              "description": "Wait until the page DOM has loaded",
+              "value": "domContentLoaded",
+              "displayName": "Dom Content Loaded"
+            },
+            {
+              "name": "Complete",
+              "description": "Wait until all iframes in the page have loaded",
+              "value": "complete",
+              "displayName": "Complete"
+            },
+            {
+              "name": "No Wait",
+              "description": "Do not wait for any loading event and it will return immediately",
+              "value": "noWait",
+              "displayName": "No Wait"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "action_window_Window.resource"
+    },
+    {
+      "displayName": "URL",
+      "name": "url",
+      "type": "string",
+      "description": "URL to load in the window",
+      "placeholder": "e.g. https://google.com",
+      "default": "",
+      "_source": "action_window_load.operation"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether to include the navigation bar in the Live View. When enabled, the navigation bar will be visible allowing you to navigate between pages.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include Navigation Bar",
+          "name": "includeNavigationBar",
+          "type": "boolean",
+          "description": "Whether to include the navigation bar in the Live View. When enabled, the navigation bar will be visible allowing you to navigate between pages.",
+          "default": false
+        },
+        {
+          "displayName": "Screen Resolution",
+          "name": "screenResolution",
+          "type": "string",
+          "description": "The screen resolution of the Live View. Setting a resolution will force the window to open at that specific size.",
+          "placeholder": "e.g. 1280x720",
+          "default": ""
+        },
+        {
+          "displayName": "Disable Resize",
+          "name": "disableResize",
+          "type": "boolean",
+          "description": "Whether to disable the window from being resized in the Live View",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ],
+          "operation": [
+            "getLiveView"
+          ]
+        }
+      },
+      "_operation": "getLiveView",
+      "_source": "action_window_getLiveView.operation"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Wait until the specified loading event occurs. Defaults to 'Fully Loaded'.",
+      "placeholder": "Add Field",
+      "value": "complete",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Wait Until",
+          "name": "waitUntil",
+          "type": "options",
+          "description": "Wait until the specified loading event occurs. Defaults to 'Fully Loaded'.",
+          "value": "complete",
+          "default": "load",
+          "options": [
+            {
+              "name": "Complete",
+              "description": "Wait until the page and all it's iframes have loaded it's dom and assets",
+              "value": "complete",
+              "displayName": "Complete"
+            },
+            {
+              "name": "DOM Only Loaded",
+              "description": "Wait until the dom has loaded",
+              "value": "domContentLoaded",
+              "displayName": "Dom Only Loaded"
+            },
+            {
+              "name": "Fully Loaded",
+              "description": "Wait until the page dom and it's assets have loaded",
+              "value": "load",
+              "displayName": "Fully Loaded"
+            },
+            {
+              "name": "No Wait",
+              "description": "Do not wait for any loading event and will return immediately",
+              "value": "noWait",
+              "displayName": "No Wait"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ],
+          "operation": [
+            "load"
+          ]
+        }
+      },
+      "_operation": "load",
+      "_source": "action_window_load.operation"
+    },
+    {
+      "displayName": "Output Binary Image",
+      "name": "outputImageAsBinary",
+      "type": "boolean",
+      "description": "Whether to output the image as a binary file instead of a base64 encoded string",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ],
+          "operation": [
+            "takeScreenshot"
+          ]
+        }
+      },
+      "_operation": "takeScreenshot",
+      "_source": "action_window_takeScreenshot.operation"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Delete an uploaded file",
+      "action": "Delete a file",
+      "value": "deleteFile",
+      "default": "getMany",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Delete",
+          "description": "Delete an uploaded file",
+          "action": "Delete a file",
+          "value": "deleteFile",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get a details of an uploaded file",
+          "action": "Get a file",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get details of multiple uploaded files",
+          "action": "Get many files",
+          "value": "getMany",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Load",
+          "description": "Load a file into a session",
+          "action": "Load a file",
+          "value": "load",
+          "displayName": "Load"
+        },
+        {
+          "name": "Upload",
+          "description": "Upload a file into a session",
+          "action": "Upload a file",
+          "value": "upload",
+          "displayName": "Upload"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ]
+        }
+      },
+      "_source": "file"
+    },
+    {
+      "displayName": "File ID",
+      "name": "fileId",
+      "type": "string",
+      "description": "ID of the file to delete",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ],
+          "operation": [
+            "deleteFile"
+          ]
+        }
+      },
+      "_operation": "deleteFile",
+      "_source": "action_file_delete.operation"
+    },
+    {
+      "displayName": "File ID",
+      "name": "fileId",
+      "type": "string",
+      "description": "ID of the file to load into the session",
+      "default": "",
+      "required": true,
+      "_source": "action_file_load.operation"
+    },
+    {
+      "displayName": "Output Binary File",
+      "name": "outputBinaryFile",
+      "type": "boolean",
+      "description": "Whether to output the file in binary format if the file is ready for download",
+      "default": false,
+      "_source": "action_file_get.operation"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "_source": "action_file_getMany.operation"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 10,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ],
+          "operation": [
+            "getMany"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getMany",
+      "_source": "action_file_getMany.operation"
+    },
+    {
+      "displayName": "Session IDs",
+      "name": "sessionIds",
+      "type": "string",
+      "description": "Comma-separated list of <a href=\"https://docs.airtop.ai/api-reference/airtop-api/sessions/create\" target=\"_blank\">Session IDs</a> to filter files by. When empty, all files from all sessions will be returned.",
+      "placeholder": "e.g. 6aac6f73-bd89-4a76-ab32-5a6c422e8b0b, a13c6f73-bd89-4a76-ab32-5a6c422e8224",
+      "default": "",
+      "_source": "action_file_getMany.operation"
+    },
+    {
+      "displayName": "Output Files in Single Item",
+      "name": "outputSingleItem",
+      "type": "boolean",
+      "description": "Whether to output one item containing all files or output each file as a separate item",
+      "default": true,
+      "_source": "action_file_getMany.operation"
+    },
+    {
+      "displayName": "Element Description",
+      "name": "elementDescription",
+      "type": "string",
+      "description": "A specific description of the element to execute the interaction on",
+      "placeholder": "e.g. the search box at the top of the page",
+      "default": "",
+      "_source": "action_file_load.operation"
+    },
+    {
+      "displayName": "Include Hidden Elements",
+      "name": "includeHiddenElements",
+      "type": "boolean",
+      "description": "Whether to include hidden elements in the interaction",
+      "default": true,
+      "_source": "action_file_load.operation"
+    },
+    {
+      "displayName": "File Name",
+      "name": "fileName",
+      "type": "string",
+      "description": "Name for the file to upload. For a session, all files loaded should have <b>unique names</b>.",
+      "default": "",
+      "required": true,
+      "_source": "action_file_upload.operation"
+    },
+    {
+      "displayName": "File Type",
+      "name": "fileType",
+      "type": "options",
+      "description": "Choose the type of file to upload. Defaults to 'Customer Upload'.",
+      "value": "browser_download",
+      "default": "customer_upload",
+      "options": [
+        {
+          "name": "Browser Download",
+          "value": "browser_download",
+          "displayName": "Browser Download"
+        },
+        {
+          "name": "Screenshot",
+          "value": "screenshot",
+          "displayName": "Screenshot"
+        },
+        {
+          "name": "Video",
+          "value": "video",
+          "displayName": "Video"
+        },
+        {
+          "name": "Customer Upload",
+          "value": "customer_upload",
+          "displayName": "Customer Upload"
+        }
+      ],
+      "_source": "action_file_upload.operation"
+    },
+    {
+      "displayName": "Source",
+      "name": "source",
+      "type": "options",
+      "description": "Source of the file to upload",
+      "value": "url",
+      "default": "url",
+      "options": [
+        {
+          "name": "URL",
+          "value": "url",
+          "displayName": "Url"
+        },
+        {
+          "name": "Binary",
+          "value": "binary",
+          "displayName": "Binary"
+        }
+      ],
+      "_source": "action_file_upload.operation"
+    },
+    {
+      "displayName": "Binary Property",
+      "name": "binaryPropertyName",
+      "type": "string",
+      "description": "Name of the binary property containing the file data",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "source": [
+            "binary"
+          ]
+        }
+      },
+      "_source": "action_file_upload.operation"
+    },
+    {
+      "displayName": "URL",
+      "name": "url",
+      "type": "string",
+      "description": "URL from where to fetch the file to upload",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "source": [
+            "url"
+          ]
+        }
+      },
+      "_source": "action_file_upload.operation"
+    },
+    {
+      "displayName": "Trigger File Input",
+      "name": "triggerFileInputParameter",
+      "type": "boolean",
+      "description": "Whether to automatically trigger the file input dialog in the current window. If disabled, the file will only be uploaded to the session without opening the file input dialog.",
+      "default": true,
+      "_source": "action_file_upload.operation"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Query a page to extract data or ask a question given the data on the page",
+      "action": "Query page",
+      "value": "query",
+      "default": "getPaginated",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Query Page",
+          "description": "Query a page to extract data or ask a question given the data on the page",
+          "action": "Query page",
+          "value": "query",
+          "displayName": "Query Page"
+        },
+        {
+          "name": "Query Page with Pagination",
+          "description": "Extract content from paginated or dynamically loaded pages",
+          "action": "Query page with pagination",
+          "value": "getPaginated",
+          "displayName": "Query Page With Pagination"
+        },
+        {
+          "name": "Smart Scrape",
+          "description": "Scrape a page and return the data as markdown",
+          "action": "Smart scrape page",
+          "value": "scrape",
+          "displayName": "Smart Scrape"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "extraction"
+          ]
+        }
+      },
+      "_source": "extraction"
+    },
+    {
+      "displayName": "Prompt",
+      "name": "prompt",
+      "type": "string",
+      "description": "The prompt to extract data from the pages",
+      "placeholder": "e.g. Extract all the product names and prices",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "rows": 4
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "extraction"
+          ],
+          "operation": [
+            "getPaginated"
+          ]
+        }
+      },
+      "_operation": "getPaginated",
+      "_source": "action_extraction_Extraction.resource"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The strategy for interacting with the page",
+      "placeholder": "Add Field",
+      "value": "auto",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Interaction Mode",
+          "name": "interactionMode",
+          "type": "options",
+          "description": "The strategy for interacting with the page",
+          "value": "auto",
+          "default": "auto",
+          "options": [
+            {
+              "name": "Auto",
+              "description": "Automatically choose the most cost-effective mode",
+              "value": "auto",
+              "displayName": "Auto"
+            },
+            {
+              "name": "Accurate",
+              "description": "Prioritize accuracy over cost",
+              "value": "accurate",
+              "displayName": "Accurate"
+            },
+            {
+              "name": "Cost Efficient",
+              "description": "Minimize costs while ensuring effectiveness",
+              "value": "cost-efficient",
+              "displayName": "Cost Efficient"
+            }
+          ]
+        },
+        {
+          "displayName": "Pagination Mode",
+          "name": "paginationMode",
+          "type": "options",
+          "description": "The pagination approach to use",
+          "value": "auto",
+          "default": "auto",
+          "options": [
+            {
+              "name": "Auto",
+              "description": "Look for pagination links first, then try infinite scrolling",
+              "value": "auto",
+              "displayName": "Auto"
+            },
+            {
+              "name": "Paginated",
+              "description": "Only use pagination links",
+              "value": "paginated",
+              "displayName": "Paginated"
+            },
+            {
+              "name": "Infinite Scroll",
+              "description": "Scroll the page to load more content",
+              "value": "infinite-scroll",
+              "displayName": "Infinite Scroll"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "extraction"
+          ],
+          "operation": [
+            "getPaginated"
+          ]
+        }
+      },
+      "_operation": "getPaginated",
+      "_source": "action_extraction_Extraction.resource"
+    },
+    {
+      "displayName": "JSON Output Schema",
+      "name": "outputSchema",
+      "type": "json",
+      "description": "JSON schema defining the structure of the output",
+      "hint": "If you want to force your output to be JSON, provide a valid JSON schema describing the output. You can generate one automatically in the <a href=\"https://portal.airtop.ai/\" target=\"_blank\">Airtop API Playground</a>.",
+      "default": "",
+      "_source": "action_extraction_Extraction.resource"
+    },
+    {
+      "displayName": "Parse JSON Output",
+      "name": "parseJsonOutput",
+      "type": "boolean",
+      "description": "Whether to parse the model's response to JSON in the output. Requires the 'JSON Output Schema' parameter to be set.",
+      "default": true,
+      "_source": "action_extraction_Extraction.resource"
+    },
+    {
+      "displayName": "Prompt",
+      "name": "prompt",
+      "type": "string",
+      "description": "The prompt to query the page content",
+      "placeholder": "e.g. Is there a login form in this page?",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "rows": 4
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "extraction"
+          ],
+          "operation": [
+            "query"
+          ]
+        }
+      },
+      "_operation": "query",
+      "_source": "action_extraction_Extraction.resource"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether to analyze the web page visually when fulfilling the request",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include Visual Analysis",
+          "name": "includeVisualAnalysis",
+          "type": "boolean",
+          "description": "Whether to analyze the web page visually when fulfilling the request",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "extraction"
+          ],
+          "operation": [
+            "query"
+          ]
+        }
+      },
+      "_operation": "query",
+      "_source": "action_extraction_Extraction.resource"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Execute a click on an element given a description",
+      "action": "Click an element",
+      "value": "click",
+      "default": "click",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Click an Element",
+          "description": "Execute a click on an element given a description",
+          "action": "Click an element",
+          "value": "click",
+          "displayName": "Click An Element"
+        },
+        {
+          "name": "Fill Form",
+          "description": "Fill a form with the provided information",
+          "action": "Fill form",
+          "value": "fill",
+          "displayName": "Fill Form"
+        },
+        {
+          "name": "Hover on an Element",
+          "description": "Execute a hover action on an element given a description",
+          "action": "Hover on an element",
+          "value": "hover",
+          "displayName": "Hover On An Element"
+        },
+        {
+          "name": "Scroll",
+          "description": "Execute a scroll action on the page",
+          "action": "Scroll on page",
+          "value": "scroll",
+          "displayName": "Scroll"
+        },
+        {
+          "name": "Type",
+          "description": "Execute a Type action on an element given a description",
+          "action": "Type text",
+          "value": "type",
+          "displayName": "Type"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ]
+        }
+      },
+      "_source": "interaction"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Defines the strategy for visual analysis of the current window",
+      "placeholder": "Add Field",
+      "value": "auto",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Visual Scope",
+          "name": "visualScope",
+          "type": "options",
+          "description": "Defines the strategy for visual analysis of the current window",
+          "value": "auto",
+          "default": "auto",
+          "options": [
+            {
+              "name": "Auto",
+              "description": "Provides the simplest out-of-the-box experience for most web pages",
+              "value": "auto",
+              "displayName": "Auto"
+            },
+            {
+              "name": "Viewport",
+              "description": "For analysis of the current browser view only",
+              "value": "viewport",
+              "displayName": "Viewport"
+            },
+            {
+              "name": "Page",
+              "description": "For analysis of the entire page",
+              "value": "page",
+              "displayName": "Page"
+            },
+            {
+              "name": "Scan",
+              "description": "For a full page analysis on sites that have compatibility issues with 'Page' mode",
+              "value": "scan",
+              "displayName": "Scan"
+            }
+          ]
+        },
+        {
+          "displayName": "Wait Until Event After Navigation",
+          "name": "waitForNavigation",
+          "type": "options",
+          "description": "The condition to wait for the navigation to complete after an interaction (click, type or hover). Defaults to 'Fully Loaded'.",
+          "value": "load",
+          "default": "load",
+          "options": [
+            {
+              "name": "Fully Loaded (Slower)",
+              "value": "load",
+              "displayName": "Fully Loaded (slower)"
+            },
+            {
+              "name": "DOM Only Loaded (Faster)",
+              "value": "domcontentloaded",
+              "displayName": "Dom Only Loaded (faster)"
+            },
+            {
+              "name": "All Network Activity Has Stopped",
+              "value": "networkidle0",
+              "displayName": "All Network Activity Has Stopped"
+            },
+            {
+              "name": "Most Network Activity Has Stopped",
+              "value": "networkidle2",
+              "displayName": "Most Network Activity Has Stopped"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "click",
+            "hover",
+            "type",
+            "scroll"
+          ]
+        }
+      },
+      "_operation": "click",
+      "_source": "interaction"
+    },
+    {
+      "displayName": "Click Type",
+      "name": "clickType",
+      "type": "options",
+      "description": "The type of click to perform. Defaults to left click.",
+      "value": "click",
+      "default": "click",
+      "options": [
+        {
+          "name": "Left Click",
+          "value": "click",
+          "displayName": "Left Click"
+        },
+        {
+          "name": "Double Click",
+          "value": "doubleClick",
+          "displayName": "Double Click"
+        },
+        {
+          "name": "Right Click",
+          "value": "rightClick",
+          "displayName": "Right Click"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "click"
+          ]
+        }
+      },
+      "_operation": "click",
+      "_source": "action_interaction_Interaction.resource"
+    },
+    {
+      "displayName": "Form Data",
+      "name": "formData",
+      "type": "string",
+      "description": "The information to fill into the form written in natural language",
+      "placeholder": "e.g. \"Name: John Doe, Email: john.doe@example.com\"",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "rows": 4
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "fill"
+          ]
+        }
+      },
+      "_operation": "fill",
+      "_source": "action_interaction_fill.operation"
+    },
+    {
+      "displayName": "Scroll Mode",
+      "name": "scrollingMode",
+      "type": "options",
+      "description": "Choose the mode of scrolling",
+      "value": "automatic",
+      "default": "automatic",
+      "required": true,
+      "options": [
+        {
+          "name": "Automatic",
+          "description": "Describe with natural language the element to scroll to",
+          "value": "automatic",
+          "displayName": "Automatic"
+        },
+        {
+          "name": "Manual",
+          "description": "Define the direction and amount to scroll by",
+          "value": "manual",
+          "displayName": "Manual"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "scroll"
+          ]
+        }
+      },
+      "_operation": "scroll",
+      "_source": "action_interaction_Interaction.resource"
+    },
+    {
+      "displayName": "Element Description",
+      "name": "scrollToElement",
+      "type": "string",
+      "description": "A natural language description of the element to scroll to",
+      "placeholder": "e.g. the page section titled \"Contact Us\"",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "scroll"
+          ],
+          "scrollingMode": [
+            "automatic"
+          ]
+        }
+      },
+      "_operation": "scroll",
+      "_source": "action_interaction_Interaction.resource"
+    },
+    {
+      "displayName": "Scroll To Edge",
+      "name": "scrollToEdge",
+      "type": "fixedCollection",
+      "description": "The direction to scroll to. When 'Scroll By' is defined, 'Scroll To Edge' action will be executed first, then 'Scroll By' action.",
+      "placeholder": "Add Edge Direction",
+      "default": {},
+      "options": [
+        {
+          "name": "edgeValues",
+          "displayName": "Page Edges",
+          "values": [
+            {
+              "displayName": "Vertically",
+              "name": "yAxis",
+              "type": "options",
+              "default": "",
+              "options": [
+                {
+                  "name": "Empty",
+                  "displayName": "Empty"
+                },
+                {
+                  "name": "Top",
+                  "value": "top",
+                  "displayName": "Top"
+                },
+                {
+                  "name": "Bottom",
+                  "value": "bottom",
+                  "displayName": "Bottom"
+                }
+              ]
+            },
+            {
+              "displayName": "Horizontally",
+              "name": "xAxis",
+              "type": "options",
+              "default": "",
+              "options": [
+                {
+                  "name": "Empty",
+                  "displayName": "Empty"
+                },
+                {
+                  "name": "Left",
+                  "value": "left",
+                  "displayName": "Left"
+                },
+                {
+                  "name": "Right",
+                  "value": "right",
+                  "displayName": "Right"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "scroll"
+          ],
+          "scrollingMode": [
+            "manual"
+          ]
+        }
+      },
+      "_operation": "scroll",
+      "_source": "action_interaction_Interaction.resource"
+    },
+    {
+      "displayName": "Scroll By",
+      "name": "scrollBy",
+      "type": "fixedCollection",
+      "description": "The amount to scroll by. When 'Scroll To Edge' is defined, 'Scroll By' action will be executed after 'Scroll To Edge'.",
+      "placeholder": "Add Scroll Amount",
+      "default": {},
+      "options": [
+        {
+          "name": "scrollValues",
+          "displayName": "Scroll Values",
+          "values": [
+            {
+              "displayName": "Vertically",
+              "name": "yAxis",
+              "type": "string",
+              "placeholder": "e.g. 200px, 50%, -100px",
+              "default": ""
+            },
+            {
+              "displayName": "Horizontally",
+              "name": "xAxis",
+              "type": "string",
+              "placeholder": "e.g. 50px, 10%, -200px",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "scroll"
+          ],
+          "scrollingMode": [
+            "manual"
+          ]
+        }
+      },
+      "_operation": "scroll",
+      "_source": "action_interaction_Interaction.resource"
+    },
+    {
+      "displayName": "Scrollable Area",
+      "name": "scrollWithin",
+      "type": "string",
+      "description": "Scroll within an element on the page",
+      "placeholder": "e.g. the left sidebar",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "scroll"
+          ]
+        }
+      },
+      "_operation": "scroll",
+      "_source": "action_interaction_Interaction.resource"
+    },
+    {
+      "displayName": "Text",
+      "name": "text",
+      "type": "string",
+      "description": "The text to type into the browser window",
+      "placeholder": "e.g. email@example.com",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "type"
+          ]
+        }
+      },
+      "_operation": "type",
+      "_source": "action_interaction_type.operation"
+    },
+    {
+      "displayName": "Press Enter Key",
+      "name": "pressEnterKey",
+      "type": "boolean",
+      "description": "Whether to press the Enter key after typing the text",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "type"
+          ]
+        }
+      },
+      "_operation": "type",
+      "_source": "action_interaction_type.operation"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create Session",
+      "description": "Create an Airtop browser session",
+      "action": "Create a session",
+      "value": "create",
+      "displayName": "Create Session"
+    },
+    {
+      "name": "Save Profile on Termination",
+      "description": "Save in a profile changes made in your browsing session such as cookies and local storage",
+      "action": "Save a profile on session termination",
+      "value": "save",
+      "displayName": "Save Profile On Termination"
+    },
+    {
+      "name": "Terminate Session",
+      "description": "Terminate a session",
+      "action": "Terminate a session",
+      "value": "terminate",
+      "displayName": "Terminate Session"
+    },
+    {
+      "name": "Wait for Download",
+      "description": "Wait for a file download to become available",
+      "action": "Wait for a download",
+      "value": "waitForDownload",
+      "displayName": "Wait For Download"
+    },
+    {
+      "name": "Close Window",
+      "description": "Close a window inside a session",
+      "action": "Close a window",
+      "value": "close",
+      "displayName": "Close Window"
+    },
+    {
+      "name": "Get Live View",
+      "description": "Get information about a browser window, including the live view URL",
+      "action": "Get live view",
+      "value": "getLiveView",
+      "displayName": "Get Live View"
+    },
+    {
+      "name": "List Windows",
+      "description": "List all browser windows in a session",
+      "action": "List windows",
+      "value": "list",
+      "displayName": "List Windows"
+    },
+    {
+      "name": "Load URL",
+      "description": "Load a URL in an existing window",
+      "action": "Load a page",
+      "value": "load",
+      "displayName": "Load Url"
+    },
+    {
+      "name": "Take Screenshot",
+      "description": "Take a screenshot of the current window",
+      "action": "Take screenshot",
+      "value": "takeScreenshot",
+      "displayName": "Take Screenshot"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete an uploaded file",
+      "action": "Delete a file",
+      "value": "deleteFile",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Get a details of an uploaded file",
+      "action": "Get a file",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get details of multiple uploaded files",
+      "action": "Get many files",
+      "value": "getMany",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Upload",
+      "description": "Upload a file into a session",
+      "action": "Upload a file",
+      "value": "upload",
+      "displayName": "Upload"
+    },
+    {
+      "name": "Query Page",
+      "description": "Query a page to extract data or ask a question given the data on the page",
+      "action": "Query page",
+      "value": "query",
+      "displayName": "Query Page"
+    },
+    {
+      "name": "Query Page with Pagination",
+      "description": "Extract content from paginated or dynamically loaded pages",
+      "action": "Query page with pagination",
+      "value": "getPaginated",
+      "displayName": "Query Page With Pagination"
+    },
+    {
+      "name": "Smart Scrape",
+      "description": "Scrape a page and return the data as markdown",
+      "action": "Smart scrape page",
+      "value": "scrape",
+      "displayName": "Smart Scrape"
+    },
+    {
+      "name": "Click an Element",
+      "description": "Execute a click on an element given a description",
+      "action": "Click an element",
+      "value": "click",
+      "displayName": "Click An Element"
+    },
+    {
+      "name": "Fill Form",
+      "description": "Fill a form with the provided information",
+      "action": "Fill form",
+      "value": "fill",
+      "displayName": "Fill Form"
+    },
+    {
+      "name": "Hover on an Element",
+      "description": "Execute a hover action on an element given a description",
+      "action": "Hover on an element",
+      "value": "hover",
+      "displayName": "Hover On An Element"
+    },
+    {
+      "name": "Scroll",
+      "description": "Execute a scroll action on the page",
+      "action": "Scroll on page",
+      "value": "scroll",
+      "displayName": "Scroll"
+    },
+    {
+      "name": "Type",
+      "description": "Execute a Type action on an element given a description",
+      "action": "Type text",
+      "value": "type",
+      "displayName": "Type"
+    }
+  ],
+  "operations_by_resource": {
+    "session": [
+      {
+        "name": "Create Session",
+        "description": "Create an Airtop browser session",
+        "action": "Create a session",
+        "value": "create",
+        "displayName": "Create Session"
+      },
+      {
+        "name": "Save Profile on Termination",
+        "description": "Save in a profile changes made in your browsing session such as cookies and local storage",
+        "action": "Save a profile on session termination",
+        "value": "save",
+        "displayName": "Save Profile On Termination"
+      },
+      {
+        "name": "Terminate Session",
+        "description": "Terminate a session",
+        "action": "Terminate a session",
+        "value": "terminate",
+        "displayName": "Terminate Session"
+      },
+      {
+        "name": "Wait for Download",
+        "description": "Wait for a file download to become available",
+        "action": "Wait for a download",
+        "value": "waitForDownload",
+        "displayName": "Wait For Download"
+      }
+    ],
+    "window": [
+      {
+        "name": "Close Window",
+        "description": "Close a window inside a session",
+        "action": "Close a window",
+        "value": "close",
+        "displayName": "Close Window"
+      },
+      {
+        "name": "Create a New Browser Window",
+        "description": "Create a new browser window inside a session. Can load a URL when created.",
+        "action": "Create a window",
+        "value": "create",
+        "displayName": "Create A New Browser Window"
+      },
+      {
+        "name": "Get Live View",
+        "description": "Get information about a browser window, including the live view URL",
+        "action": "Get live view",
+        "value": "getLiveView",
+        "displayName": "Get Live View"
+      },
+      {
+        "name": "List Windows",
+        "description": "List all browser windows in a session",
+        "action": "List windows",
+        "value": "list",
+        "displayName": "List Windows"
+      },
+      {
+        "name": "Load URL",
+        "description": "Load a URL in an existing window",
+        "action": "Load a page",
+        "value": "load",
+        "displayName": "Load Url"
+      },
+      {
+        "name": "Take Screenshot",
+        "description": "Take a screenshot of the current window",
+        "action": "Take screenshot",
+        "value": "takeScreenshot",
+        "displayName": "Take Screenshot"
+      }
+    ],
+    "file": [
+      {
+        "name": "Delete",
+        "description": "Delete an uploaded file",
+        "action": "Delete a file",
+        "value": "deleteFile",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get a details of an uploaded file",
+        "action": "Get a file",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get details of multiple uploaded files",
+        "action": "Get many files",
+        "value": "getMany",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Load",
+        "description": "Load a file into a session",
+        "action": "Load a file",
+        "value": "load",
+        "displayName": "Load"
+      },
+      {
+        "name": "Upload",
+        "description": "Upload a file into a session",
+        "action": "Upload a file",
+        "value": "upload",
+        "displayName": "Upload"
+      }
+    ],
+    "extraction": [
+      {
+        "name": "Query Page",
+        "description": "Query a page to extract data or ask a question given the data on the page",
+        "action": "Query page",
+        "value": "query",
+        "displayName": "Query Page"
+      },
+      {
+        "name": "Query Page with Pagination",
+        "description": "Extract content from paginated or dynamically loaded pages",
+        "action": "Query page with pagination",
+        "value": "getPaginated",
+        "displayName": "Query Page With Pagination"
+      },
+      {
+        "name": "Smart Scrape",
+        "description": "Scrape a page and return the data as markdown",
+        "action": "Smart scrape page",
+        "value": "scrape",
+        "displayName": "Smart Scrape"
+      }
+    ],
+    "interaction": [
+      {
+        "name": "Click an Element",
+        "description": "Execute a click on an element given a description",
+        "action": "Click an element",
+        "value": "click",
+        "displayName": "Click An Element"
+      },
+      {
+        "name": "Fill Form",
+        "description": "Fill a form with the provided information",
+        "action": "Fill form",
+        "value": "fill",
+        "displayName": "Fill Form"
+      },
+      {
+        "name": "Hover on an Element",
+        "description": "Execute a hover action on an element given a description",
+        "action": "Hover on an element",
+        "value": "hover",
+        "displayName": "Hover On An Element"
+      },
+      {
+        "name": "Scroll",
+        "description": "Execute a scroll action on the page",
+        "action": "Scroll on page",
+        "value": "scroll",
+        "displayName": "Scroll"
+      },
+      {
+        "name": "Type",
+        "description": "Execute a Type action on an element given a description",
+        "action": "Type text",
+        "value": "type",
+        "displayName": "Type"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "airtopApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{ $json[\"sessionId\"] }}",
+    "={{ $json[\"windowId\"] }}",
+    "={{ $parameter[\"operation\"] + \": \" + $parameter[\"resource\"] }}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ]
+        }
+      }
+    },
+    "proxyConfig": {
+      "displayOptions": {
+        "show": {
+          "proxy": [
+            "integrated"
+          ]
+        }
+      }
+    },
+    "proxyUrl": {
+      "format": "url",
+      "displayOptions": {
+        "show": {
+          "proxy": [
+            "proxyUrl"
+          ]
+        }
+      }
+    },
+    "notice": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "session"
+          ],
+          "operation": [
+            "save"
+          ]
+        }
+      }
+    },
+    "sessionId": {
+      "required": true
+    },
+    "windowId": {
+      "required": true
+    },
+    "getLiveView": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "includeNavigationBar": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ],
+          "operation": [
+            "create"
+          ],
+          "getLiveView": [
+            true
+          ]
+        }
+      }
+    },
+    "screenResolution": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ],
+          "operation": [
+            "create"
+          ],
+          "getLiveView": [
+            true
+          ]
+        }
+      }
+    },
+    "disableResize": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ],
+          "operation": [
+            "create"
+          ],
+          "getLiveView": [
+            true
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "click",
+            "hover",
+            "type",
+            "scroll"
+          ]
+        }
+      }
+    },
+    "url": {
+      "required": true,
+      "format": "url",
+      "displayOptions": {
+        "show": {
+          "source": [
+            "url"
+          ]
+        }
+      }
+    },
+    "outputImageAsBinary": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "window"
+          ],
+          "operation": [
+            "takeScreenshot"
+          ]
+        }
+      }
+    },
+    "fileId": {
+      "required": true
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "file"
+          ],
+          "operation": [
+            "getMany"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "fileName": {
+      "required": true
+    },
+    "binaryPropertyName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "source": [
+            "binary"
+          ]
+        }
+      }
+    },
+    "prompt": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "extraction"
+          ],
+          "operation": [
+            "query"
+          ]
+        }
+      }
+    },
+    "clickType": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "click"
+          ]
+        }
+      }
+    },
+    "formData": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "fill"
+          ]
+        }
+      }
+    },
+    "scrollingMode": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "scroll"
+          ]
+        }
+      }
+    },
+    "scrollToElement": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "scroll"
+          ],
+          "scrollingMode": [
+            "automatic"
+          ]
+        }
+      }
+    },
+    "scrollToEdge": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "scroll"
+          ],
+          "scrollingMode": [
+            "manual"
+          ]
+        }
+      }
+    },
+    "scrollBy": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "scroll"
+          ],
+          "scrollingMode": [
+            "manual"
+          ]
+        }
+      }
+    },
+    "scrollWithin": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "scroll"
+          ]
+        }
+      }
+    },
+    "text": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "type"
+          ]
+        }
+      }
+    },
+    "pressEnterKey": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "interaction"
+          ],
+          "operation": [
+            "type"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "extraction",
+          "name": "Extraction",
+          "description": ""
+        },
+        {
+          "value": "file",
+          "name": "File",
+          "description": ""
+        },
+        {
+          "value": "interaction",
+          "name": "Interaction",
+          "description": ""
+        },
+        {
+          "value": "session",
+          "name": "Session",
+          "description": ""
+        },
+        {
+          "value": "window",
+          "name": "Window",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "click",
+          "name": "Click an Element",
+          "description": "Execute a click on an element given a description"
+        },
+        {
+          "value": "fill",
+          "name": "Fill Form",
+          "description": "Fill a form with the provided information"
+        },
+        {
+          "value": "hover",
+          "name": "Hover on an Element",
+          "description": "Execute a hover action on an element given a description"
+        },
+        {
+          "value": "scroll",
+          "name": "Scroll",
+          "description": "Execute a scroll action on the page"
+        },
+        {
+          "value": "type",
+          "name": "Type",
+          "description": "Execute a Type action on an element given a description"
+        }
+      ]
+    },
+    "saveProfileOnTermination": {
+      "type": "boolean",
+      "displayName": "Save Profile",
+      "name": "saveProfileOnTermination"
+    },
+    "record": {
+      "type": "boolean",
+      "displayName": "Record Session",
+      "name": "record"
+    },
+    "timeoutMinutes": {
+      "type": "number",
+      "displayName": "Idle Timeout",
+      "name": "timeoutMinutes"
+    },
+    "proxy": {
+      "type": "options",
+      "displayName": "Proxy",
+      "name": "proxy",
+      "possibleValues": [
+        {
+          "value": "none",
+          "name": "None",
+          "description": "No proxy will be used"
+        },
+        {
+          "value": "integrated",
+          "name": "Integrated",
+          "description": "Use Airtop-provided proxy"
+        },
+        {
+          "value": "proxyUrl",
+          "name": "Proxy URL",
+          "description": "Use a proxy URL to configure the proxy"
+        }
+      ]
+    },
+    "proxyConfig": {
+      "type": "collection",
+      "displayName": "Proxy Configuration",
+      "name": "proxyConfig",
+      "subProperties": [
+        {
+          "displayName": "Country",
+          "name": "country",
+          "type": "options",
+          "description": "The country to use for the proxy. Not all countries are guaranteed to provide a proxy. Learn more <a href=\"https://docs.airtop.ai/api-reference/airtop-api/sessions/create#request.body.configuration.proxy.Proxy.Airtop-Proxy-Configuration.country\" target=\"_blank\">here</a>.",
+          "default": "US"
+        },
+        {
+          "displayName": "Keep Same IP",
+          "name": "sticky",
+          "type": "boolean",
+          "description": "Whether to try to maintain the same IP address for the duration of the session. Airtop can guarantee that the same IP address will be available for up to a maximum of 30 minutes.",
+          "default": true
+        }
+      ]
+    },
+    "proxyUrl": {
+      "type": "string",
+      "displayName": "Proxy URL",
+      "name": "proxyUrl"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Visual Scope",
+          "name": "visualScope",
+          "type": "options",
+          "description": "Defines the strategy for visual analysis of the current window",
+          "value": "auto",
+          "default": "auto",
+          "options": [
+            {
+              "name": "Auto",
+              "description": "Provides the simplest out-of-the-box experience for most web pages",
+              "value": "auto",
+              "displayName": "Auto"
+            },
+            {
+              "name": "Viewport",
+              "description": "For analysis of the current browser view only",
+              "value": "viewport",
+              "displayName": "Viewport"
+            },
+            {
+              "name": "Page",
+              "description": "For analysis of the entire page",
+              "value": "page",
+              "displayName": "Page"
+            },
+            {
+              "name": "Scan",
+              "description": "For a full page analysis on sites that have compatibility issues with 'Page' mode",
+              "value": "scan",
+              "displayName": "Scan"
+            }
+          ]
+        },
+        {
+          "displayName": "Wait Until Event After Navigation",
+          "name": "waitForNavigation",
+          "type": "options",
+          "description": "The condition to wait for the navigation to complete after an interaction (click, type or hover). Defaults to 'Fully Loaded'.",
+          "value": "load",
+          "default": "load",
+          "options": [
+            {
+              "name": "Fully Loaded (Slower)",
+              "value": "load",
+              "displayName": "Fully Loaded (slower)"
+            },
+            {
+              "name": "DOM Only Loaded (Faster)",
+              "value": "domcontentloaded",
+              "displayName": "Dom Only Loaded (faster)"
+            },
+            {
+              "name": "All Network Activity Has Stopped",
+              "value": "networkidle0",
+              "displayName": "All Network Activity Has Stopped"
+            },
+            {
+              "name": "Most Network Activity Has Stopped",
+              "value": "networkidle2",
+              "displayName": "Most Network Activity Has Stopped"
+            }
+          ]
+        }
+      ]
+    },
+    "profileName": {
+      "type": "string",
+      "displayName": "Profile Name",
+      "name": "profileName"
+    },
+    "notice": {
+      "type": "notice",
+      "displayName": "Note: This operation is not needed if you enabled 'Save Profile' in the 'Create Session' operation",
+      "name": "notice"
+    },
+    "sessionId": {
+      "type": "string",
+      "displayName": "Session ID",
+      "name": "sessionId"
+    },
+    "windowId": {
+      "type": "string",
+      "displayName": "Window ID",
+      "name": "windowId"
+    },
+    "getLiveView": {
+      "type": "boolean",
+      "displayName": "Get Live View",
+      "name": "getLiveView"
+    },
+    "includeNavigationBar": {
+      "type": "boolean",
+      "displayName": "Include Navigation Bar",
+      "name": "includeNavigationBar"
+    },
+    "screenResolution": {
+      "type": "string",
+      "displayName": "Screen Resolution",
+      "name": "screenResolution"
+    },
+    "disableResize": {
+      "type": "boolean",
+      "displayName": "Disable Resize",
+      "name": "disableResize"
+    },
+    "url": {
+      "type": "string",
+      "displayName": "URL",
+      "name": "url"
+    },
+    "outputImageAsBinary": {
+      "type": "boolean",
+      "displayName": "Output Binary Image",
+      "name": "outputImageAsBinary"
+    },
+    "fileId": {
+      "type": "string",
+      "displayName": "File ID",
+      "name": "fileId"
+    },
+    "outputBinaryFile": {
+      "type": "boolean",
+      "displayName": "Output Binary File",
+      "name": "outputBinaryFile"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 100
+      }
+    },
+    "sessionIds": {
+      "type": "string",
+      "displayName": "Session IDs",
+      "name": "sessionIds"
+    },
+    "outputSingleItem": {
+      "type": "boolean",
+      "displayName": "Output Files in Single Item",
+      "name": "outputSingleItem"
+    },
+    "elementDescription": {
+      "type": "string",
+      "displayName": "Element Description",
+      "name": "elementDescription"
+    },
+    "includeHiddenElements": {
+      "type": "boolean",
+      "displayName": "Include Hidden Elements",
+      "name": "includeHiddenElements"
+    },
+    "fileName": {
+      "type": "string",
+      "displayName": "File Name",
+      "name": "fileName"
+    },
+    "fileType": {
+      "type": "options",
+      "displayName": "File Type",
+      "name": "fileType",
+      "possibleValues": [
+        {
+          "value": "browser_download",
+          "name": "Browser Download",
+          "description": ""
+        },
+        {
+          "value": "screenshot",
+          "name": "Screenshot",
+          "description": ""
+        },
+        {
+          "value": "video",
+          "name": "Video",
+          "description": ""
+        },
+        {
+          "value": "customer_upload",
+          "name": "Customer Upload",
+          "description": ""
+        }
+      ]
+    },
+    "source": {
+      "type": "options",
+      "displayName": "Source",
+      "name": "source",
+      "possibleValues": [
+        {
+          "value": "url",
+          "name": "URL",
+          "description": ""
+        },
+        {
+          "value": "binary",
+          "name": "Binary",
+          "description": ""
+        }
+      ]
+    },
+    "binaryPropertyName": {
+      "type": "string",
+      "displayName": "Binary Property",
+      "name": "binaryPropertyName"
+    },
+    "triggerFileInputParameter": {
+      "type": "boolean",
+      "displayName": "Trigger File Input",
+      "name": "triggerFileInputParameter"
+    },
+    "prompt": {
+      "type": "string",
+      "displayName": "Prompt",
+      "name": "prompt",
+      "typeOptions": {
+        "rows": 4
+      }
+    },
+    "outputSchema": {
+      "type": "json",
+      "displayName": "JSON Output Schema",
+      "name": "outputSchema"
+    },
+    "parseJsonOutput": {
+      "type": "boolean",
+      "displayName": "Parse JSON Output",
+      "name": "parseJsonOutput"
+    },
+    "clickType": {
+      "type": "options",
+      "displayName": "Click Type",
+      "name": "clickType",
+      "possibleValues": [
+        {
+          "value": "click",
+          "name": "Left Click",
+          "description": ""
+        },
+        {
+          "value": "doubleClick",
+          "name": "Double Click",
+          "description": ""
+        },
+        {
+          "value": "rightClick",
+          "name": "Right Click",
+          "description": ""
+        }
+      ]
+    },
+    "formData": {
+      "type": "string",
+      "displayName": "Form Data",
+      "name": "formData",
+      "typeOptions": {
+        "rows": 4
+      }
+    },
+    "scrollingMode": {
+      "type": "options",
+      "displayName": "Scroll Mode",
+      "name": "scrollingMode",
+      "possibleValues": [
+        {
+          "value": "automatic",
+          "name": "Automatic",
+          "description": "Describe with natural language the element to scroll to"
+        },
+        {
+          "value": "manual",
+          "name": "Manual",
+          "description": "Define the direction and amount to scroll by"
+        }
+      ]
+    },
+    "scrollToElement": {
+      "type": "string",
+      "displayName": "Element Description",
+      "name": "scrollToElement"
+    },
+    "scrollToEdge": {
+      "type": "fixedCollection",
+      "displayName": "Scroll To Edge",
+      "name": "scrollToEdge",
+      "subProperties": [
+        {
+          "name": "edgeValues",
+          "displayName": "Page Edges",
+          "values": [
+            {
+              "displayName": "Vertically",
+              "name": "yAxis",
+              "type": "options",
+              "default": "",
+              "options": [
+                {
+                  "name": "Empty",
+                  "displayName": "Empty"
+                },
+                {
+                  "name": "Top",
+                  "value": "top",
+                  "displayName": "Top"
+                },
+                {
+                  "name": "Bottom",
+                  "value": "bottom",
+                  "displayName": "Bottom"
+                }
+              ]
+            },
+            {
+              "displayName": "Horizontally",
+              "name": "xAxis",
+              "type": "options",
+              "default": "",
+              "options": [
+                {
+                  "name": "Empty",
+                  "displayName": "Empty"
+                },
+                {
+                  "name": "Left",
+                  "value": "left",
+                  "displayName": "Left"
+                },
+                {
+                  "name": "Right",
+                  "value": "right",
+                  "displayName": "Right"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "scrollBy": {
+      "type": "fixedCollection",
+      "displayName": "Scroll By",
+      "name": "scrollBy",
+      "subProperties": [
+        {
+          "name": "scrollValues",
+          "displayName": "Scroll Values",
+          "values": [
+            {
+              "displayName": "Vertically",
+              "name": "yAxis",
+              "type": "string",
+              "placeholder": "e.g. 200px, 50%, -100px",
+              "default": ""
+            },
+            {
+              "displayName": "Horizontally",
+              "name": "xAxis",
+              "type": "string",
+              "placeholder": "e.g. 50px, 10%, -200px",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "scrollWithin": {
+      "type": "string",
+      "displayName": "Scrollable Area",
+      "name": "scrollWithin"
+    },
+    "text": {
+      "type": "string",
+      "displayName": "Text",
+      "name": "text"
+    },
+    "pressEnterKey": {
+      "type": "boolean",
+      "displayName": "Press Enter Key",
+      "name": "pressEnterKey"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [
+      "GET"
+    ],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [
+      {
+        "name": "notice",
+        "text": "Note: This operation is not needed if you enabled 'Save Profile' in the 'Create Session' operation",
+        "conditions": {
+          "show": {
+            "resource": [
+              "session"
+            ],
+            "operation": [
+              "save"
+            ]
+          }
+        }
+      }
+    ],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "proxyConfig",
+        "text": "Add Attribute"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "profileName",
+        "text": "e.g. my-x-profile"
+      },
+      {
+        "field": "screenResolution",
+        "text": "e.g. 1280x720"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "url",
+        "text": "e.g. https://google.com"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "sessionIds",
+        "text": "e.g. 6aac6f73-bd89-4a76-ab32-5a6c422e8b0b, a13c6f73-bd89-4a76-ab32-5a6c422e8224"
+      },
+      {
+        "field": "elementDescription",
+        "text": "e.g. the search box at the top of the page"
+      },
+      {
+        "field": "prompt",
+        "text": "e.g. Extract all the product names and prices"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "prompt",
+        "text": "e.g. Is there a login form in this page?"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "formData",
+        "text": "e.g. \"Name: John Doe, Email: john.doe@example.com\""
+      },
+      {
+        "field": "scrollToElement",
+        "text": "e.g. the page section titled \"Contact Us\""
+      },
+      {
+        "field": "scrollToEdge",
+        "text": "Add Edge Direction"
+      },
+      {
+        "field": "scrollBy",
+        "text": "Add Scroll Amount"
+      },
+      {
+        "field": "scrollWithin",
+        "text": "e.g. the left sidebar"
+      },
+      {
+        "field": "text",
+        "text": "e.g. email@example.com"
+      }
+    ],
+    "hints": [
+      {
+        "field": "profileName",
+        "text": "<a href=\"https://docs.airtop.ai/guides/how-to/saving-a-profile\" target=\"_blank\">Learn more</a> about Airtop profiles"
+      },
+      {
+        "field": "outputSchema",
+        "text": "If you want to force your output to be JSON, provide a valid JSON schema describing the output. You can generate one automatically in the <a href=\"https://portal.airtop.ai/\" target=\"_blank\">Airtop API Playground</a>."
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

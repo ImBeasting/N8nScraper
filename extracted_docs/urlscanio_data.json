@@ -1,0 +1,702 @@
+{
+  "node_info": {
+    "icon": "file:urlScanIo.svg",
+    "defaults": {
+      "name": "urlscan.io"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "urlScanIoApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "urlscan.io",
+    "name": "urlScanIo",
+    "description": "Provides various utilities for monitoring websites like health checks or screenshots",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.urlScanIo",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development",
+      "Utility"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/urlscanio/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.urlscanio/"
+        }
+      ]
+    },
+    "alias": [
+      "Scrape"
+    ]
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "scan",
+      "default": "scan",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Scan",
+          "value": "scan",
+          "displayName": "Scan"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Get a scan",
+      "value": "get",
+      "default": "perform",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "action": "Get a scan",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many scans",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Perform",
+          "action": "Perform a scan",
+          "value": "perform",
+          "displayName": "Perform"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ]
+        }
+      },
+      "_source": "Scan_scanOperations"
+    },
+    {
+      "displayName": "Scan ID",
+      "name": "scanId",
+      "type": "string",
+      "description": "ID of the scan to retrieve",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Scan_scanFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Scan_scanFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Scan_scanFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Query using the <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-dsl-query-string-query\">Elastic Search Query String syntax</a>. See <a href=\"https://urlscan.io/docs/search/\">supported fields</a> in the documentation.",
+      "placeholder": "Add Filter",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "Query using the <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-dsl-query-string-query\">Elastic Search Query String syntax</a>. See <a href=\"https://urlscan.io/docs/search/\">supported fields</a> in the documentation.",
+          "placeholder": "domain:n8n.io",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Scan_scanFields"
+    },
+    {
+      "displayName": "URL",
+      "name": "url",
+      "type": "string",
+      "description": "URL to scan",
+      "placeholder": "https://n8n.io",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ],
+          "operation": [
+            "perform"
+          ]
+        }
+      },
+      "_operation": "perform",
+      "_source": "Scan_scanFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "<code>User-Agent</code> header to set for this scan. Defaults to <code>n8n</code>",
+      "placeholder": "Add Field",
+      "value": "private",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Custom Agent",
+          "name": "customAgent",
+          "type": "string",
+          "description": "<code>User-Agent</code> header to set for this scan. Defaults to <code>n8n</code>",
+          "default": ""
+        },
+        {
+          "displayName": "Override Safety",
+          "name": "overrideSafety",
+          "type": "string",
+          "description": "Disable reclassification of URLs with potential PII in them",
+          "default": ""
+        },
+        {
+          "displayName": "Referer",
+          "name": "referer",
+          "type": "string",
+          "description": "HTTP referer to set for this scan",
+          "placeholder": "https://n8n.io",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "Comma-separated list of user-defined tags to add to this scan. Limited to 10 tags.",
+          "placeholder": "phishing, malicious",
+          "default": ""
+        },
+        {
+          "displayName": "Visibility",
+          "name": "visibility",
+          "type": "options",
+          "value": "private",
+          "default": "private",
+          "options": [
+            {
+              "name": "Private",
+              "value": "private",
+              "displayName": "Private"
+            },
+            {
+              "name": "Public",
+              "value": "public",
+              "displayName": "Public"
+            },
+            {
+              "name": "Unlisted",
+              "value": "unlisted",
+              "displayName": "Unlisted"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ],
+          "operation": [
+            "perform"
+          ]
+        }
+      },
+      "_operation": "perform",
+      "_source": "Scan_scanFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Get",
+      "action": "Get a scan",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "action": "Get many scans",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Perform",
+      "action": "Perform a scan",
+      "value": "perform",
+      "displayName": "Perform"
+    }
+  ],
+  "operations_by_resource": {
+    "scan": [
+      {
+        "name": "Get",
+        "action": "Get a scan",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many scans",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Perform",
+        "action": "Perform a scan",
+        "value": "perform",
+        "displayName": "Perform"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "urlScanIoApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ]
+        }
+      }
+    },
+    "scanId": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "url": {
+      "format": "url",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ],
+          "operation": [
+            "perform"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "scan"
+          ],
+          "operation": [
+            "perform"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "scan",
+          "name": "Scan",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "get",
+          "name": "Get",
+          "description": ""
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": ""
+        },
+        {
+          "value": "perform",
+          "name": "Perform",
+          "description": ""
+        }
+      ]
+    },
+    "scanId": {
+      "type": "string",
+      "displayName": "Scan ID",
+      "name": "scanId"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1
+      }
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "subProperties": [
+        {
+          "displayName": "Query",
+          "name": "query",
+          "type": "string",
+          "description": "Query using the <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-dsl-query-string-query\">Elastic Search Query String syntax</a>. See <a href=\"https://urlscan.io/docs/search/\">supported fields</a> in the documentation.",
+          "placeholder": "domain:n8n.io",
+          "default": ""
+        }
+      ]
+    },
+    "url": {
+      "type": "string",
+      "displayName": "URL",
+      "name": "url"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Custom Agent",
+          "name": "customAgent",
+          "type": "string",
+          "description": "<code>User-Agent</code> header to set for this scan. Defaults to <code>n8n</code>",
+          "default": ""
+        },
+        {
+          "displayName": "Override Safety",
+          "name": "overrideSafety",
+          "type": "string",
+          "description": "Disable reclassification of URLs with potential PII in them",
+          "default": ""
+        },
+        {
+          "displayName": "Referer",
+          "name": "referer",
+          "type": "string",
+          "description": "HTTP referer to set for this scan",
+          "placeholder": "https://n8n.io",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "Comma-separated list of user-defined tags to add to this scan. Limited to 10 tags.",
+          "placeholder": "phishing, malicious",
+          "default": ""
+        },
+        {
+          "displayName": "Visibility",
+          "name": "visibility",
+          "type": "options",
+          "value": "private",
+          "default": "private",
+          "options": [
+            {
+              "name": "Private",
+              "value": "private",
+              "displayName": "Private"
+            },
+            {
+              "name": "Public",
+              "value": "public",
+              "displayName": "Public"
+            },
+            {
+              "name": "Unlisted",
+              "value": "unlisted",
+              "displayName": "Unlisted"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [
+      "GET"
+    ],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "url",
+        "text": "https://n8n.io"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

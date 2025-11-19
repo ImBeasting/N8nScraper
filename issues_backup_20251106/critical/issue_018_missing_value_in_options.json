@@ -1,0 +1,51 @@
+{
+  "issue_id": "issue_018",
+  "title": "Missing 'value' in 'options' for properties",
+  "severity": "critical",
+  "status": "open",
+  "priority": 1,
+  "metadata": {
+    "created_at": "2025-11-06T21:00:00Z",
+    "created_by": "gemini_cli",
+    "updated_at": "2025-11-06T21:00:00Z",
+    "affected_nodes": "Zulip, Google Calendar, Webhook (and likely others)",
+    "source": "Manual analysis"
+  },
+  "description": {
+    "problem": "For properties of type 'options' or 'multiOptions', the extracted data consistently includes the 'name' of the option but omits the 'value'. The 'value' is critical as it is what the node's code uses to identify the selected option.",
+    "impact": "The extracted data is incomplete and cannot be used to understand the actual values used by the node.",
+    "examples": [
+      {
+        "node": "Zulip",
+        "property": "operation",
+        "extracted": "{\"name\": \"Send to Stream\"}",
+        "expected": "{\"name\": \"Send to Stream\", \"value\": \"sendStream\"}"
+      },
+      {
+        "node": "Google Calendar",
+        "property": "operation",
+        "extracted": "{\"name\": \"Create\"}",
+        "expected": "{\"name\": \"Create\", \"value\": \"create\"}"
+      }
+    ]
+  },
+  "root_cause": {
+    "pattern": "extraction_issue",
+    "location": "n8n_node_extractor.py",
+    "hypothesis": "The script is not correctly parsing the 'options' array for properties of type 'options' and 'multiOptions'."
+  },
+  "ownership": {
+    "assigned_to": "gemini_cli",
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null
+  },
+  "proposed_fixes": [],
+  "verification": {
+    "test_nodes": ["Zulip", "Google Calendar", "Webhook"],
+    "acceptance_criteria": ["The 'value' field should be present for all options in 'options' and 'multiOptions' properties."]
+  },
+  "related_issues": [],
+  "blocking_issues": [],
+  "blocked_by_issues": []
+}

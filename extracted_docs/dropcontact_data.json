@@ -1,0 +1,673 @@
+{
+  "node_info": {
+    "icon": "file:dropcontact.svg",
+    "defaults": {
+      "name": "Dropcontact"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "dropcontactApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Dropcontact",
+    "name": "dropcontact",
+    "description": "Find B2B emails and enrich contacts",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.dropcontact",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Sales"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/dropcontact/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.dropcontact/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "contact",
+      "default": "contact",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Contact",
+          "value": "contact",
+          "displayName": "Contact"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Find B2B emails and enrich your contact from his name and his website",
+      "action": "Find B2B emails",
+      "value": "enrich",
+      "default": "enrich",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Enrich",
+          "description": "Find B2B emails and enrich your contact from his name and his website",
+          "action": "Find B2B emails",
+          "value": "enrich",
+          "displayName": "Enrich"
+        },
+        {
+          "name": "Fetch Request",
+          "value": "fetchRequest",
+          "displayName": "Fetch Request"
+        }
+      ]
+    },
+    {
+      "displayName": "Request ID",
+      "name": "requestId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "fetchRequest"
+          ]
+        }
+      },
+      "_operation": "fetchRequest"
+    },
+    {
+      "displayName": "Email",
+      "name": "email",
+      "type": "string",
+      "placeholder": "name@email.com",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      },
+      "_operation": "enrich"
+    },
+    {
+      "displayName": "Simplify Output (Faster)",
+      "name": "simplify",
+      "type": "boolean",
+      "description": "When off, waits for the contact data before completing. Waiting time can be adjusted with Extend Wait Time option. When on, returns a request_id that can be used later in the Fetch Request operation.",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      },
+      "_operation": "enrich"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Company SIREN Number",
+          "name": "num_siren",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Company SIRET Code",
+          "name": "siret",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Company Name",
+          "name": "company",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Country",
+          "name": "country",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "First Name",
+          "name": "first_name",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Full Name",
+          "name": "full_name",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Last Name",
+          "name": "last_name",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "LinkedIn Profile",
+          "name": "linkedin",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Phone Number",
+          "name": "phone",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Website",
+          "name": "website",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      },
+      "_operation": "enrich"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "When not simplifying the response, data will be fetched in two steps. This parameter controls how long to wait (in seconds) before trying the second step.",
+      "placeholder": "Add option",
+      "value": "en",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Data Fetch Wait Time",
+          "name": "waitTime",
+          "type": "number",
+          "description": "When not simplifying the response, data will be fetched in two steps. This parameter controls how long to wait (in seconds) before trying the second step.",
+          "default": 45,
+          "typeOptions": {
+            "minValue": 1
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "French Company Enrich",
+          "name": "siren",
+          "type": "boolean",
+          "description": "Whether you want the <a href=\"https://en.wikipedia.org/wiki/SIREN_code\" target=\"_blank\">SIREN number</a>, NAF code, TVA number, company address and informations about the company leader. Only applies to french companies.",
+          "default": false
+        },
+        {
+          "displayName": "Language",
+          "name": "language",
+          "type": "options",
+          "description": "Whether the response is in English or French",
+          "value": "en",
+          "default": "en",
+          "options": [
+            {
+              "name": "English",
+              "value": "en",
+              "displayName": "English"
+            },
+            {
+              "name": "French",
+              "value": "fr",
+              "displayName": "French"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      },
+      "_operation": "enrich"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Enrich",
+      "description": "Find B2B emails and enrich your contact from his name and his website",
+      "action": "Find B2B emails",
+      "value": "enrich",
+      "displayName": "Enrich"
+    },
+    {
+      "name": "Fetch Request",
+      "value": "fetchRequest",
+      "displayName": "Fetch Request"
+    }
+  ],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "dropcontactApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "resource": {
+      "required": true
+    },
+    "operation": {
+      "required": true
+    },
+    "requestId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "fetchRequest"
+          ]
+        }
+      }
+    },
+    "email": {
+      "format": "email",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      }
+    },
+    "simplify": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "enrich"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "contact",
+          "name": "Contact",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "enrich",
+          "name": "Enrich",
+          "description": "Find B2B emails and enrich your contact from his name and his website"
+        },
+        {
+          "value": "fetchRequest",
+          "name": "Fetch Request",
+          "description": ""
+        }
+      ]
+    },
+    "requestId": {
+      "type": "string",
+      "displayName": "Request ID",
+      "name": "requestId"
+    },
+    "email": {
+      "type": "string",
+      "displayName": "Email",
+      "name": "email"
+    },
+    "simplify": {
+      "type": "boolean",
+      "displayName": "Simplify Output (Faster)",
+      "name": "simplify"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Company SIREN Number",
+          "name": "num_siren",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Company SIRET Code",
+          "name": "siret",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Company Name",
+          "name": "company",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Country",
+          "name": "country",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "First Name",
+          "name": "first_name",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Full Name",
+          "name": "full_name",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Last Name",
+          "name": "last_name",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "LinkedIn Profile",
+          "name": "linkedin",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Phone Number",
+          "name": "phone",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Website",
+          "name": "website",
+          "type": "string",
+          "default": ""
+        }
+      ]
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "minValue": 1
+      },
+      "subProperties": [
+        {
+          "displayName": "Data Fetch Wait Time",
+          "name": "waitTime",
+          "type": "number",
+          "description": "When not simplifying the response, data will be fetched in two steps. This parameter controls how long to wait (in seconds) before trying the second step.",
+          "default": 45,
+          "typeOptions": {
+            "minValue": 1
+          },
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "French Company Enrich",
+          "name": "siren",
+          "type": "boolean",
+          "description": "Whether you want the <a href=\"https://en.wikipedia.org/wiki/SIREN_code\" target=\"_blank\">SIREN number</a>, NAF code, TVA number, company address and informations about the company leader. Only applies to french companies.",
+          "default": false
+        },
+        {
+          "displayName": "Language",
+          "name": "language",
+          "type": "options",
+          "description": "Whether the response is in English or French",
+          "value": "en",
+          "default": "en",
+          "options": [
+            {
+              "name": "English",
+              "value": "en",
+              "displayName": "English"
+            },
+            {
+              "name": "French",
+              "value": "fr",
+              "displayName": "French"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "email",
+        "text": "name@email.com"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

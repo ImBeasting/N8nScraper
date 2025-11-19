@@ -1,0 +1,40 @@
+{
+  "issue_id": "_gemini_cli_issue_015",
+  "title": "HubSpot node: 'subtitle' field truncated in extracted node_info",
+  "severity": "high",
+  "status": "new",
+  "priority": 2,
+  "metadata": {
+    "created_at": "2025-11-13T19:20:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "HubSpot, Slack (potentially other nodes with complex subtitle expressions)",
+    "validation_session": "comprehensive_audit_2025-11-13"
+  },
+  "description": {
+    "problem": "Multiple nodes (e.g., HubSpot, Slack, HttpRequest) have their 'subtitle' field truncated in the extracted 'node_info'. For HubSpot, the extracted 'subtitle' is truncated to '={{$parameter[', instead of the full expression '={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}'. For Slack, the extracted 'subtitle' is also truncated to '={{$parameter[', instead of the full expression '={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}'. For HttpRequest, the extracted 'subtitle' is truncated to '={{$parameter[', instead of the full expression '={{$parameter[\"requestMethod\"] + \": \" + $parameter[\"url\"]}}'.",
+    "impact": "HIGH - Loss of critical dynamic information. The subtitle is used to provide context about the node's current operation and resource, which is essential for understanding its behavior in a workflow. Truncation makes this information unusable.",
+    "root_cause": "The extractor's logic for parsing complex string expressions, especially those involving interpolation or concatenation, might be failing or prematurely truncating the string. This could be due to an issue with regex matching or AST parsing of string literals.",
+    "evidence": [
+      "Source file: n8n/packages/nodes-base/nodes/Hubspot/Hubspot.node.ts",
+      "Source snippet: subtitle: '={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}'",
+      "Extracted file: extracted_docs/hubspot_data.json",
+      "Extracted node_info.subtitle: '={{$parameter['",
+      "Source file: n8n/packages/nodes-base/nodes/Slack/Slack.node.ts",
+      "Source snippet: subtitle: '={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}'",
+      "Extracted file: extracted_docs/slack_data.json",
+      "Extracted node_info.subtitle: '={{$parameter['",
+      "Source file: n8n/packages/nodes-base/nodes/HttpRequest/HttpRequest.node.ts",
+      "Source snippet: subtitle: '={{$parameter[\"requestMethod\"] + \": \" + $parameter[\"url\"]}}'",
+      "Extracted file: extracted_docs/httprequest_data.json",
+      "Extracted node_info.subtitle: '={{$parameter['",
+      "Command used to verify: jq '.node_info.subtitle' extracted_docs/hubspot_data.json, jq '.node_info.subtitle' extracted_docs/slack_data.json, jq '.node_info.subtitle' extracted_docs/httprequest_data.json and manual comparison with source."
+    ],
+    "fix_approach": "1. Review and enhance the extractor's logic for parsing string literals, especially those used in 'subtitle' fields, to ensure full and accurate extraction of complex expressions. \n2. This might require a more robust string parsing mechanism that can handle special characters and interpolation syntax. \n3. Test with: HubSpot, Slack, HttpRequest nodes. \n4. Expected result: 'hubspot_data.json' should have the complete subtitle expression, 'slack_data.json' should have the complete subtitle expression, and 'httprequest_data.json' should have the complete subtitle expression. \n5. Validation command: jq '.node_info.subtitle' extracted_docs/hubspot_data.json should return '={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}', jq '.node_info.subtitle' extracted_docs/slack_data.json should return '={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}', and jq '.node_info.subtitle' extracted_docs/httprequest_data.json should return '={{$parameter[\"requestMethod\"] + \": \" + $parameter[\"url\"]}}'."
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

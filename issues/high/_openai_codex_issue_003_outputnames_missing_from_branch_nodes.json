@@ -1,0 +1,31 @@
+{
+  "issue_id": "_openai_codex_issue_003",
+  "title": "Branching nodes missing outputNames metadata",
+  "severity": "high",
+  "status": "new",
+  "priority": 2,
+  "metadata": {
+    "created_at": "2025-11-06T17:09:00Z",
+    "created_by": "openai_codex",
+    "affected_nodes": "If, Switch, Filter V2, and other branching nodes defining description.outputNames"
+  },
+  "description": {
+    "problem": "`node_info` omits the `outputNames` array for nodes that label individual outputs (true/false, 0-3, etc.).",
+    "impact": "High – without labels consumers cannot map which branch corresponds to a given output index, breaking workflow visualizations and AI reasoning about control flow.",
+    "root_cause": "The extractor reads `description.outputs` but never copies the optional `outputNames` property from the node description. Versioned nodes (e.g. IfV2, SwitchV1) spread base metadata that includes this array, but the parser drops it.",
+    "evidence": [
+      "extracted_docs/if_data.json: node_info.outputs → [\"Main\",\"Main\"], node_info.outputNames → null",
+      "n8n/packages/nodes-base/nodes/If/V2/IfV2.node.ts:23-34 defines `outputNames: ['true', 'false']`",
+      "extracted_docs/switch_data.json: node_info.outputNames → null (outputs array empty despite four branches)",
+      "n8n/packages/nodes-base/nodes/Switch/V1/SwitchV1.node.ts:22-38 exposes `outputNames: ['0','1','2','3']`"
+    ],
+    "fix_approach": "1. Extend the metadata extraction routine to copy `description.outputNames` when present. 2. Ensure arrays survive spread assignments (`...baseDescription`). 3. Retest against If and Switch nodes to confirm branch labels appear in `node_info.outputNames`. 4. Re-run `python3 validate_extraction.py` to verify no nodes report missing output labels."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

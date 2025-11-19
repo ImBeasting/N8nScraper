@@ -1,0 +1,884 @@
+{
+  "node_info": {
+    "icon": "file:travisci.png",
+    "defaults": {
+      "name": "TravisCI"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "travisCiApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "TravisCI",
+    "name": "travisCi",
+    "description": "Consume TravisCI API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.travisCi",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/travisci/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.travisci/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "How to set up a no-code CI/CD pipeline with GitHub and TravisCI",
+          "icon": "\ud83c\udfa1",
+          "url": "https://n8n.io/blog/how-to-set-up-a-ci-cd-pipeline-with-no-code/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "build",
+      "default": "build",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Build",
+          "value": "build",
+          "displayName": "Build"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Cancel a build",
+      "action": "Cancel a build",
+      "value": "cancel",
+      "default": "cancel",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Cancel",
+          "description": "Cancel a build",
+          "action": "Cancel a build",
+          "value": "cancel",
+          "displayName": "Cancel"
+        },
+        {
+          "name": "Get",
+          "description": "Get a build",
+          "action": "Get a build",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many builds",
+          "action": "Get many builds",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Restart",
+          "description": "Restart a build",
+          "action": "Restart a build",
+          "value": "restart",
+          "displayName": "Restart"
+        },
+        {
+          "name": "Trigger",
+          "description": "Trigger a build",
+          "action": "Trigger a build",
+          "value": "trigger",
+          "displayName": "Trigger"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "build"
+          ]
+        }
+      },
+      "_source": "Build_buildOperations"
+    },
+    {
+      "displayName": "Build ID",
+      "name": "buildId",
+      "type": "string",
+      "description": "Value uniquely identifying the build",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "cancel"
+          ],
+          "resource": [
+            "build"
+          ]
+        }
+      },
+      "_operation": "cancel",
+      "_source": "Build_buildFields"
+    },
+    {
+      "displayName": "Build ID",
+      "name": "buildId",
+      "type": "string",
+      "description": "Value uniquely identifying the build",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "build"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Build_buildFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "List of attributes to eager load",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include",
+          "name": "include",
+          "type": "string",
+          "description": "List of attributes to eager load",
+          "placeholder": "build.commit",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "build"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Build_buildFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "build"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Build_buildFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "build"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Build_buildFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "List of attributes to eager load",
+      "placeholder": "Add Field",
+      "value": "asc",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include",
+          "name": "include",
+          "type": "string",
+          "description": "List of attributes to eager load",
+          "placeholder": "build.commit",
+          "default": ""
+        },
+        {
+          "displayName": "Order",
+          "name": "order",
+          "type": "options",
+          "description": "You may specify order to sort your response",
+          "value": "asc",
+          "default": "asc",
+          "options": [
+            {
+              "name": "ASC",
+              "value": "asc",
+              "displayName": "Asc"
+            },
+            {
+              "name": "DESC",
+              "value": "desc",
+              "displayName": "Desc"
+            }
+          ]
+        },
+        {
+          "displayName": "Sort By",
+          "name": "sortBy",
+          "type": "options",
+          "value": "created_at",
+          "default": "number",
+          "options": [
+            {
+              "name": "Created At",
+              "value": "created_at",
+              "displayName": "Created At"
+            },
+            {
+              "name": "Finished At",
+              "value": "finished_at",
+              "displayName": "Finished At"
+            },
+            {
+              "name": "ID",
+              "value": "id",
+              "displayName": "Id"
+            },
+            {
+              "name": "Number",
+              "value": "number",
+              "displayName": "Number"
+            },
+            {
+              "name": "Started At",
+              "value": "started_at",
+              "displayName": "Started At"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "build"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Build_buildFields"
+    },
+    {
+      "displayName": "Build ID",
+      "name": "buildId",
+      "type": "string",
+      "description": "Value uniquely identifying the build",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "restart"
+          ],
+          "resource": [
+            "build"
+          ]
+        }
+      },
+      "_operation": "restart",
+      "_source": "Build_buildFields"
+    },
+    {
+      "displayName": "Slug",
+      "name": "slug",
+      "type": "string",
+      "description": "Same as {ownerName}/{repositoryName}",
+      "placeholder": "n8n-io/n8n",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "trigger"
+          ],
+          "resource": [
+            "build"
+          ]
+        }
+      },
+      "_operation": "trigger",
+      "_source": "Build_buildFields"
+    },
+    {
+      "displayName": "Branch",
+      "name": "branch",
+      "type": "string",
+      "description": "Branch requested to be built",
+      "placeholder": "master",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "trigger"
+          ],
+          "resource": [
+            "build"
+          ]
+        }
+      },
+      "_operation": "trigger",
+      "_source": "Build_buildFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Travis-ci status message attached to the request",
+      "placeholder": "Add Field",
+      "value": "deep_merge",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Message",
+          "name": "message",
+          "type": "string",
+          "description": "Travis-ci status message attached to the request",
+          "default": ""
+        },
+        {
+          "displayName": "Merge Mode",
+          "name": "mergeMode",
+          "type": "options",
+          "value": "deep_merge",
+          "default": "",
+          "options": [
+            {
+              "name": "Deep Merge",
+              "value": "deep_merge",
+              "displayName": "Deep Merge"
+            },
+            {
+              "name": "Deep Merge Append",
+              "value": "deep_merge_append",
+              "displayName": "Deep Merge Append"
+            },
+            {
+              "name": "Deep Merge Prepend",
+              "value": "deep_merge_prepend",
+              "displayName": "Deep Merge Prepend"
+            },
+            {
+              "name": "Merge",
+              "value": "merge",
+              "displayName": "Merge"
+            },
+            {
+              "name": "Replace",
+              "value": "replace",
+              "displayName": "Replace"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "build"
+          ],
+          "operation": [
+            "trigger"
+          ]
+        }
+      },
+      "_operation": "trigger",
+      "_source": "Build_buildFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Cancel",
+      "description": "Cancel a build",
+      "action": "Cancel a build",
+      "value": "cancel",
+      "displayName": "Cancel"
+    },
+    {
+      "name": "Get",
+      "description": "Get a build",
+      "action": "Get a build",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many builds",
+      "action": "Get many builds",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Restart",
+      "description": "Restart a build",
+      "action": "Restart a build",
+      "value": "restart",
+      "displayName": "Restart"
+    },
+    {
+      "name": "Trigger",
+      "description": "Trigger a build",
+      "action": "Trigger a build",
+      "value": "trigger",
+      "displayName": "Trigger"
+    }
+  ],
+  "operations_by_resource": {
+    "build": [
+      {
+        "name": "Cancel",
+        "description": "Cancel a build",
+        "action": "Cancel a build",
+        "value": "cancel",
+        "displayName": "Cancel"
+      },
+      {
+        "name": "Get",
+        "description": "Get a build",
+        "action": "Get a build",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many builds",
+        "action": "Get many builds",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Restart",
+        "description": "Restart a build",
+        "action": "Restart a build",
+        "value": "restart",
+        "displayName": "Restart"
+      },
+      {
+        "name": "Trigger",
+        "description": "Trigger a build",
+        "action": "Trigger a build",
+        "value": "trigger",
+        "displayName": "Trigger"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "travisCiApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "build"
+          ]
+        }
+      }
+    },
+    "buildId": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "restart"
+          ],
+          "resource": [
+            "build"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "build"
+          ],
+          "operation": [
+            "trigger"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "build"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "build"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "slug": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "trigger"
+          ],
+          "resource": [
+            "build"
+          ]
+        }
+      }
+    },
+    "branch": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "trigger"
+          ],
+          "resource": [
+            "build"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "build",
+          "name": "Build",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "cancel",
+          "name": "Cancel",
+          "description": "Cancel a build"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a build"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get many builds"
+        },
+        {
+          "value": "restart",
+          "name": "Restart",
+          "description": "Restart a build"
+        },
+        {
+          "value": "trigger",
+          "name": "Trigger",
+          "description": "Trigger a build"
+        }
+      ]
+    },
+    "buildId": {
+      "type": "string",
+      "displayName": "Build ID",
+      "name": "buildId"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Message",
+          "name": "message",
+          "type": "string",
+          "description": "Travis-ci status message attached to the request",
+          "default": ""
+        },
+        {
+          "displayName": "Merge Mode",
+          "name": "mergeMode",
+          "type": "options",
+          "value": "deep_merge",
+          "default": "",
+          "options": [
+            {
+              "name": "Deep Merge",
+              "value": "deep_merge",
+              "displayName": "Deep Merge"
+            },
+            {
+              "name": "Deep Merge Append",
+              "value": "deep_merge_append",
+              "displayName": "Deep Merge Append"
+            },
+            {
+              "name": "Deep Merge Prepend",
+              "value": "deep_merge_prepend",
+              "displayName": "Deep Merge Prepend"
+            },
+            {
+              "name": "Merge",
+              "value": "merge",
+              "displayName": "Merge"
+            },
+            {
+              "name": "Replace",
+              "value": "replace",
+              "displayName": "Replace"
+            }
+          ]
+        }
+      ]
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      }
+    },
+    "slug": {
+      "type": "string",
+      "displayName": "Slug",
+      "name": "slug"
+    },
+    "branch": {
+      "type": "string",
+      "displayName": "Branch",
+      "name": "branch"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Travis-API-Version",
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "slug",
+        "text": "n8n-io/n8n"
+      },
+      {
+        "field": "branch",
+        "text": "master"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

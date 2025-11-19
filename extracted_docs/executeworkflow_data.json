@@ -1,0 +1,585 @@
+{
+  "node_info": {
+    "icon": "fa:sign-in-alt",
+    "defaults": {
+      "name": "Execute Workflow"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Execute Sub-workflow",
+    "name": "executeWorkflow",
+    "description": "Execute another workflow",
+    "subtitle": "={{\"Workflow: \" + $parameter[\"workflowId\"]}}",
+    "iconColor": "orange-red",
+    "version": [
+      "1",
+      "1.1",
+      "1.2",
+      "1.3"
+    ],
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.executeWorkflow",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "details": "The Execute Workflow node can be used when you want your workflow to treat another workflow as a step in your flow. It allows you to modularize your workflows and have a single source of truth for series of actions you perform often. ",
+    "categories": [
+      "Core Nodes"
+    ],
+    "resources": {
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executeworkflow/"
+        }
+      ]
+    },
+    "alias": [
+      "n8n",
+      "call",
+      "sub",
+      "workflow",
+      "sub-workflow",
+      "subworkflow"
+    ],
+    "subcategories": {
+      "Core Nodes": [
+        "Helpers",
+        "Flow"
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "hidden",
+      "value": "call_workflow",
+      "default": "call_workflow",
+      "noDataExpression": true
+    },
+    {
+      "displayName": "This node is out of date. Please upgrade by removing it and adding a new one",
+      "name": "outdatedVersionWarning",
+      "type": "notice",
+      "default": "",
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    {
+      "displayName": "Source",
+      "name": "source",
+      "type": "options",
+      "description": "Load the workflow from the database by ID",
+      "value": "database",
+      "default": "database",
+      "options": [
+        {
+          "name": "Database",
+          "description": "Load the workflow from the database by ID",
+          "value": "database",
+          "displayName": "Database"
+        },
+        {
+          "name": "Local File",
+          "description": "Load the workflow from a locally saved file",
+          "value": "localFile",
+          "displayName": "Local File"
+        },
+        {
+          "name": "Parameter",
+          "description": "Load the workflow from a parameter",
+          "value": "parameter",
+          "displayName": "Parameter"
+        },
+        {
+          "name": "URL",
+          "description": "Load the workflow from an URL",
+          "value": "url",
+          "displayName": "Url"
+        }
+      ],
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    {
+      "displayName": "Workflow ID",
+      "name": "workflowId",
+      "type": "string",
+      "description": "Note on using an expression here: if this node is set to run once with all items, they will all be sent to the <em>same</em> workflow. That workflow's ID will be calculated by evaluating the expression for the <strong>first input item</strong>.",
+      "hint": "Can be found in the URL of the workflow",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "source": [
+            "database"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Workflow Path",
+      "name": "workflowPath",
+      "type": "string",
+      "description": "The path to local JSON workflow file to execute",
+      "placeholder": "/data/workflow.json",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "source": [
+            "localFile"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Workflow JSON",
+      "name": "workflowJson",
+      "type": "json",
+      "description": "The workflow JSON code to execute",
+      "default": "\\n\\n\\n",
+      "required": true,
+      "typeOptions": {
+        "rows": 10
+      },
+      "displayOptions": {
+        "show": {
+          "source": [
+            "parameter"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Workflow URL",
+      "name": "workflowUrl",
+      "type": "string",
+      "description": "The URL from which to load the workflow from",
+      "placeholder": "https://example.com/workflow.json",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "source": [
+            "url"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Any data you pass into this node will be output by the Execute Workflow Trigger. <a href=\"https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executeworkflow/\" target=\"_blank\">More info</a>",
+      "name": "executeWorkflowNotice",
+      "type": "notice",
+      "default": "",
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    {
+      "displayName": "Workflow Inputs",
+      "name": "workflowInputs",
+      "type": "resourceMapper",
+      "required": true,
+      "noDataExpression": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "source": [
+            "database"
+          ]
+        },
+        "hide": {
+          "workflowId": [
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Mode",
+      "name": "mode",
+      "type": "options",
+      "description": "Pass all items into a single execution of the sub-workflow",
+      "value": "once",
+      "default": "once",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Run once with all items",
+          "description": "Pass all items into a single execution of the sub-workflow",
+          "value": "once",
+          "displayName": "Run Once With All Items"
+        },
+        {
+          "name": "Run once for each item",
+          "description": "Call the sub-workflow individually for each item",
+          "value": "each",
+          "displayName": "Run Once For Each Item"
+        }
+      ]
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether the main workflow should wait for the sub-workflow to complete its execution before proceeding",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Wait For Sub-Workflow Completion",
+          "name": "waitForSubWorkflow",
+          "type": "boolean",
+          "description": "Whether the main workflow should wait for the sub-workflow to complete its execution before proceeding",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [],
+  "workflow_examples": [],
+  "expressions": [
+    "={{ $rawParameter.workflowId.startsWith(\"=\") && $parameter.mode === \"once\" && $nodeVersion >= 1.2 }}",
+    "={{\"Workflow: \" + $parameter[\"workflowId\"]}}"
+  ],
+  "validation_rules": {
+    "outdatedVersionWarning": {
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    "source": {
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    "workflowId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "source": [
+            "database"
+          ]
+        }
+      }
+    },
+    "workflowPath": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "source": [
+            "localFile"
+          ]
+        }
+      }
+    },
+    "workflowJson": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "source": [
+            "parameter"
+          ]
+        }
+      }
+    },
+    "workflowUrl": {
+      "required": true,
+      "format": "url",
+      "displayOptions": {
+        "show": {
+          "source": [
+            "url"
+          ]
+        }
+      }
+    },
+    "executeWorkflowNotice": {
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    "workflowInputs": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "source": [
+            "database"
+          ]
+        },
+        "hide": {
+          "workflowId": [
+            ""
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "operation": {
+      "type": "hidden",
+      "displayName": "Operation",
+      "name": "operation"
+    },
+    "outdatedVersionWarning": {
+      "type": "notice",
+      "displayName": "This node is out of date. Please upgrade by removing it and adding a new one",
+      "name": "outdatedVersionWarning"
+    },
+    "source": {
+      "type": "options",
+      "displayName": "Source",
+      "name": "source",
+      "possibleValues": [
+        {
+          "value": "database",
+          "name": "Database",
+          "description": "Load the workflow from the database by ID"
+        },
+        {
+          "value": "localFile",
+          "name": "Local File",
+          "description": "Load the workflow from a locally saved file"
+        },
+        {
+          "value": "parameter",
+          "name": "Parameter",
+          "description": "Load the workflow from a parameter"
+        },
+        {
+          "value": "url",
+          "name": "URL",
+          "description": "Load the workflow from an URL"
+        }
+      ]
+    },
+    "workflowId": {
+      "type": "string",
+      "displayName": "Workflow ID",
+      "name": "workflowId"
+    },
+    "workflowPath": {
+      "type": "string",
+      "displayName": "Workflow Path",
+      "name": "workflowPath"
+    },
+    "workflowJson": {
+      "type": "json",
+      "displayName": "Workflow JSON",
+      "name": "workflowJson",
+      "typeOptions": {
+        "rows": 10
+      }
+    },
+    "workflowUrl": {
+      "type": "string",
+      "displayName": "Workflow URL",
+      "name": "workflowUrl"
+    },
+    "executeWorkflowNotice": {
+      "type": "notice",
+      "displayName": "Any data you pass into this node will be output by the Execute Workflow Trigger. <a href=\"https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executeworkflow/\" target=\"_blank\">More info</a>",
+      "name": "executeWorkflowNotice"
+    },
+    "workflowInputs": {
+      "type": "resourceMapper",
+      "displayName": "Workflow Inputs",
+      "name": "workflowInputs"
+    },
+    "mode": {
+      "type": "options",
+      "displayName": "Mode",
+      "name": "mode",
+      "possibleValues": [
+        {
+          "value": "once",
+          "name": "Run once with all items",
+          "description": "Pass all items into a single execution of the sub-workflow"
+        },
+        {
+          "value": "each",
+          "name": "Run once for each item",
+          "description": "Call the sub-workflow individually for each item"
+        }
+      ]
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Wait For Sub-Workflow Completion",
+          "name": "waitForSubWorkflow",
+          "type": "boolean",
+          "description": "Whether the main workflow should wait for the sub-workflow to complete its execution before proceeding",
+          "default": true
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [
+      "GET"
+    ],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [
+      {
+        "name": "outdatedVersionWarning",
+        "text": "This node is out of date. Please upgrade by removing it and adding a new one",
+        "conditions": {
+          "show": {}
+        }
+      },
+      {
+        "name": "executeWorkflowNotice",
+        "text": "Any data you pass into this node will be output by the Execute Workflow Trigger. <a href=\"https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executeworkflow/\" target=\"_blank\">More info</a>",
+        "conditions": {
+          "show": {}
+        }
+      }
+    ],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "workflowPath",
+        "text": "/data/workflow.json"
+      },
+      {
+        "field": "workflowUrl",
+        "text": "https://example.com/workflow.json"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": [
+      {
+        "field": "workflowId",
+        "text": "Can be found in the URL of the workflow"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

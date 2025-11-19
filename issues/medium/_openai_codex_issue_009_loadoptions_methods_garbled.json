@@ -1,0 +1,30 @@
+{
+  "issue_id": "_openai_codex_issue_009",
+  "title": "loadOptions/listSearch metadata polluted with method body tokens and missing functions",
+  "severity": "medium",
+  "status": "new",
+  "priority": 3,
+  "metadata": {
+    "created_at": "2025-11-12T01:42:00Z",
+    "created_by": "openai_codex",
+    "affected_nodes": "Slack, Salesforce, ClickUp, and any node exposing methods.loadOptions/listSearch"
+  },
+  "description": {
+    "problem": "`node_info.loadOptionsMethods` and `node_info.listSearchMethods` do not reflect the actual helper names. They either include random tokens from inside the functions (\"for\", \"name\", \"value\", \"q\", \"this\", \"limit\") or stop after the first method, hiding the rest.",
+    "impact": "MEDIUM – Consumers rely on these arrays to know which helpers are available for dynamic dropdowns and search endpoints. With mangled data, tooling cannot prefetch or lint load options, and documentation shows nonsense strings instead of helper names.",
+    "root_cause": "During extraction the parser appears to split on whitespace inside the method body instead of reading the object keys. Nodes such as Slack define `methods = { listSearch: { getChannels, getUsers }, loadOptions: { getUsers, getChannels } }`, but the extractor records `getUsers` followed by the first identifiers found inside the loop (`for`, `name`, `value`). Salesforce shows only `getLeadStatuses` plus the query variable `q`, even though the `loadOptions` object declares ~10 async helpers. ClickUp exposes one of the richest method sets in the codebase, but the dataset lists just `getTeams`.",
+    "evidence": [
+      "Slack (n8n/packages/nodes-base/nodes/Slack/V2/SlackV2.node.ts lines 181-250) defines:\n```ts\nmethods = {\n  listSearch: { async getChannels(...) { ... }, async getUsers(...) { ... } },\n  loadOptions: { async getUsers(...) { ... }, async getChannels(...) { ... } }\n};\n```\nExtracted JSON: `jq '.node_info.loadOptionsMethods' extracted_docs/slack_data.json` → `[\"getUsers\",\"for\",\"name\",\"value\"]`, `jq '.node_info.listSearchMethods' ...` → `[\"getChannels\",\"this\",\"limit\"]`.",
+      "Salesforce: `jq '.node_info.loadOptionsMethods' extracted_docs/salesforce_data.json` → `[\"getLeadStatuses\",\"q\"]`, yet `Salesforce.node.ts` lines 194-270 contain `getLeadStatuses`, `getUsers`, `getCaseOwners`, `getObjects`, `getStages`, etc.",
+      "ClickUp: `jq '.node_info.loadOptionsMethods' extracted_docs/clickup_data.json` → `[\"getTeams\"]`, even though `ClickUp.node.ts` imports dozens of helper functions (`getSpaces`, `getFolders`, `getAssignees`, `getTags`, `getStatuses`, ...)."
+    ],
+    "fix_approach": "Update the method extractor to read the property names of the `methods` object rather than tokens inside the function bodies:\n1. Parse the AST (or at least use a regex anchored on `async <name>(` / `<name>(` immediately inside the `methods.loadOptions` or `methods.listSearch` object) so only declared method names are collected.\n2. Ignore reserved keywords encountered inside the function body (`for`, `this`, `limit`, `q`).\n3. Collect every property key, not just the first match, to avoid truncating ClickUp/Salesforce.\n4. Regenerate Slack, Salesforce, and ClickUp JSON files to confirm the arrays become `['getUsers','getChannels']`, `['getLeadStatuses','getUsers','getCaseOwners',…]`, etc.\n5. Add a validation that flags unexpected lowercase tokens (e.g., `for`) in these arrays during `validate_extraction.py` so regressions are caught."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

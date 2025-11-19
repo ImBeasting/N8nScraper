@@ -1,0 +1,2831 @@
+{
+  "node_info": {
+    "icon": "file:elasticSecurity.svg",
+    "defaults": {
+      "name": "Elastic Security"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "elasticSecurityApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getTags",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Elastic Security",
+    "name": "elasticSecurity",
+    "description": "Consume the Elastic Security API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.elasticSecurity",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Development"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/elasticsecurity/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.elasticsecurity/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "case",
+      "default": "case",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Case",
+          "value": "case",
+          "displayName": "Case"
+        },
+        {
+          "name": "Case Comment",
+          "value": "caseComment",
+          "displayName": "Case Comment"
+        },
+        {
+          "name": "Case Tag",
+          "value": "caseTag",
+          "displayName": "Case Tag"
+        },
+        {
+          "name": "Connector",
+          "value": "connector",
+          "displayName": "Connector"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a connector",
+      "action": "Create a connector",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a connector",
+          "action": "Create a connector",
+          "value": "create",
+          "displayName": "Create"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ]
+        }
+      },
+      "_source": "Connector_connectorOperations"
+    },
+    {
+      "displayName": "Connector Name",
+      "name": "name",
+      "type": "string",
+      "description": "Connectors allow you to send Elastic Security cases into other systems (only ServiceNow, Jira, or IBM Resilient)",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Connector_connectorFields"
+    },
+    {
+      "displayName": "Connector Type",
+      "name": "connectorType",
+      "type": "options",
+      "value": ".resilient",
+      "default": ".jira",
+      "required": true,
+      "options": [
+        {
+          "name": "IBM Resilient",
+          "value": ".resilient",
+          "displayName": "Ibm Resilient"
+        },
+        {
+          "name": "Jira",
+          "value": ".jira",
+          "displayName": "Jira"
+        },
+        {
+          "name": "ServiceNow ITSM",
+          "value": ".servicenow",
+          "displayName": "Service Now Itsm"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Connector_connectorFields"
+    },
+    {
+      "displayName": "API URL",
+      "name": "apiUrl",
+      "type": "string",
+      "description": "URL of the third-party instance",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Connector_connectorFields"
+    },
+    {
+      "displayName": "Email",
+      "name": "email",
+      "type": "string",
+      "description": "Jira-registered email",
+      "placeholder": "name@email.com",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".jira"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Connector_connectorFields"
+    },
+    {
+      "displayName": "API Token",
+      "name": "apiToken",
+      "type": "string",
+      "description": "Jira API token",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "password": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".jira"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Connector_connectorFields"
+    },
+    {
+      "displayName": "Project Key",
+      "name": "projectKey",
+      "type": "string",
+      "description": "Jira Project Key",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".jira"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Connector_connectorFields"
+    },
+    {
+      "displayName": "Username",
+      "name": "username",
+      "type": "string",
+      "description": "ServiceNow ITSM username",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".servicenow"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Connector_connectorFields"
+    },
+    {
+      "displayName": "Password",
+      "name": "password",
+      "type": "string",
+      "description": "ServiceNow ITSM password",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "password": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".servicenow"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Connector_connectorFields"
+    },
+    {
+      "displayName": "API Key ID",
+      "name": "apiKeyId",
+      "type": "string",
+      "description": "IBM Resilient API key ID",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "password": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".resilient"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Connector_connectorFields"
+    },
+    {
+      "displayName": "API Key Secret",
+      "name": "apiKeySecret",
+      "type": "string",
+      "description": "IBM Resilient API key secret",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "password": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".resilient"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Connector_connectorFields"
+    },
+    {
+      "displayName": "Organization ID",
+      "name": "orgId",
+      "type": "string",
+      "description": "IBM Resilient organization ID",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".resilient"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Connector_connectorFields"
+    },
+    {
+      "displayName": "Title",
+      "name": "title",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Connector Name or ID",
+      "name": "connectorId",
+      "type": "options",
+      "description": "Connectors allow you to send Elastic Security cases into other systems (only ServiceNow, Jira, or IBM Resilient). Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getConnectors"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Connector Type",
+      "name": "connectorType",
+      "type": "options",
+      "value": ".resilient",
+      "default": ".jira",
+      "required": true,
+      "options": [
+        {
+          "name": "IBM Resilient",
+          "value": ".resilient",
+          "displayName": "Ibm Resilient"
+        },
+        {
+          "name": "Jira",
+          "value": ".jira",
+          "displayName": "Jira"
+        },
+        {
+          "name": "ServiceNow ITSM",
+          "value": ".servicenow",
+          "displayName": "Service Now Itsm"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Issue Type",
+      "name": "issueType",
+      "type": "string",
+      "description": "Type of the Jira issue to create for this case",
+      "placeholder": "Task",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".jira"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Priority",
+      "name": "priority",
+      "type": "string",
+      "description": "Priority of the Jira issue to create for this case",
+      "placeholder": "High",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".jira"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Urgency",
+      "name": "urgency",
+      "type": "options",
+      "description": "Urgency of the ServiceNow ITSM issue to create for this case",
+      "default": 1,
+      "required": true,
+      "options": [
+        {
+          "name": "Low",
+          "displayName": "Low"
+        },
+        {
+          "name": "Medium",
+          "displayName": "Medium"
+        },
+        {
+          "name": "High",
+          "displayName": "High"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".servicenow"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Severity",
+      "name": "severity",
+      "type": "options",
+      "description": "Severity of the ServiceNow ITSM issue to create for this case",
+      "default": 1,
+      "required": true,
+      "options": [
+        {
+          "name": "Low",
+          "displayName": "Low"
+        },
+        {
+          "name": "Medium",
+          "displayName": "Medium"
+        },
+        {
+          "name": "High",
+          "displayName": "High"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".servicenow"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Impact",
+      "name": "impact",
+      "type": "options",
+      "description": "Impact of the ServiceNow ITSM issue to create for this case",
+      "default": 1,
+      "required": true,
+      "options": [
+        {
+          "name": "Low",
+          "displayName": "Low"
+        },
+        {
+          "name": "Medium",
+          "displayName": "Medium"
+        },
+        {
+          "name": "High",
+          "displayName": "High"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".servicenow"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Category",
+      "name": "category",
+      "type": "string",
+      "description": "Category of the ServiceNow ITSM issue to create for this case",
+      "placeholder": "Helpdesk",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".servicenow"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Issue Types",
+      "name": "issueTypes",
+      "type": "string",
+      "description": "Comma-separated list of numerical types of the IBM Resilient issue to create for this case",
+      "placeholder": "123,456",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".resilient"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Severity Code",
+      "name": "severityCode",
+      "type": "number",
+      "description": "Severity code of the IBM Resilient issue to create for this case",
+      "default": 1,
+      "required": true,
+      "typeOptions": {
+        "minValue": 0
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".resilient"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Valid application owner registered within the Cases Role Based Access Control system",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Owner",
+          "name": "owner",
+          "type": "string",
+          "description": "Valid application owner registered within the Cases Role Based Access Control system",
+          "default": ""
+        },
+        {
+          "displayName": "Sync Alerts",
+          "name": "syncAlerts",
+          "type": "boolean",
+          "description": "Whether to synchronize with alerts",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "caseId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "caseId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "placeholder": "Add Filter",
+      "value": "open",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "value": "open",
+          "default": "open",
+          "options": [
+            {
+              "name": "Open",
+              "value": "open",
+              "displayName": "Open"
+            },
+            {
+              "name": "In Progress",
+              "value": "in-progress",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Closed",
+              "value": "closed",
+              "displayName": "Closed"
+            }
+          ]
+        },
+        {
+          "displayName": "Tag Names or IDs",
+          "name": "tags",
+          "type": "multiOptions",
+          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getTags"
+          }
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getTags"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Sort",
+      "name": "sortOptions",
+      "type": "fixedCollection",
+      "placeholder": "Add Sort Options",
+      "value": "createdAt",
+      "default": {},
+      "options": [
+        {
+          "name": "sortOptionsProperties",
+          "displayName": "Sort Options",
+          "values": [
+            {
+              "displayName": "Sort Key",
+              "name": "sortField",
+              "type": "options",
+              "value": "createdAt",
+              "default": "createdAt",
+              "options": [
+                {
+                  "name": "Created At",
+                  "value": "createdAt",
+                  "displayName": "Created At"
+                },
+                {
+                  "name": "Updated At",
+                  "value": "updatedAt",
+                  "displayName": "Updated At"
+                }
+              ]
+            },
+            {
+              "displayName": "Sort Order",
+              "name": "sortOrder",
+              "type": "options",
+              "value": "asc",
+              "default": "asc",
+              "options": [
+                {
+                  "name": "Ascending",
+                  "value": "asc",
+                  "displayName": "Ascending"
+                },
+                {
+                  "name": "Descending",
+                  "value": "desc",
+                  "displayName": "Descending"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "caseId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Whether to synchronize with alerts",
+      "placeholder": "Add Field",
+      "value": "closed",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "value": "closed",
+          "default": "open",
+          "options": [
+            {
+              "name": "Closed",
+              "value": "closed",
+              "displayName": "Closed"
+            },
+            {
+              "name": "Open",
+              "value": "open",
+              "displayName": "Open"
+            },
+            {
+              "name": "In Progress",
+              "value": "in-progress",
+              "displayName": "In Progress"
+            }
+          ]
+        },
+        {
+          "displayName": "Sync Alerts",
+          "name": "syncAlerts",
+          "type": "boolean",
+          "description": "Whether to synchronize with alerts",
+          "default": false
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Version",
+          "name": "version",
+          "type": "string",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Case_caseFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a case",
+      "action": "Create a case",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a case",
+          "action": "Create a case",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a case",
+          "action": "Delete a case",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get a case",
+          "action": "Get a case",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Retrieve many cases",
+          "action": "Get many cases",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Get Status",
+          "description": "Retrieve a summary of all case activity",
+          "action": "Get the status of a case",
+          "value": "getStatus",
+          "displayName": "Get Status"
+        },
+        {
+          "name": "Update",
+          "description": "Update a case",
+          "action": "Update a case",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ]
+        }
+      },
+      "_source": "Case_caseOperations"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "caseId",
+      "type": "string",
+      "description": "ID of the case containing the comment to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Comment",
+      "name": "comment",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Valid application owner registered within the Cases Role Based Access Control system",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Owner",
+          "name": "owner",
+          "type": "string",
+          "description": "Valid application owner registered within the Cases Role Based Access Control system",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "caseId",
+      "type": "string",
+      "description": "ID of the case containing the comment to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Comment ID",
+      "name": "commentId",
+      "type": "string",
+      "description": "ID of the case comment to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "caseId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "caseId",
+      "type": "string",
+      "description": "ID of the case containing the comment to remove",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "remove"
+          ]
+        }
+      },
+      "_operation": "remove",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Comment ID",
+      "name": "commentId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "remove"
+          ]
+        }
+      },
+      "_operation": "remove",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "caseId",
+      "type": "string",
+      "description": "ID of the case containing the comment to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Comment ID",
+      "name": "commentId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Comment",
+      "name": "comment",
+      "type": "string",
+      "description": "Text to replace current comment message",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "CaseComment_caseCommentFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Add a comment to a case",
+      "action": "Add a comment to a case",
+      "value": "add",
+      "default": "add",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Add",
+          "description": "Add a comment to a case",
+          "action": "Add a comment to a case",
+          "value": "add",
+          "displayName": "Add"
+        },
+        {
+          "name": "Get",
+          "description": "Get a case comment",
+          "action": "Get a case comment",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Retrieve many case comments",
+          "action": "Get many case comments",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Remove",
+          "description": "Remove a comment from a case",
+          "action": "Remove a comment from a case",
+          "value": "remove",
+          "displayName": "Remove"
+        },
+        {
+          "name": "Update",
+          "description": "Update a comment in a case",
+          "action": "Update a comment from a case",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ]
+        }
+      },
+      "_source": "CaseComment_caseCommentOperations"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "caseId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseTag"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "CaseTag_caseTagFields"
+    },
+    {
+      "displayName": "Tag Name or ID",
+      "name": "tag",
+      "type": "options",
+      "description": "Tag to attach to the case. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTags"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseTag"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      },
+      "_operation": "add",
+      "_source": "CaseTag_caseTagFields"
+    },
+    {
+      "displayName": "Case ID",
+      "name": "caseId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseTag"
+          ],
+          "operation": [
+            "remove"
+          ]
+        }
+      },
+      "_operation": "remove",
+      "_source": "CaseTag_caseTagFields"
+    },
+    {
+      "displayName": "Tag Name or ID",
+      "name": "tag",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTags"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseTag"
+          ],
+          "operation": [
+            "remove"
+          ]
+        }
+      },
+      "_operation": "remove",
+      "_source": "CaseTag_caseTagFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Add a tag to a case",
+      "action": "Add a tag to a case",
+      "value": "add",
+      "default": "add",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Add",
+          "description": "Add a tag to a case",
+          "action": "Add a tag to a case",
+          "value": "add",
+          "displayName": "Add"
+        },
+        {
+          "name": "Remove",
+          "description": "Remove a tag from a case",
+          "action": "Remove a tag from a case",
+          "value": "remove",
+          "displayName": "Remove"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseTag"
+          ]
+        }
+      },
+      "_source": "CaseTag_caseTagOperations"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a connector",
+      "action": "Create a connector",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a case",
+      "action": "Delete a case",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Get a case",
+      "action": "Get a case",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Retrieve many cases",
+      "action": "Get many cases",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Get Status",
+      "description": "Retrieve a summary of all case activity",
+      "action": "Get the status of a case",
+      "value": "getStatus",
+      "displayName": "Get Status"
+    },
+    {
+      "name": "Update",
+      "description": "Update a case",
+      "action": "Update a case",
+      "value": "update",
+      "displayName": "Update"
+    },
+    {
+      "name": "Add",
+      "description": "Add a comment to a case",
+      "action": "Add a comment to a case",
+      "value": "add",
+      "displayName": "Add"
+    },
+    {
+      "name": "Remove",
+      "description": "Remove a comment from a case",
+      "action": "Remove a comment from a case",
+      "value": "remove",
+      "displayName": "Remove"
+    }
+  ],
+  "operations_by_resource": {
+    "connector": [
+      {
+        "name": "Create",
+        "description": "Create a connector",
+        "action": "Create a connector",
+        "value": "create",
+        "displayName": "Create"
+      }
+    ],
+    "case": [
+      {
+        "name": "Create",
+        "description": "Create a case",
+        "action": "Create a case",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a case",
+        "action": "Delete a case",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get a case",
+        "action": "Get a case",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Retrieve many cases",
+        "action": "Get many cases",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Get Status",
+        "description": "Retrieve a summary of all case activity",
+        "action": "Get the status of a case",
+        "value": "getStatus",
+        "displayName": "Get Status"
+      },
+      {
+        "name": "Update",
+        "description": "Update a case",
+        "action": "Update a case",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "caseComment": [
+      {
+        "name": "Add",
+        "description": "Add a comment to a case",
+        "action": "Add a comment to a case",
+        "value": "add",
+        "displayName": "Add"
+      },
+      {
+        "name": "Get",
+        "description": "Get a case comment",
+        "action": "Get a case comment",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Retrieve many case comments",
+        "action": "Get many case comments",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Remove",
+        "description": "Remove a comment from a case",
+        "action": "Remove a comment from a case",
+        "value": "remove",
+        "displayName": "Remove"
+      },
+      {
+        "name": "Update",
+        "description": "Update a comment in a case",
+        "action": "Update a comment from a case",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "caseTag": [
+      {
+        "name": "Add",
+        "description": "Add a tag to a case",
+        "action": "Add a tag to a case",
+        "value": "add",
+        "displayName": "Add"
+      },
+      {
+        "name": "Remove",
+        "description": "Remove a tag from a case",
+        "action": "Remove a tag from a case",
+        "value": "remove",
+        "displayName": "Remove"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "elasticSecurityApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseTag"
+          ]
+        }
+      }
+    },
+    "name": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "connectorType": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "apiUrl": {
+      "required": true,
+      "format": "url",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "email": {
+      "required": true,
+      "format": "email",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".jira"
+          ]
+        }
+      }
+    },
+    "apiToken": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".jira"
+          ]
+        }
+      }
+    },
+    "projectKey": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".jira"
+          ]
+        }
+      }
+    },
+    "username": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".servicenow"
+          ]
+        }
+      }
+    },
+    "password": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".servicenow"
+          ]
+        }
+      }
+    },
+    "apiKeyId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".resilient"
+          ]
+        }
+      }
+    },
+    "apiKeySecret": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".resilient"
+          ]
+        }
+      }
+    },
+    "orgId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "connector"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".resilient"
+          ]
+        }
+      }
+    },
+    "title": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "connectorId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "issueType": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".jira"
+          ]
+        }
+      }
+    },
+    "priority": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".jira"
+          ]
+        }
+      }
+    },
+    "urgency": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".servicenow"
+          ]
+        }
+      }
+    },
+    "severity": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".servicenow"
+          ]
+        }
+      }
+    },
+    "impact": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".servicenow"
+          ]
+        }
+      }
+    },
+    "category": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".servicenow"
+          ]
+        }
+      }
+    },
+    "issueTypes": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".resilient"
+          ]
+        }
+      }
+    },
+    "severityCode": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "create"
+          ],
+          "connectorType": [
+            ".resilient"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "add"
+          ]
+        }
+      }
+    },
+    "caseId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseTag"
+          ],
+          "operation": [
+            "remove"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "sortOptions": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "case"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "comment": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "simple": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "commentId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseComment"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "tag": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "caseTag"
+          ],
+          "operation": [
+            "remove"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "case",
+          "name": "Case",
+          "description": ""
+        },
+        {
+          "value": "caseComment",
+          "name": "Case Comment",
+          "description": ""
+        },
+        {
+          "value": "caseTag",
+          "name": "Case Tag",
+          "description": ""
+        },
+        {
+          "value": "connector",
+          "name": "Connector",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "add",
+          "name": "Add",
+          "description": "Add a tag to a case"
+        },
+        {
+          "value": "remove",
+          "name": "Remove",
+          "description": "Remove a tag from a case"
+        }
+      ]
+    },
+    "name": {
+      "type": "string",
+      "displayName": "Connector Name",
+      "name": "name"
+    },
+    "connectorType": {
+      "type": "options",
+      "displayName": "Connector Type",
+      "name": "connectorType",
+      "possibleValues": [
+        {
+          "value": ".resilient",
+          "name": "IBM Resilient",
+          "description": ""
+        },
+        {
+          "value": ".jira",
+          "name": "Jira",
+          "description": ""
+        },
+        {
+          "value": ".servicenow",
+          "name": "ServiceNow ITSM",
+          "description": ""
+        }
+      ]
+    },
+    "apiUrl": {
+      "type": "string",
+      "displayName": "API URL",
+      "name": "apiUrl"
+    },
+    "email": {
+      "type": "string",
+      "displayName": "Email",
+      "name": "email"
+    },
+    "apiToken": {
+      "type": "string",
+      "displayName": "API Token",
+      "name": "apiToken",
+      "typeOptions": {
+        "password": true
+      }
+    },
+    "projectKey": {
+      "type": "string",
+      "displayName": "Project Key",
+      "name": "projectKey"
+    },
+    "username": {
+      "type": "string",
+      "displayName": "Username",
+      "name": "username"
+    },
+    "password": {
+      "type": "string",
+      "displayName": "Password",
+      "name": "password",
+      "typeOptions": {
+        "password": true
+      }
+    },
+    "apiKeyId": {
+      "type": "string",
+      "displayName": "API Key ID",
+      "name": "apiKeyId",
+      "typeOptions": {
+        "password": true
+      }
+    },
+    "apiKeySecret": {
+      "type": "string",
+      "displayName": "API Key Secret",
+      "name": "apiKeySecret",
+      "typeOptions": {
+        "password": true
+      }
+    },
+    "orgId": {
+      "type": "string",
+      "displayName": "Organization ID",
+      "name": "orgId"
+    },
+    "title": {
+      "type": "string",
+      "displayName": "Title",
+      "name": "title"
+    },
+    "connectorId": {
+      "type": "options",
+      "displayName": "Connector Name or ID",
+      "name": "connectorId",
+      "typeOptions": {
+        "loadOptionsMethod": "getConnectors"
+      },
+      "possibleValues": []
+    },
+    "issueType": {
+      "type": "string",
+      "displayName": "Issue Type",
+      "name": "issueType"
+    },
+    "priority": {
+      "type": "string",
+      "displayName": "Priority",
+      "name": "priority"
+    },
+    "urgency": {
+      "type": "options",
+      "displayName": "Urgency",
+      "name": "urgency",
+      "possibleValues": [
+        {
+          "value": "Low",
+          "name": "Low",
+          "description": ""
+        },
+        {
+          "value": "Medium",
+          "name": "Medium",
+          "description": ""
+        },
+        {
+          "value": "High",
+          "name": "High",
+          "description": ""
+        }
+      ]
+    },
+    "severity": {
+      "type": "options",
+      "displayName": "Severity",
+      "name": "severity",
+      "possibleValues": [
+        {
+          "value": "Low",
+          "name": "Low",
+          "description": ""
+        },
+        {
+          "value": "Medium",
+          "name": "Medium",
+          "description": ""
+        },
+        {
+          "value": "High",
+          "name": "High",
+          "description": ""
+        }
+      ]
+    },
+    "impact": {
+      "type": "options",
+      "displayName": "Impact",
+      "name": "impact",
+      "possibleValues": [
+        {
+          "value": "Low",
+          "name": "Low",
+          "description": ""
+        },
+        {
+          "value": "Medium",
+          "name": "Medium",
+          "description": ""
+        },
+        {
+          "value": "High",
+          "name": "High",
+          "description": ""
+        }
+      ]
+    },
+    "category": {
+      "type": "string",
+      "displayName": "Category",
+      "name": "category"
+    },
+    "issueTypes": {
+      "type": "string",
+      "displayName": "Issue Types",
+      "name": "issueTypes"
+    },
+    "severityCode": {
+      "type": "number",
+      "displayName": "Severity Code",
+      "name": "severityCode",
+      "typeOptions": {
+        "minValue": 0
+      }
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Owner",
+          "name": "owner",
+          "type": "string",
+          "description": "Valid application owner registered within the Cases Role Based Access Control system",
+          "default": ""
+        }
+      ]
+    },
+    "caseId": {
+      "type": "string",
+      "displayName": "Case ID",
+      "name": "caseId"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1
+      }
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "typeOptions": {
+        "loadOptionsMethod": "getTags"
+      },
+      "subProperties": [
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "value": "open",
+          "default": "open",
+          "options": [
+            {
+              "name": "Open",
+              "value": "open",
+              "displayName": "Open"
+            },
+            {
+              "name": "In Progress",
+              "value": "in-progress",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Closed",
+              "value": "closed",
+              "displayName": "Closed"
+            }
+          ]
+        },
+        {
+          "displayName": "Tag Names or IDs",
+          "name": "tags",
+          "type": "multiOptions",
+          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getTags"
+          }
+        }
+      ]
+    },
+    "sortOptions": {
+      "type": "fixedCollection",
+      "displayName": "Sort",
+      "name": "sortOptions",
+      "subProperties": [
+        {
+          "name": "sortOptionsProperties",
+          "displayName": "Sort Options",
+          "values": [
+            {
+              "displayName": "Sort Key",
+              "name": "sortField",
+              "type": "options",
+              "value": "createdAt",
+              "default": "createdAt",
+              "options": [
+                {
+                  "name": "Created At",
+                  "value": "createdAt",
+                  "displayName": "Created At"
+                },
+                {
+                  "name": "Updated At",
+                  "value": "updatedAt",
+                  "displayName": "Updated At"
+                }
+              ]
+            },
+            {
+              "displayName": "Sort Order",
+              "name": "sortOrder",
+              "type": "options",
+              "value": "asc",
+              "default": "asc",
+              "options": [
+                {
+                  "name": "Ascending",
+                  "value": "asc",
+                  "displayName": "Ascending"
+                },
+                {
+                  "name": "Descending",
+                  "value": "desc",
+                  "displayName": "Descending"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "subProperties": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "value": "closed",
+          "default": "open",
+          "options": [
+            {
+              "name": "Closed",
+              "value": "closed",
+              "displayName": "Closed"
+            },
+            {
+              "name": "Open",
+              "value": "open",
+              "displayName": "Open"
+            },
+            {
+              "name": "In Progress",
+              "value": "in-progress",
+              "displayName": "In Progress"
+            }
+          ]
+        },
+        {
+          "displayName": "Sync Alerts",
+          "name": "syncAlerts",
+          "type": "boolean",
+          "description": "Whether to synchronize with alerts",
+          "default": false
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Version",
+          "name": "version",
+          "type": "string",
+          "default": ""
+        }
+      ]
+    },
+    "comment": {
+      "type": "string",
+      "displayName": "Comment",
+      "name": "comment"
+    },
+    "simple": {
+      "type": "boolean",
+      "displayName": "Simplify",
+      "name": "simple"
+    },
+    "commentId": {
+      "type": "string",
+      "displayName": "Comment ID",
+      "name": "commentId"
+    },
+    "tag": {
+      "type": "options",
+      "displayName": "Tag Name or ID",
+      "name": "tag",
+      "typeOptions": {
+        "loadOptionsMethod": "getTags"
+      },
+      "possibleValues": []
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "email",
+        "text": "name@email.com"
+      },
+      {
+        "field": "issueType",
+        "text": "Task"
+      },
+      {
+        "field": "priority",
+        "text": "High"
+      },
+      {
+        "field": "category",
+        "text": "Helpdesk"
+      },
+      {
+        "field": "issueTypes",
+        "text": "123,456"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "sortOptions",
+        "text": "Add Sort Options"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

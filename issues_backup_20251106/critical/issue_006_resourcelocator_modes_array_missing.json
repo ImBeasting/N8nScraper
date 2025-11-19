@@ -1,0 +1,46 @@
+{
+  "issue_id": "issue_006",
+  "title": "ResourceLocator Modes Array Missing",
+  "severity": "critical",
+  "status": "resolved",
+  "priority": 6,
+  "metadata": {
+    "created_at": "2025-11-06T10:49:00Z",
+    "created_by": "claude_code",
+    "updated_at": "2025-11-06T15:00:00Z",
+    "affected_nodes": "GoogleBusinessProfileTrigger (confirmed), likely all nodes with resourceLocator",
+    "source": "EXTRACTION_ERRORS_REPORT.md"
+  },
+  "description": {
+    "problem": "Properties with `type: \"resourceLocator\"` are extracted without their `modes` array, which contains the different ways users can specify the resource.\n\n**GoogleBusinessProfileTrigger \"account\" Property Example:**\n\n**Extracted** (`googleBusinessProfileTrigger_data.json:44-58`):\n```json\n{\n  \"displayName\": \"Account\",\n  \"name\": \"account\",\n  \"type\": \"resourceLocator\",\n  \"description\": \"The Google Business Profile account\",\n  \"placeholder\": \"e.g. accounts/0123456789\",\n  \"hint\": \"Enter the account name...",
+    "impact": "See full report for details",
+    "examples": [
+      {
+        "node": "GoogleBusinessProfileTrigger \"account\" Property Example:**\n\n**Extracted",
+        "location": "googleBusinessProfileTrigger_data.json:44-58",
+        "extracted": "{\n  \"displayName\": \"Account\",\n  \"name\": \"account\",\n  \"type\": \"resourceLocator\",\n  \"description\": \"The Google Business Profile account\",\n  \"placeholder\": \"e.g. accounts/0123456789\",\n  \"hint\": \"Enter the account name\",\n  \"required\": true,\n  \"typeOptions\": {},\n  \"displayOptions\": {\n    \"show\": {\n      \"event\": [\"reviewAdded\"]\n    }\n  }\n}",
+        "source": "{\n  displayName: 'Account',\n  name: 'account',\n  required: true,\n  type: 'resourceLocator',\n  default: { mode: 'list', value: '' },\n  description: 'The Google Business Profile account',\n  displayOptions: { show: { event: ['reviewAdded'] } },\n  modes: [\n    {\n      displayName: 'From list',\n      name: 'list',\n      type: 'list',\n      typeOptions: {\n        searchListMethod: 'searchAccounts',\n        searchable: true,\n      },\n    },\n    {\n      displayName: 'By name',\n      name: 'name',\n      type: 'string',\n      hint: 'Enter the account name',\n      validation: [\n        {\n          type: 'regex',\n          properties: {\n            regex: 'accounts/[0-9]+',\n            errorMessage: 'The name must start with \"accounts/\"',\n          },\n        },\n      ],\n      placeholder: 'e.g. accounts/0123456789',\n    },\n  ],\n}",
+        "expected": "{\n  \"displayName\": \"Account\",\n  \"name\": \"account\",\n  \"type\": \"resourceLocator\",\n  \"description\": \"The Google Business Profile account\",\n  \"required\": true,\n  \"default\": { \"mode\": \"list\", \"value\": \"\" },\n  \"modes\": [\n    {\n      \"displayName\": \"From list\",\n      \"name\": \"list\",\n      \"type\": \"list\",\n      \"typeOptions\": {\n        \"searchListMethod\": \"searchAccounts\",\n        \"searchable\": true\n      }\n    },\n    {\n      \"displayName\": \"By name\",\n      \"name\": \"name\",\n      \"type\": \"string\",\n      \"hint\": \"Enter the account name\",\n      \"validation\": [\n        {\n          \"type\": \"regex\",\n          \"properties\": {\n            \"regex\": \"accounts/[0-9]+\",\n            \"errorMessage\": \"The name must start with \\\"accounts/\\\"\"\n          }\n        }\n      ],\n      \"placeholder\": \"e.g. accounts/0123456789\"\n    }\n  ],\n  \"displayOptions\": {\n    \"show\": {\n      \"event\": [\"reviewAdded\"]\n    }\n  }\n}"
+      }
+    ]
+  },
+  "root_cause": {
+    "pattern": "extraction_issue",
+    "location": "n8n_node_extractor.py",
+    "hypothesis": "Needs investigation"
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null
+  },
+  "proposed_fixes": [],
+  "verification": {
+    "test_nodes": [],
+    "acceptance_criteria": []
+  },
+  "related_issues": [],
+  "blocking_issues": [],
+  "blocked_by_issues": []
+}

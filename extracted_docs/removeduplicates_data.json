@@ -1,0 +1,612 @@
+{
+  "node_info": {
+    "icon": "file:removeDuplicates.svg",
+    "defaults": {
+      "name": "Remove Duplicates"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Remove Duplicates",
+    "description": "Delete items with matching field values",
+    "name": "removeDuplicates",
+    "subtitle": "",
+    "version": [
+      "2"
+    ],
+    "node_type": "regular"
+  },
+  "metadata": {},
+  "properties": [
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "default": "removeDuplicateInputItems",
+      "noDataExpression": true,
+      "_source": "RemoveDuplicatesV2.description_removeDuplicatesNodeFields"
+    },
+    {
+      "displayName": "Compare",
+      "name": "compare",
+      "type": "options",
+      "description": "The fields of the input items to compare to see if they are the same",
+      "default": "allFields",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "removeDuplicateInputItems"
+          ]
+        }
+      },
+      "_operation": "removeDuplicateInputItems",
+      "_source": "RemoveDuplicatesV2.description_removeDuplicatesNodeFields"
+    },
+    {
+      "displayName": "Fields To Exclude",
+      "name": "fieldsToExclude",
+      "type": "string",
+      "description": "Fields in the input to exclude from the comparison",
+      "placeholder": "e.g. email, name",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "compare": [
+            "allFieldsExcept"
+          ]
+        }
+      },
+      "_source": "RemoveDuplicatesV2.description_removeDuplicatesNodeFields"
+    },
+    {
+      "displayName": "Fields To Compare",
+      "name": "fieldsToCompare",
+      "type": "string",
+      "description": "Fields in the input to add to the comparison",
+      "placeholder": "e.g. email, name",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "compare": [
+            "selectedFields"
+          ]
+        }
+      },
+      "_source": "RemoveDuplicatesV2.description_removeDuplicatesNodeFields"
+    },
+    {
+      "displayName": "Keep Items Where",
+      "name": "logic",
+      "type": "options",
+      "description": "How to select input items to remove by comparing them with key values previously processed",
+      "default": "removeItemsWithAlreadySeenKeyValues",
+      "noDataExpression": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "removeItemsSeenInPreviousExecutions"
+          ]
+        }
+      },
+      "_operation": "removeItemsSeenInPreviousExecutions",
+      "_source": "RemoveDuplicatesV2.description_removeDuplicatesNodeFields"
+    },
+    {
+      "displayName": "Value to Dedupe On",
+      "name": "dedupeValue",
+      "type": "string",
+      "description": "Use an input field (or a combination of fields) that has a unique ID value",
+      "placeholder": "e.g. ID",
+      "hint": "The input field value to compare between items",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "logic": [
+            "removeItemsWithAlreadySeenKeyValues"
+          ]
+        }
+      },
+      "_source": "RemoveDuplicatesV2.description_removeDuplicatesNodeFields"
+    },
+    {
+      "displayName": "Value to Dedupe On",
+      "name": "incrementalDedupeValue",
+      "type": "number",
+      "description": "Use an input field (or a combination of fields) that has an incremental value",
+      "placeholder": "e.g. ID",
+      "hint": "The input field value to compare between items, an incremental value is expected",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "logic": [
+            "removeItemsUpToStoredIncrementalKey"
+          ]
+        }
+      },
+      "_source": "RemoveDuplicatesV2.description_removeDuplicatesNodeFields"
+    },
+    {
+      "displayName": "Value to Dedupe On",
+      "name": "dateDedupeValue",
+      "type": "dateTime",
+      "description": "Use an input field that has a date value in ISO format",
+      "placeholder": "e.g. 2024-08-09T13:44:16Z",
+      "hint": "The input field value to compare between items, a date is expected",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "logic": [
+            "removeItemsUpToStoredDate"
+          ]
+        }
+      },
+      "_source": "RemoveDuplicatesV2.description_removeDuplicatesNodeFields"
+    },
+    {
+      "displayName": "Mode",
+      "name": "mode",
+      "type": "options",
+      "description": "How you want to modify the key values stored on the database. None of these modes removes input items.",
+      "default": "cleanDatabase",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "clearDeduplicationHistory"
+          ]
+        }
+      },
+      "_operation": "clearDeduplicationHistory",
+      "_source": "RemoveDuplicatesV2.description_removeDuplicatesNodeFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to disallow referencing child fields using `parent.child` in the field name",
+      "placeholder": "Add Field",
+      "hint": "The max number of past items to store for deduplication",
+      "value": "workflow",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Disable Dot Notation",
+          "name": "disableDotNotation",
+          "type": "boolean",
+          "description": "Whether to disallow referencing child fields using `parent.child` in the field name",
+          "default": false,
+          "displayOptions": {
+            "show": {},
+            "hide": {}
+          }
+        },
+        {
+          "displayName": "Remove Other Fields",
+          "name": "removeOtherFields",
+          "type": "boolean",
+          "description": "Whether to remove any fields that are not being compared. If disabled, will keep the values from the first of the duplicates.",
+          "default": false,
+          "displayOptions": {
+            "show": {},
+            "hide": {}
+          }
+        },
+        {
+          "displayName": "Scope",
+          "name": "scope",
+          "type": "options",
+          "description": "If set to \u2018workflow,\u2019 key values will be shared across all nodes in the workflow. If set to \u2018node,\u2019 key values will be specific to this node.",
+          "value": "workflow",
+          "default": "node",
+          "options": [
+            {
+              "name": "Workflow",
+              "description": "Deduplication info will be shared by all the nodes in the workflow",
+              "value": "workflow",
+              "displayName": "Workflow"
+            },
+            {
+              "name": "Node",
+              "description": "Deduplication info will be stored only for this node",
+              "value": "node",
+              "displayName": "Node"
+            }
+          ],
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "History Size",
+          "name": "historySize",
+          "type": "number",
+          "hint": "The max number of past items to store for deduplication",
+          "default": 10000,
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "removeDuplicateInputItems",
+            "removeItemsSeenInPreviousExecutions",
+            "clearDeduplicationHistory",
+            ""
+          ]
+        }
+      },
+      "_operation": "removeDuplicateInputItems,removeItemsSeenInPreviousExecutions,clearDeduplicationHistory,",
+      "_source": "RemoveDuplicatesV2.description_removeDuplicatesNodeFields"
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [],
+  "workflow_examples": [],
+  "expressions": [
+    "={{ $parameter[\"operation\"] === \"removeItemsSeenInPreviousExecutions\" && ($parameter[\"logic\"] === \"removeItemsWithAlreadySeenKeyValues\" && $parameter[\"dedupeValue\"] === undefined) || ($parameter[\"logic\"] === \"removeItemsUpToStoredIncrementalKey\" && $parameter[\"incrementalDedupeValue\"] === undefined) || ($parameter[\"logic\"] === \"removeItemsUpToStoredDate\" && $parameter[\"dateDedupeValue\"] === undefined) }}"
+  ],
+  "validation_rules": {
+    "compare": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "removeDuplicateInputItems"
+          ]
+        }
+      }
+    },
+    "fieldsToExclude": {
+      "displayOptions": {
+        "show": {
+          "compare": [
+            "allFieldsExcept"
+          ]
+        }
+      }
+    },
+    "fieldsToCompare": {
+      "displayOptions": {
+        "show": {
+          "compare": [
+            "selectedFields"
+          ]
+        }
+      }
+    },
+    "logic": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "removeItemsSeenInPreviousExecutions"
+          ]
+        }
+      }
+    },
+    "dedupeValue": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "logic": [
+            "removeItemsWithAlreadySeenKeyValues"
+          ]
+        }
+      }
+    },
+    "incrementalDedupeValue": {
+      "displayOptions": {
+        "show": {
+          "logic": [
+            "removeItemsUpToStoredIncrementalKey"
+          ]
+        }
+      }
+    },
+    "dateDedupeValue": {
+      "displayOptions": {
+        "show": {
+          "logic": [
+            "removeItemsUpToStoredDate"
+          ]
+        }
+      }
+    },
+    "mode": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "clearDeduplicationHistory"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "removeDuplicateInputItems",
+            "removeItemsSeenInPreviousExecutions",
+            "clearDeduplicationHistory",
+            ""
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": []
+    },
+    "compare": {
+      "type": "options",
+      "displayName": "Compare",
+      "name": "compare",
+      "possibleValues": []
+    },
+    "fieldsToExclude": {
+      "type": "string",
+      "displayName": "Fields To Exclude",
+      "name": "fieldsToExclude"
+    },
+    "fieldsToCompare": {
+      "type": "string",
+      "displayName": "Fields To Compare",
+      "name": "fieldsToCompare"
+    },
+    "logic": {
+      "type": "options",
+      "displayName": "Keep Items Where",
+      "name": "logic",
+      "possibleValues": []
+    },
+    "dedupeValue": {
+      "type": "string",
+      "displayName": "Value to Dedupe On",
+      "name": "dedupeValue"
+    },
+    "incrementalDedupeValue": {
+      "type": "number",
+      "displayName": "Value to Dedupe On",
+      "name": "incrementalDedupeValue"
+    },
+    "dateDedupeValue": {
+      "type": "dateTime",
+      "displayName": "Value to Dedupe On",
+      "name": "dateDedupeValue"
+    },
+    "mode": {
+      "type": "options",
+      "displayName": "Mode",
+      "name": "mode",
+      "possibleValues": []
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Disable Dot Notation",
+          "name": "disableDotNotation",
+          "type": "boolean",
+          "description": "Whether to disallow referencing child fields using `parent.child` in the field name",
+          "default": false,
+          "displayOptions": {
+            "show": {},
+            "hide": {}
+          }
+        },
+        {
+          "displayName": "Remove Other Fields",
+          "name": "removeOtherFields",
+          "type": "boolean",
+          "description": "Whether to remove any fields that are not being compared. If disabled, will keep the values from the first of the duplicates.",
+          "default": false,
+          "displayOptions": {
+            "show": {},
+            "hide": {}
+          }
+        },
+        {
+          "displayName": "Scope",
+          "name": "scope",
+          "type": "options",
+          "description": "If set to \u2018workflow,\u2019 key values will be shared across all nodes in the workflow. If set to \u2018node,\u2019 key values will be specific to this node.",
+          "value": "workflow",
+          "default": "node",
+          "options": [
+            {
+              "name": "Workflow",
+              "description": "Deduplication info will be shared by all the nodes in the workflow",
+              "value": "workflow",
+              "displayName": "Workflow"
+            },
+            {
+              "name": "Node",
+              "description": "Deduplication info will be stored only for this node",
+              "value": "node",
+              "displayName": "Node"
+            }
+          ],
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "History Size",
+          "name": "historySize",
+          "type": "number",
+          "hint": "The max number of past items to store for deduplication",
+          "default": 10000,
+          "displayOptions": {
+            "show": {}
+          }
+        }
+      ]
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "fieldsToExclude",
+        "text": "e.g. email, name"
+      },
+      {
+        "field": "fieldsToCompare",
+        "text": "e.g. email, name"
+      },
+      {
+        "field": "dedupeValue",
+        "text": "e.g. ID"
+      },
+      {
+        "field": "incrementalDedupeValue",
+        "text": "e.g. ID"
+      },
+      {
+        "field": "dateDedupeValue",
+        "text": "e.g. 2024-08-09T13:44:16Z"
+      },
+      {
+        "field": "options",
+        "text": "Add Field"
+      }
+    ],
+    "hints": [
+      {
+        "field": "dedupeValue",
+        "text": "The input field value to compare between items"
+      },
+      {
+        "field": "incrementalDedupeValue",
+        "text": "The input field value to compare between items, an incremental value is expected"
+      },
+      {
+        "field": "dateDedupeValue",
+        "text": "The input field value to compare between items, a date is expected"
+      },
+      {
+        "field": "options",
+        "text": "The max number of past items to store for deduplication"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

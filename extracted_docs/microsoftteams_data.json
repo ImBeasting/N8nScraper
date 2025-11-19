@@ -1,0 +1,2457 @@
+{
+  "node_info": {
+    "icon": "file:teams.svg",
+    "defaults": {
+      "name": "Microsoft Teams"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "microsoftTeamsOAuth2Api",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getChannels"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Microsoft Teams",
+    "description": "Consume Microsoft Teams API",
+    "name": "microsoftTeams",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": [
+      "1",
+      "1.1"
+    ],
+    "node_type": "regular"
+  },
+  "metadata": {},
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "channel",
+      "default": "channel",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Channel",
+          "value": "channel",
+          "displayName": "Channel"
+        },
+        {
+          "name": "Channel Message (Beta)",
+          "value": "channelMessage",
+          "displayName": "Channel Message (beta)"
+        },
+        {
+          "name": "Chat Message",
+          "value": "chatMessage",
+          "displayName": "Chat Message"
+        },
+        {
+          "name": "Task",
+          "value": "task",
+          "displayName": "Task"
+        }
+      ]
+    },
+    {
+      "displayName": "<strong>New node version available:</strong> get the latest version with added features from the nodes panel.",
+      "name": "oldVersionNotice",
+      "type": "notice",
+      "default": ""
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a channel",
+      "action": "Create a channel",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a channel",
+          "action": "Create a channel",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a channel",
+          "action": "Delete a channel",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get a channel",
+          "action": "Get a channel",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many channels",
+          "action": "Get many channels",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update a channel",
+          "action": "Update a channel",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "channel"
+          ]
+        }
+      },
+      "_source": "Channel_channelOperations"
+    },
+    {
+      "displayName": "Team Name or ID",
+      "name": "teamId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "channel"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Channel_channelFields"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "Channel name as it will appear to the user in Microsoft Teams",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "channel"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Channel_channelFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Channel's description",
+      "placeholder": "Add Field",
+      "value": "private",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Channel's description",
+          "default": ""
+        },
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "options",
+          "description": "The type of the channel",
+          "value": "private",
+          "default": "standard",
+          "options": [
+            {
+              "name": "Private",
+              "value": "private",
+              "displayName": "Private"
+            },
+            {
+              "name": "Standard",
+              "value": "standard",
+              "displayName": "Standard"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "channel"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Channel_channelFields"
+    },
+    {
+      "displayName": "Team Name or ID",
+      "name": "teamId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ],
+          "resource": [
+            "channel"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Channel_channelFields"
+    },
+    {
+      "displayName": "Channel Name or ID",
+      "name": "channelId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "typeOptions": {
+        "loadOptionsMethod": "getChannels"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ],
+          "resource": [
+            "channel"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Channel_channelFields"
+    },
+    {
+      "displayName": "Team Name or ID",
+      "name": "teamId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "channel"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Channel_channelFields"
+    },
+    {
+      "displayName": "Channel Name or ID",
+      "name": "channelId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "typeOptions": {
+        "loadOptionsMethod": "getChannels"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "channel"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Channel_channelFields"
+    },
+    {
+      "displayName": "Team Name or ID",
+      "name": "teamId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "channel"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Channel_channelFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "channel"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Channel_channelFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "channel"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Channel_channelFields"
+    },
+    {
+      "displayName": "Team Name or ID",
+      "name": "teamId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "channel"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Channel_channelFields"
+    },
+    {
+      "displayName": "Channel Name or ID",
+      "name": "channelId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "typeOptions": {
+        "loadOptionsMethod": "getChannels"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "channel"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Channel_channelFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Channel name as it will appear to the user in Microsoft Teams",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "Channel name as it will appear to the user in Microsoft Teams",
+          "default": ""
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Channel's description",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "channel"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Channel_channelFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a message",
+      "action": "Create a message in a channel",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a message",
+          "action": "Create a message in a channel",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many messages",
+          "action": "Get many messages in a channel",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "channelMessage"
+          ]
+        }
+      },
+      "_source": "ChannelMessage_channelMessageOperations"
+    },
+    {
+      "displayName": "Team Name or ID",
+      "name": "teamId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "channelMessage"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "ChannelMessage_channelMessageFields"
+    },
+    {
+      "displayName": "Channel Name or ID",
+      "name": "channelId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "typeOptions": {
+        "loadOptionsMethod": "getChannels"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "channelMessage"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "ChannelMessage_channelMessageFields"
+    },
+    {
+      "displayName": "Message Type",
+      "name": "messageType",
+      "type": "options",
+      "description": "The type of the content",
+      "value": "text",
+      "default": "text",
+      "required": true,
+      "options": [
+        {
+          "name": "Text",
+          "value": "text",
+          "displayName": "Text"
+        },
+        {
+          "name": "HTML",
+          "value": "html",
+          "displayName": "Html"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "channelMessage"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "ChannelMessage_channelMessageFields"
+    },
+    {
+      "displayName": "Message",
+      "name": "message",
+      "type": "string",
+      "description": "The content of the item",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "channelMessage"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "ChannelMessage_channelMessageFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to append a link to this workflow at the end of the message. This is helpful if you have many workflows sending messages.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include Link to Workflow",
+          "name": "includeLinkToWorkflow",
+          "type": "boolean",
+          "description": "Whether to append a link to this workflow at the end of the message. This is helpful if you have many workflows sending messages.",
+          "default": true
+        },
+        {
+          "displayName": "Make Reply",
+          "name": "makeReply",
+          "type": "string",
+          "description": "An optional ID of the message you want to reply to",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "channelMessage"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "ChannelMessage_channelMessageFields"
+    },
+    {
+      "displayName": "Team Name or ID",
+      "name": "teamId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "channelMessage"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "ChannelMessage_channelMessageFields"
+    },
+    {
+      "displayName": "Channel Name or ID",
+      "name": "channelId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "typeOptions": {
+        "loadOptionsMethod": "getChannels"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "channelMessage"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "ChannelMessage_channelMessageFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "channelMessage"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "ChannelMessage_channelMessageFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "channelMessage"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "ChannelMessage_channelMessageFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a message",
+      "action": "Create a chat message",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a message",
+          "action": "Create a chat message",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Get",
+          "description": "Get a message",
+          "action": "Get a chat message",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many messages",
+          "action": "Get many chat messages",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "chatMessage"
+          ]
+        }
+      },
+      "_source": "ChatMessage_chatMessageOperations"
+    },
+    {
+      "displayName": "Chat Name or ID",
+      "name": "chatId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getChats"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create",
+            "get"
+          ],
+          "resource": [
+            "chatMessage"
+          ]
+        }
+      },
+      "_operation": "create,get",
+      "_source": "ChatMessage_chatMessageFields"
+    },
+    {
+      "displayName": "Message Type",
+      "name": "messageType",
+      "type": "options",
+      "description": "The type of the content",
+      "value": "text",
+      "default": "text",
+      "required": true,
+      "options": [
+        {
+          "name": "Text",
+          "value": "text",
+          "displayName": "Text"
+        },
+        {
+          "name": "HTML",
+          "value": "html",
+          "displayName": "Html"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "chatMessage"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "ChatMessage_chatMessageFields"
+    },
+    {
+      "displayName": "Message",
+      "name": "message",
+      "type": "string",
+      "description": "The content of the item",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "chatMessage"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "ChatMessage_chatMessageFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Other options to set",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include Link to Workflow",
+          "name": "includeLinkToWorkflow",
+          "type": "boolean",
+          "description": "Whether to append a link to this workflow at the end of the message. This is helpful if you have many workflows sending messages.",
+          "default": true
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "chatMessage"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "ChatMessage_chatMessageFields"
+    },
+    {
+      "displayName": "Message ID",
+      "name": "messageId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "chatMessage"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "ChatMessage_chatMessageFields"
+    },
+    {
+      "displayName": "Chat Name or ID",
+      "name": "chatId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getChats"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "chatMessage"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "ChatMessage_chatMessageFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "chatMessage"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "ChatMessage_chatMessageFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "chatMessage"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "ChatMessage_chatMessageFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a task",
+      "action": "Create a task",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a task",
+          "action": "Create a task",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a task",
+          "action": "Delete a task",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get a task",
+          "action": "Get a task",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many tasks",
+          "action": "Get many tasks",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update a task",
+          "action": "Update a task",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_source": "Task_taskOperations"
+    },
+    {
+      "displayName": "Group Source",
+      "name": "groupSource",
+      "type": "options",
+      "description": "From all groups",
+      "value": "all",
+      "default": "all",
+      "required": true,
+      "options": [
+        {
+          "name": "All Groups",
+          "description": "From all groups",
+          "value": "all",
+          "displayName": "All Groups"
+        },
+        {
+          "name": "My Groups",
+          "description": "Only load groups that account is member of",
+          "value": "mine",
+          "displayName": "My Groups"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll",
+            "create",
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "getAll,create,update",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Group Name or ID",
+      "name": "groupId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getGroups"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Plan Name or ID",
+      "name": "planId",
+      "type": "options",
+      "description": "The plan for the task to belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getPlans"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Bucket Name or ID",
+      "name": "bucketId",
+      "type": "options",
+      "description": "The bucket for the task to belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getBuckets"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Title",
+      "name": "title",
+      "type": "string",
+      "description": "Title of the task",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Who the task should be assigned to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Assigned To Name or ID",
+          "name": "assignedTo",
+          "type": "options",
+          "description": "Who the task should be assigned to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getMembers"
+          }
+        },
+        {
+          "displayName": "Due Date Time",
+          "name": "dueDateTime",
+          "type": "dateTime",
+          "description": "Date and time at which the task is due. The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time.",
+          "default": ""
+        },
+        {
+          "displayName": "Label Names or IDs",
+          "name": "labels",
+          "type": "multiOptions",
+          "description": "Labels to assign to the task. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          }
+        },
+        {
+          "displayName": "Percent Complete",
+          "name": "percentComplete",
+          "type": "number",
+          "description": "Percentage of task completion. When set to 100, the task is considered completed.",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0,
+            "maxValue": 100
+          }
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getMembers"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Task ID",
+      "name": "taskId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "delete"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Task ID",
+      "name": "taskId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Tasks For",
+      "name": "tasksFor",
+      "type": "options",
+      "description": "Tasks assigned to group member",
+      "value": "member",
+      "default": "member",
+      "required": true,
+      "options": [
+        {
+          "name": "Group Member",
+          "description": "Tasks assigned to group member",
+          "value": "member",
+          "displayName": "Group Member"
+        },
+        {
+          "name": "Plan",
+          "description": "Tasks in group plan",
+          "value": "plan",
+          "displayName": "Plan"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Group Name or ID",
+      "name": "groupId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getGroups"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Member Name or ID",
+      "name": "memberId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "typeOptions": {
+        "loadOptionsMethod": "getMembers"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ],
+          "tasksFor": [
+            "member"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Plan Name or ID",
+      "name": "planId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "typeOptions": {
+        "loadOptionsMethod": "getPlans"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ],
+          "tasksFor": [
+            "plan"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Task ID",
+      "name": "taskId",
+      "type": "string",
+      "description": "The ID of the Task",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Task_taskFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Who the task should be assigned to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Assigned To Name or ID",
+          "name": "assignedTo",
+          "type": "options",
+          "description": "Who the task should be assigned to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getMembers"
+          }
+        },
+        {
+          "displayName": "Bucket Name or ID",
+          "name": "bucketId",
+          "type": "options",
+          "description": "The bucket for the task to belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getBuckets"
+          }
+        },
+        {
+          "displayName": "Due Date Time",
+          "name": "dueDateTime",
+          "type": "dateTime",
+          "description": "Date and time at which the task is due. The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time.",
+          "default": ""
+        },
+        {
+          "displayName": "Group Name or ID",
+          "name": "groupId",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getGroups"
+          }
+        },
+        {
+          "displayName": "Label Names or IDs",
+          "name": "labels",
+          "type": "multiOptions",
+          "description": "Labels to assign to the task. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          }
+        },
+        {
+          "displayName": "Percent Complete",
+          "name": "percentComplete",
+          "type": "number",
+          "description": "Percentage of task completion. When set to 100, the task is considered completed.",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0,
+            "maxValue": 100
+          }
+        },
+        {
+          "displayName": "Plan Name or ID",
+          "name": "planId",
+          "type": "options",
+          "description": "The plan for the task to belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getPlans"
+          }
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Title of the task",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getMembers"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Task_taskFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a channel",
+      "action": "Create a channel",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a channel",
+      "action": "Delete a channel",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Get a channel",
+      "action": "Get a channel",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many channels",
+      "action": "Get many channels",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "description": "Update a channel",
+      "action": "Update a channel",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "channel": [
+      {
+        "name": "Create",
+        "description": "Create a channel",
+        "action": "Create a channel",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a channel",
+        "action": "Delete a channel",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get a channel",
+        "action": "Get a channel",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many channels",
+        "action": "Get many channels",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update a channel",
+        "action": "Update a channel",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "channelMessage": [
+      {
+        "name": "Create",
+        "description": "Create a message",
+        "action": "Create a message in a channel",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many messages",
+        "action": "Get many messages in a channel",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "chatMessage": [
+      {
+        "name": "Create",
+        "description": "Create a message",
+        "action": "Create a chat message",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Get",
+        "description": "Get a message",
+        "action": "Get a chat message",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many messages",
+        "action": "Get many chat messages",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "task": [
+      {
+        "name": "Create",
+        "description": "Create a task",
+        "action": "Create a task",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a task",
+        "action": "Delete a task",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get a task",
+        "action": "Get a task",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many tasks",
+        "action": "Get many tasks",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update a task",
+        "action": "Update a task",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "microsoftTeamsOAuth2Api",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "teamId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "channelMessage"
+          ]
+        }
+      }
+    },
+    "name": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "channel"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "chatMessage"
+          ]
+        }
+      }
+    },
+    "channelId": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "channelMessage"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "messageType": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "chatMessage"
+          ]
+        }
+      }
+    },
+    "message": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "chatMessage"
+          ]
+        }
+      }
+    },
+    "chatId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "chatMessage"
+          ]
+        }
+      }
+    },
+    "messageId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "chatMessage"
+          ]
+        }
+      }
+    },
+    "groupSource": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll",
+            "create",
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "groupId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "planId": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ],
+          "tasksFor": [
+            "plan"
+          ]
+        }
+      }
+    },
+    "bucketId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "title": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "taskId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "update"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "tasksFor": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "memberId": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ],
+          "tasksFor": [
+            "member"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "channel",
+          "name": "Channel",
+          "description": ""
+        },
+        {
+          "value": "channelMessage",
+          "name": "Channel Message (Beta)",
+          "description": ""
+        },
+        {
+          "value": "chatMessage",
+          "name": "Chat Message",
+          "description": ""
+        },
+        {
+          "value": "task",
+          "name": "Task",
+          "description": ""
+        }
+      ]
+    },
+    "oldVersionNotice": {
+      "type": "notice",
+      "displayName": "<strong>New node version available:</strong> get the latest version with added features from the nodes panel.",
+      "name": "oldVersionNotice"
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a task"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a task"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a task"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get many tasks"
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": "Update a task"
+        }
+      ]
+    },
+    "teamId": {
+      "type": "options",
+      "displayName": "Team Name or ID",
+      "name": "teamId",
+      "typeOptions": {
+        "loadOptionsMethod": "getTeams"
+      },
+      "possibleValues": []
+    },
+    "name": {
+      "type": "string",
+      "displayName": "Name",
+      "name": "name"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Include Link to Workflow",
+          "name": "includeLinkToWorkflow",
+          "type": "boolean",
+          "description": "Whether to append a link to this workflow at the end of the message. This is helpful if you have many workflows sending messages.",
+          "default": true
+        }
+      ]
+    },
+    "channelId": {
+      "type": "options",
+      "displayName": "Channel Name or ID",
+      "name": "channelId",
+      "typeOptions": {
+        "loadOptionsMethod": "getChannels"
+      },
+      "possibleValues": []
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      }
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "typeOptions": {
+        "loadOptionsMethod": "getMembers"
+      },
+      "subProperties": [
+        {
+          "displayName": "Assigned To Name or ID",
+          "name": "assignedTo",
+          "type": "options",
+          "description": "Who the task should be assigned to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getMembers"
+          }
+        },
+        {
+          "displayName": "Bucket Name or ID",
+          "name": "bucketId",
+          "type": "options",
+          "description": "The bucket for the task to belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getBuckets"
+          }
+        },
+        {
+          "displayName": "Due Date Time",
+          "name": "dueDateTime",
+          "type": "dateTime",
+          "description": "Date and time at which the task is due. The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time.",
+          "default": ""
+        },
+        {
+          "displayName": "Group Name or ID",
+          "name": "groupId",
+          "type": "options",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getGroups"
+          }
+        },
+        {
+          "displayName": "Label Names or IDs",
+          "name": "labels",
+          "type": "multiOptions",
+          "description": "Labels to assign to the task. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          }
+        },
+        {
+          "displayName": "Percent Complete",
+          "name": "percentComplete",
+          "type": "number",
+          "description": "Percentage of task completion. When set to 100, the task is considered completed.",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0,
+            "maxValue": 100
+          }
+        },
+        {
+          "displayName": "Plan Name or ID",
+          "name": "planId",
+          "type": "options",
+          "description": "The plan for the task to belong to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getPlans"
+          }
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Title of the task",
+          "default": ""
+        }
+      ]
+    },
+    "messageType": {
+      "type": "options",
+      "displayName": "Message Type",
+      "name": "messageType",
+      "possibleValues": [
+        {
+          "value": "text",
+          "name": "Text",
+          "description": ""
+        },
+        {
+          "value": "html",
+          "name": "HTML",
+          "description": ""
+        }
+      ]
+    },
+    "message": {
+      "type": "string",
+      "displayName": "Message",
+      "name": "message"
+    },
+    "chatId": {
+      "type": "options",
+      "displayName": "Chat Name or ID",
+      "name": "chatId",
+      "typeOptions": {
+        "loadOptionsMethod": "getChats"
+      },
+      "possibleValues": []
+    },
+    "messageId": {
+      "type": "string",
+      "displayName": "Message ID",
+      "name": "messageId"
+    },
+    "groupSource": {
+      "type": "options",
+      "displayName": "Group Source",
+      "name": "groupSource",
+      "possibleValues": [
+        {
+          "value": "all",
+          "name": "All Groups",
+          "description": "From all groups"
+        },
+        {
+          "value": "mine",
+          "name": "My Groups",
+          "description": "Only load groups that account is member of"
+        }
+      ]
+    },
+    "groupId": {
+      "type": "options",
+      "displayName": "Group Name or ID",
+      "name": "groupId",
+      "typeOptions": {
+        "loadOptionsMethod": "getGroups"
+      },
+      "possibleValues": []
+    },
+    "planId": {
+      "type": "options",
+      "displayName": "Plan Name or ID",
+      "name": "planId",
+      "typeOptions": {
+        "loadOptionsMethod": "getPlans"
+      },
+      "possibleValues": []
+    },
+    "bucketId": {
+      "type": "options",
+      "displayName": "Bucket Name or ID",
+      "name": "bucketId",
+      "typeOptions": {
+        "loadOptionsMethod": "getBuckets"
+      },
+      "possibleValues": []
+    },
+    "title": {
+      "type": "string",
+      "displayName": "Title",
+      "name": "title"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "typeOptions": {
+        "loadOptionsMethod": "getMembers"
+      },
+      "subProperties": [
+        {
+          "displayName": "Assigned To Name or ID",
+          "name": "assignedTo",
+          "type": "options",
+          "description": "Who the task should be assigned to. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getMembers"
+          }
+        },
+        {
+          "displayName": "Due Date Time",
+          "name": "dueDateTime",
+          "type": "dateTime",
+          "description": "Date and time at which the task is due. The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time.",
+          "default": ""
+        },
+        {
+          "displayName": "Label Names or IDs",
+          "name": "labels",
+          "type": "multiOptions",
+          "description": "Labels to assign to the task. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          }
+        },
+        {
+          "displayName": "Percent Complete",
+          "name": "percentComplete",
+          "type": "number",
+          "description": "Percentage of task completion. When set to 100, the task is considered completed.",
+          "default": 0,
+          "typeOptions": {
+            "minValue": 0,
+            "maxValue": 100
+          }
+        }
+      ]
+    },
+    "taskId": {
+      "type": "string",
+      "displayName": "Task ID",
+      "name": "taskId"
+    },
+    "tasksFor": {
+      "type": "options",
+      "displayName": "Tasks For",
+      "name": "tasksFor",
+      "possibleValues": [
+        {
+          "value": "member",
+          "name": "Group Member",
+          "description": "Tasks assigned to group member"
+        },
+        {
+          "value": "plan",
+          "name": "Plan",
+          "description": "Tasks in group plan"
+        }
+      ]
+    },
+    "memberId": {
+      "type": "options",
+      "displayName": "Member Name or ID",
+      "name": "memberId",
+      "typeOptions": {
+        "loadOptionsMethod": "getMembers"
+      },
+      "possibleValues": []
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [
+      {
+        "name": "oldVersionNotice",
+        "text": "<strong>New node version available:</strong> get the latest version with added features from the nodes panel.",
+        "conditions": null
+      }
+    ],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "options",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

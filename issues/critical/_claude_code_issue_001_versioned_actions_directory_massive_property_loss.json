@@ -1,0 +1,60 @@
+{
+  "issue_id": "_claude_code_issue_001",
+  "title": "PATTERN: Versioned multi-resource nodes with actions/ directory structure losing 70-96% of properties",
+  "severity": "critical",
+  "status": "resolved",
+  "priority": 1,
+  "metadata": {
+    "created_at": "2025-11-13T17:08:49Z",
+    "created_by": "claude_code",
+    "affected_nodes": "Discord (96% loss), Hubspot (80% loss), Airtable (70% loss), Slack (50-75% loss), and potentially 20+ other versioned multi-resource nodes",
+    "validation_session": "comprehensive_audit_2025-11-13",
+    "related_issues": "This is a systemic pattern affecting the entire versioned multi-resource node category"
+  },
+  "description": {
+    "problem": "Nodes with v2/ or V2/ directories containing an actions/ subdirectory are failing to extract 70-96% of their properties, making these nodes essentially unusable for AI training",
+    "impact": "CRITICAL - Affects 20+ high-value nodes including Discord, Hubspot, Airtable, and Slack. Property extraction rates: Discord 4/83 (5%), Hubspot 87/442 (20%), Airtable 13/44 (30%), Slack 111/280 (40%). Total estimated loss: 500-1000+ properties across affected nodes. These are among the most popular n8n nodes, making this the highest priority issue.",
+    "root_cause": "The extractor fails to properly traverse and extract properties from the modern n8n node structure where versioned nodes (v2/V2) organize properties in an actions/<resource>/ directory hierarchy. The extraction appears to only capture top-level properties from versionDescription.ts but misses the bulk of properties defined in actions/<resource>/*.ts files and their nested operation-specific files.",
+    "evidence": [
+      "Discord: Source n8n/packages/nodes-base/nodes/Discord/v2/actions/ has 83 displayName entries",
+      "Discord: Extracted discord_data.json has only 4 properties (96% loss)",
+      "Command: grep -r 'displayName:' n8n/packages/nodes-base/nodes/Discord/v2/actions --include='*.ts' | wc -l = 83",
+      "Command: jq '.properties | length' extracted_docs/discord_data.json = 4",
+      "",
+      "Hubspot: Source n8n/packages/nodes-base/nodes/Hubspot/V2/ has 442 displayName entries",
+      "Hubspot: Extracted hubspot_data.json has only 87 properties (80% loss)",
+      "Command: grep -r 'displayName:' n8n/packages/nodes-base/nodes/Hubspot/V2 --include='*.ts' | wc -l = 442",
+      "Command: jq '.properties | length' extracted_docs/hubspot_data.json = 87",
+      "",
+      "Airtable: Source n8n/packages/nodes-base/nodes/Airtable/v2/ has 44 displayName entries",
+      "Airtable: Extracted airtable_data.json has only 13 properties (70% loss)",
+      "Command: grep -r 'displayName:' n8n/packages/nodes-base/nodes/Airtable/v2 --include='*.ts' | wc -l = 44",
+      "Command: jq '.properties | length' extracted_docs/airtable_data.json = 13",
+      "",
+      "Slack: Source n8n/packages/nodes-base/nodes/Slack/V2/ has 280 displayName entries across 7 *Description.ts files",
+      "Slack: Extracted slack_data.json has only 111 properties (60% loss)",
+      "Per-resource breakdown showing consistent pattern:",
+      "  Channel: 91 in source \u2192 37 extracted (59% loss)",
+      "  Message: 93 in source \u2192 28 extracted (70% loss)",
+      "  User: 24 in source \u2192 6 extracted (75% loss)",
+      "",
+      "Common directory structure pattern:",
+      "  nodes/<NodeName>/v2/actions/versionDescription.ts (top-level properties)",
+      "  nodes/<NodeName>/v2/actions/<resource>/*.ts (resource-specific properties)",
+      "  nodes/<NodeName>/V2/*Description.ts (legacy structure - also affected)",
+      "",
+      "Estimated affected nodes (all with v2/V2 and actions/ or multi-resource structure):",
+      "  ActiveCampaign, Adalo, Affinity, Asana, BambooHr, Bannerbear, Discord, EmailReadImap, EmailSend, Filter, Form, HighLevel, Hubspot, If, ItemLists, Lemlist, plus potentially 10+ more"
+    ],
+    "fix_approach": "CRITICAL FIX REQUIRED - Multi-step enhancement to n8n_node_extractor.py:\n\n1. Add detection for versioned node structure:\n   - When extracting from a versioned node (v2/, V2/, v[0-9]/, V[0-9]/)\n   - Check for actions/ subdirectory\n   - If found, switch to actions-aware extraction mode\n\n2. Implement actions/ directory traversal:\n   - Read actions/versionDescription.ts for base properties\n   - Identify all resources from actions/<resource>/ directories\n   - For each resource, read all *.ts files in that directory\n   - Extract operation-specific properties from each file\n\n3. Handle modern n8n routing patterns:\n   - Parse router.ts to understand resource/operation mapping\n   - Follow import paths in action files (e.g., './create', './update')\n   - Resolve spreads from common.description.ts files\n\n4. Property deduplication and tagging:\n   - Merge properties from all sources\n   - Properly tag with _operation field for filtering\n   - Preserve displayOptions for conditional rendering\n\n5. Testing strategy:\n   - Test with Discord (actions/ structure): Expected 83 properties (currently 4)\n   - Test with Hubspot (V2 structure): Expected 400+ properties (currently 87)\n   - Test with Airtable (v2 structure): Expected 44 properties (currently 13)\n   - Test with Slack (V2 *Description.ts structure): Expected 280 properties (currently 111)\n\n6. Validation commands:\n   jq '.properties | length' extracted_docs/discord_data.json # Should show ~83 not 4\n   jq '.properties | length' extracted_docs/hubspot_data.json # Should show ~400+ not 87\n   jq '.properties | length' extracted_docs/airtable_data.json # Should show ~44 not 13\n   jq '.properties | length' extracted_docs/slack_data.json # Should show ~280 not 111\n\n7. Verify operations extraction:\n   - Ensure operations_by_resource is properly populated\n   - Verify each resource has complete operation list\n   - Confirm operation-specific properties are tagged correctly\n\n8. Regression testing:\n   - Re-extract all 20+ affected versioned nodes\n   - Compare before/after property counts\n   - Verify no regressions in non-versioned nodes"
+  },
+  "ownership": {
+    "assigned_to": "claude_code",
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": "2025-11-13T17:20:02.744854Z"
+  },
+  "resolved_by": "claude_code",
+  "resolved_at": "2025-11-13T17:25:27.691524Z"
+}

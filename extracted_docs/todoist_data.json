@@ -1,0 +1,1422 @@
+{
+  "node_info": {
+    "icon": "file:todoist.svg",
+    "defaults": {
+      "name": "Todoist"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "todoistApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "apiKey"
+            ]
+          }
+        }
+      },
+      {
+        "name": "todoistOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getProjects",
+      "for",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Todoist",
+    "subtitle": "={{$parameter[",
+    "description": "Consume Todoist API",
+    "name": "todoist",
+    "version": "1",
+    "listSearchMethods": [
+      "searchProjects",
+      "results",
+      "name",
+      "value"
+    ],
+    "node_type": "regular"
+  },
+  "metadata": {},
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "apiKey",
+      "default": "apiKey",
+      "options": [
+        {
+          "name": "API Key",
+          "value": "apiKey",
+          "displayName": "Api Key"
+        },
+        {
+          "name": "OAuth2",
+          "value": "oAuth2",
+          "displayName": "Oauth2"
+        }
+      ]
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "description": "Task resource",
+      "value": "task",
+      "default": "task",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Task",
+          "description": "Task resource",
+          "value": "task",
+          "displayName": "Task"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Close a task",
+      "action": "Close a task",
+      "value": "close",
+      "default": "create",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Close",
+          "description": "Close a task",
+          "action": "Close a task",
+          "value": "close",
+          "displayName": "Close"
+        },
+        {
+          "name": "Create",
+          "description": "Create a new task",
+          "action": "Create a task",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a task",
+          "action": "Delete a task",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get a task",
+          "action": "Get a task",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many tasks",
+          "action": "Get many tasks",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Move",
+          "description": "Move a task",
+          "action": "Move a task",
+          "value": "move",
+          "displayName": "Move"
+        },
+        {
+          "name": "Reopen",
+          "description": "Reopen a task",
+          "action": "Reopen a task",
+          "value": "reopen",
+          "displayName": "Reopen"
+        },
+        {
+          "name": "Sync",
+          "description": "Sync a project",
+          "value": "sync",
+          "displayName": "Sync"
+        },
+        {
+          "name": "Update",
+          "description": "Update a task",
+          "action": "Update a task",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Task ID",
+      "name": "taskId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "delete",
+            "close",
+            "get",
+            "reopen",
+            "update",
+            "move"
+          ]
+        }
+      },
+      "_operation": "delete,close,get,reopen,update,move"
+    },
+    {
+      "displayName": "Project Name or ID",
+      "name": "project",
+      "type": "resourceLocator",
+      "description": "The project you want to operate on. Choose from the list, or specify an ID.",
+      "placeholder": "Select a project...",
+      "required": true,
+      "modes": [
+        {
+          "displayName": "From List",
+          "name": "list",
+          "type": "list",
+          "placeholder": "Select a project...",
+          "typeOptions": {}
+        },
+        {
+          "displayName": "ID",
+          "name": "id",
+          "type": "string",
+          "placeholder": "2302163813"
+        }
+      ],
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create",
+            "move",
+            "sync"
+          ]
+        }
+      },
+      "_operation": "create,move,sync"
+    },
+    {
+      "displayName": "Section Name or ID",
+      "name": "section",
+      "type": "options",
+      "description": "Section to which you want move the task. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "typeOptions": {
+        "loadOptionsMethod": "getSections"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "move"
+          ]
+        }
+      },
+      "_operation": "move"
+    },
+    {
+      "displayName": "Label Names or IDs",
+      "name": "labels",
+      "type": "multiOptions",
+      "description": "Optional labels that will be assigned to a created task. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": [],
+      "typeOptions": {
+        "loadOptionsMethod": "getLabels"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Content",
+      "name": "content",
+      "type": "string",
+      "description": "Task content",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "rows": 5
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Sync Commands",
+      "name": "commands",
+      "type": "string",
+      "description": "Sync body",
+      "hint": "See docs for possible commands: https://developer.todoist.com/sync/v8/#sync",
+      "default": "[]",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "sync"
+          ]
+        }
+      },
+      "_operation": "sync"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "options",
+      "type": "collection",
+      "description": "A description for the task",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "A description for the task",
+          "default": ""
+        },
+        {
+          "displayName": "Due Date Time",
+          "name": "dueDateTime",
+          "type": "dateTime",
+          "description": "Specific date and time in RFC3339 format in UTC",
+          "default": ""
+        },
+        {
+          "displayName": "Due String Locale",
+          "name": "dueLang",
+          "type": "string",
+          "description": "2-letter code specifying language in case due_string is not written in English",
+          "default": ""
+        },
+        {
+          "displayName": "Due String",
+          "name": "dueString",
+          "type": "string",
+          "description": "Human defined task due date (ex.: \u201cnext Monday\u201d, \u201cTomorrow\u201d). Value is set using local (not UTC) time.",
+          "default": ""
+        },
+        {
+          "displayName": "Parent Name or ID",
+          "name": "parentId",
+          "type": "options",
+          "description": "The parent task you want to operate on. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": {},
+          "typeOptions": {
+            "loadOptionsMethod": "getItems"
+          }
+        },
+        {
+          "displayName": "Priority",
+          "name": "priority",
+          "type": "number",
+          "description": "Task priority from 1 (normal) to 4 (urgent)",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1,
+            "maxValue": 4
+          }
+        },
+        {
+          "displayName": "Section Name or ID",
+          "name": "section",
+          "type": "options",
+          "description": "The section you want to operate on. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": {},
+          "typeOptions": {
+            "loadOptionsMethod": "getSections"
+          }
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getItems"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Filter by any <a href=\"https://get.todoist.help/hc/en-us/articles/205248842\">supported filter.</a>",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Filter",
+          "name": "filter",
+          "type": "string",
+          "description": "Filter by any <a href=\"https://get.todoist.help/hc/en-us/articles/205248842\">supported filter.</a>",
+          "default": ""
+        },
+        {
+          "displayName": "IDs",
+          "name": "ids",
+          "type": "string",
+          "description": "A list of the task IDs to retrieve, this should be a comma-separated list",
+          "default": ""
+        },
+        {
+          "displayName": "Label Name or ID",
+          "name": "labelId",
+          "type": "options",
+          "description": "Filter tasks by label. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": {},
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          }
+        },
+        {
+          "displayName": "Lang",
+          "name": "lang",
+          "type": "string",
+          "description": "IETF language tag defining what language filter is written in, if differs from default English",
+          "default": ""
+        },
+        {
+          "displayName": "Parent Name or ID",
+          "name": "parentId",
+          "type": "options",
+          "description": "Filter tasks by parent task ID. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getItems"
+          }
+        },
+        {
+          "displayName": "Project Name or ID",
+          "name": "projectId",
+          "type": "options",
+          "description": "Filter tasks by project ID. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getProjects"
+          }
+        },
+        {
+          "displayName": "Section Name or ID",
+          "name": "sectionId",
+          "type": "options",
+          "description": "Filter tasks by section ID. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSections"
+          }
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getLabels"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "Task content",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Content",
+          "name": "content",
+          "type": "string",
+          "description": "Task content",
+          "default": ""
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "A description for the task",
+          "default": ""
+        },
+        {
+          "displayName": "Due Date Time",
+          "name": "dueDateTime",
+          "type": "dateTime",
+          "description": "Specific date and time in RFC3339 format in UTC",
+          "default": ""
+        },
+        {
+          "displayName": "Due String Locale",
+          "name": "dueLang",
+          "type": "string",
+          "description": "2-letter code specifying language in case due_string is not written in English",
+          "default": ""
+        },
+        {
+          "displayName": "Due String",
+          "name": "dueString",
+          "type": "string",
+          "description": "Human defined task due date (ex.: \u201cnext Monday\u201d, \u201cTomorrow\u201d). Value is set using local (not UTC) time.",
+          "default": ""
+        },
+        {
+          "displayName": "Due String Locale",
+          "name": "dueLang",
+          "type": "string",
+          "description": "2-letter code specifying language in case due_string is not written in English",
+          "default": ""
+        },
+        {
+          "displayName": "Label Names or IDs",
+          "name": "labels",
+          "type": "multiOptions",
+          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          }
+        },
+        {
+          "displayName": "Priority",
+          "name": "priority",
+          "type": "number",
+          "description": "Task priority from 1 (normal) to 4 (urgent)",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1,
+            "maxValue": 4
+          }
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getLabels"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Close",
+      "description": "Close a task",
+      "action": "Close a task",
+      "value": "close",
+      "displayName": "Close"
+    },
+    {
+      "name": "Create",
+      "description": "Create a new task",
+      "action": "Create a task",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a task",
+      "action": "Delete a task",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Get a task",
+      "action": "Get a task",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many tasks",
+      "action": "Get many tasks",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Move",
+      "description": "Move a task",
+      "action": "Move a task",
+      "value": "move",
+      "displayName": "Move"
+    },
+    {
+      "name": "Reopen",
+      "description": "Reopen a task",
+      "action": "Reopen a task",
+      "value": "reopen",
+      "displayName": "Reopen"
+    },
+    {
+      "name": "Sync",
+      "description": "Sync a project",
+      "value": "sync",
+      "displayName": "Sync"
+    },
+    {
+      "name": "Update",
+      "description": "Update a task",
+      "action": "Update a task",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "task": [
+      {
+        "name": "Close",
+        "description": "Close a task",
+        "action": "Close a task",
+        "value": "close",
+        "displayName": "Close"
+      },
+      {
+        "name": "Create",
+        "description": "Create a new task",
+        "action": "Create a task",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a task",
+        "action": "Delete a task",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get a task",
+        "action": "Get a task",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many tasks",
+        "action": "Get many tasks",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Move",
+        "description": "Move a task",
+        "action": "Move a task",
+        "value": "move",
+        "displayName": "Move"
+      },
+      {
+        "name": "Reopen",
+        "description": "Reopen a task",
+        "action": "Reopen a task",
+        "value": "reopen",
+        "displayName": "Reopen"
+      },
+      {
+        "name": "Sync",
+        "description": "Sync a project",
+        "value": "sync",
+        "displayName": "Sync"
+      },
+      {
+        "name": "Update",
+        "description": "Update a task",
+        "action": "Update a task",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "todoistApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "apiKey"
+          ]
+        }
+      }
+    },
+    {
+      "name": "todoistOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "resource": {
+      "required": true
+    },
+    "operation": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "taskId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "delete",
+            "close",
+            "get",
+            "reopen",
+            "update",
+            "move"
+          ]
+        }
+      }
+    },
+    "project": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create",
+            "move",
+            "sync"
+          ]
+        }
+      }
+    },
+    "section": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "move"
+          ]
+        }
+      }
+    },
+    "labels": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "content": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "commands": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "sync"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "task"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "task"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "apiKey",
+          "name": "API Key",
+          "description": ""
+        },
+        {
+          "value": "oAuth2",
+          "name": "OAuth2",
+          "description": ""
+        }
+      ]
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "task",
+          "name": "Task",
+          "description": "Task resource"
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "close",
+          "name": "Close",
+          "description": "Close a task"
+        },
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a new task"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a task"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a task"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get many tasks"
+        },
+        {
+          "value": "move",
+          "name": "Move",
+          "description": "Move a task"
+        },
+        {
+          "value": "reopen",
+          "name": "Reopen",
+          "description": "Reopen a task"
+        },
+        {
+          "value": "sync",
+          "name": "Sync",
+          "description": "Sync a project"
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": "Update a task"
+        }
+      ]
+    },
+    "taskId": {
+      "type": "string",
+      "displayName": "Task ID",
+      "name": "taskId"
+    },
+    "project": {
+      "type": "resourceLocator",
+      "displayName": "Project Name or ID",
+      "name": "project"
+    },
+    "section": {
+      "type": "options",
+      "displayName": "Section Name or ID",
+      "name": "section",
+      "typeOptions": {
+        "loadOptionsMethod": "getSections"
+      },
+      "possibleValues": []
+    },
+    "labels": {
+      "type": "multiOptions",
+      "displayName": "Label Names or IDs",
+      "name": "labels",
+      "typeOptions": {
+        "loadOptionsMethod": "getLabels"
+      },
+      "possibleValues": []
+    },
+    "content": {
+      "type": "string",
+      "displayName": "Content",
+      "name": "content",
+      "typeOptions": {
+        "rows": 5
+      }
+    },
+    "commands": {
+      "type": "string",
+      "displayName": "Sync Commands",
+      "name": "commands"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "options",
+      "typeOptions": {
+        "loadOptionsMethod": "getItems"
+      },
+      "subProperties": [
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "A description for the task",
+          "default": ""
+        },
+        {
+          "displayName": "Due Date Time",
+          "name": "dueDateTime",
+          "type": "dateTime",
+          "description": "Specific date and time in RFC3339 format in UTC",
+          "default": ""
+        },
+        {
+          "displayName": "Due String Locale",
+          "name": "dueLang",
+          "type": "string",
+          "description": "2-letter code specifying language in case due_string is not written in English",
+          "default": ""
+        },
+        {
+          "displayName": "Due String",
+          "name": "dueString",
+          "type": "string",
+          "description": "Human defined task due date (ex.: \u201cnext Monday\u201d, \u201cTomorrow\u201d). Value is set using local (not UTC) time.",
+          "default": ""
+        },
+        {
+          "displayName": "Parent Name or ID",
+          "name": "parentId",
+          "type": "options",
+          "description": "The parent task you want to operate on. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": {},
+          "typeOptions": {
+            "loadOptionsMethod": "getItems"
+          }
+        },
+        {
+          "displayName": "Priority",
+          "name": "priority",
+          "type": "number",
+          "description": "Task priority from 1 (normal) to 4 (urgent)",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1,
+            "maxValue": 4
+          }
+        },
+        {
+          "displayName": "Section Name or ID",
+          "name": "section",
+          "type": "options",
+          "description": "The section you want to operate on. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": {},
+          "typeOptions": {
+            "loadOptionsMethod": "getSections"
+          }
+        }
+      ]
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      }
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "typeOptions": {
+        "loadOptionsMethod": "getLabels"
+      },
+      "subProperties": [
+        {
+          "displayName": "Filter",
+          "name": "filter",
+          "type": "string",
+          "description": "Filter by any <a href=\"https://get.todoist.help/hc/en-us/articles/205248842\">supported filter.</a>",
+          "default": ""
+        },
+        {
+          "displayName": "IDs",
+          "name": "ids",
+          "type": "string",
+          "description": "A list of the task IDs to retrieve, this should be a comma-separated list",
+          "default": ""
+        },
+        {
+          "displayName": "Label Name or ID",
+          "name": "labelId",
+          "type": "options",
+          "description": "Filter tasks by label. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": {},
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          }
+        },
+        {
+          "displayName": "Lang",
+          "name": "lang",
+          "type": "string",
+          "description": "IETF language tag defining what language filter is written in, if differs from default English",
+          "default": ""
+        },
+        {
+          "displayName": "Parent Name or ID",
+          "name": "parentId",
+          "type": "options",
+          "description": "Filter tasks by parent task ID. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getItems"
+          }
+        },
+        {
+          "displayName": "Project Name or ID",
+          "name": "projectId",
+          "type": "options",
+          "description": "Filter tasks by project ID. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getProjects"
+          }
+        },
+        {
+          "displayName": "Section Name or ID",
+          "name": "sectionId",
+          "type": "options",
+          "description": "Filter tasks by section ID. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSections"
+          }
+        }
+      ]
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "typeOptions": {
+        "loadOptionsMethod": "getLabels"
+      },
+      "subProperties": [
+        {
+          "displayName": "Content",
+          "name": "content",
+          "type": "string",
+          "description": "Task content",
+          "default": ""
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "A description for the task",
+          "default": ""
+        },
+        {
+          "displayName": "Due Date Time",
+          "name": "dueDateTime",
+          "type": "dateTime",
+          "description": "Specific date and time in RFC3339 format in UTC",
+          "default": ""
+        },
+        {
+          "displayName": "Due String Locale",
+          "name": "dueLang",
+          "type": "string",
+          "description": "2-letter code specifying language in case due_string is not written in English",
+          "default": ""
+        },
+        {
+          "displayName": "Due String",
+          "name": "dueString",
+          "type": "string",
+          "description": "Human defined task due date (ex.: \u201cnext Monday\u201d, \u201cTomorrow\u201d). Value is set using local (not UTC) time.",
+          "default": ""
+        },
+        {
+          "displayName": "Due String Locale",
+          "name": "dueLang",
+          "type": "string",
+          "description": "2-letter code specifying language in case due_string is not written in English",
+          "default": ""
+        },
+        {
+          "displayName": "Label Names or IDs",
+          "name": "labels",
+          "type": "multiOptions",
+          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          }
+        },
+        {
+          "displayName": "Priority",
+          "name": "priority",
+          "type": "number",
+          "description": "Task priority from 1 (normal) to 4 (urgent)",
+          "default": 1,
+          "typeOptions": {
+            "minValue": 1,
+            "maxValue": 4
+          }
+        }
+      ]
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "project",
+        "text": "Select a project..."
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "filters",
+        "text": "Add option"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": [
+      {
+        "field": "commands",
+        "text": "See docs for possible commands: https://developer.todoist.com/sync/v8/#sync"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

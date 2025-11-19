@@ -1,0 +1,29 @@
+{
+  "issue_id": "_openai_codex_issue_011",
+  "title": "node_info.name falls back to displayName for versioned nodes (Slack/HubSpot → capitalised names)",
+  "severity": "low",
+  "status": "new",
+  "priority": 4,
+  "metadata": {
+    "created_at": "2025-11-12T01:48:00Z",
+    "created_by": "openai_codex",
+    "affected_nodes": "At least Slack and HubSpot; likely every VersionedNodeType whose baseDescription supplies the lowercase name"
+  },
+  "description": {
+    "problem": "`node_info.name` is supposed to mirror the machine-readable `description.name` (e.g., `slack`, `hubspot`). For several versioned nodes the field now equals the human displayName (`\"Slack\"`, `\"HubSpot\"`).",
+    "impact": "LOW but noisy – tooling that joins metadata by `node_info.name` (or expects lowercase ids) now sees duplicate keys (`Slack` vs `slack`). It also prevents consumers from matching JSON entries back to `n8n`'s internal node type ids.",
+    "root_cause": "When parsing versioned nodes the extractor resolves `...baseDescription` for icon/group/etc., but it appears to fall back to `defaults.name` (or even `displayName`) when it cannot locate a `name` key inside the version file. Slack and HubSpot store `name: 'slack'` / `name: 'hubspot'` exclusively inside the base description (`Slack/Slack.node.ts`, `Hubspot/Hubspot.node.ts`). Because the parser doesn't merge that field, it records the capitalised default name instead.",
+    "evidence": [
+      "Slack base description (n8n/packages/nodes-base/nodes/Slack/Slack.node.ts lines 8-18): `name: 'slack'`.\n      Extracted value: `jq '.node_info.name' extracted_docs/slack_data.json` → `\"Slack\"`.",
+      "HubSpot base description (n8n/packages/nodes-base/nodes/Hubspot/Hubspot.node.ts lines 8-18): `name: 'hubspot'`.\n      Extracted value: `jq '.node_info.name' extracted_docs/hubspot_data.json` → `\"HubSpot\"`."
+    ],
+    "fix_approach": "Ensure `n8n_node_extractor.py` copies `description.name` before any fallback to defaults:\n1. When resolving versioned nodes, read the base description once and explicitly capture `name` along with `displayName`/`icon`.\n2. Only use `defaults.name` to populate `node_info.defaults.name`, never to backfill `node_info.name`.\n3. Add a validation that `node_info.name` matches `/^[a-z0-9]+([A-Za-z0-9]+)*$/` from the TypeScript `name` literal so regressions surface immediately.\n4. Re-extract Slack and HubSpot and verify the JSON now shows `\"slack\"`/`\"hubspot\"`."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

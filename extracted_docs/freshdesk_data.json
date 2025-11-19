@@ -1,0 +1,2971 @@
+{
+  "node_info": {
+    "icon": "file:freshdesk.svg",
+    "defaults": {
+      "name": "Freshdesk"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "output"
+    ],
+    "authentication": [
+      {
+        "name": "freshdeskApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getAgents",
+      "for",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Freshdesk",
+    "name": "freshdesk",
+    "description": "Consume Freshdesk API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.freshdesk",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/freshdesk/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.freshdesk/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "contact",
+      "default": "ticket",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Contact",
+          "value": "contact",
+          "displayName": "Contact"
+        },
+        {
+          "name": "Ticket",
+          "value": "ticket",
+          "displayName": "Ticket"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new ticket",
+      "action": "Create a ticket",
+      "value": "create",
+      "default": "create",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a new ticket",
+          "action": "Create a ticket",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a ticket",
+          "action": "Delete a ticket",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get a ticket",
+          "action": "Get a ticket",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many tickets",
+          "action": "Get many tickets",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update a ticket",
+          "action": "Update a ticket",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Requester Identification",
+      "name": "requester",
+      "type": "options",
+      "description": "Email address of the requester. If no contact exists with this email address in Freshdesk, it will be added as a new contact.",
+      "value": "email",
+      "default": "requesterId",
+      "required": true,
+      "options": [
+        {
+          "name": "Email",
+          "description": "Email address of the requester. If no contact exists with this email address in Freshdesk, it will be added as a new contact.",
+          "value": "email",
+          "displayName": "Email"
+        },
+        {
+          "name": "Facebook ID",
+          "description": "Facebook ID of the requester. If no contact exists with this facebook_id, then a new contact will be created.",
+          "value": "facebookId",
+          "displayName": "Facebook Id"
+        },
+        {
+          "name": "Phone",
+          "description": "Phone number of the requester. If no contact exists with this phone number in Freshdesk, it will be added as a new contact. If the phone number is set and the email address is not, then the name attribute is mandatory.",
+          "value": "phone",
+          "displayName": "Phone"
+        },
+        {
+          "name": "Requester ID",
+          "description": "User ID of the requester. For existing contacts, the requester_id can be passed instead of the requester's email.",
+          "value": "requesterId",
+          "displayName": "Requester Id"
+        },
+        {
+          "name": "Twitter ID",
+          "description": "Twitter handle of the requester. If no contact exists with this handle in Freshdesk, it will be added as a new contact.",
+          "value": "twitterId",
+          "displayName": "Twitter Id"
+        },
+        {
+          "name": "Unique External ID",
+          "description": "External ID of the requester. If no contact exists with this external ID in Freshdesk, they will be added as a new contact.",
+          "value": "uniqueExternalId",
+          "displayName": "Unique External Id"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Value",
+      "name": "requesterIdentificationValue",
+      "type": "string",
+      "description": "Value of the identification selected",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Status",
+      "name": "status",
+      "type": "options",
+      "value": "closed",
+      "default": "pending",
+      "required": true,
+      "options": [
+        {
+          "name": "Closed",
+          "value": "closed",
+          "displayName": "Closed"
+        },
+        {
+          "name": "Open",
+          "value": "open",
+          "displayName": "Open"
+        },
+        {
+          "name": "Pending",
+          "value": "pending",
+          "displayName": "Pending"
+        },
+        {
+          "name": "Resolved",
+          "value": "resolved",
+          "displayName": "Resolved"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Priority",
+      "name": "priority",
+      "type": "options",
+      "value": "low",
+      "default": "low",
+      "required": true,
+      "options": [
+        {
+          "name": "Low",
+          "value": "low",
+          "displayName": "Low"
+        },
+        {
+          "name": "Medium",
+          "value": "medium",
+          "displayName": "Medium"
+        },
+        {
+          "name": "High",
+          "value": "high",
+          "displayName": "High"
+        },
+        {
+          "name": "Urgent",
+          "value": "urgent",
+          "displayName": "Urgent"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Source",
+      "name": "source",
+      "type": "options",
+      "description": "The channel through which the ticket was created",
+      "value": "chat",
+      "default": "portal",
+      "required": true,
+      "options": [
+        {
+          "name": "Chat",
+          "value": "chat",
+          "displayName": "Chat"
+        },
+        {
+          "name": "Email",
+          "value": "email",
+          "displayName": "Email"
+        },
+        {
+          "name": "Feedback Widget",
+          "value": "feedbackWidget",
+          "displayName": "Feedback Widget"
+        },
+        {
+          "name": "Mobihelp",
+          "value": "mobileHelp",
+          "displayName": "Mobihelp"
+        },
+        {
+          "name": "Outbound Email",
+          "value": "OutboundEmail",
+          "displayName": "Outbound Email"
+        },
+        {
+          "name": "Phone",
+          "value": "phone",
+          "displayName": "Phone"
+        },
+        {
+          "name": "Portal",
+          "value": "portal",
+          "displayName": "Portal"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "JSON Parameters",
+      "name": "jsonParameters",
+      "type": "boolean",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "// \t\t\t\t'ticket'\n\t\t\t//"
+          ],
+          "operation": [
+            "// \t\t\t\t'create",
+            "//"
+          ]
+        }
+      },
+      "_operation": "// \t\t\t\t'create,//"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "ID of the agent to whom the ticket has been assigned. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add option",
+      "value": "Feature Request",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Agent Name or ID",
+          "name": "agent",
+          "type": "options",
+          "description": "ID of the agent to whom the ticket has been assigned. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getAgents"
+          }
+        },
+        {
+          "displayName": "CC Emails",
+          "name": "ccEmails",
+          "type": "string",
+          "description": "Separated by a comma (,) email addresses added in the 'cc' field of the incoming ticket email",
+          "default": ""
+        },
+        {
+          "displayName": "Company Name or ID",
+          "name": "company",
+          "type": "options",
+          "description": "Company ID of the requester. This attribute can only be set if the Multiple Companies feature is enabled (Estate plan and above). Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getCompanies"
+          }
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "HTML content of the ticket",
+          "default": "",
+          "typeOptions": {
+            "rows": 5
+          }
+        },
+        {
+          "displayName": "Due By",
+          "name": "dueBy",
+          "type": "dateTime",
+          "description": "Timestamp that denotes when the ticket is due to be resolved",
+          "default": ""
+        },
+        {
+          "displayName": "Email Config ID",
+          "name": "emailConfigId",
+          "type": "number",
+          "description": "ID of email config which is used for this ticket. (i.e., support@yourcompany.com/sales@yourcompany.com) If product_id is given and email_config_id is not given, product's primary email_config_id will be set.",
+          "default": ""
+        },
+        {
+          "displayName": "FR Due By",
+          "name": "frDueBy",
+          "type": "dateTime",
+          "description": "Timestamp that denotes when the first response is due",
+          "default": ""
+        },
+        {
+          "displayName": "Group Name or ID",
+          "name": "group",
+          "type": "options",
+          "description": "ID of the group to which the ticket has been assigned. The default value is the ID of the group that is associated with the given email_config_id. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getGroups"
+          }
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "Name of the requester",
+          "default": ""
+        },
+        {
+          "displayName": "Product Name or ID",
+          "name": "product",
+          "type": "options",
+          "description": "ID of the product to which the ticket is associated. It will be ignored if the email_config_id attribute is set in the request. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getProducts"
+          }
+        },
+        {
+          "displayName": "Subject",
+          "name": "subject",
+          "type": "string",
+          "description": "Subject of the ticket",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "Separated by a comma (,) tags that have been associated with the ticket",
+          "default": ""
+        },
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "options",
+          "description": "Helps categorize the ticket according to the different kinds of issues your support team deals with",
+          "value": "Feature Request",
+          "default": "Question",
+          "options": [
+            {
+              "name": "Feature Request",
+              "value": "Feature Request",
+              "displayName": "Feature Request"
+            },
+            {
+              "name": "Incident",
+              "value": "Incident",
+              "displayName": "Incident"
+            },
+            {
+              "name": "Problem",
+              "value": "Problem",
+              "displayName": "Problem"
+            },
+            {
+              "name": "Question",
+              "value": "Question",
+              "displayName": "Question"
+            },
+            {
+              "name": "Refund",
+              "value": "Refund",
+              "displayName": "Refund"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getAgents"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create"
+    },
+    {
+      "displayName": "Custom Fields",
+      "name": "customFieldsUi",
+      "type": "fixedCollection",
+      "description": "Key value pairs containing the names and values of custom fields.",
+      "placeholder": "Add Custom fields",
+      "default": "",
+      "options": [
+        {
+          "name": "customFieldsValues",
+          "displayName": "Custom fields",
+          "values": [
+            {
+              "displayName": "Key",
+              "name": "key",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "// \t\t\t\t'ticket'\n\t\t\t//"
+          ],
+          "operation": [
+            "// \t\t\t\t'create'\n\t\t\t//"
+          ],
+          "jsonParameters": [
+            "// \t\t\t\tfalse",
+            "//"
+          ]
+        }
+      },
+      "_operation": "// \t\t\t\t'create'\n\t\t\t//"
+    },
+    {
+      "displayName": "Custom Fields",
+      "name": "customFieldsJson",
+      "type": "json",
+      "description": "Key value pairs containing the names and values of custom fields.",
+      "placeholder": "{\n\t\t\t// \t\t'gadget': 'Cold Welder',\n\t\t\t// \t}",
+      "default": "",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "// \t\t\t\t'ticket",
+            "//"
+          ],
+          "operation": [
+            "// \t\t\t\t'create",
+            "//"
+          ],
+          "jsonParameters": [
+            "// \t\t\t\ttrue",
+            "//"
+          ]
+        }
+      },
+      "_operation": "// \t\t\t\t'create,//"
+    },
+    {
+      "displayName": "Ticket ID",
+      "name": "ticketId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "ID of the agent to whom the ticket has been assigned. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "placeholder": "Add Field",
+      "value": "low",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Agent Name or ID",
+          "name": "agent",
+          "type": "options",
+          "description": "ID of the agent to whom the ticket has been assigned. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getAgents"
+          }
+        },
+        {
+          "displayName": "CC Emails",
+          "name": "ccEmails",
+          "type": "string",
+          "description": "Separated by a comma (,) email addresses added in the 'cc' field of the incoming ticket email",
+          "default": ""
+        },
+        {
+          "displayName": "Company Name or ID",
+          "name": "company",
+          "type": "options",
+          "description": "Company ID of the requester. This attribute can only be set if the Multiple Companies feature is enabled (Estate plan and above). Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getCompanies"
+          }
+        },
+        {
+          "displayName": "Due By",
+          "name": "dueBy",
+          "type": "dateTime",
+          "description": "Timestamp that denotes when the ticket is due to be resolved",
+          "default": ""
+        },
+        {
+          "displayName": "Email Config ID",
+          "name": "emailConfigId",
+          "type": "number",
+          "description": "ID of email config which is used for this ticket. (i.e., support@yourcompany.com/sales@yourcompany.com) If product_id is given and email_config_id is not given, product's primary email_config_id will be set.",
+          "default": ""
+        },
+        {
+          "displayName": "FR Due By",
+          "name": "frDueBy",
+          "type": "dateTime",
+          "description": "Timestamp that denotes when the first response is due",
+          "default": ""
+        },
+        {
+          "displayName": "Group Name or ID",
+          "name": "group",
+          "type": "options",
+          "description": "ID of the group to which the ticket has been assigned. The default value is the ID of the group that is associated with the given email_config_id. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getGroups"
+          }
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "Name of the requester",
+          "default": ""
+        },
+        {
+          "displayName": "Product Name or ID",
+          "name": "product",
+          "type": "options",
+          "description": "ID of the product to which the ticket is associated. It will be ignored if the email_config_id attribute is set in the request. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getProducts"
+          }
+        },
+        {
+          "displayName": "Priority",
+          "name": "priority",
+          "type": "options",
+          "value": "low",
+          "default": "low",
+          "options": [
+            {
+              "name": "Low",
+              "value": "low",
+              "displayName": "Low"
+            },
+            {
+              "name": "Medium",
+              "value": "medium",
+              "displayName": "Medium"
+            },
+            {
+              "name": "High",
+              "value": "high",
+              "displayName": "High"
+            },
+            {
+              "name": "Urgent",
+              "value": "urgent",
+              "displayName": "Urgent"
+            }
+          ]
+        },
+        {
+          "displayName": "Requester Identification",
+          "name": "requester",
+          "type": "options",
+          "description": "Email address of the requester. If no contact exists with this email address in Freshdesk, it will be added as a new contact.",
+          "value": "email",
+          "default": "requesterId",
+          "options": [
+            {
+              "name": "Email",
+              "description": "Email address of the requester. If no contact exists with this email address in Freshdesk, it will be added as a new contact.",
+              "value": "email",
+              "displayName": "Email"
+            },
+            {
+              "name": "Facebook ID",
+              "description": "Facebook ID of the requester. If no contact exists with this facebook_id, then a new contact will be created.",
+              "value": "facebookId",
+              "displayName": "Facebook Id"
+            },
+            {
+              "name": "Phone",
+              "description": "Phone number of the requester. If no contact exists with this phone number in Freshdesk, it will be added as a new contact. If the phone number is set and the email address is not, then the name attribute is mandatory.",
+              "value": "phone",
+              "displayName": "Phone"
+            },
+            {
+              "name": "Requester ID",
+              "description": "User ID of the requester. For existing contacts, the requester_id can be passed instead of the requester's email.",
+              "value": "requesterId",
+              "displayName": "Requester Id"
+            },
+            {
+              "name": "Twitter ID",
+              "description": "Twitter handle of the requester. If no contact exists with this handle in Freshdesk, it will be added as a new contact.",
+              "value": "twitterId",
+              "displayName": "Twitter Id"
+            },
+            {
+              "name": "Unique External ID",
+              "description": "External ID of the requester. If no contact exists with this external ID in Freshdesk, they will be added as a new contact.",
+              "value": "uniqueExternalId",
+              "displayName": "Unique External Id"
+            }
+          ]
+        },
+        {
+          "displayName": "Requester Value",
+          "name": "requesterIdentificationValue",
+          "type": "string",
+          "description": "Value of the identification selected",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "value": "open",
+          "default": "pending",
+          "options": [
+            {
+              "name": "Open",
+              "value": "open",
+              "displayName": "Open"
+            },
+            {
+              "name": "Pending",
+              "value": "pending",
+              "displayName": "Pending"
+            },
+            {
+              "name": "Resolved",
+              "value": "resolved",
+              "displayName": "Resolved"
+            },
+            {
+              "name": "Closed",
+              "value": "closed",
+              "displayName": "Closed"
+            }
+          ]
+        },
+        {
+          "displayName": "Source",
+          "name": "source",
+          "type": "options",
+          "description": "The channel through which the ticket was created",
+          "value": "chat",
+          "default": "portal",
+          "options": [
+            {
+              "name": "Chat",
+              "value": "chat",
+              "displayName": "Chat"
+            },
+            {
+              "name": "Email",
+              "value": "email",
+              "displayName": "Email"
+            },
+            {
+              "name": "Feedback Widget",
+              "value": "feedbackWidget",
+              "displayName": "Feedback Widget"
+            },
+            {
+              "name": "Mobihelp",
+              "value": "mobileHelp",
+              "displayName": "Mobihelp"
+            },
+            {
+              "name": "Outbound Email",
+              "value": "OutboundEmail",
+              "displayName": "Outbound Email"
+            },
+            {
+              "name": "Phone",
+              "value": "phone",
+              "displayName": "Phone"
+            },
+            {
+              "name": "Portal",
+              "value": "portal",
+              "displayName": "Portal"
+            }
+          ]
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "Separated by a comma (,) tags that have been associated with the ticket",
+          "default": ""
+        },
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "options",
+          "description": "Helps categorize the ticket according to the different kinds of issues your support team deals with",
+          "value": "Feature Request",
+          "default": "Question",
+          "options": [
+            {
+              "name": "Feature Request",
+              "value": "Feature Request",
+              "displayName": "Feature Request"
+            },
+            {
+              "name": "Incident",
+              "value": "Incident",
+              "displayName": "Incident"
+            },
+            {
+              "name": "Problem",
+              "value": "Problem",
+              "displayName": "Problem"
+            },
+            {
+              "name": "Question",
+              "value": "Question",
+              "displayName": "Question"
+            },
+            {
+              "name": "Refund",
+              "value": "Refund",
+              "displayName": "Refund"
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getAgents"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update"
+    },
+    {
+      "displayName": "Ticket ID",
+      "name": "ticketId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 5,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 10
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Order sort attribute ascending or descending",
+      "placeholder": "Add option",
+      "value": "company",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Company ID",
+          "name": "companyId",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Include",
+          "name": "include",
+          "type": "multiOptions",
+          "value": "company",
+          "default": [],
+          "options": [
+            {
+              "name": "Company",
+              "value": "company",
+              "displayName": "Company"
+            },
+            {
+              "name": "Description",
+              "value": "description",
+              "displayName": "Description"
+            },
+            {
+              "name": "Requester",
+              "value": "requester",
+              "displayName": "Requester"
+            },
+            {
+              "name": "Stats",
+              "value": "stats",
+              "displayName": "Stats"
+            }
+          ]
+        },
+        {
+          "displayName": "Order",
+          "name": "order",
+          "type": "options",
+          "description": "Order sort attribute ascending or descending",
+          "value": "asc",
+          "default": "desc",
+          "options": [
+            {
+              "name": "ASC",
+              "value": "asc",
+              "displayName": "Asc"
+            },
+            {
+              "name": "DESC",
+              "value": "desc",
+              "displayName": "Desc"
+            }
+          ]
+        },
+        {
+          "displayName": "Order By",
+          "name": "orderBy",
+          "type": "options",
+          "description": "Sort collection by object attribute",
+          "value": "createdAt",
+          "default": "",
+          "options": [
+            {
+              "name": "Created At",
+              "value": "createdAt",
+              "displayName": "Created At"
+            },
+            {
+              "name": "Due By",
+              "value": "dueBy",
+              "displayName": "Due By"
+            },
+            {
+              "name": "Updated At",
+              "value": "updatedAt",
+              "displayName": "Updated At"
+            }
+          ]
+        },
+        {
+          "displayName": "Requester Email",
+          "name": "requesterEmail",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Requester ID",
+          "name": "requesterId",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Updated Since",
+          "name": "updatedSince",
+          "type": "dateTime",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Ticket ID",
+      "name": "ticketId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new contact",
+      "action": "Create a contact",
+      "value": "create",
+      "default": "create",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a new contact",
+          "action": "Create a contact",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a contact",
+          "action": "Delete a contact",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "description": "Get a contact",
+          "action": "Get a contact",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "description": "Get many contacts",
+          "action": "Get many contacts",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "description": "Update a contact",
+          "action": "Update a contact",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ]
+        }
+      },
+      "_source": "Contact_contactOperations"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "type": "string",
+      "description": "Name of the contact",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "contact"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Contact_contactFields"
+    },
+    {
+      "displayName": "Email",
+      "name": "email",
+      "type": "string",
+      "description": "Primary email address of the contact. If you want to associate additional email(s) with this contact, use the other_emails attribute.",
+      "placeholder": "name@email.com",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "contact"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Contact_contactFields"
+    },
+    {
+      "displayName": "Contact ID",
+      "name": "contactId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Contact_contactFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Address of the contact",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Address",
+          "name": "address",
+          "type": "string",
+          "description": "Address of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "Avatar",
+          "name": "avatar",
+          "description": "Avatar image of the contact The maximum file size is 5MB\n\t\t\t// \tand the supported file types are .jpg, .jpeg, .jpe, and .png.",
+          "default": ""
+        },
+        {
+          "displayName": "Company ID",
+          "name": "company_id",
+          "type": "number",
+          "description": "ID of the primary company to which this contact belongs",
+          "default": ""
+        },
+        {
+          "displayName": "Custom Fields",
+          "name": "customFields",
+          "type": "fixedCollection",
+          "description": "Key value pairs containing the name and value of the custom field. Only dates in the format YYYY-MM-DD are accepted as input for custom date fields.",
+          "placeholder": "Add Custom Field",
+          "default": [],
+          "options": [
+            {
+              "name": "customField",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Name",
+                  "name": "name",
+                  "type": "string",
+                  "description": "Custom Field's name",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "Custom Field's values",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "A small description of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "Email",
+          "name": "email",
+          "type": "string",
+          "description": "Primary email address of the contact. If you want to associate additional email(s) with this contact, use the other_emails attribute.",
+          "placeholder": "name@email.com",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Job Title",
+          "name": "job_title",
+          "type": "string",
+          "description": "Job title of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "Language",
+          "name": "language",
+          "type": "string",
+          "description": "Language of the contact. Default language is \"en\". This attribute can only be set if the Multiple Language feature is enabled (Garden plan and above).",
+          "default": ""
+        },
+        {
+          "displayName": "Mobile",
+          "name": "mobile",
+          "type": "string",
+          "description": "Mobile number of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "Name of the contact",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Other Companies",
+          "name": "other_companies",
+          "type": "string",
+          "description": "Additional companies associated with the contact. This attribute can only be set if the Multiple Companies feature is enabled (Estate plan and above).",
+          "placeholder": "Add Company",
+          "default": [],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Other Emails",
+          "name": "other_emails",
+          "type": "string",
+          "description": "Additional emails associated with the contact",
+          "placeholder": "Add Email",
+          "default": [],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Phone",
+          "name": "phone",
+          "type": "string",
+          "description": "Telephone number of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "Tags associated with this contact",
+          "default": [],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Time Zone",
+          "name": "time_zone",
+          "type": "string",
+          "description": "Time zone of the contact. Default value is the time zone of the domain. This attribute can only be set if the Multiple Time Zone feature is enabled (Garden plan and above).",
+          "default": ""
+        },
+        {
+          "displayName": "Twitter ID",
+          "name": "twitter_id",
+          "type": "string",
+          "description": "Twitter handle of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "Unique External ID",
+          "name": "unique_external_id",
+          "type": "string",
+          "description": "External ID of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "View All Tickets",
+          "name": "view_all_tickets",
+          "type": "boolean",
+          "description": "Whether the contact can see all the tickets that are associated with the company to which they belong",
+          "default": false
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create",
+            "update"
+          ],
+          "resource": [
+            "contact"
+          ]
+        }
+      },
+      "_operation": "create,update",
+      "_source": "Contact_contactFields"
+    },
+    {
+      "displayName": "Contact ID",
+      "name": "contactId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Contact_contactFields"
+    },
+    {
+      "displayName": "Contact ID",
+      "name": "contactId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Contact_contactFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "placeholder": "Add Filter",
+      "value": "blocked",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Company ID",
+          "name": "company_id",
+          "type": "number",
+          "default": ""
+        },
+        {
+          "displayName": "Email",
+          "name": "email",
+          "type": "string",
+          "placeholder": "name@email.com",
+          "default": ""
+        },
+        {
+          "displayName": "Mobile",
+          "name": "mobile",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Phone",
+          "name": "phone",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "State",
+          "name": "state",
+          "type": "options",
+          "value": "blocked",
+          "default": "",
+          "options": [
+            {
+              "name": "Blocked",
+              "value": "blocked",
+              "displayName": "Blocked"
+            },
+            {
+              "name": "Deleted",
+              "value": "deleted",
+              "displayName": "Deleted"
+            },
+            {
+              "name": "Unverified",
+              "value": "unverified",
+              "displayName": "Unverified"
+            },
+            {
+              "name": "Verified",
+              "value": "verified",
+              "displayName": "Verified"
+            }
+          ]
+        },
+        {
+          "displayName": "Updated Since",
+          "name": "updated_since",
+          "type": "dateTime",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "contact"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Contact_contactFields"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "description": "Create a new ticket",
+      "action": "Create a ticket",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "description": "Delete a ticket",
+      "action": "Delete a ticket",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "description": "Get a ticket",
+      "action": "Get a ticket",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many tickets",
+      "action": "Get many tickets",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "description": "Update a ticket",
+      "action": "Update a ticket",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "ticket": [
+      {
+        "name": "Create",
+        "description": "Create a new ticket",
+        "action": "Create a ticket",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a ticket",
+        "action": "Delete a ticket",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get a ticket",
+        "action": "Get a ticket",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many tickets",
+        "action": "Get many tickets",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update a ticket",
+        "action": "Update a ticket",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "contact": [
+      {
+        "name": "Create",
+        "description": "Create a new contact",
+        "action": "Create a contact",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a contact",
+        "action": "Delete a contact",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "description": "Get a contact",
+        "action": "Get a contact",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "description": "Get many contacts",
+        "action": "Get many contacts",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "description": "Update a contact",
+        "action": "Update a contact",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "freshdeskApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "resource": {
+      "required": true
+    },
+    "operation": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ]
+        }
+      }
+    },
+    "requester": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "requesterIdentificationValue": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "status": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "priority": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "source": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "jsonParameters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "// \t\t\t\t'ticket'\n\t\t\t//"
+          ],
+          "operation": [
+            "// \t\t\t\t'create",
+            "//"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "customFieldsUi": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "// \t\t\t\t'ticket'\n\t\t\t//"
+          ],
+          "operation": [
+            "// \t\t\t\t'create'\n\t\t\t//"
+          ],
+          "jsonParameters": [
+            "// \t\t\t\tfalse",
+            "//"
+          ]
+        }
+      }
+    },
+    "customFieldsJson": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "// \t\t\t\t'ticket",
+            "//"
+          ],
+          "operation": [
+            "// \t\t\t\t'create",
+            "//"
+          ],
+          "jsonParameters": [
+            "// \t\t\t\ttrue",
+            "//"
+          ]
+        }
+      }
+    },
+    "ticketId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "ticket"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "name": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "contact"
+          ]
+        }
+      }
+    },
+    "email": {
+      "format": "email",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create"
+          ],
+          "resource": [
+            "contact"
+          ]
+        }
+      }
+    },
+    "contactId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "contact"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "create",
+            "update"
+          ],
+          "resource": [
+            "contact"
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "contact"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "contact",
+          "name": "Contact",
+          "description": ""
+        },
+        {
+          "value": "ticket",
+          "name": "Ticket",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": "Create a new contact"
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": "Delete a contact"
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a contact"
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": "Get many contacts"
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": "Update a contact"
+        }
+      ]
+    },
+    "requester": {
+      "type": "options",
+      "displayName": "Requester Identification",
+      "name": "requester",
+      "possibleValues": [
+        {
+          "value": "email",
+          "name": "Email",
+          "description": "Email address of the requester. If no contact exists with this email address in Freshdesk, it will be added as a new contact."
+        },
+        {
+          "value": "facebookId",
+          "name": "Facebook ID",
+          "description": "Facebook ID of the requester. If no contact exists with this facebook_id, then a new contact will be created."
+        },
+        {
+          "value": "phone",
+          "name": "Phone",
+          "description": "Phone number of the requester. If no contact exists with this phone number in Freshdesk, it will be added as a new contact. If the phone number is set and the email address is not, then the name attribute is mandatory."
+        },
+        {
+          "value": "requesterId",
+          "name": "Requester ID",
+          "description": "User ID of the requester. For existing contacts, the requester_id can be passed instead of the requester's email."
+        },
+        {
+          "value": "twitterId",
+          "name": "Twitter ID",
+          "description": "Twitter handle of the requester. If no contact exists with this handle in Freshdesk, it will be added as a new contact."
+        },
+        {
+          "value": "uniqueExternalId",
+          "name": "Unique External ID",
+          "description": "External ID of the requester. If no contact exists with this external ID in Freshdesk, they will be added as a new contact."
+        }
+      ]
+    },
+    "requesterIdentificationValue": {
+      "type": "string",
+      "displayName": "Value",
+      "name": "requesterIdentificationValue"
+    },
+    "status": {
+      "type": "options",
+      "displayName": "Status",
+      "name": "status",
+      "possibleValues": [
+        {
+          "value": "closed",
+          "name": "Closed",
+          "description": ""
+        },
+        {
+          "value": "open",
+          "name": "Open",
+          "description": ""
+        },
+        {
+          "value": "pending",
+          "name": "Pending",
+          "description": ""
+        },
+        {
+          "value": "resolved",
+          "name": "Resolved",
+          "description": ""
+        }
+      ]
+    },
+    "priority": {
+      "type": "options",
+      "displayName": "Priority",
+      "name": "priority",
+      "possibleValues": [
+        {
+          "value": "low",
+          "name": "Low",
+          "description": ""
+        },
+        {
+          "value": "medium",
+          "name": "Medium",
+          "description": ""
+        },
+        {
+          "value": "high",
+          "name": "High",
+          "description": ""
+        },
+        {
+          "value": "urgent",
+          "name": "Urgent",
+          "description": ""
+        }
+      ]
+    },
+    "source": {
+      "type": "options",
+      "displayName": "Source",
+      "name": "source",
+      "possibleValues": [
+        {
+          "value": "chat",
+          "name": "Chat",
+          "description": ""
+        },
+        {
+          "value": "email",
+          "name": "Email",
+          "description": ""
+        },
+        {
+          "value": "feedbackWidget",
+          "name": "Feedback Widget",
+          "description": ""
+        },
+        {
+          "value": "mobileHelp",
+          "name": "Mobihelp",
+          "description": ""
+        },
+        {
+          "value": "OutboundEmail",
+          "name": "Outbound Email",
+          "description": ""
+        },
+        {
+          "value": "phone",
+          "name": "Phone",
+          "description": ""
+        },
+        {
+          "value": "portal",
+          "name": "Portal",
+          "description": ""
+        }
+      ]
+    },
+    "jsonParameters": {
+      "type": "boolean",
+      "displayName": "JSON Parameters",
+      "name": "jsonParameters"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "Company ID",
+          "name": "companyId",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Include",
+          "name": "include",
+          "type": "multiOptions",
+          "value": "company",
+          "default": [],
+          "options": [
+            {
+              "name": "Company",
+              "value": "company",
+              "displayName": "Company"
+            },
+            {
+              "name": "Description",
+              "value": "description",
+              "displayName": "Description"
+            },
+            {
+              "name": "Requester",
+              "value": "requester",
+              "displayName": "Requester"
+            },
+            {
+              "name": "Stats",
+              "value": "stats",
+              "displayName": "Stats"
+            }
+          ]
+        },
+        {
+          "displayName": "Order",
+          "name": "order",
+          "type": "options",
+          "description": "Order sort attribute ascending or descending",
+          "value": "asc",
+          "default": "desc",
+          "options": [
+            {
+              "name": "ASC",
+              "value": "asc",
+              "displayName": "Asc"
+            },
+            {
+              "name": "DESC",
+              "value": "desc",
+              "displayName": "Desc"
+            }
+          ]
+        },
+        {
+          "displayName": "Order By",
+          "name": "orderBy",
+          "type": "options",
+          "description": "Sort collection by object attribute",
+          "value": "createdAt",
+          "default": "",
+          "options": [
+            {
+              "name": "Created At",
+              "value": "createdAt",
+              "displayName": "Created At"
+            },
+            {
+              "name": "Due By",
+              "value": "dueBy",
+              "displayName": "Due By"
+            },
+            {
+              "name": "Updated At",
+              "value": "updatedAt",
+              "displayName": "Updated At"
+            }
+          ]
+        },
+        {
+          "displayName": "Requester Email",
+          "name": "requesterEmail",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Requester ID",
+          "name": "requesterId",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Updated Since",
+          "name": "updatedSince",
+          "type": "dateTime",
+          "default": ""
+        }
+      ]
+    },
+    "customFieldsUi": {
+      "type": "fixedCollection",
+      "displayName": "Custom Fields",
+      "name": "customFieldsUi",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "customFieldsValues",
+          "displayName": "Custom fields",
+          "values": [
+            {
+              "displayName": "Key",
+              "name": "key",
+              "type": "string",
+              "default": ""
+            },
+            {
+              "displayName": "Value",
+              "name": "value",
+              "type": "string",
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    "customFieldsJson": {
+      "type": "json",
+      "displayName": "Custom Fields",
+      "name": "customFieldsJson",
+      "typeOptions": {
+        "alwaysOpenEditWindow": true
+      }
+    },
+    "ticketId": {
+      "type": "string",
+      "displayName": "Ticket ID",
+      "name": "ticketId"
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "typeOptions": {
+        "loadOptionsMethod": "getAgents"
+      },
+      "subProperties": [
+        {
+          "displayName": "Agent Name or ID",
+          "name": "agent",
+          "type": "options",
+          "description": "ID of the agent to whom the ticket has been assigned. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getAgents"
+          }
+        },
+        {
+          "displayName": "CC Emails",
+          "name": "ccEmails",
+          "type": "string",
+          "description": "Separated by a comma (,) email addresses added in the 'cc' field of the incoming ticket email",
+          "default": ""
+        },
+        {
+          "displayName": "Company Name or ID",
+          "name": "company",
+          "type": "options",
+          "description": "Company ID of the requester. This attribute can only be set if the Multiple Companies feature is enabled (Estate plan and above). Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getCompanies"
+          }
+        },
+        {
+          "displayName": "Due By",
+          "name": "dueBy",
+          "type": "dateTime",
+          "description": "Timestamp that denotes when the ticket is due to be resolved",
+          "default": ""
+        },
+        {
+          "displayName": "Email Config ID",
+          "name": "emailConfigId",
+          "type": "number",
+          "description": "ID of email config which is used for this ticket. (i.e., support@yourcompany.com/sales@yourcompany.com) If product_id is given and email_config_id is not given, product's primary email_config_id will be set.",
+          "default": ""
+        },
+        {
+          "displayName": "FR Due By",
+          "name": "frDueBy",
+          "type": "dateTime",
+          "description": "Timestamp that denotes when the first response is due",
+          "default": ""
+        },
+        {
+          "displayName": "Group Name or ID",
+          "name": "group",
+          "type": "options",
+          "description": "ID of the group to which the ticket has been assigned. The default value is the ID of the group that is associated with the given email_config_id. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getGroups"
+          }
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "Name of the requester",
+          "default": ""
+        },
+        {
+          "displayName": "Product Name or ID",
+          "name": "product",
+          "type": "options",
+          "description": "ID of the product to which the ticket is associated. It will be ignored if the email_config_id attribute is set in the request. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getProducts"
+          }
+        },
+        {
+          "displayName": "Priority",
+          "name": "priority",
+          "type": "options",
+          "value": "low",
+          "default": "low",
+          "options": [
+            {
+              "name": "Low",
+              "value": "low",
+              "displayName": "Low"
+            },
+            {
+              "name": "Medium",
+              "value": "medium",
+              "displayName": "Medium"
+            },
+            {
+              "name": "High",
+              "value": "high",
+              "displayName": "High"
+            },
+            {
+              "name": "Urgent",
+              "value": "urgent",
+              "displayName": "Urgent"
+            }
+          ]
+        },
+        {
+          "displayName": "Requester Identification",
+          "name": "requester",
+          "type": "options",
+          "description": "Email address of the requester. If no contact exists with this email address in Freshdesk, it will be added as a new contact.",
+          "value": "email",
+          "default": "requesterId",
+          "options": [
+            {
+              "name": "Email",
+              "description": "Email address of the requester. If no contact exists with this email address in Freshdesk, it will be added as a new contact.",
+              "value": "email",
+              "displayName": "Email"
+            },
+            {
+              "name": "Facebook ID",
+              "description": "Facebook ID of the requester. If no contact exists with this facebook_id, then a new contact will be created.",
+              "value": "facebookId",
+              "displayName": "Facebook Id"
+            },
+            {
+              "name": "Phone",
+              "description": "Phone number of the requester. If no contact exists with this phone number in Freshdesk, it will be added as a new contact. If the phone number is set and the email address is not, then the name attribute is mandatory.",
+              "value": "phone",
+              "displayName": "Phone"
+            },
+            {
+              "name": "Requester ID",
+              "description": "User ID of the requester. For existing contacts, the requester_id can be passed instead of the requester's email.",
+              "value": "requesterId",
+              "displayName": "Requester Id"
+            },
+            {
+              "name": "Twitter ID",
+              "description": "Twitter handle of the requester. If no contact exists with this handle in Freshdesk, it will be added as a new contact.",
+              "value": "twitterId",
+              "displayName": "Twitter Id"
+            },
+            {
+              "name": "Unique External ID",
+              "description": "External ID of the requester. If no contact exists with this external ID in Freshdesk, they will be added as a new contact.",
+              "value": "uniqueExternalId",
+              "displayName": "Unique External Id"
+            }
+          ]
+        },
+        {
+          "displayName": "Requester Value",
+          "name": "requesterIdentificationValue",
+          "type": "string",
+          "description": "Value of the identification selected",
+          "default": ""
+        },
+        {
+          "displayName": "Status",
+          "name": "status",
+          "type": "options",
+          "value": "open",
+          "default": "pending",
+          "options": [
+            {
+              "name": "Open",
+              "value": "open",
+              "displayName": "Open"
+            },
+            {
+              "name": "Pending",
+              "value": "pending",
+              "displayName": "Pending"
+            },
+            {
+              "name": "Resolved",
+              "value": "resolved",
+              "displayName": "Resolved"
+            },
+            {
+              "name": "Closed",
+              "value": "closed",
+              "displayName": "Closed"
+            }
+          ]
+        },
+        {
+          "displayName": "Source",
+          "name": "source",
+          "type": "options",
+          "description": "The channel through which the ticket was created",
+          "value": "chat",
+          "default": "portal",
+          "options": [
+            {
+              "name": "Chat",
+              "value": "chat",
+              "displayName": "Chat"
+            },
+            {
+              "name": "Email",
+              "value": "email",
+              "displayName": "Email"
+            },
+            {
+              "name": "Feedback Widget",
+              "value": "feedbackWidget",
+              "displayName": "Feedback Widget"
+            },
+            {
+              "name": "Mobihelp",
+              "value": "mobileHelp",
+              "displayName": "Mobihelp"
+            },
+            {
+              "name": "Outbound Email",
+              "value": "OutboundEmail",
+              "displayName": "Outbound Email"
+            },
+            {
+              "name": "Phone",
+              "value": "phone",
+              "displayName": "Phone"
+            },
+            {
+              "name": "Portal",
+              "value": "portal",
+              "displayName": "Portal"
+            }
+          ]
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "Separated by a comma (,) tags that have been associated with the ticket",
+          "default": ""
+        },
+        {
+          "displayName": "Type",
+          "name": "type",
+          "type": "options",
+          "description": "Helps categorize the ticket according to the different kinds of issues your support team deals with",
+          "value": "Feature Request",
+          "default": "Question",
+          "options": [
+            {
+              "name": "Feature Request",
+              "value": "Feature Request",
+              "displayName": "Feature Request"
+            },
+            {
+              "name": "Incident",
+              "value": "Incident",
+              "displayName": "Incident"
+            },
+            {
+              "name": "Problem",
+              "value": "Problem",
+              "displayName": "Problem"
+            },
+            {
+              "name": "Question",
+              "value": "Question",
+              "displayName": "Question"
+            },
+            {
+              "name": "Refund",
+              "value": "Refund",
+              "displayName": "Refund"
+            }
+          ]
+        }
+      ]
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 10
+      }
+    },
+    "name": {
+      "type": "string",
+      "displayName": "Name",
+      "name": "name"
+    },
+    "email": {
+      "type": "string",
+      "displayName": "Email",
+      "name": "email"
+    },
+    "contactId": {
+      "type": "string",
+      "displayName": "Contact ID",
+      "name": "contactId"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Address",
+          "name": "address",
+          "type": "string",
+          "description": "Address of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "Avatar",
+          "name": "avatar",
+          "description": "Avatar image of the contact The maximum file size is 5MB\n\t\t\t// \tand the supported file types are .jpg, .jpeg, .jpe, and .png.",
+          "default": ""
+        },
+        {
+          "displayName": "Company ID",
+          "name": "company_id",
+          "type": "number",
+          "description": "ID of the primary company to which this contact belongs",
+          "default": ""
+        },
+        {
+          "displayName": "Custom Fields",
+          "name": "customFields",
+          "type": "fixedCollection",
+          "description": "Key value pairs containing the name and value of the custom field. Only dates in the format YYYY-MM-DD are accepted as input for custom date fields.",
+          "placeholder": "Add Custom Field",
+          "default": [],
+          "options": [
+            {
+              "name": "customField",
+              "displayName": "Custom Field",
+              "values": [
+                {
+                  "displayName": "Name",
+                  "name": "name",
+                  "type": "string",
+                  "description": "Custom Field's name",
+                  "default": ""
+                },
+                {
+                  "displayName": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "description": "Custom Field's values",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "A small description of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "Email",
+          "name": "email",
+          "type": "string",
+          "description": "Primary email address of the contact. If you want to associate additional email(s) with this contact, use the other_emails attribute.",
+          "placeholder": "name@email.com",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Job Title",
+          "name": "job_title",
+          "type": "string",
+          "description": "Job title of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "Language",
+          "name": "language",
+          "type": "string",
+          "description": "Language of the contact. Default language is \"en\". This attribute can only be set if the Multiple Language feature is enabled (Garden plan and above).",
+          "default": ""
+        },
+        {
+          "displayName": "Mobile",
+          "name": "mobile",
+          "type": "string",
+          "description": "Mobile number of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "Name of the contact",
+          "default": "",
+          "displayOptions": {
+            "show": {}
+          }
+        },
+        {
+          "displayName": "Other Companies",
+          "name": "other_companies",
+          "type": "string",
+          "description": "Additional companies associated with the contact. This attribute can only be set if the Multiple Companies feature is enabled (Estate plan and above).",
+          "placeholder": "Add Company",
+          "default": [],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Other Emails",
+          "name": "other_emails",
+          "type": "string",
+          "description": "Additional emails associated with the contact",
+          "placeholder": "Add Email",
+          "default": [],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Phone",
+          "name": "phone",
+          "type": "string",
+          "description": "Telephone number of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "string",
+          "description": "Tags associated with this contact",
+          "default": [],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Time Zone",
+          "name": "time_zone",
+          "type": "string",
+          "description": "Time zone of the contact. Default value is the time zone of the domain. This attribute can only be set if the Multiple Time Zone feature is enabled (Garden plan and above).",
+          "default": ""
+        },
+        {
+          "displayName": "Twitter ID",
+          "name": "twitter_id",
+          "type": "string",
+          "description": "Twitter handle of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "Unique External ID",
+          "name": "unique_external_id",
+          "type": "string",
+          "description": "External ID of the contact",
+          "default": ""
+        },
+        {
+          "displayName": "View All Tickets",
+          "name": "view_all_tickets",
+          "type": "boolean",
+          "description": "Whether the contact can see all the tickets that are associated with the company to which they belong",
+          "default": false
+        }
+      ]
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "subProperties": [
+        {
+          "displayName": "Company ID",
+          "name": "company_id",
+          "type": "number",
+          "default": ""
+        },
+        {
+          "displayName": "Email",
+          "name": "email",
+          "type": "string",
+          "placeholder": "name@email.com",
+          "default": ""
+        },
+        {
+          "displayName": "Mobile",
+          "name": "mobile",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "Phone",
+          "name": "phone",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "displayName": "State",
+          "name": "state",
+          "type": "options",
+          "value": "blocked",
+          "default": "",
+          "options": [
+            {
+              "name": "Blocked",
+              "value": "blocked",
+              "displayName": "Blocked"
+            },
+            {
+              "name": "Deleted",
+              "value": "deleted",
+              "displayName": "Deleted"
+            },
+            {
+              "name": "Unverified",
+              "value": "unverified",
+              "displayName": "Unverified"
+            },
+            {
+              "name": "Verified",
+              "value": "verified",
+              "displayName": "Verified"
+            }
+          ]
+        },
+        {
+          "displayName": "Updated Since",
+          "name": "updated_since",
+          "type": "dateTime",
+          "default": ""
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "customFieldsUi",
+        "text": "Add Custom fields"
+      },
+      {
+        "field": "customFieldsJson",
+        "text": "{\n\t\t\t// \t\t'gadget': 'Cold Welder',\n\t\t\t// \t}"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "email",
+        "text": "name@email.com"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

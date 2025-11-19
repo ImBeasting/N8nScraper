@@ -1,0 +1,34 @@
+{
+  "issue_id": "_gemini_cli_issue_016",
+  "title": "Slack node: Incorrect 'listSearchMethods' extracted, includes non-method names",
+  "severity": "high",
+  "status": "new",
+  "priority": 2,
+  "metadata": {
+    "created_at": "2025-11-13T19:45:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "Slack (potentially other nodes with complex 'methods.listSearch' definitions)",
+    "validation_session": "comprehensive_audit_2025-11-13"
+  },
+  "description": {
+    "problem": "The 'listSearchMethods' array for the Slack node incorrectly includes 'this' and 'limit' alongside the actual method name 'getChannels'. These are not valid method names.",
+    "impact": "HIGH - Misleading and potentially confusing documentation. Users might attempt to use these non-existent methods, leading to errors or frustration. It indicates a fundamental parsing error in identifying actual method names.",
+    "root_cause": "The extractor's logic for identifying method names within the 'methods.listSearch' object is flawed. It appears to be extracting keywords or property names from the method definition rather than just the function names.",
+    "evidence": [
+      "Source file: n8n/packages/nodes-base/nodes/Slack/Slack.node.ts (Note: listSearchMethods are defined in SlackV1/V2.node.ts, but the issue is visible in the main Slack node's extracted data)",
+      "Source snippet (from SlackV1/V2.node.ts, example): methods = { listSearch: { async getChannels(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> { ... } } }",
+      "Extracted file: extracted_docs/slack_data.json",
+      "Extracted node_info.listSearchMethods: ["getChannels", "this", "limit"]
+",
+      "Command used to verify: jq '.node_info.listSearchMethods' extracted_docs/slack_data.json and manual comparison with source."
+    ],
+    "fix_approach": "1. Refine the extractor's logic for parsing 'methods.listSearch' to accurately identify and extract only the actual function names. \n2. Ensure that keywords, parameters, or other parts of the function signature are not mistakenly included as method names. \n3. Test with: Slack node. \n4. Expected result: 'slack_data.json' should have 'listSearchMethods: ["getChannels"]'. \n5. Validation command: jq '.node_info.listSearchMethods' extracted_docs/slack_data.json should return ["getChannels"]."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

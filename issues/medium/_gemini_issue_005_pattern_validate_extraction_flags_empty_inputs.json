@@ -1,0 +1,31 @@
+{
+  "issue_id": "_gemini_issue_005",
+  "title": "PATTERN: `validate_extraction.py` incorrectly flags nodes with `inputs: []` as 'missing inputs'",
+  "severity": "medium",
+  "status": "new",
+  "priority": 3,
+  "metadata": {
+    "created_at": "2025-11-11T10:00:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "108 nodes (all triggers)"
+  },
+  "description": {
+    "problem": "The `validate_extraction.py` script incorrectly reports that 108 nodes are 'missing inputs', creating significant noise in the validation report.",
+    "impact": "MEDIUM - This bug does not affect the quality of the extracted data itself, but it floods the validation report with false positives, making it difficult to identify genuine issues where the `inputs` field might actually be missing from extraction.",
+    "root_cause": "The validation script checks for a non-empty `inputs` array rather than the presence of the `inputs` key. Trigger nodes correctly have `inputs: []` as they are starting points in a workflow, but the script misinterprets this valid empty array as a missing field.",
+    "evidence": [
+      "The `validation_report.json` lists 108 files under `missing_inputs`.",
+      "Example Source (`n8n/packages/nodes-base/nodes/Eventbrite/EventbriteTrigger.node.ts`):\n```typescript\n{\n  // ...\n  inputs: [],\n  outputs: [NodeConnectionTypes.Main],\n  // ...\n}\n```",
+      "Example Extracted (`extracted_docs/eventbritetrigger_data.json`):\n```json\n{\n  \"node_info\": {\n    \"inputs\": [],\n    \"outputs\": [\n      \"Main\"\n    ]\n  }\n}\n```",
+      "The extractor is correctly parsing `inputs: []`, but the validation script is flagging it as an error."
+    ],
+    "fix_approach": "Modify the check in `validate_extraction.py` for the `inputs` field.\n1. Open `validate_extraction.py`.\n2. Locate the logic that checks for missing fields (likely a loop over nodes).\n3. Change the condition from something like `if not node_data['node_info'].get('inputs'):` to `if 'inputs' not in node_data['node_info']:`.\n4. This ensures the script only flags nodes where the `inputs` key is completely absent from the `node_info` object, not when it's a valid empty array."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

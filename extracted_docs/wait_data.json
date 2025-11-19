@@ -1,0 +1,480 @@
+{
+  "node_info": {
+    "icon": "fa:pause-circle",
+    "defaults": {
+      "name": "Wait"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "organization"
+    ],
+    "authentication": [],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Wait",
+    "name": "wait",
+    "description": "Wait before continue with execution",
+    "subtitle": "",
+    "iconColor": "crimson",
+    "version": [
+      "1",
+      "1.1"
+    ],
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.wait",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Core Nodes"
+    ],
+    "resources": {
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.wait/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "How to get started with CRM automation (with 3 no-code workflow ideas",
+          "icon": "\ud83d\udc65",
+          "url": "https://n8n.io/blog/how-to-get-started-with-crm-automation-and-no-code-workflow-ideas/"
+        },
+        {
+          "label": "7 no-code workflow automations for Amazon Web Services",
+          "url": "https://n8n.io/blog/aws-workflow-automation/"
+        }
+      ]
+    },
+    "alias": [
+      "pause",
+      "sleep",
+      "delay",
+      "timeout"
+    ],
+    "subcategories": {
+      "Core Nodes": [
+        "Helpers",
+        "Flow"
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Limit Wait Time",
+      "name": "limitWaitTime",
+      "type": "boolean",
+      "description": "Whether to limit the time this node should wait for a user response before execution resumes",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resume": [
+            "webhook",
+            "form"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Limit Type",
+      "name": "limitType",
+      "type": "options",
+      "description": "Sets the condition for the execution to resume. Can be a specified date or after some time.",
+      "value": "afterTimeInterval",
+      "default": "afterTimeInterval",
+      "options": [
+        {
+          "name": "After Time Interval",
+          "description": "Waits for a certain amount of time",
+          "value": "afterTimeInterval",
+          "displayName": "After Time Interval"
+        },
+        {
+          "name": "At Specified Time",
+          "description": "Waits until the set date and time to continue",
+          "value": "atSpecifiedTime",
+          "displayName": "At Specified Time"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "limitWaitTime": [
+            true
+          ],
+          "resume": [
+            "webhook",
+            "form"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Amount",
+      "name": "resumeAmount",
+      "type": "number",
+      "description": "The time to wait",
+      "default": 1,
+      "typeOptions": {
+        "minValue": 0,
+        "numberPrecision": 2
+      },
+      "displayOptions": {
+        "show": {
+          "limitType": [
+            "afterTimeInterval"
+          ],
+          "limitWaitTime": [
+            true
+          ],
+          "resume": [
+            "webhook",
+            "form"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Unit",
+      "name": "resumeUnit",
+      "type": "options",
+      "description": "Unit of the interval value",
+      "value": "seconds",
+      "default": "hours",
+      "options": [
+        {
+          "name": "Seconds",
+          "value": "seconds",
+          "displayName": "Seconds"
+        },
+        {
+          "name": "Minutes",
+          "value": "minutes",
+          "displayName": "Minutes"
+        },
+        {
+          "name": "Hours",
+          "value": "hours",
+          "displayName": "Hours"
+        },
+        {
+          "name": "Days",
+          "value": "days",
+          "displayName": "Days"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "limitType": [
+            "afterTimeInterval"
+          ],
+          "limitWaitTime": [
+            true
+          ],
+          "resume": [
+            "webhook",
+            "form"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Max Date and Time",
+      "name": "maxDateAndTime",
+      "type": "dateTime",
+      "description": "Continue execution after the specified date and time",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "limitType": [
+            "atSpecifiedTime"
+          ],
+          "limitWaitTime": [
+            true
+          ],
+          "resume": [
+            "webhook",
+            "form"
+          ]
+        }
+      }
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [],
+  "workflow_examples": [
+    {
+      "name": "Wait",
+      "parameters": {
+        "amount": 42,
+        "unit": "seconds"
+      },
+      "credentials": {},
+      "position": [
+        560,
+        420
+      ],
+      "workflow_file": "Wait.workflow.json",
+      "workflow_name": "[Unit Test] Wait Node"
+    }
+  ],
+  "expressions": [
+    "{{ $execution.resumeFormUrl }}",
+    "={{$parameter[\"responseData\"]}}",
+    "={{$parameter[\"options\"][\"webhookSuffix\"] || \"\"}}",
+    "={{$parameter[\"responseMode\"]}}",
+    "={{$parameter[\"responseMode\"] === \"lastNode\" ? \"noData\" : undefined}}"
+  ],
+  "validation_rules": {
+    "limitWaitTime": {
+      "displayOptions": {
+        "show": {
+          "resume": [
+            "webhook",
+            "form"
+          ]
+        }
+      }
+    },
+    "limitType": {
+      "displayOptions": {
+        "show": {
+          "limitWaitTime": [
+            true
+          ],
+          "resume": [
+            "webhook",
+            "form"
+          ]
+        }
+      }
+    },
+    "resumeAmount": {
+      "displayOptions": {
+        "show": {
+          "limitType": [
+            "afterTimeInterval"
+          ],
+          "limitWaitTime": [
+            true
+          ],
+          "resume": [
+            "webhook",
+            "form"
+          ]
+        }
+      }
+    },
+    "resumeUnit": {
+      "displayOptions": {
+        "show": {
+          "limitType": [
+            "afterTimeInterval"
+          ],
+          "limitWaitTime": [
+            true
+          ],
+          "resume": [
+            "webhook",
+            "form"
+          ]
+        }
+      }
+    },
+    "maxDateAndTime": {
+      "displayOptions": {
+        "show": {
+          "limitType": [
+            "atSpecifiedTime"
+          ],
+          "limitWaitTime": [
+            true
+          ],
+          "resume": [
+            "webhook",
+            "form"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "limitWaitTime": {
+      "type": "boolean",
+      "displayName": "Limit Wait Time",
+      "name": "limitWaitTime"
+    },
+    "limitType": {
+      "type": "options",
+      "displayName": "Limit Type",
+      "name": "limitType",
+      "possibleValues": [
+        {
+          "value": "afterTimeInterval",
+          "name": "After Time Interval",
+          "description": "Waits for a certain amount of time"
+        },
+        {
+          "value": "atSpecifiedTime",
+          "name": "At Specified Time",
+          "description": "Waits until the set date and time to continue"
+        }
+      ]
+    },
+    "resumeAmount": {
+      "type": "number",
+      "displayName": "Amount",
+      "name": "resumeAmount",
+      "typeOptions": {
+        "minValue": 0,
+        "numberPrecision": 2
+      }
+    },
+    "resumeUnit": {
+      "type": "options",
+      "displayName": "Unit",
+      "name": "resumeUnit",
+      "possibleValues": [
+        {
+          "value": "seconds",
+          "name": "Seconds",
+          "description": ""
+        },
+        {
+          "value": "minutes",
+          "name": "Minutes",
+          "description": ""
+        },
+        {
+          "value": "hours",
+          "name": "Hours",
+          "description": ""
+        },
+        {
+          "value": "days",
+          "name": "Days",
+          "description": ""
+        }
+      ]
+    },
+    "maxDateAndTime": {
+      "type": "dateTime",
+      "displayName": "Max Date and Time",
+      "name": "maxDateAndTime"
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

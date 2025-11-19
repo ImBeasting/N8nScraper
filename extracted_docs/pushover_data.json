@@ -1,0 +1,763 @@
+{
+  "node_info": {
+    "icon": "file:pushover.svg",
+    "defaults": {
+      "name": "Pushover"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "pushoverApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getSounds"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Pushover",
+    "name": "pushover",
+    "description": "Consume Pushover API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.pushover",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/pushover/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.pushover/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "message",
+      "default": "message",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Message",
+          "value": "message",
+          "displayName": "Message"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Push a message",
+      "value": "push",
+      "default": "push",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Push",
+          "action": "Push a message",
+          "value": "push",
+          "displayName": "Push"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "User Key",
+      "name": "userKey",
+      "type": "string",
+      "description": "The user/group key (not e-mail address) of your user (or you), viewable when logged into the <a href=\"https://pushover.net/\">dashboard</a> (often referred to as <code>USER_KEY</code> in the <a href=\"https://support.pushover.net/i44-example-code-and-pushover-libraries\">libraries</a> and code examples)",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "push"
+          ]
+        }
+      },
+      "_operation": "push"
+    },
+    {
+      "displayName": "Message",
+      "name": "message",
+      "type": "string",
+      "description": "Your message",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "push"
+          ]
+        }
+      },
+      "_operation": "push"
+    },
+    {
+      "displayName": "Priority",
+      "name": "priority",
+      "type": "options",
+      "description": "Send as -2 to generate no notification/alert, -1 to always send as a quiet notification, 1 to display as high-priority and bypass the user's quiet hours, or 2 to also require confirmation from the user",
+      "options": [
+        {
+          "name": "Lowest Priority",
+          "displayName": "Lowest Priority"
+        },
+        {
+          "name": "Low Priority",
+          "displayName": "Low Priority"
+        },
+        {
+          "name": "Normal Priority",
+          "displayName": "Normal Priority"
+        },
+        {
+          "name": "High Priority",
+          "displayName": "High Priority"
+        },
+        {
+          "name": "Emergency Priority",
+          "displayName": "Emergency Priority"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "push"
+          ]
+        }
+      },
+      "_operation": "push"
+    },
+    {
+      "displayName": "Retry (Seconds)",
+      "name": "retry",
+      "type": "number",
+      "description": "Specifies how often (in seconds) the Pushover servers will send the same notification to the user. This parameter must have a value of at least 30 seconds between retries.",
+      "default": 30,
+      "required": true,
+      "typeOptions": {
+        "minValue": 0
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "push"
+          ],
+          "priority": [
+            2
+          ]
+        }
+      },
+      "_operation": "push"
+    },
+    {
+      "displayName": "Expire (Seconds)",
+      "name": "expire",
+      "type": "number",
+      "description": "Specifies how many seconds your notification will continue to be retried for (every retry seconds)",
+      "default": 30,
+      "required": true,
+      "typeOptions": {
+        "minValue": 0,
+        "maxValue": 10800
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "push"
+          ],
+          "priority": [
+            2
+          ]
+        }
+      },
+      "_operation": "push"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Your user's device name to send the message directly to that device, rather than all of the user's devices (multiple devices may be separated by a comma)",
+      "placeholder": "Add Field",
+      "hint": "The name of the input binary field containing the file which should be added to email as attachment",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Attachment",
+          "name": "attachmentsUi",
+          "type": "fixedCollection",
+          "placeholder": "Add Attachments",
+          "hint": "The name of the input binary field containing the file which should be added to email as attachment",
+          "default": "",
+          "options": [
+            {
+              "name": "attachmentsValues",
+              "displayName": "Attachment Property",
+              "values": [
+                {
+                  "displayName": "Input Binary Field",
+                  "name": "binaryPropertyName",
+                  "type": "string",
+                  "placeholder": "data",
+                  "hint": "The name of the input binary field containing the file which should be added to email as attachment",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": false
+          }
+        },
+        {
+          "displayName": "Device",
+          "name": "device",
+          "type": "string",
+          "description": "Your user's device name to send the message directly to that device, rather than all of the user's devices (multiple devices may be separated by a comma)",
+          "default": ""
+        },
+        {
+          "displayName": "HTML Formatting",
+          "name": "html",
+          "type": "boolean",
+          "description": "Whether to enable messages formatting with HTML tags",
+          "default": false
+        },
+        {
+          "displayName": "Sound Name or ID",
+          "name": "sound",
+          "type": "options",
+          "description": "The name of one of the sounds supported by device clients to override the user's default sound choice. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSounds"
+          }
+        },
+        {
+          "displayName": "Timestamp",
+          "name": "timestamp",
+          "type": "dateTime",
+          "description": "A Unix timestamp of your message's date and time to display to the user, rather than the time your message is received by our API",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Your message's title, otherwise your app's name is used",
+          "default": ""
+        },
+        {
+          "displayName": "Timestamp",
+          "name": "timestamp",
+          "type": "dateTime",
+          "description": "A Unix timestamp of your message's date and time to display to the user, rather than the time your message is received by our API",
+          "default": ""
+        },
+        {
+          "displayName": "URL",
+          "name": "url",
+          "type": "string",
+          "description": "A supplementary URL to show with your message",
+          "default": ""
+        },
+        {
+          "displayName": "URL Title",
+          "name": "url_title",
+          "type": "string",
+          "description": "A title for your supplementary URL, otherwise just the URL is shown",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "push"
+          ]
+        }
+      },
+      "_operation": "push"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Push",
+      "action": "Push a message",
+      "value": "push",
+      "displayName": "Push"
+    }
+  ],
+  "operations_by_resource": {
+    "message": [
+      {
+        "name": "Push",
+        "action": "Push a message",
+        "value": "push",
+        "displayName": "Push"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "pushoverApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ]
+        }
+      }
+    },
+    "userKey": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "push"
+          ]
+        }
+      }
+    },
+    "message": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "push"
+          ]
+        }
+      }
+    },
+    "priority": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "push"
+          ]
+        }
+      }
+    },
+    "retry": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "push"
+          ],
+          "priority": [
+            2
+          ]
+        }
+      }
+    },
+    "expire": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "push"
+          ],
+          "priority": [
+            2
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "push"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "message",
+          "name": "Message",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "push",
+          "name": "Push",
+          "description": ""
+        }
+      ]
+    },
+    "userKey": {
+      "type": "string",
+      "displayName": "User Key",
+      "name": "userKey"
+    },
+    "message": {
+      "type": "string",
+      "displayName": "Message",
+      "name": "message"
+    },
+    "priority": {
+      "type": "options",
+      "displayName": "Priority",
+      "name": "priority",
+      "possibleValues": [
+        {
+          "value": "Lowest Priority",
+          "name": "Lowest Priority",
+          "description": ""
+        },
+        {
+          "value": "Low Priority",
+          "name": "Low Priority",
+          "description": ""
+        },
+        {
+          "value": "Normal Priority",
+          "name": "Normal Priority",
+          "description": ""
+        },
+        {
+          "value": "High Priority",
+          "name": "High Priority",
+          "description": ""
+        },
+        {
+          "value": "Emergency Priority",
+          "name": "Emergency Priority",
+          "description": ""
+        }
+      ]
+    },
+    "retry": {
+      "type": "number",
+      "displayName": "Retry (Seconds)",
+      "name": "retry",
+      "typeOptions": {
+        "minValue": 0
+      }
+    },
+    "expire": {
+      "type": "number",
+      "displayName": "Expire (Seconds)",
+      "name": "expire",
+      "typeOptions": {
+        "minValue": 0,
+        "maxValue": 10800
+      }
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "typeOptions": {
+        "multipleValues": false
+      },
+      "subProperties": [
+        {
+          "displayName": "Attachment",
+          "name": "attachmentsUi",
+          "type": "fixedCollection",
+          "placeholder": "Add Attachments",
+          "hint": "The name of the input binary field containing the file which should be added to email as attachment",
+          "default": "",
+          "options": [
+            {
+              "name": "attachmentsValues",
+              "displayName": "Attachment Property",
+              "values": [
+                {
+                  "displayName": "Input Binary Field",
+                  "name": "binaryPropertyName",
+                  "type": "string",
+                  "placeholder": "data",
+                  "hint": "The name of the input binary field containing the file which should be added to email as attachment",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": false
+          }
+        },
+        {
+          "displayName": "Device",
+          "name": "device",
+          "type": "string",
+          "description": "Your user's device name to send the message directly to that device, rather than all of the user's devices (multiple devices may be separated by a comma)",
+          "default": ""
+        },
+        {
+          "displayName": "HTML Formatting",
+          "name": "html",
+          "type": "boolean",
+          "description": "Whether to enable messages formatting with HTML tags",
+          "default": false
+        },
+        {
+          "displayName": "Sound Name or ID",
+          "name": "sound",
+          "type": "options",
+          "description": "The name of one of the sounds supported by device clients to override the user's default sound choice. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSounds"
+          }
+        },
+        {
+          "displayName": "Timestamp",
+          "name": "timestamp",
+          "type": "dateTime",
+          "description": "A Unix timestamp of your message's date and time to display to the user, rather than the time your message is received by our API",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Your message's title, otherwise your app's name is used",
+          "default": ""
+        },
+        {
+          "displayName": "Timestamp",
+          "name": "timestamp",
+          "type": "dateTime",
+          "description": "A Unix timestamp of your message's date and time to display to the user, rather than the time your message is received by our API",
+          "default": ""
+        },
+        {
+          "displayName": "URL",
+          "name": "url",
+          "type": "string",
+          "description": "A supplementary URL to show with your message",
+          "default": ""
+        },
+        {
+          "displayName": "URL Title",
+          "name": "url_title",
+          "type": "string",
+          "description": "A title for your supplementary URL, otherwise just the URL is shown",
+          "default": ""
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [
+      "https://api.pushover.net/1{path}"
+    ],
+    "headers": [
+      "Content-Type"
+    ],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": [
+      {
+        "field": "additionalFields",
+        "text": "The name of the input binary field containing the file which should be added to email as attachment"
+      }
+    ]
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

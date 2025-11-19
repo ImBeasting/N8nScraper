@@ -1,0 +1,707 @@
+{
+  "node_info": {
+    "icon": "file:googleDrive.svg",
+    "defaults": {
+      "name": "Google Drive Trigger"
+    },
+    "inputs": [],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "trigger"
+    ],
+    "authentication": [
+      {
+        "name": "googleApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "serviceAccount"
+            ]
+          }
+        }
+      },
+      {
+        "name": "googleDriveOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getDrives",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Google Drive Trigger",
+    "name": "googleDriveTrigger",
+    "description": "Starts the workflow when Google Drive events occur",
+    "subtitle": "={{$parameter[\"event\"]}}",
+    "version": "1",
+    "node_type": "trigger",
+    "polling": true
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.googleDriveTrigger",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Data & Storage"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/google/oauth-single-service/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.googledrivetrigger/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "7 no-code workflow automations for Amazon Web Services",
+          "url": "https://n8n.io/blog/aws-workflow-automation/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Credential Type",
+      "name": "authentication",
+      "type": "options",
+      "value": "oAuth2",
+      "default": "oAuth2",
+      "options": [
+        {
+          "name": "OAuth2 (recommended)",
+          "value": "oAuth2",
+          "displayName": "Oauth2 (recommended)"
+        },
+        {
+          "name": "Service Account",
+          "value": "serviceAccount",
+          "displayName": "Service Account"
+        }
+      ]
+    },
+    {
+      "displayName": "Trigger On",
+      "name": "triggerOn",
+      "type": "options",
+      "value": "specificFile",
+      "default": "",
+      "required": true,
+      "options": [
+        {
+          "name": "Changes to a Specific File",
+          "value": "specificFile",
+          "displayName": "Changes To A Specific File"
+        },
+        {
+          "name": "Changes Involving a Specific Folder",
+          "value": "specificFolder",
+          "displayName": "Changes Involving A Specific Folder"
+        },
+        {
+          "name": "Changes To Any File/Folder",
+          "value": "anyFileFolder",
+          "displayName": "Changes To Any File/folder"
+        }
+      ]
+    },
+    {
+      "displayName": "File",
+      "name": "fileToWatch",
+      "type": "resourceLocator",
+      "placeholder": "Select a file...",
+      "required": true,
+      "modes": [
+        {
+          "displayName": "File",
+          "name": "list",
+          "type": "list",
+          "placeholder": "Select a file...",
+          "typeOptions": {}
+        }
+      ],
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "triggerOn": [
+            "specificFile"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Watch For",
+      "name": "event",
+      "type": "options",
+      "description": "When to trigger this node",
+      "value": "fileUpdated",
+      "default": "fileUpdated",
+      "required": true,
+      "options": [
+        {
+          "name": "File Updated",
+          "value": "fileUpdated",
+          "displayName": "File Updated"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "triggerOn": [
+            "specificFile"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Folder",
+      "name": "folderToWatch",
+      "type": "resourceLocator",
+      "placeholder": "Select a folder...",
+      "required": true,
+      "modes": [
+        {
+          "displayName": "Folder",
+          "name": "list",
+          "type": "list",
+          "placeholder": "Select a folder...",
+          "typeOptions": {}
+        }
+      ],
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "triggerOn": [
+            "specificFolder"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Watch For",
+      "name": "event",
+      "type": "options",
+      "description": "When a file is created in the watched folder",
+      "value": "fileCreated",
+      "default": "",
+      "required": true,
+      "options": [
+        {
+          "name": "File Created",
+          "description": "When a file is created in the watched folder",
+          "value": "fileCreated",
+          "displayName": "File Created"
+        },
+        {
+          "name": "File Updated",
+          "description": "When a file is updated in the watched folder",
+          "value": "fileUpdated",
+          "displayName": "File Updated"
+        },
+        {
+          "name": "Folder Created",
+          "description": "When a folder is created in the watched folder",
+          "value": "folderCreated",
+          "displayName": "Folder Created"
+        },
+        {
+          "name": "Folder Updated",
+          "description": "When a folder is updated in the watched folder",
+          "value": "folderUpdated",
+          "displayName": "Folder Updated"
+        },
+        {
+          "name": "Watch Folder Updated",
+          "description": "When the watched folder itself is modified",
+          "value": "watchFolderUpdated",
+          "displayName": "Watch Folder Updated"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "triggerOn": [
+            "specificFolder"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Changes within subfolders won't trigger this node",
+      "name": "asas",
+      "type": "notice",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "triggerOn": [
+            "specificFolder"
+          ]
+        },
+        "hide": {
+          "event": [
+            "watchFolderUpdated"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Drive To Watch",
+      "name": "driveToWatch",
+      "type": "options",
+      "description": "The drive to monitor. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "root",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getDrives"
+      },
+      "displayOptions": {
+        "show": {
+          "triggerOn": [
+            "anyFileFolder"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Watch For",
+      "name": "event",
+      "type": "options",
+      "description": "When a file is created in the watched drive",
+      "value": "fileCreated",
+      "default": "fileCreated",
+      "required": true,
+      "options": [
+        {
+          "name": "File Created",
+          "description": "When a file is created in the watched drive",
+          "value": "fileCreated",
+          "displayName": "File Created"
+        },
+        {
+          "name": "File Updated",
+          "description": "When a file is updated in the watched drive",
+          "value": "fileUpdated",
+          "displayName": "File Updated"
+        },
+        {
+          "name": "Folder Created",
+          "description": "When a folder is created in the watched drive",
+          "value": "folderCreated",
+          "displayName": "Folder Created"
+        },
+        {
+          "name": "Folder Updated",
+          "description": "When a folder is updated in the watched drive",
+          "value": "folderUpdated",
+          "displayName": "Folder Updated"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "triggerOn": [
+            "anyFileFolder"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Triggers only when the file is this type",
+      "placeholder": "Add option",
+      "value": "all",
+      "default": {},
+      "options": [
+        {
+          "displayName": "File Type",
+          "name": "fileType",
+          "type": "options",
+          "description": "Triggers only when the file is this type",
+          "value": "all",
+          "default": "all",
+          "options": [
+            {
+              "name": "[All]",
+              "value": "all",
+              "displayName": "[all]"
+            },
+            {
+              "name": "Audio",
+              "value": "application/vnd.google-apps.audio",
+              "displayName": "Audio"
+            },
+            {
+              "name": "Google Docs",
+              "value": "application/vnd.google-apps.document",
+              "displayName": "Google Docs"
+            },
+            {
+              "name": "Google Drawings",
+              "value": "application/vnd.google-apps.drawing",
+              "displayName": "Google Drawings"
+            },
+            {
+              "name": "Google Slides",
+              "value": "application/vnd.google-apps.presentation",
+              "displayName": "Google Slides"
+            },
+            {
+              "name": "Google Spreadsheets",
+              "value": "application/vnd.google-apps.spreadsheet",
+              "displayName": "Google Spreadsheets"
+            },
+            {
+              "name": "Photos and Images",
+              "value": "application/vnd.google-apps.photo",
+              "displayName": "Photos And Images"
+            },
+            {
+              "name": "Videos",
+              "value": "application/vnd.google-apps.video",
+              "displayName": "Videos"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "event": [
+            "fileCreated",
+            "fileUpdated"
+          ]
+        },
+        "hide": {
+          "triggerOn": [
+            "specificFile"
+          ]
+        }
+      }
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "googleApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "serviceAccount"
+          ]
+        }
+      }
+    },
+    {
+      "name": "googleDriveOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"event\"]}}"
+  ],
+  "validation_rules": {
+    "triggerOn": {
+      "required": true
+    },
+    "fileToWatch": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "triggerOn": [
+            "specificFile"
+          ]
+        }
+      }
+    },
+    "event": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "triggerOn": [
+            "anyFileFolder"
+          ]
+        }
+      }
+    },
+    "folderToWatch": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "triggerOn": [
+            "specificFolder"
+          ]
+        }
+      }
+    },
+    "asas": {
+      "displayOptions": {
+        "show": {
+          "triggerOn": [
+            "specificFolder"
+          ]
+        },
+        "hide": {
+          "event": [
+            "watchFolderUpdated"
+          ]
+        }
+      }
+    },
+    "driveToWatch": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "triggerOn": [
+            "anyFileFolder"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "event": [
+            "fileCreated",
+            "fileUpdated"
+          ]
+        },
+        "hide": {
+          "triggerOn": [
+            "specificFile"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Credential Type",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "oAuth2",
+          "name": "OAuth2 (recommended)",
+          "description": ""
+        },
+        {
+          "value": "serviceAccount",
+          "name": "Service Account",
+          "description": ""
+        }
+      ]
+    },
+    "triggerOn": {
+      "type": "options",
+      "displayName": "Trigger On",
+      "name": "triggerOn",
+      "possibleValues": [
+        {
+          "value": "specificFile",
+          "name": "Changes to a Specific File",
+          "description": ""
+        },
+        {
+          "value": "specificFolder",
+          "name": "Changes Involving a Specific Folder",
+          "description": ""
+        },
+        {
+          "value": "anyFileFolder",
+          "name": "Changes To Any File/Folder",
+          "description": ""
+        }
+      ]
+    },
+    "fileToWatch": {
+      "type": "resourceLocator",
+      "displayName": "File",
+      "name": "fileToWatch"
+    },
+    "event": {
+      "type": "options",
+      "displayName": "Watch For",
+      "name": "event",
+      "possibleValues": [
+        {
+          "value": "fileCreated",
+          "name": "File Created",
+          "description": "When a file is created in the watched drive"
+        },
+        {
+          "value": "fileUpdated",
+          "name": "File Updated",
+          "description": "When a file is updated in the watched drive"
+        },
+        {
+          "value": "folderCreated",
+          "name": "Folder Created",
+          "description": "When a folder is created in the watched drive"
+        },
+        {
+          "value": "folderUpdated",
+          "name": "Folder Updated",
+          "description": "When a folder is updated in the watched drive"
+        }
+      ]
+    },
+    "folderToWatch": {
+      "type": "resourceLocator",
+      "displayName": "Folder",
+      "name": "folderToWatch"
+    },
+    "asas": {
+      "type": "notice",
+      "displayName": "Changes within subfolders won't trigger this node",
+      "name": "asas"
+    },
+    "driveToWatch": {
+      "type": "options",
+      "displayName": "Drive To Watch",
+      "name": "driveToWatch",
+      "typeOptions": {
+        "loadOptionsMethod": "getDrives"
+      },
+      "possibleValues": []
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "subProperties": [
+        {
+          "displayName": "File Type",
+          "name": "fileType",
+          "type": "options",
+          "description": "Triggers only when the file is this type",
+          "value": "all",
+          "default": "all",
+          "options": [
+            {
+              "name": "[All]",
+              "value": "all",
+              "displayName": "[all]"
+            },
+            {
+              "name": "Audio",
+              "value": "application/vnd.google-apps.audio",
+              "displayName": "Audio"
+            },
+            {
+              "name": "Google Docs",
+              "value": "application/vnd.google-apps.document",
+              "displayName": "Google Docs"
+            },
+            {
+              "name": "Google Drawings",
+              "value": "application/vnd.google-apps.drawing",
+              "displayName": "Google Drawings"
+            },
+            {
+              "name": "Google Slides",
+              "value": "application/vnd.google-apps.presentation",
+              "displayName": "Google Slides"
+            },
+            {
+              "name": "Google Spreadsheets",
+              "value": "application/vnd.google-apps.spreadsheet",
+              "displayName": "Google Spreadsheets"
+            },
+            {
+              "name": "Photos and Images",
+              "value": "application/vnd.google-apps.photo",
+              "displayName": "Photos And Images"
+            },
+            {
+              "name": "Videos",
+              "value": "application/vnd.google-apps.video",
+              "displayName": "Videos"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [
+      {
+        "name": "asas",
+        "text": "Changes within subfolders won't trigger this node",
+        "conditions": {
+          "show": {
+            "triggerOn": [
+              "specificFolder"
+            ]
+          },
+          "hide": {
+            "event": [
+              "watchFolderUpdated"
+            ]
+          }
+        }
+      }
+    ],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "fileToWatch",
+        "text": "Select a file..."
+      },
+      {
+        "field": "folderToWatch",
+        "text": "Select a folder..."
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

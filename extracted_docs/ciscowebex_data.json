@@ -1,0 +1,3283 @@
+{
+  "node_info": {
+    "icon": "file:ciscoWebex.png",
+    "defaults": {
+      "name": "Webex by Cisco"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "ciscoWebexOAuth2Api",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [
+      "getRooms",
+      "for",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Webex by Cisco",
+    "name": "ciscoWebex",
+    "description": "Consume the Cisco Webex API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.ciscoWebex",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/ciscowebex/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.ciscowebex/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "meeting",
+      "default": "message",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Meeting",
+          "value": "meeting",
+          "displayName": "Meeting"
+        },
+        {
+          "name": "Meeeting Transcript",
+          "value": "meetingTranscript",
+          "displayName": "Meeeting Transcript"
+        },
+        {
+          "name": "Message",
+          "value": "message",
+          "displayName": "Message"
+        }
+      ]
+    },
+    {
+      "displayName": "Destination",
+      "name": "destination",
+      "type": "options",
+      "value": "room",
+      "default": "room",
+      "required": true,
+      "options": [
+        {
+          "name": "Room",
+          "value": "room",
+          "displayName": "Room"
+        },
+        {
+          "name": "Person",
+          "value": "person",
+          "displayName": "Person"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Room Name or ID",
+      "name": "roomId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getRooms"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "create"
+          ],
+          "destination": [
+            "room"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Specify Person By",
+      "name": "specifyPersonBy",
+      "type": "options",
+      "value": "email",
+      "default": "email",
+      "required": true,
+      "options": [
+        {
+          "name": "Email",
+          "value": "email",
+          "displayName": "Email"
+        },
+        {
+          "name": "ID",
+          "value": "id",
+          "displayName": "Id"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "create"
+          ],
+          "destination": [
+            "person"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Person ID",
+      "name": "toPersonId",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "create"
+          ],
+          "specifyPersonBy": [
+            "id"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Person Email",
+      "name": "toPersonEmail",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "create"
+          ],
+          "specifyPersonBy": [
+            "email"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Text",
+      "name": "text",
+      "type": "string",
+      "description": "The message, in plain text",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The URL to open",
+      "placeholder": "Add Field",
+      "value": "textBlock",
+      "default": {},
+      "required": true,
+      "options": [
+        {
+          "displayName": "Attachments",
+          "name": "attachmentsUi",
+          "type": "fixedCollection",
+          "description": "The URL to open",
+          "placeholder": "Add Attachment",
+          "value": "textBlock",
+          "default": {},
+          "options": [
+            {
+              "name": "attachmentValues",
+              "displayName": "Attachment",
+              "values": [
+                {
+                  "displayName": "Elements",
+                  "name": "elementsUi",
+                  "type": "fixedCollection",
+                  "placeholder": "Add Element",
+                  "value": "textBlock",
+                  "default": {},
+                  "options": [
+                    {
+                      "name": "elementValues",
+                      "displayName": "Element",
+                      "values": [
+                        {
+                          "displayName": "Type",
+                          "name": "type",
+                          "type": "options",
+                          "value": "textBlock",
+                          "default": "textBlock",
+                          "options": [
+                            {
+                              "name": "Text Block",
+                              "value": "textBlock",
+                              "displayName": "Text Block"
+                            },
+                            {
+                              "name": "Input Text",
+                              "value": "inputText",
+                              "displayName": "Input Text"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "typeOptions": {
+                    "multipleValues": true
+                  }
+                },
+                {
+                  "displayName": "Actions",
+                  "name": "actionsUi",
+                  "type": "fixedCollection",
+                  "description": "The URL to open",
+                  "placeholder": "Add Action",
+                  "value": "execute",
+                  "default": {},
+                  "options": [
+                    {
+                      "name": "actionValues",
+                      "displayName": "Action",
+                      "values": [
+                        {
+                          "displayName": "Type",
+                          "name": "type",
+                          "type": "options",
+                          "value": "execute",
+                          "default": "openUrl",
+                          "options": [
+                            {
+                              "name": "Execute",
+                              "value": "execute",
+                              "displayName": "Execute"
+                            },
+                            {
+                              "name": "Open URL",
+                              "value": "openUrl",
+                              "displayName": "Open Url"
+                            },
+                            {
+                              "name": "Submit",
+                              "value": "submit",
+                              "displayName": "Submit"
+                            }
+                          ]
+                        },
+                        {
+                          "displayName": "URL",
+                          "name": "url",
+                          "type": "string",
+                          "description": "The URL to open",
+                          "default": "",
+                          "displayOptions": {
+                            "show": {
+                              "type": [
+                                "openUrl"
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "displayName": "Data",
+                          "name": "data",
+                          "type": "string",
+                          "description": "Any extra data to pass along. These are essentially \u2018hidden\u2019 properties.",
+                          "default": "",
+                          "displayOptions": {
+                            "show": {
+                              "type": [
+                                "submit",
+                                "execute"
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "displayName": "Verb",
+                          "name": "verb",
+                          "type": "string",
+                          "description": "The card author-defined verb associated with this action",
+                          "default": "",
+                          "displayOptions": {
+                            "show": {
+                              "type": [
+                                "execute"
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "typeOptions": {
+                    "multipleValues": true
+                  },
+                  "displayOptions": {
+                    "show": {
+                      "type": [
+                        "openUrl"
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "displayOptions": {
+            "show": {
+              "type": [
+                "openUrl"
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "File",
+          "name": "fileUi",
+          "type": "fixedCollection",
+          "description": "The field in the node input containing the binary file data",
+          "placeholder": "Add File",
+          "value": "url",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "fileValue",
+              "displayName": "File",
+              "values": [
+                {
+                  "displayName": "File Location",
+                  "name": "fileLocation",
+                  "type": "options",
+                  "value": "url",
+                  "default": "url",
+                  "options": [
+                    {
+                      "name": "URL",
+                      "value": "url",
+                      "displayName": "Url"
+                    },
+                    {
+                      "name": "Binary File",
+                      "value": "binaryData",
+                      "displayName": "Binary File"
+                    }
+                  ]
+                },
+                {
+                  "displayName": "Input Field With File",
+                  "name": "binaryPropertyName",
+                  "type": "string",
+                  "description": "The field in the node input containing the binary file data",
+                  "default": "data",
+                  "required": true,
+                  "displayOptions": {
+                    "show": {
+                      "fileLocation": [
+                        "binaryData"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "displayName": "URL",
+                  "name": "url",
+                  "type": "string",
+                  "description": "The public URL of the file",
+                  "default": "",
+                  "displayOptions": {
+                    "show": {
+                      "fileLocation": [
+                        "url"
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": false
+          },
+          "displayOptions": {
+            "show": {
+              "fileLocation": [
+                "binaryData"
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Markdown",
+          "name": "markdown",
+          "type": "string",
+          "description": "The message in markdown format. When used the text parameter is used to provide alternate text for UI clients that do not support rich text.",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Message ID",
+      "name": "messageId",
+      "type": "string",
+      "description": "ID of the message to delete",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Message ID",
+      "name": "messageId",
+      "type": "string",
+      "description": "ID of the message to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Room Name or ID",
+      "name": "roomId",
+      "type": "options",
+      "description": "List messages in a room, by ID. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getRooms"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "List messages sent before a date and time",
+      "placeholder": "Add Filter",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Before",
+          "name": "before",
+          "type": "dateTime",
+          "description": "List messages sent before a date and time",
+          "default": ""
+        },
+        {
+          "displayName": "Before Message",
+          "name": "beforeMessage",
+          "type": "string",
+          "description": "List messages sent before a message, by ID",
+          "default": ""
+        },
+        {
+          "displayName": "Parent Message ID",
+          "name": "parentId",
+          "type": "string",
+          "description": "List messages with a parent, by ID",
+          "default": ""
+        },
+        {
+          "displayName": "Mentioned Person",
+          "name": "mentionedPeople",
+          "type": "string",
+          "description": "List only messages with certain person mentioned. Enter their ID. You can use 'me' as a shorthand for yourself",
+          "default": ""
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Message ID",
+      "name": "messageId",
+      "type": "string",
+      "description": "ID of the message to update",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Is Markdown",
+      "name": "markdown",
+      "type": "boolean",
+      "description": "Whether the message uses markdown",
+      "default": false,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Text",
+      "name": "text",
+      "type": "string",
+      "description": "The message, in plain text",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "update"
+          ],
+          "markdown": [
+            false
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Markdown",
+      "name": "markdownText",
+      "type": "string",
+      "description": "The message, in Markdown format. The maximum message length is 7439 bytes.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "update"
+          ],
+          "markdown": [
+            true
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a message",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a message",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a message",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a message",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many messages",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update a message",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ]
+        }
+      },
+      "_source": "Message_messageOperations"
+    },
+    {
+      "displayName": "Title",
+      "name": "title",
+      "type": "string",
+      "description": "Meeting title. The title can be a maximum of 128 characters long.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Start",
+      "name": "start",
+      "type": "dateTime",
+      "description": "Date and time for the start of the meeting. Acceptable <a href=\"https://datatracker.ietf.org/doc/html/rfc2445\"> format</a>.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "End",
+      "name": "end",
+      "type": "dateTime",
+      "description": "Date and time for the end of the meeting. Acceptable <a href=\"https://datatracker.ietf.org/doc/html/rfc2445\"> format</a>.",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Meeting agenda. The agenda can be a maximum of 1300 characters long.",
+      "placeholder": "Add Field",
+      "value": "requireFirstName",
+      "default": {},
+      "required": true,
+      "options": [
+        {
+          "displayName": "Agenda",
+          "name": "agenda",
+          "type": "string",
+          "description": "Meeting agenda. The agenda can be a maximum of 1300 characters long.",
+          "default": ""
+        },
+        {
+          "displayName": "Allow Any User To Be Co-Host",
+          "name": "allowAnyUserToBeCoHost",
+          "type": "boolean",
+          "description": "Whether or not to allow any attendee with a host account on the target site to become a co-host when joining the meeting",
+          "default": false
+        },
+        {
+          "displayName": "Allow Authenticated Devices",
+          "name": "allowAuthenticatedDevices",
+          "type": "boolean",
+          "description": "Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt",
+          "default": false
+        },
+        {
+          "displayName": "Allow First User To Be Co-Host",
+          "name": "allowFirstUserToBeCoHost",
+          "type": "boolean",
+          "description": "Whether or not to allow the first attendee of the meeting with a host account on the target site to become a co-host",
+          "default": false
+        },
+        {
+          "displayName": "Auto Accept Request",
+          "name": "autoAcceptRequest",
+          "type": "boolean",
+          "description": "Whether or not meeting registration request is accepted automatically",
+          "default": false
+        },
+        {
+          "displayName": "Enable Connect Audio Before Host",
+          "name": "enableConnectAudioBeforeHost",
+          "type": "boolean",
+          "description": "Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting",
+          "default": false
+        },
+        {
+          "displayName": "Enabled Auto Record Meeting",
+          "name": "enabledAutoRecordMeeting",
+          "type": "boolean",
+          "description": "Whether or not meeting is recorded automatically",
+          "default": false
+        },
+        {
+          "displayName": "Enabled Join Before Host",
+          "name": "enabledJoinBeforeHost",
+          "type": "boolean",
+          "description": "Whether or not to allow any attendee to join the meeting before the host joins the meeting",
+          "default": false
+        },
+        {
+          "displayName": "Exclude Password",
+          "name": "excludePassword",
+          "type": "boolean",
+          "description": "Whether or not to exclude password from the meeting email invitation",
+          "default": false
+        },
+        {
+          "displayName": "Host Email",
+          "name": "hostEmail",
+          "type": "string",
+          "description": "Email address for the meeting host. Can only be set if you're an admin.",
+          "default": ""
+        },
+        {
+          "displayName": "Integration Tags",
+          "name": "integrationTags",
+          "type": "string",
+          "description": "External keys created by an integration application in its own domain. They could be Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc.",
+          "default": ""
+        },
+        {
+          "displayName": "Invitees",
+          "name": "inviteesUi",
+          "type": "fixedCollection",
+          "description": "Email address of meeting invitee",
+          "placeholder": "Add Invitee",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "inviteeValues",
+              "displayName": "Invitee",
+              "values": [
+                {
+                  "displayName": "Email",
+                  "name": "email",
+                  "type": "string",
+                  "description": "Email address of meeting invitee",
+                  "placeholder": "name@email.com",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Display Name",
+                  "name": "displayName",
+                  "type": "string",
+                  "description": "Display name of meeting invitee",
+                  "default": ""
+                },
+                {
+                  "displayName": "Co-Host",
+                  "name": "coHost",
+                  "type": "boolean",
+                  "description": "Whether or not invitee is allowed to be a co-host for the meeting",
+                  "default": false
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Join Before Host Minutes",
+          "name": "joinBeforeHostMinutes",
+          "type": "options",
+          "description": "The number of minutes an attendee can join the meeting before the meeting start time and the host joins",
+          "default": 0,
+          "options": [
+            {
+              "name": "0",
+              "displayName": "0"
+            },
+            {
+              "name": "5",
+              "displayName": "5"
+            },
+            {
+              "name": "10",
+              "displayName": "10"
+            },
+            {
+              "name": "15",
+              "displayName": "15"
+            }
+          ]
+        },
+        {
+          "displayName": "Public Meeting",
+          "name": "publicMeeting",
+          "type": "boolean",
+          "description": "Whether or not to allow the meeting to be listed on the public calendar",
+          "default": false
+        },
+        {
+          "displayName": "Recurrence",
+          "name": "recurrence",
+          "type": "string",
+          "description": "Rule for how the meeting should recur. Acceptable <a href=\"https://datatracker.ietf.org/doc/html/rfc2445\"> format</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Required Registration Info",
+          "name": "requireRegistrationInfo",
+          "type": "multiOptions",
+          "description": "Data required for meeting registration",
+          "value": "requireFirstName",
+          "default": [],
+          "options": [
+            {
+              "name": "Require First Name",
+              "value": "requireFirstName",
+              "displayName": "Require First Name"
+            },
+            {
+              "name": "Require Last Name",
+              "value": "requireLastName",
+              "displayName": "Require Last Name"
+            },
+            {
+              "name": "Require Email",
+              "value": "requireEmail",
+              "displayName": "Require Email"
+            },
+            {
+              "name": "Require Job Title",
+              "value": "requireJobTitle",
+              "displayName": "Require Job Title"
+            },
+            {
+              "name": "Require Company Name",
+              "value": "requireCompanyName",
+              "displayName": "Require Company Name"
+            },
+            {
+              "name": "Require Address 1",
+              "value": "requireAddress1",
+              "displayName": "Require Address 1"
+            },
+            {
+              "name": "Require Address 2",
+              "value": "requireAddress2",
+              "displayName": "Require Address 2"
+            },
+            {
+              "name": "Require City",
+              "value": "requireCity",
+              "displayName": "Require City"
+            },
+            {
+              "name": "Require State",
+              "value": "requireState",
+              "displayName": "Require State"
+            },
+            {
+              "name": "Require Zip Code",
+              "value": "requireZipCode",
+              "displayName": "Require Zip Code"
+            },
+            {
+              "name": "Require Country Region",
+              "value": "requireCountryRegion",
+              "displayName": "Require Country Region"
+            },
+            {
+              "name": "Require Work Phone",
+              "value": "requireWorkPhone",
+              "displayName": "Require Work Phone"
+            },
+            {
+              "name": "Require Fax",
+              "value": "requireFax",
+              "displayName": "Require Fax"
+            }
+          ]
+        },
+        {
+          "displayName": "Reminder Time",
+          "name": "reminderTime",
+          "type": "number",
+          "description": "The number of minutes before the meeting begins, for sending an email reminder to the host",
+          "default": 1
+        },
+        {
+          "displayName": "Send Email",
+          "name": "sendEmail",
+          "type": "boolean",
+          "description": "Whether or not to send emails to host and invitees",
+          "default": true
+        },
+        {
+          "displayName": "Site URL",
+          "name": "siteUrl",
+          "type": "options",
+          "description": "URL of the Webex site which the meeting is created on. If not specified, the meeting is created on user's preferred site. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSites"
+          }
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Meeting ID",
+      "name": "meetingId",
+      "type": "string",
+      "description": "ID of the meeting",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin-level scopes.",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Host Email",
+          "name": "hostEmail",
+          "type": "string",
+          "description": "Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin-level scopes.",
+          "default": ""
+        },
+        {
+          "displayName": "Send Email",
+          "name": "sendEmail",
+          "type": "boolean",
+          "description": "Whether or not to send emails to host and invitees",
+          "default": true
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Meeting ID",
+      "name": "meetingId",
+      "type": "string",
+      "description": "ID of the meeting",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin-level scopes.",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Host Email",
+          "name": "hostEmail",
+          "type": "string",
+          "description": "Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin-level scopes.",
+          "default": ""
+        },
+        {
+          "displayName": "Password",
+          "name": "password",
+          "type": "string",
+          "description": "Meeting password. It's required when the meeting is protected by a password and the current user is not privileged to view it if they are not a host, co-host or invitee of the meeting.",
+          "default": "",
+          "typeOptions": {
+            "password": true
+          }
+        },
+        {
+          "displayName": "Send Email",
+          "name": "sendEmail",
+          "type": "boolean",
+          "description": "Whether or not to send emails to host and invitees. It is an optional field and default value is true.",
+          "default": true
+        }
+      ],
+      "typeOptions": {
+        "password": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Start date and time (inclusive) for the meeting. Acceptable <a href=\"https://datatracker.ietf.org/doc/html/rfc2445\"> format</a>.",
+      "placeholder": "Add Filter",
+      "value": "meetingSeries",
+      "default": {},
+      "options": [
+        {
+          "displayName": "From",
+          "name": "from",
+          "type": "dateTime",
+          "description": "Start date and time (inclusive) for the meeting. Acceptable <a href=\"https://datatracker.ietf.org/doc/html/rfc2445\"> format</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Host Email",
+          "name": "hostEmail",
+          "type": "string",
+          "description": "Email address for the meeting host",
+          "default": ""
+        },
+        {
+          "displayName": "Integration Tag",
+          "name": "integrationTag",
+          "type": "string",
+          "description": "External tag created by another application, e.g. Zendesk ticket ID or Jira ID",
+          "default": ""
+        },
+        {
+          "displayName": "Limit to Current Meetings",
+          "name": "current",
+          "type": "boolean",
+          "description": "Whether to return just the current meeting or all meetings",
+          "default": true
+        },
+        {
+          "displayName": "Meeting Number",
+          "name": "meetingNumber",
+          "type": "string",
+          "description": "Meeting number for the meeting objects being requested",
+          "default": ""
+        },
+        {
+          "displayName": "Meeting Type",
+          "name": "meetingType",
+          "type": "options",
+          "description": "Master of a scheduled series of meetings which consists of one or more scheduled meeting based on a recurrence rule",
+          "value": "meetingSeries",
+          "default": "meetingSeries",
+          "options": [
+            {
+              "name": "Meeting Series",
+              "description": "Master of a scheduled series of meetings which consists of one or more scheduled meeting based on a recurrence rule",
+              "value": "meetingSeries",
+              "displayName": "Meeting Series"
+            },
+            {
+              "name": "Scheduled Meeting",
+              "description": "Instance from a master meeting series",
+              "value": "scheduledMeeting",
+              "displayName": "Scheduled Meeting"
+            },
+            {
+              "name": "Meeting",
+              "description": "Meeting instance that is actually happening or has happened",
+              "value": "meeting",
+              "displayName": "Meeting"
+            }
+          ]
+        },
+        {
+          "displayName": "Participant Email",
+          "name": "participantEmail",
+          "type": "string",
+          "description": "Email of a person that must be a meeting participant",
+          "default": ""
+        },
+        {
+          "displayName": "Site URL",
+          "name": "siteUrl",
+          "type": "options",
+          "description": "URL of the Webex site which the API lists meetings from. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSites"
+          }
+        },
+        {
+          "displayName": "State",
+          "name": "state",
+          "type": "options",
+          "description": "Meeting state for the meeting objects being requested",
+          "value": "active",
+          "default": "",
+          "options": [
+            {
+              "name": "Active",
+              "value": "active",
+              "displayName": "Active"
+            },
+            {
+              "name": "Ended",
+              "value": "ended",
+              "displayName": "Ended"
+            },
+            {
+              "name": "Expired",
+              "value": "expired",
+              "displayName": "Expired"
+            },
+            {
+              "name": "In Progress",
+              "value": "inProgress",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Lobby",
+              "value": "lobby",
+              "displayName": "Lobby"
+            },
+            {
+              "name": "Missed",
+              "value": "missed",
+              "displayName": "Missed"
+            },
+            {
+              "name": "Ready",
+              "value": "ready",
+              "displayName": "Ready"
+            },
+            {
+              "name": "Scheduled",
+              "value": "scheduled",
+              "displayName": "Scheduled"
+            }
+          ]
+        },
+        {
+          "displayName": "To",
+          "name": "to",
+          "type": "dateTime",
+          "description": "End date and time (inclusive) for the meeting. Acceptable <a href=\"https://datatracker.ietf.org/doc/html/rfc2445\"> format</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Weblink",
+          "name": "webLink",
+          "type": "string",
+          "description": "URL encoded link to information page for the meeting objects being requested",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getSites"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Meeting ID",
+      "name": "meetingId",
+      "type": "string",
+      "description": "ID of the meeting",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "type": "collection",
+      "description": "The meeting's agenda. Cannot be longer that 1300 characters.",
+      "placeholder": "Add Field",
+      "value": "requireFirstName",
+      "default": {},
+      "required": true,
+      "options": [
+        {
+          "displayName": "Agenda",
+          "name": "agenda",
+          "type": "string",
+          "description": "The meeting's agenda. Cannot be longer that 1300 characters.",
+          "default": ""
+        },
+        {
+          "displayName": "Allow Any User To Be Co-Host",
+          "name": "allowAnyUserToBeCoHost",
+          "type": "boolean",
+          "description": "Whether or not to allow any attendee with a host account on the target site to become a co-host when joining the meeting",
+          "default": false
+        },
+        {
+          "displayName": "Allow Authenticated Devices",
+          "name": "allowAuthenticatedDevices",
+          "type": "boolean",
+          "description": "Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt",
+          "default": false
+        },
+        {
+          "displayName": "Allow First User To Be Co-Host",
+          "name": "allowFirstUserToBeCoHost",
+          "type": "boolean",
+          "description": "Whether or not to allow the first attendee of the meeting with a host account on the target site to become a co-host",
+          "default": false
+        },
+        {
+          "displayName": "Enable Connect Audio Before Host",
+          "name": "enableConnectAudioBeforeHost",
+          "type": "boolean",
+          "description": "Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting",
+          "default": false
+        },
+        {
+          "displayName": "Enabled Auto Record Meeting",
+          "name": "enabledAutoRecordMeeting",
+          "type": "boolean",
+          "description": "Whether or not meeting is recorded automatically",
+          "default": false
+        },
+        {
+          "displayName": "Enabled Join Before Host",
+          "name": "enabledJoinBeforeHost",
+          "type": "boolean",
+          "description": "Whether or not to allow any attendee to join the meeting before the host joins the meeting",
+          "default": false
+        },
+        {
+          "displayName": "End",
+          "name": "end",
+          "type": "dateTime",
+          "description": "Date and time for the end of the meeting. Acceptable <a href=\"https://datatracker.ietf.org/doc/html/rfc2445\"> format</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Exclude Password",
+          "name": "excludePassword",
+          "type": "boolean",
+          "description": "Whether or not to exclude password from the meeting email invitation",
+          "default": false
+        },
+        {
+          "displayName": "Host Email",
+          "name": "hostEmail",
+          "type": "string",
+          "description": "Email address for the meeting host. This attribute should only be set if the user or application calling the API has the admin-level scopes.",
+          "default": ""
+        },
+        {
+          "displayName": "Invitees",
+          "name": "inviteesUi",
+          "type": "fixedCollection",
+          "description": "Email address of meeting invitee",
+          "placeholder": "Add Invitee",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "inviteeValues",
+              "displayName": "Invitee",
+              "values": [
+                {
+                  "displayName": "Email",
+                  "name": "email",
+                  "type": "string",
+                  "description": "Email address of meeting invitee",
+                  "placeholder": "name@email.com",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Display Name",
+                  "name": "displayName",
+                  "type": "string",
+                  "description": "Display name of meeting invitee",
+                  "default": ""
+                },
+                {
+                  "displayName": "Co-Host",
+                  "name": "coHost",
+                  "type": "boolean",
+                  "description": "Whether or not invitee is allowed to be a co-host for the meeting",
+                  "default": false
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Join Before Host Minutes",
+          "name": "joinBeforeHostMinutes",
+          "type": "options",
+          "description": "The number of minutes an attendee can join the meeting before the meeting start time and the host joins",
+          "default": 0,
+          "options": [
+            {
+              "name": "0",
+              "displayName": "0"
+            },
+            {
+              "name": "5",
+              "displayName": "5"
+            },
+            {
+              "name": "10",
+              "displayName": "10"
+            },
+            {
+              "name": "15",
+              "displayName": "15"
+            }
+          ]
+        },
+        {
+          "displayName": "Password",
+          "name": "password",
+          "type": "string",
+          "description": "Meeting password. Must conform to the site's password complexity settings. If not specified, a random password conforming to the site's password rules will be generated automatically",
+          "default": "",
+          "typeOptions": {
+            "password": true
+          }
+        },
+        {
+          "displayName": "Public Meeting",
+          "name": "publicMeeting",
+          "type": "boolean",
+          "description": "Whether or not to allow the meeting to be listed on the public calendar",
+          "default": false
+        },
+        {
+          "displayName": "Recurrence",
+          "name": "recurrence",
+          "type": "string",
+          "description": "Meeting series recurrence rule (conforming with RFC 2445), applying only to meeting series",
+          "default": ""
+        },
+        {
+          "displayName": "Required Registration Info",
+          "name": "requireRegistrationInfo",
+          "type": "multiOptions",
+          "description": "Data required for meeting registration",
+          "value": "requireFirstName",
+          "default": [],
+          "options": [
+            {
+              "name": "Require First Name",
+              "value": "requireFirstName",
+              "displayName": "Require First Name"
+            },
+            {
+              "name": "Require Last Name",
+              "value": "requireLastName",
+              "displayName": "Require Last Name"
+            },
+            {
+              "name": "Require Email",
+              "value": "requireEmail",
+              "displayName": "Require Email"
+            },
+            {
+              "name": "Require Job Title",
+              "value": "requireJobTitle",
+              "displayName": "Require Job Title"
+            },
+            {
+              "name": "Require Company Name",
+              "value": "requireCompanyName",
+              "displayName": "Require Company Name"
+            },
+            {
+              "name": "Require Address 1",
+              "value": "requireAddress1",
+              "displayName": "Require Address 1"
+            },
+            {
+              "name": "Require Address 2",
+              "value": "requireAddress2",
+              "displayName": "Require Address 2"
+            },
+            {
+              "name": "Require City",
+              "value": "requireCity",
+              "displayName": "Require City"
+            },
+            {
+              "name": "Require State",
+              "value": "requireState",
+              "displayName": "Require State"
+            },
+            {
+              "name": "Require Zip Code",
+              "value": "requireZipCode",
+              "displayName": "Require Zip Code"
+            },
+            {
+              "name": "Require Country Region",
+              "value": "requireCountryRegion",
+              "displayName": "Require Country Region"
+            },
+            {
+              "name": "Require Work Phone",
+              "value": "requireWorkPhone",
+              "displayName": "Require Work Phone"
+            },
+            {
+              "name": "Require Fax",
+              "value": "requireFax",
+              "displayName": "Require Fax"
+            }
+          ]
+        },
+        {
+          "displayName": "Reminder Time",
+          "name": "reminderTime",
+          "type": "number",
+          "description": "The number of minutes before the meeting begins, for sending an email reminder to the host",
+          "default": 1
+        },
+        {
+          "displayName": "Send Email",
+          "name": "sendEmail",
+          "type": "boolean",
+          "description": "Whether or not to send emails to host and invitees. It is an optional field and default value is true.",
+          "default": false
+        },
+        {
+          "displayName": "Site URL",
+          "name": "siteUrl",
+          "type": "options",
+          "description": "URL of the Webex site which the meeting is created on. If not specified, the meeting is created on user's preferred site. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSites"
+          }
+        },
+        {
+          "displayName": "Start",
+          "name": "start",
+          "type": "dateTime",
+          "description": "Date and time for the start of the meeting. Acceptable <a href=\"https://datatracker.ietf.org/doc/html/rfc2445\"> format</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Meeting title",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      },
+      "_operation": "update",
+      "_source": "Meeting_meetingFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Create a meeting",
+      "value": "create",
+      "default": "create",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "action": "Create a meeting",
+          "value": "create",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a meeting",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a meeting",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many meetings",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Update",
+          "action": "Update a meeting",
+          "value": "update",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ]
+        }
+      },
+      "_source": "Meeting_meetingOperations"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Create",
+      "action": "Create a message",
+      "value": "create",
+      "displayName": "Create"
+    },
+    {
+      "name": "Delete",
+      "action": "Delete a message",
+      "value": "delete",
+      "displayName": "Delete"
+    },
+    {
+      "name": "Get",
+      "action": "Get a message",
+      "value": "get",
+      "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "action": "Get many messages",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Update",
+      "action": "Update a message",
+      "value": "update",
+      "displayName": "Update"
+    }
+  ],
+  "operations_by_resource": {
+    "message": [
+      {
+        "name": "Create",
+        "action": "Create a message",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a message",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a message",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many messages",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update a message",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ],
+    "meeting": [
+      {
+        "name": "Create",
+        "action": "Create a meeting",
+        "value": "create",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a meeting",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a meeting",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many meetings",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Update",
+        "action": "Update a meeting",
+        "value": "update",
+        "displayName": "Update"
+      }
+    ]
+  },
+  "credentials": [
+    {
+      "name": "ciscoWebexOAuth2Api",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "destination": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "roomId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "specifyPersonBy": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "create"
+          ],
+          "destination": [
+            "person"
+          ]
+        }
+      }
+    },
+    "toPersonId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "create"
+          ],
+          "specifyPersonBy": [
+            "id"
+          ]
+        }
+      }
+    },
+    "toPersonEmail": {
+      "required": true,
+      "format": "email",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "create"
+          ],
+          "specifyPersonBy": [
+            "email"
+          ]
+        }
+      }
+    },
+    "text": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "update"
+          ],
+          "markdown": [
+            false
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "messageId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "filters": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "markdown": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "markdownText": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "update"
+          ],
+          "markdown": [
+            true
+          ]
+        }
+      }
+    },
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ]
+        }
+      }
+    },
+    "title": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "start": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "end": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "meetingId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "updateFields": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "meeting"
+          ],
+          "operation": [
+            "update"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "meeting",
+          "name": "Meeting",
+          "description": ""
+        },
+        {
+          "value": "meetingTranscript",
+          "name": "Meeeting Transcript",
+          "description": ""
+        },
+        {
+          "value": "message",
+          "name": "Message",
+          "description": ""
+        }
+      ]
+    },
+    "destination": {
+      "type": "options",
+      "displayName": "Destination",
+      "name": "destination",
+      "possibleValues": [
+        {
+          "value": "room",
+          "name": "Room",
+          "description": ""
+        },
+        {
+          "value": "person",
+          "name": "Person",
+          "description": ""
+        }
+      ]
+    },
+    "roomId": {
+      "type": "options",
+      "displayName": "Room Name or ID",
+      "name": "roomId",
+      "typeOptions": {
+        "loadOptionsMethod": "getRooms"
+      },
+      "possibleValues": []
+    },
+    "specifyPersonBy": {
+      "type": "options",
+      "displayName": "Specify Person By",
+      "name": "specifyPersonBy",
+      "possibleValues": [
+        {
+          "value": "email",
+          "name": "Email",
+          "description": ""
+        },
+        {
+          "value": "id",
+          "name": "ID",
+          "description": ""
+        }
+      ]
+    },
+    "toPersonId": {
+      "type": "string",
+      "displayName": "Person ID",
+      "name": "toPersonId"
+    },
+    "toPersonEmail": {
+      "type": "string",
+      "displayName": "Person Email",
+      "name": "toPersonEmail"
+    },
+    "text": {
+      "type": "string",
+      "displayName": "Text",
+      "name": "text"
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Agenda",
+          "name": "agenda",
+          "type": "string",
+          "description": "Meeting agenda. The agenda can be a maximum of 1300 characters long.",
+          "default": ""
+        },
+        {
+          "displayName": "Allow Any User To Be Co-Host",
+          "name": "allowAnyUserToBeCoHost",
+          "type": "boolean",
+          "description": "Whether or not to allow any attendee with a host account on the target site to become a co-host when joining the meeting",
+          "default": false
+        },
+        {
+          "displayName": "Allow Authenticated Devices",
+          "name": "allowAuthenticatedDevices",
+          "type": "boolean",
+          "description": "Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt",
+          "default": false
+        },
+        {
+          "displayName": "Allow First User To Be Co-Host",
+          "name": "allowFirstUserToBeCoHost",
+          "type": "boolean",
+          "description": "Whether or not to allow the first attendee of the meeting with a host account on the target site to become a co-host",
+          "default": false
+        },
+        {
+          "displayName": "Auto Accept Request",
+          "name": "autoAcceptRequest",
+          "type": "boolean",
+          "description": "Whether or not meeting registration request is accepted automatically",
+          "default": false
+        },
+        {
+          "displayName": "Enable Connect Audio Before Host",
+          "name": "enableConnectAudioBeforeHost",
+          "type": "boolean",
+          "description": "Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting",
+          "default": false
+        },
+        {
+          "displayName": "Enabled Auto Record Meeting",
+          "name": "enabledAutoRecordMeeting",
+          "type": "boolean",
+          "description": "Whether or not meeting is recorded automatically",
+          "default": false
+        },
+        {
+          "displayName": "Enabled Join Before Host",
+          "name": "enabledJoinBeforeHost",
+          "type": "boolean",
+          "description": "Whether or not to allow any attendee to join the meeting before the host joins the meeting",
+          "default": false
+        },
+        {
+          "displayName": "Exclude Password",
+          "name": "excludePassword",
+          "type": "boolean",
+          "description": "Whether or not to exclude password from the meeting email invitation",
+          "default": false
+        },
+        {
+          "displayName": "Host Email",
+          "name": "hostEmail",
+          "type": "string",
+          "description": "Email address for the meeting host. Can only be set if you're an admin.",
+          "default": ""
+        },
+        {
+          "displayName": "Integration Tags",
+          "name": "integrationTags",
+          "type": "string",
+          "description": "External keys created by an integration application in its own domain. They could be Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc.",
+          "default": ""
+        },
+        {
+          "displayName": "Invitees",
+          "name": "inviteesUi",
+          "type": "fixedCollection",
+          "description": "Email address of meeting invitee",
+          "placeholder": "Add Invitee",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "inviteeValues",
+              "displayName": "Invitee",
+              "values": [
+                {
+                  "displayName": "Email",
+                  "name": "email",
+                  "type": "string",
+                  "description": "Email address of meeting invitee",
+                  "placeholder": "name@email.com",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Display Name",
+                  "name": "displayName",
+                  "type": "string",
+                  "description": "Display name of meeting invitee",
+                  "default": ""
+                },
+                {
+                  "displayName": "Co-Host",
+                  "name": "coHost",
+                  "type": "boolean",
+                  "description": "Whether or not invitee is allowed to be a co-host for the meeting",
+                  "default": false
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Join Before Host Minutes",
+          "name": "joinBeforeHostMinutes",
+          "type": "options",
+          "description": "The number of minutes an attendee can join the meeting before the meeting start time and the host joins",
+          "default": 0,
+          "options": [
+            {
+              "name": "0",
+              "displayName": "0"
+            },
+            {
+              "name": "5",
+              "displayName": "5"
+            },
+            {
+              "name": "10",
+              "displayName": "10"
+            },
+            {
+              "name": "15",
+              "displayName": "15"
+            }
+          ]
+        },
+        {
+          "displayName": "Public Meeting",
+          "name": "publicMeeting",
+          "type": "boolean",
+          "description": "Whether or not to allow the meeting to be listed on the public calendar",
+          "default": false
+        },
+        {
+          "displayName": "Recurrence",
+          "name": "recurrence",
+          "type": "string",
+          "description": "Rule for how the meeting should recur. Acceptable <a href=\"https://datatracker.ietf.org/doc/html/rfc2445\"> format</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Required Registration Info",
+          "name": "requireRegistrationInfo",
+          "type": "multiOptions",
+          "description": "Data required for meeting registration",
+          "value": "requireFirstName",
+          "default": [],
+          "options": [
+            {
+              "name": "Require First Name",
+              "value": "requireFirstName",
+              "displayName": "Require First Name"
+            },
+            {
+              "name": "Require Last Name",
+              "value": "requireLastName",
+              "displayName": "Require Last Name"
+            },
+            {
+              "name": "Require Email",
+              "value": "requireEmail",
+              "displayName": "Require Email"
+            },
+            {
+              "name": "Require Job Title",
+              "value": "requireJobTitle",
+              "displayName": "Require Job Title"
+            },
+            {
+              "name": "Require Company Name",
+              "value": "requireCompanyName",
+              "displayName": "Require Company Name"
+            },
+            {
+              "name": "Require Address 1",
+              "value": "requireAddress1",
+              "displayName": "Require Address 1"
+            },
+            {
+              "name": "Require Address 2",
+              "value": "requireAddress2",
+              "displayName": "Require Address 2"
+            },
+            {
+              "name": "Require City",
+              "value": "requireCity",
+              "displayName": "Require City"
+            },
+            {
+              "name": "Require State",
+              "value": "requireState",
+              "displayName": "Require State"
+            },
+            {
+              "name": "Require Zip Code",
+              "value": "requireZipCode",
+              "displayName": "Require Zip Code"
+            },
+            {
+              "name": "Require Country Region",
+              "value": "requireCountryRegion",
+              "displayName": "Require Country Region"
+            },
+            {
+              "name": "Require Work Phone",
+              "value": "requireWorkPhone",
+              "displayName": "Require Work Phone"
+            },
+            {
+              "name": "Require Fax",
+              "value": "requireFax",
+              "displayName": "Require Fax"
+            }
+          ]
+        },
+        {
+          "displayName": "Reminder Time",
+          "name": "reminderTime",
+          "type": "number",
+          "description": "The number of minutes before the meeting begins, for sending an email reminder to the host",
+          "default": 1
+        },
+        {
+          "displayName": "Send Email",
+          "name": "sendEmail",
+          "type": "boolean",
+          "description": "Whether or not to send emails to host and invitees",
+          "default": true
+        },
+        {
+          "displayName": "Site URL",
+          "name": "siteUrl",
+          "type": "options",
+          "description": "URL of the Webex site which the meeting is created on. If not specified, the meeting is created on user's preferred site. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSites"
+          }
+        }
+      ]
+    },
+    "messageId": {
+      "type": "string",
+      "displayName": "Message ID",
+      "name": "messageId"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1
+      }
+    },
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
+      "typeOptions": {
+        "loadOptionsMethod": "getSites"
+      },
+      "subProperties": [
+        {
+          "displayName": "From",
+          "name": "from",
+          "type": "dateTime",
+          "description": "Start date and time (inclusive) for the meeting. Acceptable <a href=\"https://datatracker.ietf.org/doc/html/rfc2445\"> format</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Host Email",
+          "name": "hostEmail",
+          "type": "string",
+          "description": "Email address for the meeting host",
+          "default": ""
+        },
+        {
+          "displayName": "Integration Tag",
+          "name": "integrationTag",
+          "type": "string",
+          "description": "External tag created by another application, e.g. Zendesk ticket ID or Jira ID",
+          "default": ""
+        },
+        {
+          "displayName": "Limit to Current Meetings",
+          "name": "current",
+          "type": "boolean",
+          "description": "Whether to return just the current meeting or all meetings",
+          "default": true
+        },
+        {
+          "displayName": "Meeting Number",
+          "name": "meetingNumber",
+          "type": "string",
+          "description": "Meeting number for the meeting objects being requested",
+          "default": ""
+        },
+        {
+          "displayName": "Meeting Type",
+          "name": "meetingType",
+          "type": "options",
+          "description": "Master of a scheduled series of meetings which consists of one or more scheduled meeting based on a recurrence rule",
+          "value": "meetingSeries",
+          "default": "meetingSeries",
+          "options": [
+            {
+              "name": "Meeting Series",
+              "description": "Master of a scheduled series of meetings which consists of one or more scheduled meeting based on a recurrence rule",
+              "value": "meetingSeries",
+              "displayName": "Meeting Series"
+            },
+            {
+              "name": "Scheduled Meeting",
+              "description": "Instance from a master meeting series",
+              "value": "scheduledMeeting",
+              "displayName": "Scheduled Meeting"
+            },
+            {
+              "name": "Meeting",
+              "description": "Meeting instance that is actually happening or has happened",
+              "value": "meeting",
+              "displayName": "Meeting"
+            }
+          ]
+        },
+        {
+          "displayName": "Participant Email",
+          "name": "participantEmail",
+          "type": "string",
+          "description": "Email of a person that must be a meeting participant",
+          "default": ""
+        },
+        {
+          "displayName": "Site URL",
+          "name": "siteUrl",
+          "type": "options",
+          "description": "URL of the Webex site which the API lists meetings from. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSites"
+          }
+        },
+        {
+          "displayName": "State",
+          "name": "state",
+          "type": "options",
+          "description": "Meeting state for the meeting objects being requested",
+          "value": "active",
+          "default": "",
+          "options": [
+            {
+              "name": "Active",
+              "value": "active",
+              "displayName": "Active"
+            },
+            {
+              "name": "Ended",
+              "value": "ended",
+              "displayName": "Ended"
+            },
+            {
+              "name": "Expired",
+              "value": "expired",
+              "displayName": "Expired"
+            },
+            {
+              "name": "In Progress",
+              "value": "inProgress",
+              "displayName": "In Progress"
+            },
+            {
+              "name": "Lobby",
+              "value": "lobby",
+              "displayName": "Lobby"
+            },
+            {
+              "name": "Missed",
+              "value": "missed",
+              "displayName": "Missed"
+            },
+            {
+              "name": "Ready",
+              "value": "ready",
+              "displayName": "Ready"
+            },
+            {
+              "name": "Scheduled",
+              "value": "scheduled",
+              "displayName": "Scheduled"
+            }
+          ]
+        },
+        {
+          "displayName": "To",
+          "name": "to",
+          "type": "dateTime",
+          "description": "End date and time (inclusive) for the meeting. Acceptable <a href=\"https://datatracker.ietf.org/doc/html/rfc2445\"> format</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Weblink",
+          "name": "webLink",
+          "type": "string",
+          "description": "URL encoded link to information page for the meeting objects being requested",
+          "default": ""
+        }
+      ]
+    },
+    "markdown": {
+      "type": "boolean",
+      "displayName": "Is Markdown",
+      "name": "markdown"
+    },
+    "markdownText": {
+      "type": "string",
+      "displayName": "Markdown",
+      "name": "markdownText"
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "create",
+          "name": "Create",
+          "description": ""
+        },
+        {
+          "value": "delete",
+          "name": "Delete",
+          "description": ""
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": ""
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": ""
+        },
+        {
+          "value": "update",
+          "name": "Update",
+          "description": ""
+        }
+      ]
+    },
+    "title": {
+      "type": "string",
+      "displayName": "Title",
+      "name": "title"
+    },
+    "start": {
+      "type": "dateTime",
+      "displayName": "Start",
+      "name": "start"
+    },
+    "end": {
+      "type": "dateTime",
+      "displayName": "End",
+      "name": "end"
+    },
+    "meetingId": {
+      "type": "string",
+      "displayName": "Meeting ID",
+      "name": "meetingId"
+    },
+    "options": {
+      "type": "collection",
+      "displayName": "Options",
+      "name": "options",
+      "typeOptions": {
+        "password": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Host Email",
+          "name": "hostEmail",
+          "type": "string",
+          "description": "Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin-level scopes.",
+          "default": ""
+        },
+        {
+          "displayName": "Password",
+          "name": "password",
+          "type": "string",
+          "description": "Meeting password. It's required when the meeting is protected by a password and the current user is not privileged to view it if they are not a host, co-host or invitee of the meeting.",
+          "default": "",
+          "typeOptions": {
+            "password": true
+          }
+        },
+        {
+          "displayName": "Send Email",
+          "name": "sendEmail",
+          "type": "boolean",
+          "description": "Whether or not to send emails to host and invitees. It is an optional field and default value is true.",
+          "default": true
+        }
+      ]
+    },
+    "updateFields": {
+      "type": "collection",
+      "displayName": "Update Fields",
+      "name": "updateFields",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "displayName": "Agenda",
+          "name": "agenda",
+          "type": "string",
+          "description": "The meeting's agenda. Cannot be longer that 1300 characters.",
+          "default": ""
+        },
+        {
+          "displayName": "Allow Any User To Be Co-Host",
+          "name": "allowAnyUserToBeCoHost",
+          "type": "boolean",
+          "description": "Whether or not to allow any attendee with a host account on the target site to become a co-host when joining the meeting",
+          "default": false
+        },
+        {
+          "displayName": "Allow Authenticated Devices",
+          "name": "allowAuthenticatedDevices",
+          "type": "boolean",
+          "description": "Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt",
+          "default": false
+        },
+        {
+          "displayName": "Allow First User To Be Co-Host",
+          "name": "allowFirstUserToBeCoHost",
+          "type": "boolean",
+          "description": "Whether or not to allow the first attendee of the meeting with a host account on the target site to become a co-host",
+          "default": false
+        },
+        {
+          "displayName": "Enable Connect Audio Before Host",
+          "name": "enableConnectAudioBeforeHost",
+          "type": "boolean",
+          "description": "Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting",
+          "default": false
+        },
+        {
+          "displayName": "Enabled Auto Record Meeting",
+          "name": "enabledAutoRecordMeeting",
+          "type": "boolean",
+          "description": "Whether or not meeting is recorded automatically",
+          "default": false
+        },
+        {
+          "displayName": "Enabled Join Before Host",
+          "name": "enabledJoinBeforeHost",
+          "type": "boolean",
+          "description": "Whether or not to allow any attendee to join the meeting before the host joins the meeting",
+          "default": false
+        },
+        {
+          "displayName": "End",
+          "name": "end",
+          "type": "dateTime",
+          "description": "Date and time for the end of the meeting. Acceptable <a href=\"https://datatracker.ietf.org/doc/html/rfc2445\"> format</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Exclude Password",
+          "name": "excludePassword",
+          "type": "boolean",
+          "description": "Whether or not to exclude password from the meeting email invitation",
+          "default": false
+        },
+        {
+          "displayName": "Host Email",
+          "name": "hostEmail",
+          "type": "string",
+          "description": "Email address for the meeting host. This attribute should only be set if the user or application calling the API has the admin-level scopes.",
+          "default": ""
+        },
+        {
+          "displayName": "Invitees",
+          "name": "inviteesUi",
+          "type": "fixedCollection",
+          "description": "Email address of meeting invitee",
+          "placeholder": "Add Invitee",
+          "default": {},
+          "required": true,
+          "options": [
+            {
+              "name": "inviteeValues",
+              "displayName": "Invitee",
+              "values": [
+                {
+                  "displayName": "Email",
+                  "name": "email",
+                  "type": "string",
+                  "description": "Email address of meeting invitee",
+                  "placeholder": "name@email.com",
+                  "default": "",
+                  "required": true
+                },
+                {
+                  "displayName": "Display Name",
+                  "name": "displayName",
+                  "type": "string",
+                  "description": "Display name of meeting invitee",
+                  "default": ""
+                },
+                {
+                  "displayName": "Co-Host",
+                  "name": "coHost",
+                  "type": "boolean",
+                  "description": "Whether or not invitee is allowed to be a co-host for the meeting",
+                  "default": false
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "Join Before Host Minutes",
+          "name": "joinBeforeHostMinutes",
+          "type": "options",
+          "description": "The number of minutes an attendee can join the meeting before the meeting start time and the host joins",
+          "default": 0,
+          "options": [
+            {
+              "name": "0",
+              "displayName": "0"
+            },
+            {
+              "name": "5",
+              "displayName": "5"
+            },
+            {
+              "name": "10",
+              "displayName": "10"
+            },
+            {
+              "name": "15",
+              "displayName": "15"
+            }
+          ]
+        },
+        {
+          "displayName": "Password",
+          "name": "password",
+          "type": "string",
+          "description": "Meeting password. Must conform to the site's password complexity settings. If not specified, a random password conforming to the site's password rules will be generated automatically",
+          "default": "",
+          "typeOptions": {
+            "password": true
+          }
+        },
+        {
+          "displayName": "Public Meeting",
+          "name": "publicMeeting",
+          "type": "boolean",
+          "description": "Whether or not to allow the meeting to be listed on the public calendar",
+          "default": false
+        },
+        {
+          "displayName": "Recurrence",
+          "name": "recurrence",
+          "type": "string",
+          "description": "Meeting series recurrence rule (conforming with RFC 2445), applying only to meeting series",
+          "default": ""
+        },
+        {
+          "displayName": "Required Registration Info",
+          "name": "requireRegistrationInfo",
+          "type": "multiOptions",
+          "description": "Data required for meeting registration",
+          "value": "requireFirstName",
+          "default": [],
+          "options": [
+            {
+              "name": "Require First Name",
+              "value": "requireFirstName",
+              "displayName": "Require First Name"
+            },
+            {
+              "name": "Require Last Name",
+              "value": "requireLastName",
+              "displayName": "Require Last Name"
+            },
+            {
+              "name": "Require Email",
+              "value": "requireEmail",
+              "displayName": "Require Email"
+            },
+            {
+              "name": "Require Job Title",
+              "value": "requireJobTitle",
+              "displayName": "Require Job Title"
+            },
+            {
+              "name": "Require Company Name",
+              "value": "requireCompanyName",
+              "displayName": "Require Company Name"
+            },
+            {
+              "name": "Require Address 1",
+              "value": "requireAddress1",
+              "displayName": "Require Address 1"
+            },
+            {
+              "name": "Require Address 2",
+              "value": "requireAddress2",
+              "displayName": "Require Address 2"
+            },
+            {
+              "name": "Require City",
+              "value": "requireCity",
+              "displayName": "Require City"
+            },
+            {
+              "name": "Require State",
+              "value": "requireState",
+              "displayName": "Require State"
+            },
+            {
+              "name": "Require Zip Code",
+              "value": "requireZipCode",
+              "displayName": "Require Zip Code"
+            },
+            {
+              "name": "Require Country Region",
+              "value": "requireCountryRegion",
+              "displayName": "Require Country Region"
+            },
+            {
+              "name": "Require Work Phone",
+              "value": "requireWorkPhone",
+              "displayName": "Require Work Phone"
+            },
+            {
+              "name": "Require Fax",
+              "value": "requireFax",
+              "displayName": "Require Fax"
+            }
+          ]
+        },
+        {
+          "displayName": "Reminder Time",
+          "name": "reminderTime",
+          "type": "number",
+          "description": "The number of minutes before the meeting begins, for sending an email reminder to the host",
+          "default": 1
+        },
+        {
+          "displayName": "Send Email",
+          "name": "sendEmail",
+          "type": "boolean",
+          "description": "Whether or not to send emails to host and invitees. It is an optional field and default value is true.",
+          "default": false
+        },
+        {
+          "displayName": "Site URL",
+          "name": "siteUrl",
+          "type": "options",
+          "description": "URL of the Webex site which the meeting is created on. If not specified, the meeting is created on user's preferred site. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getSites"
+          }
+        },
+        {
+          "displayName": "Start",
+          "name": "start",
+          "type": "dateTime",
+          "description": "Date and time for the start of the meeting. Acceptable <a href=\"https://datatracker.ietf.org/doc/html/rfc2445\"> format</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Title",
+          "name": "title",
+          "type": "string",
+          "description": "Meeting title",
+          "default": ""
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "updateFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

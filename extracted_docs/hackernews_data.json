@@ -1,0 +1,705 @@
+{
+  "node_info": {
+    "icon": "file:hackernews.png",
+    "defaults": {
+      "name": "Hacker News"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Hacker News",
+    "name": "hackerNews",
+    "description": "Consume Hacker News API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.hackerNews",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Communication",
+      "Marketing"
+    ],
+    "resources": {
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.hackernews/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "2021 Goals: Level Up Your Vocabulary With Vonage and n8n",
+          "icon": "\ud83c\udfaf",
+          "url": "https://n8n.io/blog/2021-goals-level-up-your-vocabulary-with-vonage-and-n8n/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "all",
+      "default": "article",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "All",
+          "value": "all",
+          "displayName": "All"
+        },
+        {
+          "name": "Article",
+          "value": "article",
+          "displayName": "Article"
+        },
+        {
+          "name": "User",
+          "value": "user",
+          "displayName": "User"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Get many items",
+      "action": "Get many items",
+      "value": "getAll",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get Many",
+          "description": "Get many items",
+          "action": "Get many items",
+          "value": "getAll",
+          "displayName": "Get Many"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "all"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Get a Hacker News article",
+      "action": "Get an article",
+      "value": "get",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "description": "Get a Hacker News article",
+          "action": "Get an article",
+          "value": "get",
+          "displayName": "Get"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "article"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Get a Hacker News user",
+      "action": "Get a user",
+      "value": "get",
+      "default": "get",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Get",
+          "description": "Get a Hacker News user",
+          "action": "Get a user",
+          "value": "get",
+          "displayName": "Get"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Article ID",
+      "name": "articleId",
+      "type": "string",
+      "description": "The ID of the Hacker News article to be returned",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "article"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get"
+    },
+    {
+      "displayName": "Username",
+      "name": "username",
+      "type": "string",
+      "description": "The Hacker News user to be returned",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "all"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 100,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "all"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "Whether to include all the comments in a Hacker News article",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include Comments",
+          "name": "includeComments",
+          "type": "boolean",
+          "description": "Whether to include all the comments in a Hacker News article",
+          "default": false
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "article"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The keyword for filtering the results of the query",
+      "placeholder": "Add Field",
+      "value": "ask_hn",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Keyword",
+          "name": "keyword",
+          "type": "string",
+          "description": "The keyword for filtering the results of the query",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "multiOptions",
+          "description": "Returns query results filtered by Ask HN tag",
+          "value": "ask_hn",
+          "default": [],
+          "options": [
+            {
+              "name": "Ask HN",
+              "description": "Returns query results filtered by Ask HN tag",
+              "value": "ask_hn",
+              "displayName": "Ask Hn"
+            },
+            {
+              "name": "Comment",
+              "description": "Returns query results filtered by comment tag",
+              "value": "comment",
+              "displayName": "Comment"
+            },
+            {
+              "name": "Front Page",
+              "description": "Returns query results filtered by Front Page tag",
+              "value": "front_page",
+              "displayName": "Front Page"
+            },
+            {
+              "name": "Poll",
+              "description": "Returns query results filtered by poll tag",
+              "value": "poll",
+              "displayName": "Poll"
+            },
+            {
+              "name": "Show HN",
+              "description": "Returns query results filtered by Show HN tag",
+              "value": "show_hn",
+              "displayName": "Show Hn"
+            },
+            {
+              "name": "Story",
+              "description": "Returns query results filtered by story tag",
+              "value": "story",
+              "displayName": "Story"
+            }
+          ]
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "all"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Get Many",
+      "description": "Get many items",
+      "action": "Get many items",
+      "value": "getAll",
+      "displayName": "Get Many"
+    },
+    {
+      "name": "Get",
+      "description": "Get a Hacker News article",
+      "action": "Get an article",
+      "value": "get",
+      "displayName": "Get"
+    }
+  ],
+  "operations_by_resource": {
+    "all": [
+      {
+        "name": "Get Many",
+        "description": "Get many items",
+        "action": "Get many items",
+        "value": "getAll",
+        "displayName": "Get Many"
+      }
+    ],
+    "article": [
+      {
+        "name": "Get",
+        "description": "Get a Hacker News article",
+        "action": "Get an article",
+        "value": "get",
+        "displayName": "Get"
+      }
+    ],
+    "user": [
+      {
+        "name": "Get",
+        "description": "Get a Hacker News user",
+        "action": "Get a user",
+        "value": "get",
+        "displayName": "Get"
+      }
+    ]
+  },
+  "credentials": [],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ]
+        }
+      }
+    },
+    "articleId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "article"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "username": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "user"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "all"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "all"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "all"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "all",
+          "name": "All",
+          "description": ""
+        },
+        {
+          "value": "article",
+          "name": "Article",
+          "description": ""
+        },
+        {
+          "value": "user",
+          "name": "User",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "get",
+          "name": "Get",
+          "description": "Get a Hacker News user"
+        }
+      ]
+    },
+    "articleId": {
+      "type": "string",
+      "displayName": "Article ID",
+      "name": "articleId"
+    },
+    "username": {
+      "type": "string",
+      "displayName": "Username",
+      "name": "username"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "number",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1
+      }
+    },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "subProperties": [
+        {
+          "displayName": "Keyword",
+          "name": "keyword",
+          "type": "string",
+          "description": "The keyword for filtering the results of the query",
+          "default": ""
+        },
+        {
+          "displayName": "Tags",
+          "name": "tags",
+          "type": "multiOptions",
+          "description": "Returns query results filtered by Ask HN tag",
+          "value": "ask_hn",
+          "default": [],
+          "options": [
+            {
+              "name": "Ask HN",
+              "description": "Returns query results filtered by Ask HN tag",
+              "value": "ask_hn",
+              "displayName": "Ask Hn"
+            },
+            {
+              "name": "Comment",
+              "description": "Returns query results filtered by comment tag",
+              "value": "comment",
+              "displayName": "Comment"
+            },
+            {
+              "name": "Front Page",
+              "description": "Returns query results filtered by Front Page tag",
+              "value": "front_page",
+              "displayName": "Front Page"
+            },
+            {
+              "name": "Poll",
+              "description": "Returns query results filtered by poll tag",
+              "value": "poll",
+              "displayName": "Poll"
+            },
+            {
+              "name": "Show HN",
+              "description": "Returns query results filtered by Show HN tag",
+              "value": "show_hn",
+              "displayName": "Show Hn"
+            },
+            {
+              "name": "Story",
+              "description": "Returns query results filtered by story tag",
+              "value": "story",
+              "displayName": "Story"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

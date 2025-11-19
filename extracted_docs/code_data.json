@@ -1,0 +1,465 @@
+{
+  "node_info": {
+    "icon": "file:code.svg",
+    "defaults": {
+      "name": "Code"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Code",
+    "name": "code",
+    "description": "Run custom JavaScript or Python code",
+    "subtitle": "",
+    "version": [
+      "1",
+      "2"
+    ],
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.code",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "details": "The Code node allows you to execute JavaScript in your workflow.",
+    "categories": [
+      "Development",
+      "Core Nodes"
+    ],
+    "resources": {
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code/"
+        }
+      ]
+    },
+    "alias": [
+      "cpde",
+      "Javascript",
+      "JS",
+      "Python",
+      "Script",
+      "Custom Code",
+      "Function"
+    ],
+    "subcategories": {
+      "Core Nodes": [
+        "Helpers",
+        "Data Transformation"
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Mode",
+      "name": "mode",
+      "type": "options",
+      "description": "Run this code only once, no matter how many input items there are",
+      "value": "runOnceForAllItems",
+      "default": "runOnceForAllItems",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Run Once for All Items",
+          "description": "Run this code only once, no matter how many input items there are",
+          "value": "runOnceForAllItems",
+          "displayName": "Run Once For All Items"
+        },
+        {
+          "name": "Run Once for Each Item",
+          "description": "Run this code as many times as there are input items",
+          "value": "runOnceForEachItem",
+          "displayName": "Run Once For Each Item"
+        }
+      ]
+    },
+    {
+      "displayName": "Language",
+      "name": "language",
+      "type": "options",
+      "action": "Code in JavaScript",
+      "value": "javaScript",
+      "default": "javaScript",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "JavaScript",
+          "action": "Code in JavaScript",
+          "value": "javaScript",
+          "displayName": "Java Script"
+        },
+        {
+          "name": "Python (Beta)",
+          "action": "Code in Python (Beta)",
+          "value": "python",
+          "displayName": "Python (beta)"
+        },
+        {
+          "name": "Python (Native) (Beta)",
+          "action": "Code in Python (Native) (Beta)",
+          "value": "pythonNative",
+          "displayName": "Python (native) (beta)"
+        }
+      ],
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    {
+      "displayName": "Type <code>$</code> for a list of <a target=\"_blank\" href=\"https://docs.n8n.io/code-examples/methods-variables-reference/\">special vars/methods</a>. Debug by using <code>console.log()</code> statements and viewing their output in the browser console.",
+      "name": "notice",
+      "type": "notice",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "language": [
+            "javaScript"
+          ]
+        }
+      },
+      "_source": "JavascriptCode_javascriptCodeDescription"
+    },
+    {
+      "name": "notice",
+      "type": "notice",
+      "displayName": "Notice",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "language": [
+            "python"
+          ]
+        }
+      },
+      "_source": "PythonCode_pythonCodeDescription"
+    },
+    {
+      "displayName": "(template: PRINT_INSTRUCTION)<br><br>The native Python option does not support <code>_</code> syntax and helpers, except for <code>_items</code> in all-items mode and <code>_item</code> in per-item mode.",
+      "name": "notice",
+      "type": "notice",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "language": [
+            "pythonNative"
+          ]
+        }
+      },
+      "_source": "PythonCode_pythonCodeDescription"
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [],
+  "workflow_examples": [
+    {
+      "name": "Sample Data",
+      "parameters": {
+        "jsCode": "return[\n  { value: 1 },\n  { value: 2 },\n]"
+      },
+      "credentials": {},
+      "position": [
+        200,
+        580
+      ],
+      "workflow_file": "Code.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Run Once for All Items",
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field\n// called 'myNewField' to the JSON of each one\nlet sum = 0;\nfor (const item of $input.all()) {\n  sum += item.json.value;\n}\n\nreturn [ {sum} ];"
+      },
+      "credentials": {},
+      "position": [
+        460,
+        320
+      ],
+      "workflow_file": "Code.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Run Once for All Items (Legacy Syntax)",
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field\n// called 'myNewField' to the JSON of each one\nlet sum = 0;\nfor (const item of items) {\n  sum += item.json.value;\n}\n\nreturn [ {sum} ];"
+      },
+      "credentials": {},
+      "position": [
+        460,
+        500
+      ],
+      "workflow_file": "Code.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Run Once for Each Item",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Add a new field called 'myNewField' to the\n// JSON of the item\n$input.item.json.myNewField = $input.item.json.value;\n\nreturn $input.item;"
+      },
+      "credentials": {},
+      "position": [
+        460,
+        680
+      ],
+      "workflow_file": "Code.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Run Once for Each Item  (Legacy Syntax)",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Add a new field called 'myNewField' to the\n// JSON of the item\nitem.json.myNewField = item.json.value;\n\nreturn item;"
+      },
+      "credentials": {},
+      "position": [
+        460,
+        860
+      ],
+      "workflow_file": "Code.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "With Async Functions",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const json = $input.item.json\njson.myNewField = await (async () => json.value)();\n\nreturn $input.item;"
+      },
+      "credentials": {},
+      "position": [
+        460,
+        1200
+      ],
+      "workflow_file": "Code.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "With Promises",
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const json = $input.item.json\njson.myNewField = await new Promise((resolve) => resolve(json.value));\n\nreturn $input.item;"
+      },
+      "credentials": {},
+      "position": [
+        460,
+        1380
+      ],
+      "workflow_file": "Code.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    }
+  ],
+  "expressions": [],
+  "validation_rules": {
+    "language": {
+      "displayOptions": {
+        "show": {}
+      }
+    },
+    "notice": {
+      "displayOptions": {
+        "show": {
+          "language": [
+            "pythonNative"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "mode": {
+      "type": "options",
+      "displayName": "Mode",
+      "name": "mode",
+      "possibleValues": [
+        {
+          "value": "runOnceForAllItems",
+          "name": "Run Once for All Items",
+          "description": "Run this code only once, no matter how many input items there are"
+        },
+        {
+          "value": "runOnceForEachItem",
+          "name": "Run Once for Each Item",
+          "description": "Run this code as many times as there are input items"
+        }
+      ]
+    },
+    "language": {
+      "type": "options",
+      "displayName": "Language",
+      "name": "language",
+      "possibleValues": [
+        {
+          "value": "javaScript",
+          "name": "JavaScript",
+          "description": ""
+        },
+        {
+          "value": "python",
+          "name": "Python (Beta)",
+          "description": ""
+        },
+        {
+          "value": "pythonNative",
+          "name": "Python (Native) (Beta)",
+          "description": ""
+        }
+      ]
+    },
+    "notice": {
+      "type": "notice",
+      "displayName": "(template: PRINT_INSTRUCTION)<br><br>The native Python option does not support <code>_</code> syntax and helpers, except for <code>_items</code> in all-items mode and <code>_item</code> in per-item mode.",
+      "name": "notice"
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [
+      {
+        "name": "notice",
+        "text": "Type <code>$</code> for a list of <a target=\"_blank\" href=\"https://docs.n8n.io/code-examples/methods-variables-reference/\">special vars/methods</a>. Debug by using <code>console.log()</code> statements and viewing their output in the browser console.",
+        "conditions": {
+          "show": {
+            "language": [
+              "javaScript"
+            ]
+          }
+        }
+      },
+      {
+        "name": "notice",
+        "text": "Notice",
+        "conditions": {
+          "show": {
+            "language": [
+              "python"
+            ]
+          }
+        }
+      },
+      {
+        "name": "notice",
+        "text": "(template: PRINT_INSTRUCTION)<br><br>The native Python option does not support <code>_</code> syntax and helpers, except for <code>_items</code> in all-items mode and <code>_item</code> in per-item mode.",
+        "conditions": {
+          "show": {
+            "language": [
+              "pythonNative"
+            ]
+          }
+        }
+      }
+    ],
+    "tooltips": [],
+    "placeholders": [],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

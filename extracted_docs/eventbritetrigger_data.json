@@ -1,0 +1,422 @@
+{
+  "node_info": {
+    "icon": "file:eventbrite.png",
+    "defaults": {
+      "name": "Eventbrite Trigger"
+    },
+    "inputs": [],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "trigger"
+    ],
+    "authentication": [
+      {
+        "name": "eventbriteApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "privateKey"
+            ]
+          }
+        }
+      },
+      {
+        "name": "eventbriteOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [
+      "getOrganizations",
+      "for",
+      "name",
+      "value"
+    ],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Eventbrite Trigger",
+    "name": "eventbriteTrigger",
+    "description": "Handle Eventbrite events via webhooks",
+    "subtitle": "={{$parameter[\"event\"]}}",
+    "version": "1",
+    "node_type": "trigger",
+    "webhooks": [
+      {
+        "name": "default",
+        "httpMethod": "POST",
+        "responseMode": "onReceived",
+        "path": "webhook"
+      }
+    ]
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.eventbriteTrigger",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Sales"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/eventbrite/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.eventbritetrigger/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "Hey founders! Your business doesn't need you to operate",
+          "icon": " \ud83d\udda5\ufe0f",
+          "url": "https://n8n.io/blog/your-business-doesnt-need-you-to-operate/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "privateKey",
+      "default": "privateKey",
+      "options": [
+        {
+          "name": "Private Key",
+          "value": "privateKey",
+          "displayName": "Private Key"
+        },
+        {
+          "name": "OAuth2",
+          "value": "oAuth2",
+          "displayName": "Oauth2"
+        }
+      ]
+    },
+    {
+      "displayName": "Organization Name or ID",
+      "name": "organization",
+      "type": "options",
+      "description": "The Eventbrite Organization to work on. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      }
+    },
+    {
+      "displayName": "Event Name or ID",
+      "name": "event",
+      "type": "options",
+      "description": "Limit the triggers to this event. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getEvents"
+      }
+    },
+    {
+      "displayName": "Actions",
+      "name": "actions",
+      "type": "multiOptions",
+      "description": "One or more action to subscribe to",
+      "value": "attendee.checked_in",
+      "default": [],
+      "required": true,
+      "options": [
+        {
+          "name": "attendee.checked_in",
+          "value": "attendee.checked_in",
+          "displayName": "Attendee.checked In"
+        },
+        {
+          "name": "attendee.checked_out",
+          "value": "attendee.checked_out",
+          "displayName": "Attendee.checked Out"
+        },
+        {
+          "name": "attendee.updated",
+          "value": "attendee.updated",
+          "displayName": "Attendee.updated"
+        },
+        {
+          "name": "event.created",
+          "value": "event.created",
+          "displayName": "Event.created"
+        },
+        {
+          "name": "event.published",
+          "value": "event.published",
+          "displayName": "Event.published"
+        },
+        {
+          "name": "event.unpublished",
+          "value": "event.unpublished",
+          "displayName": "Event.unpublished"
+        },
+        {
+          "name": "event.updated",
+          "value": "event.updated",
+          "displayName": "Event.updated"
+        },
+        {
+          "name": "order.placed",
+          "value": "order.placed",
+          "displayName": "Order.placed"
+        },
+        {
+          "name": "order.refunded",
+          "value": "order.refunded",
+          "displayName": "Order.refunded"
+        },
+        {
+          "name": "order.updated",
+          "value": "order.updated",
+          "displayName": "Order.updated"
+        },
+        {
+          "name": "organizer.updated",
+          "value": "organizer.updated",
+          "displayName": "Organizer.updated"
+        },
+        {
+          "name": "ticket_class.created",
+          "value": "ticket_class.created",
+          "displayName": "Ticket Class.created"
+        },
+        {
+          "name": "ticket_class.deleted",
+          "value": "ticket_class.deleted",
+          "displayName": "Ticket Class.deleted"
+        },
+        {
+          "name": "ticket_class.updated",
+          "value": "ticket_class.updated",
+          "displayName": "Ticket Class.updated"
+        },
+        {
+          "name": "venue.updated",
+          "value": "venue.updated",
+          "displayName": "Venue.updated"
+        }
+      ]
+    },
+    {
+      "displayName": "Resolve Data",
+      "name": "resolveData",
+      "type": "boolean",
+      "description": "By default does the webhook-data only contain the URL to receive the object data manually. If this option gets activated, it will resolve the data automatically.",
+      "default": true
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "eventbriteApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "privateKey"
+          ]
+        }
+      }
+    },
+    {
+      "name": "eventbriteOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [
+    "={{$parameter[\"event\"]}}"
+  ],
+  "validation_rules": {
+    "organization": {
+      "required": true
+    },
+    "event": {
+      "required": true
+    },
+    "actions": {
+      "required": true
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "privateKey",
+          "name": "Private Key",
+          "description": ""
+        },
+        {
+          "value": "oAuth2",
+          "name": "OAuth2",
+          "description": ""
+        }
+      ]
+    },
+    "organization": {
+      "type": "options",
+      "displayName": "Organization Name or ID",
+      "name": "organization",
+      "typeOptions": {
+        "loadOptionsMethod": "getOrganizations"
+      },
+      "possibleValues": []
+    },
+    "event": {
+      "type": "options",
+      "displayName": "Event Name or ID",
+      "name": "event",
+      "typeOptions": {
+        "loadOptionsMethod": "getEvents"
+      },
+      "possibleValues": []
+    },
+    "actions": {
+      "type": "multiOptions",
+      "displayName": "Actions",
+      "name": "actions",
+      "possibleValues": [
+        {
+          "value": "attendee.checked_in",
+          "name": "attendee.checked_in",
+          "description": ""
+        },
+        {
+          "value": "attendee.checked_out",
+          "name": "attendee.checked_out",
+          "description": ""
+        },
+        {
+          "value": "attendee.updated",
+          "name": "attendee.updated",
+          "description": ""
+        },
+        {
+          "value": "event.created",
+          "name": "event.created",
+          "description": ""
+        },
+        {
+          "value": "event.published",
+          "name": "event.published",
+          "description": ""
+        },
+        {
+          "value": "event.unpublished",
+          "name": "event.unpublished",
+          "description": ""
+        },
+        {
+          "value": "event.updated",
+          "name": "event.updated",
+          "description": ""
+        },
+        {
+          "value": "order.placed",
+          "name": "order.placed",
+          "description": ""
+        },
+        {
+          "value": "order.refunded",
+          "name": "order.refunded",
+          "description": ""
+        },
+        {
+          "value": "order.updated",
+          "name": "order.updated",
+          "description": ""
+        },
+        {
+          "value": "organizer.updated",
+          "name": "organizer.updated",
+          "description": ""
+        },
+        {
+          "value": "ticket_class.created",
+          "name": "ticket_class.created",
+          "description": ""
+        },
+        {
+          "value": "ticket_class.deleted",
+          "name": "ticket_class.deleted",
+          "description": ""
+        },
+        {
+          "value": "ticket_class.updated",
+          "name": "ticket_class.updated",
+          "description": ""
+        },
+        {
+          "value": "venue.updated",
+          "name": "venue.updated",
+          "description": ""
+        }
+      ]
+    },
+    "resolveData": {
+      "type": "boolean",
+      "displayName": "Resolve Data",
+      "name": "resolveData"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "note": "Trigger nodes only have common settings (notes, notesInFlow)"
+  }
+}

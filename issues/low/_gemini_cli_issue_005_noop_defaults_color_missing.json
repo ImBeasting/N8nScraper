@@ -1,0 +1,37 @@
+{
+  "issue_id": "_gemini_cli_issue_005",
+  "title": "NoOp node: 'color' property missing from extracted 'defaults'",
+  "severity": "low",
+  "status": "new",
+  "priority": 3,
+  "metadata": {
+    "created_at": "2025-11-13T17:05:00Z",
+    "created_by": "gemini_cli",
+    "affected_nodes": "NoOp (potentially other nodes with complex 'defaults' objects)",
+    "validation_session": "comprehensive_audit_2025-11-13"
+  },
+  "description": {
+    "problem": "The 'color' property, defined in the 'defaults' object of the NoOp node in the source file, is missing from the extracted 'defaults' in 'noop_data.json'.",
+    "impact": "LOW - Minor cosmetic issue. The 'defaults' object is not fully extracted, potentially leading to incomplete default values for node configuration. For NoOp, the impact is minimal as it's a simple node.",
+    "root_cause": "The extractor might not be fully parsing all key-value pairs within the 'defaults' object, or it might have a specific filter that only includes certain keys (e.g., 'name') and excludes others (e.g., 'color').",
+    "evidence": [
+      "Source file: n8n/packages/nodes-base/nodes/NoOp/NoOp.node.ts",
+      "Source snippet: defaults: { name: 'No Operation, do nothing', color: '#b0b0b0' }",
+      "Extracted file: extracted_docs/noop_data.json",
+      "Extracted node_info.defaults: { 'name': 'No Operation, do nothing' }",
+      "Command used to verify: jq '.node_info.defaults' extracted_docs/noop_data.json and manual comparison with source."
+    ],
+    "fix_approach": "1. Review the extraction logic for the 'defaults' object within the node extractor. 
+2. Ensure that all properties within the 'defaults' object are correctly identified and extracted. 
+3. Test with: NoOp node. 
+4. Expected result: 'noop_data.json' should include 'color: '#b0b0b0'' in its 'defaults' object. 
+5. Validation command: jq '.node_info.defaults.color' extracted_docs/noop_data.json should return '#b0b0b0'."
+  },
+  "ownership": {
+    "assigned_to": null,
+    "locked_by": null,
+    "lock_acquired_at": null,
+    "lock_expires_at": null,
+    "claimed_at": null
+  }
+}

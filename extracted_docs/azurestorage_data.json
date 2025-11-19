@@ -1,0 +1,1579 @@
+{
+  "node_info": {
+    "icon": {
+      "light": "file:azureStorage.svg",
+      "dark": "file:azureStorage.dark.svg"
+    },
+    "defaults": {
+      "name": "Azure Storage"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "transform"
+    ],
+    "authentication": [
+      {
+        "name": "azureStorageOAuth2Api",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "oAuth2"
+            ]
+          }
+        }
+      },
+      {
+        "name": "azureStorageSharedKeyApi",
+        "required": true,
+        "displayOptions": {
+          "show": {
+            "authentication": [
+              "sharedKey"
+            ]
+          }
+        }
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "Azure Storage",
+    "name": "azureStorage",
+    "description": "Interact with Azure Storage API",
+    "subtitle": "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}",
+    "version": "1",
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.azureStorage",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Data & Storage"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/microsoft/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.azurestorage/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "oAuth2",
+      "default": "sharedKey",
+      "options": [
+        {
+          "name": "OAuth2",
+          "value": "oAuth2",
+          "displayName": "Oauth2"
+        },
+        {
+          "name": "Shared Key",
+          "value": "sharedKey",
+          "displayName": "Shared Key"
+        }
+      ]
+    },
+    {
+      "displayName": "Resource",
+      "name": "resource",
+      "type": "options",
+      "value": "blob",
+      "default": "container",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Blob",
+          "value": "blob",
+          "displayName": "Blob"
+        },
+        {
+          "name": "Container",
+          "value": "container",
+          "displayName": "Container"
+        }
+      ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a container",
+      "action": "Create container",
+      "value": "create",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "container"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tignoreHttpStatusErrors: true,\n\t\t\t\t\t\tmethod: 'PUT',\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\trestype: 'container',\n\t\t\t\t\t\t",
+      "_source": "Container_containerOperations"
+    },
+    {
+      "displayName": "Container Name",
+      "name": "containerCreate",
+      "type": "string",
+      "description": "The name of the new container",
+      "placeholder": "e.g. mycontainer",
+      "validateType": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "container"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpreSend: [\n\t\t\t\t\tasync function (\n\t\t\t\t\t\tthis: IExecuteSingleFunctions,\n\t\t\t\t\t\trequestOptions: IHttpRequestOptions,\n\t\t\t\t\t): Promise<IHttpRequestOptions> {\n\t\t\t\t\t\tconst container = this.getNodeParameter('containerCreate') as string;\n\t\t\t\t\t\tif (container.length < 3 || container.length > 63) {\n\t\t\t\t\t\t\tthrow new NodeOperationError(\n\t\t\t\t\t\t\t\tthis.getNode(),\n\t\t\t\t\t\t\t\t\"'Container Name' must be from 3 through 63 characters long\",\n\t\t\t\t\t\t\t);\n\t\t\t\t\t\t",
+      "_source": "Container_containerFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "options",
+      "description": "Specifies public read access for blobs. Blob data within this container can be read via anonymous request, but container data isn't available. Clients can't enumerate blobs within the container via anonymous request.",
+      "placeholder": "Add metadata",
+      "validateType": "options",
+      "value": "blob",
+      "default": {},
+      "options": [],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "container"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\theaders: {\n\t\t\t\t\t\t\t[HeaderConstants.X_MS_BLOB_PUBLIC_ACCESS]: '={{ $value || undefined ",
+      "_source": "Container_containerFields"
+    },
+    {
+      "displayName": "Container",
+      "name": "container",
+      "type": "list",
+      "description": "Select the container to delete",
+      "placeholder": "e.g. mycontainer",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "container"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Container_containerFields"
+    },
+    {
+      "displayName": "Container",
+      "name": "container",
+      "type": "list",
+      "description": "Select the container to get",
+      "placeholder": "e.g. mycontainer",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "container"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Container_containerFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "placeholder": "Add option",
+      "default": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "container"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Container_containerFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "container"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpaginate: '={{ $value ",
+      "_source": "Container_containerFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "query",
+      "description": "Max number of results to return",
+      "validateType": "number",
+      "value": "={{ $value }}",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "container"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: 'maxresults',\n\t\t\t\ttype: 'query',\n\t\t\t\tvalue: '={{ $value ",
+      "_source": "Container_containerFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "query",
+      "description": "The fields to add to the output",
+      "placeholder": "e.g. mycontainer",
+      "validateType": "string",
+      "value": "metadata",
+      "default": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "container"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\tproperty: 'include',\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tvalue: '={{ $value.join(\",\") || undefined ",
+      "_source": "Container_containerFields"
+    },
+    {
+      "displayName": "Container",
+      "name": "container",
+      "type": "list",
+      "description": "Container to create or replace a blob in",
+      "placeholder": "e.g. mycontainer",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Blob Name",
+      "name": "blobCreate",
+      "type": "string",
+      "description": "The name of the new or existing blob",
+      "placeholder": "e.g. myblob",
+      "validateType": "string",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "From",
+      "name": "from",
+      "type": "options",
+      "value": "binary",
+      "default": "binary",
+      "required": true,
+      "options": [
+        {
+          "name": "Binary",
+          "value": "binary",
+          "displayName": "Binary"
+        },
+        {
+          "name": "URL",
+          "value": "url",
+          "displayName": "Url"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Binary Contents",
+      "name": "binaryPropertyName",
+      "type": "string",
+      "description": "The name of the input binary field containing the file to be written",
+      "default": "data",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "create"
+          ],
+          "from": [
+            "binary"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpreSend: [\n\t\t\t\t\tasync function (\n\t\t\t\t\t\tthis: IExecuteSingleFunctions,\n\t\t\t\t\t\trequestOptions: IHttpRequestOptions,\n\t\t\t\t\t): Promise<IHttpRequestOptions> {\n\t\t\t\t\t\tconst binaryPropertyName = this.getNodeParameter('binaryPropertyName') as string;\n\n\t\t\t\t\t\tconst binaryData = this.helpers.assertBinaryData(binaryPropertyName);\n\t\t\t\t\t\tconst binaryDataBuffer = await this.helpers.getBinaryDataBuffer(binaryPropertyName);\n\n\t\t\t\t\t\trequestOptions.headers ??= {",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "URL",
+      "name": "url",
+      "type": "string",
+      "description": "URL where to read of the blob contents from",
+      "placeholder": "e.g. https://example.com/image.jpg",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "create"
+          ],
+          "from": [
+            "url"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpreSend: [\n\t\t\t\t\tasync function (\n\t\t\t\t\t\tthis: IExecuteSingleFunctions,\n\t\t\t\t\t\trequestOptions: IHttpRequestOptions,\n\t\t\t\t\t): Promise<IHttpRequestOptions> {\n\t\t\t\t\t\tconst url = this.getNodeParameter('url') as string;\n\n\t\t\t\t\t\trequestOptions.headers ??= {",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "options",
+      "description": "The tier to be set on the blob. For detailed information about block blob tiering, see <a href=\"https://learn.microsoft.com/en-us/azure/storage/blobs/access-tiers-overview\">Hot, cool, and archive storage tiers</a>.",
+      "placeholder": "Add metadata",
+      "validateType": "options",
+      "value": "Archive",
+      "default": {},
+      "options": [],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      },
+      "_operation": "create",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\theaders: {\n\t\t\t\t\t\t\t[HeaderConstants.X_MS_ACCESS_TIER]: '={{ $value || undefined ",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Container",
+      "name": "container",
+      "type": "list",
+      "description": "Container to delete a blob from",
+      "placeholder": "e.g. mycontainer",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Blob",
+      "name": "blob",
+      "type": "list",
+      "description": "Blob to be deleted",
+      "placeholder": "e.g. myblob",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "string",
+      "description": "Required if the blob has an active lease",
+      "placeholder": "Add option",
+      "validateType": "string",
+      "default": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "delete"
+          ]
+        }
+      },
+      "_operation": "delete",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\theaders: {\n\t\t\t\t\t\t\t[HeaderConstants.X_MS_LEASE_ID]: '={{ $value || undefined ",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Container",
+      "name": "container",
+      "type": "list",
+      "description": "Container to get a blob from",
+      "placeholder": "e.g. mycontainer",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Blob",
+      "name": "blob",
+      "type": "list",
+      "description": "Blob to get",
+      "placeholder": "e.g. myblob",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "string",
+      "description": "If this header is specified, the operation is performed only if both of the following conditions are met: <ul><li>The blob's lease is currently active.</li><li>The lease ID that's specified in the request matches the lease ID of the blob.</li></ul>",
+      "placeholder": "Add option",
+      "validateType": "string",
+      "default": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\theaders: {\n\t\t\t\t\t\t\t[HeaderConstants.X_MS_LEASE_ID]: '={{ $value || undefined ",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Container",
+      "name": "container",
+      "type": "list",
+      "description": "Container to get blobs from",
+      "placeholder": "e.g. mycontainer",
+      "required": true,
+      "typeOptions": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tpaginate: '={{ $value ",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "query",
+      "description": "Max number of results to return",
+      "validateType": "number",
+      "value": "={{ $value }}",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\tsend: {\n\t\t\t\tproperty: 'maxresults',\n\t\t\t\ttype: 'query',\n\t\t\t\tvalue: '={{ $value ",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "query",
+      "description": "The fields to add to the output",
+      "placeholder": "Add option",
+      "validateType": "boolean",
+      "value": "copy",
+      "default": {},
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\tproperty: 'include',\n\t\t\t\t\t\ttype: 'query',\n\t\t\t\t\t\tvalue: '={{ $value.join(\",\") || undefined ",
+      "_source": "Blob_blobFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new blob or replace an existing one",
+      "action": "Create blob",
+      "value": "create",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ]
+        }
+      },
+      "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tignoreHttpStatusErrors: true,\n\t\t\t\t\t\tmethod: 'PUT',\n\t\t\t\t\t\turl: '=/{{ $parameter[\"container\"] ",
+      "_source": "Blob_blobOperations"
+    }
+  ],
+  "operations": [],
+  "operations_by_resource": {
+    "container": [],
+    "blob": []
+  },
+  "credentials": [
+    {
+      "name": "azureStorageOAuth2Api",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "oAuth2"
+          ]
+        }
+      }
+    },
+    {
+      "name": "azureStorageSharedKeyApi",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "sharedKey"
+          ]
+        }
+      }
+    }
+  ],
+  "workflow_examples": [
+    {
+      "name": "Azure Storage",
+      "parameters": {
+        "operation": "delete",
+        "container": {
+          "__rl": true,
+          "mode": "list",
+          "value": "mycontainer"
+        },
+        "requestOptions": {}
+      },
+      "credentials": {
+        "azureStorageSharedKeyApi": {
+          "id": "VPmcFM58eDDexWQL",
+          "name": "Azure Storage Shared Key account"
+        }
+      },
+      "position": [
+        220,
+        0
+      ],
+      "workflow_file": "container_delete.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Azure Storage",
+      "parameters": {
+        "operation": "getAll",
+        "limit": 1,
+        "options": {
+          "fields": [
+            "metadata",
+            "deleted",
+            "system"
+          ],
+          "filter": "mycontainer"
+        },
+        "requestOptions": {}
+      },
+      "credentials": {
+        "azureStorageSharedKeyApi": {
+          "id": "VPmcFM58eDDexWQL",
+          "name": "Azure Storage Shared Key account"
+        }
+      },
+      "position": [
+        220,
+        0
+      ],
+      "workflow_file": "container_getAllLimitOptions.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Azure Storage",
+      "parameters": {
+        "operation": "create",
+        "containerCreate": "mycontainer",
+        "options": {
+          "accessLevel": "blob",
+          "metadata": {
+            "metadataValues": [
+              {
+                "fieldName": "key1",
+                "fieldValue": "value1"
+              }
+            ]
+          }
+        },
+        "requestOptions": {}
+      },
+      "credentials": {
+        "azureStorageSharedKeyApi": {
+          "id": "VPmcFM58eDDexWQL",
+          "name": "Azure Storage Shared Key account"
+        }
+      },
+      "position": [
+        220,
+        0
+      ],
+      "workflow_file": "container_create.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Azure Storage",
+      "parameters": {
+        "operation": "get",
+        "container": {
+          "__rl": true,
+          "mode": "list",
+          "value": "mycontainer"
+        },
+        "options": {
+          "simplify": false
+        },
+        "requestOptions": {}
+      },
+      "credentials": {
+        "azureStorageSharedKeyApi": {
+          "id": "VPmcFM58eDDexWQL",
+          "name": "Azure Storage Shared Key account"
+        }
+      },
+      "position": [
+        220,
+        0
+      ],
+      "workflow_file": "container_get.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Azure Storage",
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "requestOptions": {}
+      },
+      "credentials": {
+        "azureStorageSharedKeyApi": {
+          "id": "VPmcFM58eDDexWQL",
+          "name": "Azure Storage Shared Key account"
+        }
+      },
+      "position": [
+        220,
+        0
+      ],
+      "workflow_file": "container_getAll.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Azure Storage",
+      "parameters": {
+        "resource": "blob",
+        "operation": "getAll",
+        "container": {
+          "__rl": true,
+          "value": "mycontainer",
+          "mode": "list"
+        },
+        "returnAll": true,
+        "options": {
+          "simplify": false
+        },
+        "requestOptions": {}
+      },
+      "credentials": {
+        "azureStorageSharedKeyApi": {
+          "id": "VPmcFM58eDDexWQL",
+          "name": "Azure Storage Shared Key account"
+        }
+      },
+      "position": [
+        660,
+        0
+      ],
+      "workflow_file": "blob_getAll.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Azure Storage",
+      "parameters": {
+        "resource": "blob",
+        "operation": "create",
+        "container": {
+          "__rl": true,
+          "value": "mycontainer",
+          "mode": "list"
+        },
+        "blobCreate": "myblob",
+        "options": {
+          "accessTier": "Hot",
+          "blobType": "BlockBlob",
+          "cacheControl": "no-cache",
+          "contentCrc64": "3EDB64E77CB16A4C",
+          "contentEncoding": "utf8",
+          "contentLanguage": "en-US",
+          "contentMd5": "b97f46db5f3be7709d942eefe30e5b45",
+          "contentType": "application/json",
+          "encryptionContext": "context",
+          "encryptionScope": "encryptionScope",
+          "expiryOption": "Absolute",
+          "filename": "file.json",
+          "immutabilityPolicyUntilDate": "2025-01-01T00:00:00",
+          "immutabilityPolicyMode": "unlocked",
+          "leaseId": "leaseId123",
+          "legalHold": true,
+          "metadata": {
+            "metadataValues": [
+              {
+                "fieldName": "key1",
+                "fieldValue": "value1"
+              }
+            ]
+          },
+          "origin": "http://contoso.com",
+          "tags": {
+            "tagValues": [
+              {
+                "tagName": "tag1",
+                "tagValue": "value1"
+              }
+            ]
+          }
+        },
+        "requestOptions": {}
+      },
+      "credentials": {
+        "azureStorageSharedKeyApi": {
+          "id": "VPmcFM58eDDexWQL",
+          "name": "Azure Storage Shared Key account"
+        }
+      },
+      "position": [
+        660,
+        0
+      ],
+      "workflow_file": "blob_create.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Azure Storage",
+      "parameters": {
+        "resource": "blob",
+        "operation": "delete",
+        "container": {
+          "__rl": true,
+          "mode": "id",
+          "value": "mycontainer"
+        },
+        "blob": {
+          "__rl": true,
+          "mode": "id",
+          "value": "myblob"
+        },
+        "options": {
+          "leaseId": "leaseId123"
+        },
+        "requestOptions": {}
+      },
+      "credentials": {
+        "azureStorageSharedKeyApi": {
+          "id": "VPmcFM58eDDexWQL",
+          "name": "Azure Storage Shared Key account"
+        }
+      },
+      "position": [
+        660,
+        0
+      ],
+      "workflow_file": "blob_delete.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Azure Storage",
+      "parameters": {
+        "resource": "blob",
+        "operation": "get",
+        "container": {
+          "__rl": true,
+          "value": "mycontainer",
+          "mode": "list"
+        },
+        "blob": {
+          "__rl": true,
+          "value": "myblob",
+          "mode": "list"
+        },
+        "options": {
+          "leaseId": "leaseId123",
+          "origin": "origin123",
+          "simplify": false,
+          "upn": true
+        },
+        "requestOptions": {}
+      },
+      "credentials": {
+        "azureStorageSharedKeyApi": {
+          "id": "VPmcFM58eDDexWQL",
+          "name": "Azure Storage Shared Key account"
+        }
+      },
+      "position": [
+        660,
+        0
+      ],
+      "workflow_file": "blob_get.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Azure Storage",
+      "parameters": {
+        "resource": "blob",
+        "operation": "getAll",
+        "container": {
+          "__rl": true,
+          "value": "mycontainer",
+          "mode": "list"
+        },
+        "limit": 1,
+        "options": {
+          "fields": [
+            "copy",
+            "deleted",
+            "deletedwithversions",
+            "immutabilitypolicy",
+            "metadata",
+            "legalhold",
+            "versions",
+            "uncommittedblobs",
+            "tags",
+            "snapshots",
+            "permissions"
+          ],
+          "filter": [
+            "deleted",
+            "files",
+            "directories"
+          ],
+          "simplify": true,
+          "upn": true
+        },
+        "requestOptions": {}
+      },
+      "credentials": {
+        "azureStorageSharedKeyApi": {
+          "id": "VPmcFM58eDDexWQL",
+          "name": "Azure Storage account"
+        }
+      },
+      "position": [
+        660,
+        0
+      ],
+      "workflow_file": "blob_getAllLimitOptions.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Azure Storage",
+      "parameters": {
+        "resource": "container",
+        "operation": "get",
+        "container": {
+          "__rl": true,
+          "value": "mycontainer",
+          "mode": "id"
+        },
+        "options": {
+          "simplify": false
+        },
+        "requestOptions": {}
+      },
+      "credentials": {
+        "azureStorageSharedKeyApi": {
+          "id": "VPmcFM58eDDexWQL",
+          "name": "Azure Storage Shared Key account"
+        }
+      },
+      "position": [
+        220,
+        0
+      ],
+      "workflow_file": "credentials_sharedKey.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    },
+    {
+      "name": "Azure Storage",
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "container",
+        "operation": "get",
+        "container": {
+          "__rl": true,
+          "value": "mycontainer",
+          "mode": "id"
+        },
+        "options": {
+          "simplify": false
+        },
+        "requestOptions": {}
+      },
+      "credentials": {
+        "azureStorageOAuth2Api": {
+          "id": "VPmcFM58eDDexWQL",
+          "name": "Azure Storage OAuth2 account"
+        }
+      },
+      "position": [
+        220,
+        0
+      ],
+      "workflow_file": "credentials_oauth2.workflow.json",
+      "workflow_name": "Unnamed workflow"
+    }
+  ],
+  "expressions": [
+    "={{ $credentials.baseUrl }}",
+    "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
+  ],
+  "validation_rules": {
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ]
+        }
+      }
+    },
+    "containerCreate": {
+      "required": true,
+      "format": "validated",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "container"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "options": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "container": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "returnAll": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "getAll"
+          ]
+        }
+      }
+    },
+    "limit": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "getAll"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      }
+    },
+    "blobCreate": {
+      "required": true,
+      "format": "validated",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "from": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "create"
+          ]
+        }
+      }
+    },
+    "binaryPropertyName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "create"
+          ],
+          "from": [
+            "binary"
+          ]
+        }
+      }
+    },
+    "url": {
+      "required": true,
+      "format": "url",
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "create"
+          ],
+          "from": [
+            "url"
+          ]
+        }
+      }
+    },
+    "blob": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "blob"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "oAuth2",
+          "name": "OAuth2",
+          "description": ""
+        },
+        {
+          "value": "sharedKey",
+          "name": "Shared Key",
+          "description": ""
+        }
+      ]
+    },
+    "resource": {
+      "type": "options",
+      "displayName": "Resource",
+      "name": "resource",
+      "possibleValues": [
+        {
+          "value": "blob",
+          "name": "Blob",
+          "description": ""
+        },
+        {
+          "value": "container",
+          "name": "Container",
+          "description": ""
+        }
+      ]
+    },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": []
+    },
+    "containerCreate": {
+      "type": "string",
+      "displayName": "Container Name",
+      "name": "containerCreate"
+    },
+    "options": {
+      "type": "query",
+      "displayName": "Options",
+      "name": "options"
+    },
+    "container": {
+      "type": "list",
+      "displayName": "Container",
+      "name": "container"
+    },
+    "returnAll": {
+      "type": "boolean",
+      "displayName": "Return All",
+      "name": "returnAll"
+    },
+    "limit": {
+      "type": "query",
+      "displayName": "Limit",
+      "name": "limit",
+      "typeOptions": {
+        "minValue": 1
+      }
+    },
+    "blobCreate": {
+      "type": "string",
+      "displayName": "Blob Name",
+      "name": "blobCreate"
+    },
+    "from": {
+      "type": "options",
+      "displayName": "From",
+      "name": "from",
+      "possibleValues": [
+        {
+          "value": "binary",
+          "name": "Binary",
+          "description": ""
+        },
+        {
+          "value": "url",
+          "name": "URL",
+          "description": ""
+        }
+      ]
+    },
+    "binaryPropertyName": {
+      "type": "string",
+      "displayName": "Binary Contents",
+      "name": "binaryPropertyName"
+    },
+    "url": {
+      "type": "string",
+      "displayName": "URL",
+      "name": "url"
+    },
+    "blob": {
+      "type": "list",
+      "displayName": "Blob",
+      "name": "blob"
+    }
+  },
+  "api_patterns": {
+    "http_methods": [],
+    "endpoints": [],
+    "headers": [],
+    "query_params": []
+  },
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "containerCreate",
+        "text": "e.g. mycontainer"
+      },
+      {
+        "field": "options",
+        "text": "Add metadata"
+      },
+      {
+        "field": "container",
+        "text": "e.g. mycontainer"
+      },
+      {
+        "field": "container",
+        "text": "e.g. mycontainer"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "options",
+        "text": "e.g. mycontainer"
+      },
+      {
+        "field": "container",
+        "text": "e.g. mycontainer"
+      },
+      {
+        "field": "blobCreate",
+        "text": "e.g. myblob"
+      },
+      {
+        "field": "url",
+        "text": "e.g. https://example.com/image.jpg"
+      },
+      {
+        "field": "options",
+        "text": "Add metadata"
+      },
+      {
+        "field": "container",
+        "text": "e.g. mycontainer"
+      },
+      {
+        "field": "blob",
+        "text": "e.g. myblob"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "container",
+        "text": "e.g. mycontainer"
+      },
+      {
+        "field": "blob",
+        "text": "e.g. myblob"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "container",
+        "text": "e.g. mycontainer"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}

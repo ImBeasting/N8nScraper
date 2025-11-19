@@ -1,0 +1,542 @@
+{
+  "node_info": {
+    "icon": "file:openWeatherMap.svg",
+    "defaults": {
+      "name": "OpenWeatherMap"
+    },
+    "inputs": [
+      "Main"
+    ],
+    "outputs": [
+      "Main"
+    ],
+    "group": [
+      "input"
+    ],
+    "authentication": [
+      {
+        "name": "openWeatherMapApi",
+        "required": true
+      }
+    ],
+    "loadOptionsMethods": [],
+    "eventTriggerDescription": "",
+    "activationMessage": "",
+    "triggerPanel": {},
+    "supportsCORS": false,
+    "displayName": "OpenWeatherMap",
+    "name": "openWeatherMap",
+    "description": "Gets current and future weather information",
+    "subtitle": "",
+    "version": "1",
+    "usableAsTool": true,
+    "node_type": "regular"
+  },
+  "metadata": {
+    "node": "n8n-nodes-base.openWeatherMap",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+      "Miscellaneous",
+      "Utility"
+    ],
+    "resources": {
+      "credentialDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/credentials/openweathermap/"
+        }
+      ],
+      "primaryDocumentation": [
+        {
+          "url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.openweathermap/"
+        }
+      ],
+      "generic": [
+        {
+          "label": "Learn to Build Powerful API Endpoints Using Webhooks",
+          "icon": "\ud83e\uddf0",
+          "url": "https://n8n.io/blog/learn-to-build-powerful-api-endpoints-using-webhooks/"
+        },
+        {
+          "label": "Creating Telegram Bots with n8n, a No-Code Platform",
+          "icon": "\ud83d\udcac",
+          "url": "https://n8n.io/blog/creating-telegram-bots-with-n8n-a-no-code-platform/"
+        }
+      ]
+    }
+  },
+  "properties": [
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Returns the current weather data",
+      "action": "Return current weather data",
+      "value": "currentWeather",
+      "default": "currentWeather",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Current Weather",
+          "description": "Returns the current weather data",
+          "action": "Return current weather data",
+          "value": "currentWeather",
+          "displayName": "Current Weather"
+        },
+        {
+          "name": "5 Day Forecast",
+          "description": "Returns the weather data for the next 5 days",
+          "action": "Return weather data for the next 5 days",
+          "value": "5DayForecast",
+          "displayName": "5 Day Forecast"
+        }
+      ]
+    },
+    {
+      "displayName": "Format",
+      "name": "format",
+      "type": "options",
+      "description": "Fahrenheit | miles/hour",
+      "value": "imperial",
+      "default": "metric",
+      "options": [
+        {
+          "name": "Imperial",
+          "description": "Fahrenheit | miles/hour",
+          "value": "imperial",
+          "displayName": "Imperial"
+        },
+        {
+          "name": "Metric",
+          "description": "Celsius | meter/sec",
+          "value": "metric",
+          "displayName": "Metric"
+        },
+        {
+          "name": "Scientific",
+          "description": "Kelvin | meter/sec",
+          "value": "standard",
+          "displayName": "Scientific"
+        }
+      ]
+    },
+    {
+      "displayName": "Location Selection",
+      "name": "locationSelection",
+      "type": "options",
+      "description": "How to define the location for which to return the weather",
+      "value": "cityName",
+      "default": "cityName",
+      "options": [
+        {
+          "name": "City Name",
+          "value": "cityName",
+          "displayName": "City Name"
+        },
+        {
+          "name": "City ID",
+          "value": "cityId",
+          "displayName": "City Id"
+        },
+        {
+          "name": "Coordinates",
+          "value": "coordinates",
+          "displayName": "Coordinates"
+        },
+        {
+          "name": "Zip Code",
+          "value": "zipCode",
+          "displayName": "Zip Code"
+        }
+      ]
+    },
+    {
+      "displayName": "City",
+      "name": "cityName",
+      "type": "string",
+      "description": "The name of the city to return the weather of",
+      "placeholder": "berlin,de",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "locationSelection": [
+            "cityName"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "City ID",
+      "name": "cityId",
+      "type": "number",
+      "description": "The ID of city to return the weather of. List can be downloaded here: http://bulk.openweathermap.org/sample/.",
+      "default": 160001123,
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "locationSelection": [
+            "cityId"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Latitude",
+      "name": "latitude",
+      "type": "string",
+      "description": "The latitude of the location to return the weather of",
+      "placeholder": "13.39",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "locationSelection": [
+            "coordinates"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Longitude",
+      "name": "longitude",
+      "type": "string",
+      "description": "The longitude of the location to return the weather of",
+      "placeholder": "52.52",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "locationSelection": [
+            "coordinates"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Zip Code",
+      "name": "zipCode",
+      "type": "string",
+      "description": "The ID of city to return the weather of. List can be downloaded here: http://bulk.openweathermap.org/sample/.",
+      "placeholder": "10115,de",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "locationSelection": [
+            "zipCode"
+          ]
+        }
+      }
+    },
+    {
+      "displayName": "Language",
+      "name": "language",
+      "type": "string",
+      "description": "The two letter language code to get your output in (eg. en, de, ...).",
+      "placeholder": "en",
+      "default": ""
+    }
+  ],
+  "operations": [
+    {
+      "name": "Current Weather",
+      "description": "Returns the current weather data",
+      "action": "Return current weather data",
+      "value": "currentWeather",
+      "displayName": "Current Weather"
+    },
+    {
+      "name": "5 Day Forecast",
+      "description": "Returns the weather data for the next 5 days",
+      "action": "Return weather data for the next 5 days",
+      "value": "5DayForecast",
+      "displayName": "5 Day Forecast"
+    }
+  ],
+  "operations_by_resource": {},
+  "credentials": [
+    {
+      "name": "openWeatherMapApi",
+      "required": true
+    }
+  ],
+  "workflow_examples": [],
+  "expressions": [],
+  "validation_rules": {
+    "cityName": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "locationSelection": [
+            "cityName"
+          ]
+        }
+      }
+    },
+    "cityId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "locationSelection": [
+            "cityId"
+          ]
+        }
+      }
+    },
+    "latitude": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "locationSelection": [
+            "coordinates"
+          ]
+        }
+      }
+    },
+    "longitude": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "locationSelection": [
+            "coordinates"
+          ]
+        }
+      }
+    },
+    "zipCode": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "locationSelection": [
+            "zipCode"
+          ]
+        }
+      }
+    }
+  },
+  "type_info": {
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "currentWeather",
+          "name": "Current Weather",
+          "description": "Returns the current weather data"
+        },
+        {
+          "value": "5DayForecast",
+          "name": "5 Day Forecast",
+          "description": "Returns the weather data for the next 5 days"
+        }
+      ]
+    },
+    "format": {
+      "type": "options",
+      "displayName": "Format",
+      "name": "format",
+      "possibleValues": [
+        {
+          "value": "imperial",
+          "name": "Imperial",
+          "description": "Fahrenheit | miles/hour"
+        },
+        {
+          "value": "metric",
+          "name": "Metric",
+          "description": "Celsius | meter/sec"
+        },
+        {
+          "value": "standard",
+          "name": "Scientific",
+          "description": "Kelvin | meter/sec"
+        }
+      ]
+    },
+    "locationSelection": {
+      "type": "options",
+      "displayName": "Location Selection",
+      "name": "locationSelection",
+      "possibleValues": [
+        {
+          "value": "cityName",
+          "name": "City Name",
+          "description": ""
+        },
+        {
+          "value": "cityId",
+          "name": "City ID",
+          "description": ""
+        },
+        {
+          "value": "coordinates",
+          "name": "Coordinates",
+          "description": ""
+        },
+        {
+          "value": "zipCode",
+          "name": "Zip Code",
+          "description": ""
+        }
+      ]
+    },
+    "cityName": {
+      "type": "string",
+      "displayName": "City",
+      "name": "cityName"
+    },
+    "cityId": {
+      "type": "number",
+      "displayName": "City ID",
+      "name": "cityId"
+    },
+    "latitude": {
+      "type": "string",
+      "displayName": "Latitude",
+      "name": "latitude"
+    },
+    "longitude": {
+      "type": "string",
+      "displayName": "Longitude",
+      "name": "longitude"
+    },
+    "zipCode": {
+      "type": "string",
+      "displayName": "Zip Code",
+      "name": "zipCode"
+    },
+    "language": {
+      "type": "string",
+      "displayName": "Language",
+      "name": "language"
+    }
+  },
+  "api_patterns": {},
+  "ui_elements": {
+    "notices": [],
+    "tooltips": [],
+    "placeholders": [
+      {
+        "field": "cityName",
+        "text": "berlin,de"
+      },
+      {
+        "field": "latitude",
+        "text": "13.39"
+      },
+      {
+        "field": "longitude",
+        "text": "52.52"
+      },
+      {
+        "field": "zipCode",
+        "text": "10115,de"
+      },
+      {
+        "field": "language",
+        "text": "en"
+      }
+    ],
+    "hints": []
+  },
+  "settings": {
+    "common": {
+      "notes": {
+        "name": "Notes",
+        "field_id": "notes",
+        "type": "string",
+        "default": "",
+        "description": "Optional note to save with the node"
+      },
+      "notesInFlow": {
+        "name": "Display Note in Flow?",
+        "field_id": "notesInFlow",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the note above will display in the flow as a subtitle"
+      }
+    },
+    "executable": {
+      "alwaysOutputData": {
+        "name": "Always Output Data",
+        "field_id": "alwaysOutputData",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, will output a single, empty item when the output would have been empty. Use to prevent the workflow finishing on this node"
+      },
+      "executeOnce": {
+        "name": "Execute Once",
+        "field_id": "executeOnce",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node executes only once, with data from the first item it receives"
+      },
+      "retryOnFail": {
+        "name": "Retry On Fail",
+        "field_id": "retryOnFail",
+        "type": "boolean",
+        "default": false,
+        "description": "If active, the node tries to execute again when it fails"
+      },
+      "maxTries": {
+        "name": "Max. Tries",
+        "field_id": "maxTries",
+        "type": "number",
+        "default": 3,
+        "min": 2,
+        "max": 5,
+        "description": "Number of times to attempt to execute the node before failing the execution",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "waitBetweenTries": {
+        "name": "Wait Between Tries (ms)",
+        "field_id": "waitBetweenTries",
+        "type": "number",
+        "default": 1000,
+        "min": 0,
+        "max": 5000,
+        "description": "How long to wait between each attempt (in milliseconds)",
+        "displayOptions": {
+          "show": {
+            "retryOnFail": [
+              true
+            ]
+          }
+        }
+      },
+      "onError": {
+        "name": "On Error",
+        "field_id": "onError",
+        "type": "options",
+        "default": "stopWorkflow",
+        "description": "Action to take when the node execution fails",
+        "options": [
+          {
+            "name": "Stop Workflow",
+            "value": "stopWorkflow",
+            "description": "Halt execution and fail workflow"
+          },
+          {
+            "name": "Continue",
+            "value": "continueRegularOutput",
+            "description": "Pass error message as item in regular output"
+          },
+          {
+            "name": "Continue (using error output)",
+            "value": "continueErrorOutput",
+            "description": "Pass item to an extra `error` output"
+          }
+        ]
+      }
+    },
+    "note": "Executable nodes have both common and executable settings"
+  }
+}
