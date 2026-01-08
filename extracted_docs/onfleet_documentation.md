@@ -2,7 +2,7 @@
 title: "Node: Onfleet"
 slug: "node-onfleet"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Onfleet API"
 node_type: "regular"
 group: "['input']"
@@ -50,7 +50,7 @@ group: "['input']"
 
 ## API Patterns
 
-**Headers Used:** Content-Type, User-Agent
+**Headers Used:** User-Agent, Content-Type
 
 ---
 
@@ -890,8 +890,8 @@ api_patterns:
   http_methods: []
   endpoints: []
   headers:
-  - Content-Type
   - User-Agent
+  - Content-Type
   query_params: []
 ui_elements:
   notices: []
@@ -1270,4 +1270,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

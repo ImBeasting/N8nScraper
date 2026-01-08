@@ -2,7 +2,7 @@
 title: "Node: Email Trigger (IMAP)"
 slug: "node-emailreadimap"
 version: "['2', '2.1']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Triggers the workflow when a new email is received"
 node_type: "trigger"
 group: "['trigger']"
@@ -39,8 +39,8 @@ group: "['trigger']"
 - **Trigger Panel:**
 ```json
 {
-  "executionsHelp": "{\n\t\t\tinactive:\n\t\t\t\t\"<b>While building your workflow</b>, click the 'execute step' button, then send an email to make an event happen. This will trigger an execution, which will show up in this editor.<br /> <br /><b>Once you're happy with your workflow</b>, <a data-key='activate'>activate</a> it. Then every time an email is received, the workflow will execute. These executions will show up in the <a data-key='executions'>executions list</a>, but not in the editor.\",\n\t\t\tactive:\n\t\t\t\t\"<b>While building your workflow</b>, click the 'execute step' button, then send an email to make an event happen. This will trigger an execution, which will show up in this editor.<br /> <br /><b>Your workflow will also execute automatically</b>, since it's activated. Every time an email is received, this node will trigger an execution. These executions will show up in the <a data-key='executions'>executions list</a>, but not in the editor.\",\n\t\t}",
-  "activationHint": "Once you\u2019ve finished building your workflow, <a data-key="
+  "executionsHelp": "{\n\t\t\tinactive:\n\t\t\t\t\"<b>While building your workflow</b>, click the 'execute step' button, then send an email to make an event happen. This will trigger an execution, which will show up in this editor.<br /> <br /><b>Once you're happy with your workflow</b>, publish it. Then every time an email is received, the workflow will execute. These executions will show up in the <a data-key='executions'>executions list</a>, but not in the editor.\",\n\t\t\tactive:\n\t\t\t\t\"<b>While building your workflow</b>, click the 'execute step' button, then send an email to make an event happen. This will trigger an execution, which will show up in this editor.<br /> <br /><b>Your workflow will also execute automatically</b>, since it's activated. Every time an email is received, this node will trigger an execution. These executions will show up in the <a data-key='executions'>executions list</a>, but not in the editor.\",\n\t\t}",
+  "activationHint": "Once you\u2019ve finished building your workflow, publish it to have it also listen continuously (you just won\u2019t see those executions here)."
 }
 ```
 
@@ -392,4 +392,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['2', '2.1'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['2', '2.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

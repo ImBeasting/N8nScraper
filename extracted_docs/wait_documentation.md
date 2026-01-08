@@ -2,7 +2,7 @@
 title: "Node: Wait"
 slug: "node-wait"
 version: "['1', '1.1']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Wait before continue with execution"
 node_type: "regular"
 group: "['organization']"
@@ -84,11 +84,11 @@ These examples are extracted from actual n8n workflows:
 
 These expression patterns are commonly used with this node:
 
-- `{{ $execution.resumeFormUrl }}`
 - `={{$parameter["responseData"]}}`
-- `={{$parameter["options"]["webhookSuffix"] || ""}}`
-- `={{$parameter["responseMode"]}}`
 - `={{$parameter["responseMode"] === "lastNode" ? "noData" : undefined}}`
+- `={{$parameter["responseMode"]}}`
+- `{{ $execution.resumeFormUrl }}`
+- `={{$parameter["options"]["webhookSuffix"] || ""}}`
 
 ---
 
@@ -262,11 +262,11 @@ examples:
     unit: seconds
   workflow: '[Unit Test] Wait Node'
 common_expressions:
-- '{{ $execution.resumeFormUrl }}'
 - ={{$parameter["responseData"]}}
-- ={{$parameter["options"]["webhookSuffix"] || ""}}
-- ={{$parameter["responseMode"]}}
 - '={{$parameter["responseMode"] === "lastNode" ? "noData" : undefined}}'
+- ={{$parameter["responseMode"]}}
+- '{{ $execution.resumeFormUrl }}'
+- ={{$parameter["options"]["webhookSuffix"] || ""}}
 ui_elements:
   notices: []
   tooltips: []
@@ -484,4 +484,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '1.1'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

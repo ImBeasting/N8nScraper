@@ -2,7 +2,7 @@
 title: "Node: Split In Batches"
 slug: "node-splitinbatches"
 version: "3"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Split data into batches and iterate over each batch"
 node_type: "regular"
 group: "['organization']"
@@ -321,4 +321,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 3 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 3 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

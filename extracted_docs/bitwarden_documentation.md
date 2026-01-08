@@ -2,7 +2,7 @@
 title: "Node: Bitwarden"
 slug: "node-bitwarden"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume the Bitwarden API"
 node_type: "regular"
 group: "['transform']"
@@ -52,7 +52,7 @@ group: "['transform']"
 
 **HTTP Methods:** POST
 
-**Headers Used:** Content-Type, user-agent
+**Headers Used:** user-agent, Content-Type
 
 ---
 
@@ -765,8 +765,8 @@ api_patterns:
   - POST
   endpoints: []
   headers:
-  - Content-Type
   - user-agent
+  - Content-Type
   query_params: []
 ui_elements:
   notices: []
@@ -1102,4 +1102,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

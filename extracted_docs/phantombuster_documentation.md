@@ -2,7 +2,7 @@
 title: "Node: Phantombuster"
 slug: "node-phantombuster"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Phantombuster API"
 node_type: "regular"
 group: "['input']"
@@ -164,6 +164,116 @@ group: "['input']"
 - `for`
 - `name`
 - `value`
+
+---
+
+## Real-World Examples
+
+These examples are extracted from actual n8n workflows:
+
+### Example 1: Phantombuster
+
+**From workflow:** Phantombuster Launch With JSON Arguments Test
+
+**Parameters:**
+```json
+{
+  "resource": "agent",
+  "operation": "launch",
+  "agentId": "test-agent-123",
+  "jsonParameters": true,
+  "resolveData": false,
+  "additionalFields": {
+    "argumentsJson": "{\"complexKey\":\"complexValue\",\"nestedObject\":{\"nested\":\"value\"}}"
+  }
+}
+```
+
+**Credentials:**
+- phantombusterApi: `Phantombuster API`
+
+### Example 2: Phantombuster
+
+**From workflow:** Phantombuster Launch With Bonus Arguments Test
+
+**Parameters:**
+```json
+{
+  "resource": "agent",
+  "operation": "launch",
+  "agentId": "test-agent-123",
+  "jsonParameters": false,
+  "resolveData": false,
+  "additionalFields": {
+    "argumentsUi": {
+      "argumentValues": [
+        {
+          "key": "testKey",
+          "value": "testValue"
+        }
+      ]
+    },
+    "bonusArgumentUi": {
+      "bonusArgumentValue": [
+        {
+          "key": "bonusKey",
+          "value": "bonusValue"
+        }
+      ]
+    }
+  }
+}
+```
+
+**Credentials:**
+- phantombusterApi: `Phantombuster API`
+
+### Example 3: Phantombuster
+
+**From workflow:** Phantombuster Launch With Arguments No Bonus Test
+
+**Parameters:**
+```json
+{
+  "resource": "agent",
+  "operation": "launch",
+  "agentId": "test-agent-123",
+  "jsonParameters": false,
+  "resolveData": false,
+  "additionalFields": {
+    "argumentsUi": {
+      "argumentValues": [
+        {
+          "key": "testKey",
+          "value": "testValue"
+        }
+      ]
+    }
+  }
+}
+```
+
+**Credentials:**
+- phantombusterApi: `Phantombuster API`
+
+### Example 4: Phantombuster
+
+**From workflow:** Phantombuster Launch Without Arguments Test
+
+**Parameters:**
+```json
+{
+  "resource": "agent",
+  "operation": "launch",
+  "agentId": "test-agent-123",
+  "jsonParameters": false,
+  "resolveData": false
+}
+```
+
+**Credentials:**
+- phantombusterApi: `Phantombuster API`
+
 
 ---
 
@@ -367,6 +477,47 @@ operations:
       type: boolean
       displayName: JSON Parameters
       name: jsonParameters
+examples:
+- name: Phantombuster
+  parameters:
+    resource: agent
+    operation: launch
+    agentId: test-agent-123
+    jsonParameters: true
+    resolveData: false
+    additionalFields:
+      argumentsJson: '{"complexKey":"complexValue","nestedObject":{"nested":"value"}}'
+  workflow: Phantombuster Launch With JSON Arguments Test
+- name: Phantombuster
+  parameters:
+    resource: agent
+    operation: launch
+    agentId: test-agent-123
+    jsonParameters: false
+    resolveData: false
+    additionalFields:
+      argumentsUi:
+        argumentValues:
+        - key: testKey
+          value: testValue
+      bonusArgumentUi:
+        bonusArgumentValue:
+        - key: bonusKey
+          value: bonusValue
+  workflow: Phantombuster Launch With Bonus Arguments Test
+- name: Phantombuster
+  parameters:
+    resource: agent
+    operation: launch
+    agentId: test-agent-123
+    jsonParameters: false
+    resolveData: false
+    additionalFields:
+      argumentsUi:
+        argumentValues:
+        - key: testKey
+          value: testValue
+  workflow: Phantombuster Launch With Arguments No Bonus Test
 common_expressions:
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 api_patterns:
@@ -608,6 +759,69 @@ settings:
       "name": "phantombusterApi",
       "required": true
     }
+  ],
+  "examples": [
+    {
+      "description": "Phantombuster",
+      "value": {
+        "resource": "agent",
+        "operation": "launch",
+        "agentId": "test-agent-123",
+        "jsonParameters": true,
+        "resolveData": false,
+        "additionalFields": {
+          "argumentsJson": "{\"complexKey\":\"complexValue\",\"nestedObject\":{\"nested\":\"value\"}}"
+        }
+      }
+    },
+    {
+      "description": "Phantombuster",
+      "value": {
+        "resource": "agent",
+        "operation": "launch",
+        "agentId": "test-agent-123",
+        "jsonParameters": false,
+        "resolveData": false,
+        "additionalFields": {
+          "argumentsUi": {
+            "argumentValues": [
+              {
+                "key": "testKey",
+                "value": "testValue"
+              }
+            ]
+          },
+          "bonusArgumentUi": {
+            "bonusArgumentValue": [
+              {
+                "key": "bonusKey",
+                "value": "bonusValue"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "description": "Phantombuster",
+      "value": {
+        "resource": "agent",
+        "operation": "launch",
+        "agentId": "test-agent-123",
+        "jsonParameters": false,
+        "resolveData": false,
+        "additionalFields": {
+          "argumentsUi": {
+            "argumentValues": [
+              {
+                "key": "testKey",
+                "value": "testValue"
+              }
+            ]
+          }
+        }
+      }
+    }
   ]
 }
 ```
@@ -618,4 +832,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

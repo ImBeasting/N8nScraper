@@ -1,8 +1,8 @@
 ---
 title: "Node: Schedule Trigger"
 slug: "node-scheduletrigger"
-version: "['1', '1.1', '1.2']"
-updated: "2025-11-13"
+version: "['1', '1.1', '1.2', '1.3']"
+updated: "2026-01-08"
 summary: "Triggers the workflow on a given schedule"
 node_type: "trigger"
 group: "['trigger', 'schedule']"
@@ -41,7 +41,7 @@ group: "['trigger', 'schedule']"
 
 **Node-Specific Tips:**
 
-- **notice**: This workflow will run on the schedule you define here once you <a data-key="activate">activate</a> it.<br><br>For testing, you can also trigger it manually: by going back to the canvas and clicking 'execute workflow'
+- **notice**: This workflow will run on the schedule you define here once you publish it.<br><br>For testing, you can also trigger it manually: by going back to the canvas and clicking 'execute workflow'
 
 ---
 
@@ -96,6 +96,7 @@ version:
 - '1'
 - '1.1'
 - '1.2'
+- '1.3'
 nodeType: trigger
 group:
 - trigger
@@ -107,7 +108,7 @@ params:
   default: days
   required: false
   description: Number of seconds between each workflow trigger
-  hint: If a month doesn’t have this day, the node won’t trigger
+  hint: Must be in range 1-59
   placeholder: Add Rule
   validation:
     displayOptions:
@@ -155,6 +156,7 @@ params:
         name: secondsInterval
         type: number
         description: Number of seconds between each workflow trigger
+        hint: Must be in range 1-59
         default: 30
         displayOptions:
           show:
@@ -164,6 +166,7 @@ params:
         name: minutesInterval
         type: number
         description: Number of minutes between each workflow trigger
+        hint: Must be in range 1-59
         default: 5
         displayOptions:
           show:
@@ -173,6 +176,7 @@ params:
         name: hoursInterval
         type: number
         description: Number of hours between each workflow trigger
+        hint: Must be in range 1-23
         default: 1
         displayOptions:
           show:
@@ -182,6 +186,7 @@ params:
         name: daysInterval
         type: number
         description: Number of days between each workflow trigger
+        hint: Must be in range 1-31
         default: 1
         displayOptions:
           show:
@@ -344,7 +349,7 @@ api_patterns:
 ui_elements:
   notices:
   - name: notice
-    text: 'This workflow will run on the schedule you define here once you <a data-key="activate">activate</a>
+    text: 'This workflow will run on the schedule you define here once you publish
       it.<br><br>For testing, you can also trigger it manually: by going back to the
       canvas and clicking ''execute workflow'''
     conditions: null
@@ -354,7 +359,7 @@ ui_elements:
     text: Add Rule
   hints:
   - field: rule
-    text: If a month doesn’t have this day, the node won’t trigger
+    text: Must be in range 1-59
 settings:
   common:
     notes:
@@ -419,7 +424,8 @@ settings:
     "version": [
       "1",
       "1.1",
-      "1.2"
+      "1.2",
+      "1.3"
     ]
   }
 }
@@ -431,4 +437,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '1.1', '1.2'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1', '1.2', '1.3'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

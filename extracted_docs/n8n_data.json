@@ -597,16 +597,16 @@
       "displayName": "Operation",
       "name": "operation",
       "type": "options",
-      "action": "Activate a workflow",
+      "action": "Publish a workflow",
       "value": "activate",
       "default": "getAll",
       "noDataExpression": true,
       "options": [
         {
-          "name": "Activate",
-          "action": "Activate a workflow",
+          "name": "Publish",
+          "action": "Publish a workflow",
           "value": "activate",
-          "displayName": "Activate"
+          "displayName": "Publish"
         },
         {
           "name": "Create",
@@ -616,10 +616,10 @@
           "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/workflows',\n\t\t\t\t\t"
         },
         {
-          "name": "Deactivate",
-          "action": "Deactivate a workflow",
+          "name": "Unpublish",
+          "action": "Unpublish a workflow",
           "value": "deactivate",
-          "displayName": "Deactivate"
+          "displayName": "Unpublish"
         },
         {
           "name": "Delete",
@@ -641,6 +641,12 @@
           "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/workflows',\n\t\t\t\t\t"
         },
         {
+          "name": "Get Version",
+          "action": "Get a workflow version",
+          "value": "getVersion",
+          "displayName": "Get Version"
+        },
+        {
           "name": "Update",
           "action": "Update a workflow",
           "value": "update",
@@ -656,6 +662,59 @@
       },
       "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/workflows',\n\t\t\t\t\t",
       "_source": "Workflow_workflowOperations"
+    },
+    {
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "type": "collection",
+      "description": "The version ID of the workflow to publish",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Version ID",
+          "name": "versionId",
+          "type": "string",
+          "description": "The version ID of the workflow to publish",
+          "default": "",
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'versionId',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "Published version name (will be overwritten)",
+          "default": "",
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'name',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Published version description (will be overwritten)",
+          "default": "",
+          "typeOptions": {
+            "rows": 4
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'description',\n\t\t\t\t\t"
+        }
+      ],
+      "typeOptions": {
+        "rows": 4
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ],
+          "operation": [
+            "activate"
+          ]
+        }
+      },
+      "_operation": "activate",
+      "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'versionId',\n\t\t\t\t\t",
+      "_source": "Workflow_workflowFields"
     },
     {
       "displayName": "Workflow Object",
@@ -738,7 +797,7 @@
       "default": {},
       "options": [
         {
-          "displayName": "Return Only Active Workflows",
+          "displayName": "Return Only Published Workflows",
           "name": "activeWorkflows",
           "type": "boolean",
           "default": true,
@@ -789,6 +848,26 @@
       },
       "_operation": "getAll",
       "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tqs: {\n\t\t\t\t\t\t\tactive: '={{ $value ",
+      "_source": "Workflow_workflowFields"
+    },
+    {
+      "displayName": "Version ID",
+      "name": "versionId",
+      "type": "string",
+      "description": "The version ID to retrieve",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ],
+          "operation": [
+            "getVersion"
+          ]
+        }
+      },
+      "_operation": "getVersion",
       "_source": "Workflow_workflowFields"
     },
     {
@@ -862,16 +941,22 @@
       "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/executions',\n\t\t\t\t\t"
     },
     {
-      "name": "Activate",
-      "action": "Activate a workflow",
+      "name": "Publish",
+      "action": "Publish a workflow",
       "value": "activate",
-      "displayName": "Activate"
+      "displayName": "Publish"
     },
     {
-      "name": "Deactivate",
-      "action": "Deactivate a workflow",
+      "name": "Unpublish",
+      "action": "Unpublish a workflow",
       "value": "deactivate",
-      "displayName": "Deactivate"
+      "displayName": "Unpublish"
+    },
+    {
+      "name": "Get Version",
+      "action": "Get a workflow version",
+      "value": "getVersion",
+      "displayName": "Get Version"
     },
     {
       "name": "Update",
@@ -939,10 +1024,10 @@
     ],
     "workflow": [
       {
-        "name": "Activate",
-        "action": "Activate a workflow",
+        "name": "Publish",
+        "action": "Publish a workflow",
         "value": "activate",
-        "displayName": "Activate"
+        "displayName": "Publish"
       },
       {
         "name": "Create",
@@ -952,10 +1037,10 @@
         "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\turl: '/workflows',\n\t\t\t\t\t"
       },
       {
-        "name": "Deactivate",
-        "action": "Deactivate a workflow",
+        "name": "Unpublish",
+        "action": "Unpublish a workflow",
         "value": "deactivate",
-        "displayName": "Deactivate"
+        "displayName": "Unpublish"
       },
       {
         "name": "Delete",
@@ -975,6 +1060,12 @@
         "value": "getAll",
         "displayName": "Get Many",
         "routing": "\n\t\t\t\t\trequest: {\n\t\t\t\t\t\tmethod: 'GET',\n\t\t\t\t\t\turl: '/workflows',\n\t\t\t\t\t"
+      },
+      {
+        "name": "Get Version",
+        "action": "Get a workflow version",
+        "value": "getVersion",
+        "displayName": "Get Version"
       },
       {
         "name": "Update",
@@ -1130,6 +1221,18 @@
         }
       }
     },
+    "additionalFields": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ],
+          "operation": [
+            "activate"
+          ]
+        }
+      }
+    },
     "workflowObject": {
       "required": true,
       "displayOptions": {
@@ -1139,6 +1242,19 @@
           ],
           "operation": [
             "update"
+          ]
+        }
+      }
+    },
+    "versionId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "workflow"
+          ],
+          "operation": [
+            "getVersion"
           ]
         }
       }
@@ -1179,7 +1295,7 @@
       "possibleValues": [
         {
           "value": "activate",
-          "name": "Activate",
+          "name": "Publish",
           "description": ""
         },
         {
@@ -1189,7 +1305,7 @@
         },
         {
           "value": "deactivate",
-          "name": "Deactivate",
+          "name": "Unpublish",
           "description": ""
         },
         {
@@ -1205,6 +1321,11 @@
         {
           "value": "getAll",
           "name": "Get Many",
+          "description": ""
+        },
+        {
+          "value": "getVersion",
+          "name": "Get Version",
           "description": ""
         },
         {
@@ -1311,7 +1432,7 @@
       "name": "filters",
       "subProperties": [
         {
-          "displayName": "Return Only Active Workflows",
+          "displayName": "Return Only Published Workflows",
           "name": "activeWorkflows",
           "type": "boolean",
           "default": true,
@@ -1372,6 +1493,43 @@
       "displayName": "Workflow",
       "name": "workflowId"
     },
+    "additionalFields": {
+      "type": "collection",
+      "displayName": "Additional Fields",
+      "name": "additionalFields",
+      "typeOptions": {
+        "rows": 4
+      },
+      "subProperties": [
+        {
+          "displayName": "Version ID",
+          "name": "versionId",
+          "type": "string",
+          "description": "The version ID of the workflow to publish",
+          "default": "",
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'versionId',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Name",
+          "name": "name",
+          "type": "string",
+          "description": "Published version name (will be overwritten)",
+          "default": "",
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'name',\n\t\t\t\t\t"
+        },
+        {
+          "displayName": "Description",
+          "name": "description",
+          "type": "string",
+          "description": "Published version description (will be overwritten)",
+          "default": "",
+          "typeOptions": {
+            "rows": 4
+          },
+          "routing": "\n\t\t\t\t\tsend: {\n\t\t\t\t\t\ttype: 'body',\n\t\t\t\t\t\tproperty: 'description',\n\t\t\t\t\t"
+        }
+      ]
+    },
     "workflowObject": {
       "type": "json",
       "displayName": "Workflow Object",
@@ -1379,6 +1537,11 @@
       "typeOptions": {
         "alwaysOpenEditWindow": true
       }
+    },
+    "versionId": {
+      "type": "string",
+      "displayName": "Version ID",
+      "name": "versionId"
     }
   },
   "api_patterns": {
@@ -1426,6 +1589,10 @@
       {
         "field": "options",
         "text": "Add option"
+      },
+      {
+        "field": "additionalFields",
+        "text": "Add Field"
       },
       {
         "field": "workflowObject",

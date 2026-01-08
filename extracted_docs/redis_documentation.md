@@ -2,7 +2,7 @@
 title: "Node: Redis"
 slug: "node-redis"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Get, send and update data in Redis"
 node_type: "regular"
 group: "['input']"
@@ -56,6 +56,7 @@ group: "['input']"
 | Increment | `incr` | Atomically increments a key by 1. Creates the key if it does not exist. |
 | Info | `info` | Returns generic information about the Redis instance |
 | Keys | `keys` | Returns all the keys matching a pattern |
+| List Length | `llen` | Returns the length of a list |
 | Pop | `pop` | Pop data from a redis list |
 | Publish | `publish` | Publish message to redis channel |
 | Push | `push` | Push data to a redis list |
@@ -78,6 +79,7 @@ group: "['input']"
 * **Increment** (`incr`) - Atomically increments a key by 1. Creates the key if it does not exist.
 * **Info** (`info`) - Returns generic information about the Redis instance
 * **Keys** (`keys`) - Returns all the keys matching a pattern
+* **List Length** (`llen`) - Returns the length of a list
 * **Pop** (`pop`) - Pop data from a redis list
 * **Publish** (`publish`) - Publish message to redis channel
 * **Push** (`push`) - Push data to a redis list
@@ -133,6 +135,12 @@ group: "['input']"
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
 | Key Pattern | `keyPattern` | string |  | ✓ | The key pattern for the keys to return |  |
 | Get Values | `getValues` | boolean | True | ✗ | Whether to get the value of matching keys |  |
+
+### List Length parameters (`llen`)
+
+| Name | Field ID | Type | Default | Required | Description | Validation |
+| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
+| List | `list` | string |  | ✓ | Name of the list in Redis |  |
 
 ### Pop parameters (`pop`)
 
@@ -264,12 +272,12 @@ operations:
     required: true
     description: 'Name of the property to write received data to. Supports dot-notation.
       Example: "data.person[0].name".'
-    validation: &id003
+    validation: &id005
       displayOptions:
         show:
           operation:
           - pop
-    typeInfo: &id004
+    typeInfo: &id006
       type: string
       displayName: Name
       name: propertyName
@@ -396,6 +404,27 @@ operations:
       type: boolean
       displayName: Get Values
       name: getValues
+- id: llen
+  name: List Length
+  description: Returns the length of a list
+  params:
+  - id: list
+    name: List
+    type: string
+    default: ''
+    required: true
+    description: Name of the list in Redis
+    validation: &id003
+      required: true
+      displayOptions:
+        show:
+          operation:
+          - push
+          - pop
+    typeInfo: &id004
+      type: string
+      displayName: List
+      name: list
 - id: pop
   name: Pop
   description: Pop data from a redis list
@@ -406,17 +435,8 @@ operations:
     default: ''
     required: true
     description: Name of the list in Redis
-    validation: &id005
-      required: true
-      displayOptions:
-        show:
-          operation:
-          - push
-          - pop
-    typeInfo: &id006
-      type: string
-      displayName: List
-      name: list
+    validation: *id003
+    typeInfo: *id004
   - id: tail
     name: Tail
     type: boolean
@@ -440,8 +460,8 @@ operations:
     required: false
     description: 'Optional name of the property to write received data to. Supports
       dot-notation. Example: "data.person[0].name".'
-    validation: *id003
-    typeInfo: *id004
+    validation: *id005
+    typeInfo: *id006
 - id: publish
   name: Publish
   description: Publish message to redis channel
@@ -488,8 +508,8 @@ operations:
     default: ''
     required: true
     description: Name of the list in Redis
-    validation: *id005
-    typeInfo: *id006
+    validation: *id003
+    typeInfo: *id004
   - id: messageData
     name: Data
     type: string
@@ -664,6 +684,7 @@ settings:
         "incr",
         "info",
         "keys",
+        "llen",
         "pop",
         "publish",
         "push",
@@ -684,6 +705,7 @@ settings:
             "incr",
             "info",
             "keys",
+            "llen",
             "pop",
             "publish",
             "push",
@@ -741,6 +763,11 @@ settings:
           "type": "boolean",
           "default": true
         },
+        "list": {
+          "description": "Name of the list in Redis",
+          "type": "string",
+          "default": ""
+        },
         "value": {
           "description": "The value to write in Redis",
           "type": "string",
@@ -758,11 +785,6 @@ settings:
         },
         "messageData": {
           "description": "Data to push",
-          "type": "string",
-          "default": ""
-        },
-        "list": {
-          "description": "Name of the list in Redis",
           "type": "string",
           "default": ""
         },
@@ -848,4 +870,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -2,7 +2,7 @@
 title: "Node: HTTP Request"
 slug: "node-http-request"
 version: "['3', '4', '4.1', '4.2', '4.3']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Makes an HTTP request and returns the response data"
 node_type: "regular"
 group: "['output']"
@@ -240,9 +240,9 @@ group: "['output']"
 
 These expression patterns are commonly used with this node:
 
-- `={{ Array.isArray($response.body) ? $response.body.length : !!$response.body }}`
-- `={{false}}`
 - `={{$parameter["method"] + ": " + $parameter["url"]}}`
+- `={{false}}`
+- `={{ Array.isArray($response.body) ? $response.body.length : !!$response.body }}`
 
 ---
 
@@ -1434,9 +1434,9 @@ params:
     typeOptions:
       minValue: 1
 common_expressions:
-- '={{ Array.isArray($response.body) ? $response.body.length : !!$response.body }}'
-- ={{false}}
 - '={{$parameter["method"] + ": " + $parameter["url"]}}'
+- ={{false}}
+- '={{ Array.isArray($response.body) ? $response.body.length : !!$response.body }}'
 ui_elements:
   notices:
   - name: googleApiWarning
@@ -1920,4 +1920,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['3', '4', '4.1', '4.2', '4.3'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['3', '4', '4.1', '4.2', '4.3'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

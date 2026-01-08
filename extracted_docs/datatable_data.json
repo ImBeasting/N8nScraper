@@ -25,7 +25,10 @@
     "description": "Permanently save data across workflow executions in a table",
     "subtitle": "={{$parameter[\"action\"]}}",
     "iconColor": "orange-red",
-    "version": "1",
+    "version": [
+      "1",
+      "1.1"
+    ],
     "usableAsTool": true,
     "node_type": "regular"
   },
@@ -51,7 +54,16 @@
       "knowledge",
       "data table",
       "table",
-      "sheet"
+      "sheet",
+      "database",
+      "data base",
+      "mysql",
+      "postgres",
+      "postgresql",
+      "airtable",
+      "supabase",
+      "noco",
+      "notion"
     ],
     "subcategories": {
       "Core Nodes": [
@@ -72,6 +84,11 @@
           "name": "Row",
           "value": "row",
           "displayName": "Row"
+        },
+        {
+          "name": "Table",
+          "value": "table",
+          "displayName": "Table"
         }
       ]
     },
@@ -140,6 +157,7 @@
       "displayName": "Data table",
       "name": "list",
       "type": "resourceLocator",
+      "placeholder": "e.g. My Table",
       "required": true,
       "modes": [
         {
@@ -149,20 +167,19 @@
           "typeOptions": {}
         },
         {
+          "displayName": "By Name",
+          "name": "name",
+          "type": "string",
+          "placeholder": "e.g. My Table"
+        },
+        {
           "displayName": "ID",
           "name": "id",
           "type": "string"
         }
       ],
       "typeOptions": {},
-      "displayOptions": {
-        "show": {
-          "resource": [
-            "row"
-          ]
-        }
-      },
-      "_source": "row"
+      "_source": "action_row_Row.resource"
     },
     {
       "displayName": "Options",
@@ -171,7 +188,7 @@
       "placeholder": "Add option",
       "default": {},
       "options": [],
-      "_source": "action_row_upsert.operation"
+      "_source": "action_row_update.operation"
     },
     {
       "displayName": "Return All",
@@ -197,6 +214,136 @@
         }
       },
       "_source": "action_row_Row.resource"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Create a new data table",
+      "action": "Create a data table",
+      "default": "list",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Create",
+          "description": "Create a new data table",
+          "action": "Create a data table",
+          "displayName": "Create"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete a data table",
+          "action": "Delete a data table",
+          "displayName": "Delete"
+        },
+        {
+          "name": "List",
+          "description": "List all data tables",
+          "action": "List data tables",
+          "displayName": "List"
+        },
+        {
+          "name": "Update",
+          "description": "Update a data table name",
+          "action": "Update a data table",
+          "displayName": "Update"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "table"
+          ]
+        }
+      },
+      "_source": "table"
+    },
+    {
+      "displayName": "Name",
+      "name": "tableName",
+      "type": "string",
+      "description": "The name of the data table to create",
+      "placeholder": "e.g. My Data Table",
+      "default": "",
+      "required": true,
+      "_source": "action_table_Table.resource"
+    },
+    {
+      "displayName": "Columns",
+      "name": "columns",
+      "type": "fixedCollection",
+      "description": "The columns to create in the data table",
+      "placeholder": "Add Column",
+      "value": "boolean",
+      "default": {},
+      "required": true,
+      "options": [
+        {
+          "name": "column",
+          "displayName": "Column",
+          "values": [
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "description": "The name of the column",
+              "default": "",
+              "required": true
+            },
+            {
+              "displayName": "Type",
+              "name": "type",
+              "type": "options",
+              "description": "The type of the column",
+              "value": "boolean",
+              "default": "string",
+              "options": [
+                {
+                  "name": "Boolean",
+                  "value": "boolean",
+                  "displayName": "Boolean"
+                },
+                {
+                  "name": "Date",
+                  "value": "date",
+                  "displayName": "Date"
+                },
+                {
+                  "name": "Number",
+                  "value": "number",
+                  "displayName": "Number"
+                },
+                {
+                  "name": "String",
+                  "value": "string",
+                  "displayName": "String"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "_source": "action_table_Table.resource"
+    },
+    {
+      "displayName": "This will permanently delete the data table and all its data. This action cannot be undone.",
+      "name": "deleteWarning",
+      "type": "notice",
+      "default": "",
+      "_source": "action_table_Table.resource"
+    },
+    {
+      "displayName": "New Name",
+      "name": "newName",
+      "type": "string",
+      "description": "The new name for the data table",
+      "placeholder": "e.g. Renamed Data Table",
+      "default": "",
+      "required": true,
+      "_source": "action_table_Table.resource"
     }
   ],
   "operations": [
@@ -241,6 +388,18 @@
       "description": "Update row(s), or insert if there is no match",
       "action": "Upsert row(s)",
       "displayName": "Upsert"
+    },
+    {
+      "name": "Create",
+      "description": "Create a new data table",
+      "action": "Create a data table",
+      "displayName": "Create"
+    },
+    {
+      "name": "List",
+      "description": "List all data tables",
+      "action": "List data tables",
+      "displayName": "List"
     }
   ],
   "operations_by_resource": {
@@ -287,13 +446,39 @@
         "action": "Upsert row(s)",
         "displayName": "Upsert"
       }
+    ],
+    "table": [
+      {
+        "name": "Create",
+        "description": "Create a new data table",
+        "action": "Create a data table",
+        "displayName": "Create"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete a data table",
+        "action": "Delete a data table",
+        "displayName": "Delete"
+      },
+      {
+        "name": "List",
+        "description": "List all data tables",
+        "action": "List data tables",
+        "displayName": "List"
+      },
+      {
+        "name": "Update",
+        "description": "Update a data table name",
+        "action": "Update a data table",
+        "displayName": "Update"
+      }
     ]
   },
   "credentials": [],
   "workflow_examples": [],
   "expressions": [
-    "={{$parameter[\"action\"]}}",
     "={{ $parameter.dataTableId !== \"\" && $parameter?.columns?.mappingMode === \"defineBelow\" && !$parameter?.columns?.schema?.length }}",
+    "={{$parameter[\"action\"]}}",
     "{{ $parameter.dataTableId !== \"\" && $parameter?.columns?.mappingMode === \"defineBelow\" && !$parameter?.columns?.schema?.length }}"
   ],
   "validation_rules": {
@@ -301,20 +486,13 @@
       "displayOptions": {
         "show": {
           "resource": [
-            "row"
+            "table"
           ]
         }
       }
     },
     "list": {
-      "required": true,
-      "displayOptions": {
-        "show": {
-          "resource": [
-            "row"
-          ]
-        }
-      }
+      "required": true
     },
     "limit": {
       "displayOptions": {
@@ -324,6 +502,15 @@
           ]
         }
       }
+    },
+    "tableName": {
+      "required": true
+    },
+    "columns": {
+      "required": true
+    },
+    "newName": {
+      "required": true
     }
   },
   "type_info": {
@@ -336,6 +523,11 @@
           "value": "row",
           "name": "Row",
           "description": ""
+        },
+        {
+          "value": "table",
+          "name": "Table",
+          "description": ""
         }
       ]
     },
@@ -345,39 +537,24 @@
       "name": "operation",
       "possibleValues": [
         {
+          "value": "Create",
+          "name": "Create",
+          "description": "Create a new data table"
+        },
+        {
           "value": "Delete",
           "name": "Delete",
-          "description": "Delete row(s)"
+          "description": "Delete a data table"
         },
         {
-          "value": "Get",
-          "name": "Get",
-          "description": "Get row(s)"
-        },
-        {
-          "value": "If Row Exists",
-          "name": "If Row Exists",
-          "description": "Match input items that are in the data table"
-        },
-        {
-          "value": "If Row Does Not Exist",
-          "name": "If Row Does Not Exist",
-          "description": "Match input items that are not in the data table"
-        },
-        {
-          "value": "Insert",
-          "name": "Insert",
-          "description": "Insert a new row"
+          "value": "List",
+          "name": "List",
+          "description": "List all data tables"
         },
         {
           "value": "Update",
           "name": "Update",
-          "description": "Update row(s) matching certain fields"
-        },
-        {
-          "value": "Upsert",
-          "name": "Upsert",
-          "description": "Update row(s), or insert if there is no match"
+          "description": "Update a data table name"
         }
       ]
     },
@@ -404,16 +581,107 @@
       "typeOptions": {
         "minValue": 1
       }
+    },
+    "tableName": {
+      "type": "string",
+      "displayName": "Name",
+      "name": "tableName"
+    },
+    "columns": {
+      "type": "fixedCollection",
+      "displayName": "Columns",
+      "name": "columns",
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "subProperties": [
+        {
+          "name": "column",
+          "displayName": "Column",
+          "values": [
+            {
+              "displayName": "Name",
+              "name": "name",
+              "type": "string",
+              "description": "The name of the column",
+              "default": "",
+              "required": true
+            },
+            {
+              "displayName": "Type",
+              "name": "type",
+              "type": "options",
+              "description": "The type of the column",
+              "value": "boolean",
+              "default": "string",
+              "options": [
+                {
+                  "name": "Boolean",
+                  "value": "boolean",
+                  "displayName": "Boolean"
+                },
+                {
+                  "name": "Date",
+                  "value": "date",
+                  "displayName": "Date"
+                },
+                {
+                  "name": "Number",
+                  "value": "number",
+                  "displayName": "Number"
+                },
+                {
+                  "name": "String",
+                  "value": "string",
+                  "displayName": "String"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "deleteWarning": {
+      "type": "notice",
+      "displayName": "This will permanently delete the data table and all its data. This action cannot be undone.",
+      "name": "deleteWarning"
+    },
+    "newName": {
+      "type": "string",
+      "displayName": "New Name",
+      "name": "newName"
     }
   },
   "api_patterns": {},
   "ui_elements": {
-    "notices": [],
+    "notices": [
+      {
+        "name": "deleteWarning",
+        "text": "This will permanently delete the data table and all its data. This action cannot be undone.",
+        "conditions": null
+      }
+    ],
     "tooltips": [],
     "placeholders": [
       {
+        "field": "list",
+        "text": "e.g. My Table"
+      },
+      {
         "field": "options",
         "text": "Add option"
+      },
+      {
+        "field": "tableName",
+        "text": "e.g. My Data Table"
+      },
+      {
+        "field": "columns",
+        "text": "Add Column"
+      },
+      {
+        "field": "newName",
+        "text": "e.g. Renamed Data Table"
       }
     ],
     "hints": []

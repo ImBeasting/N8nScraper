@@ -2,7 +2,7 @@
 title: "Node: GoToWebinar"
 slug: "node-gotowebinar"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume the GoToWebinar API"
 node_type: "regular"
 group: "['transform']"
@@ -50,7 +50,7 @@ group: "['transform']"
 
 ## API Patterns
 
-**Headers Used:** Content-Type, user-agent
+**Headers Used:** user-agent, Content-Type
 
 ---
 
@@ -1122,8 +1122,8 @@ api_patterns:
   http_methods: []
   endpoints: []
   headers:
-  - Content-Type
   - user-agent
+  - Content-Type
   query_params: []
 ui_elements:
   notices: []
@@ -1476,4 +1476,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

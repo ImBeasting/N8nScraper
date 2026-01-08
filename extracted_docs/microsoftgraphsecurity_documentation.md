@@ -2,7 +2,7 @@
 title: "Node: Microsoft Graph Security"
 slug: "node-microsoftgraphsecurity"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume the Microsoft Graph Security API"
 node_type: "regular"
 group: "['transform']"
@@ -162,22 +162,6 @@ These examples are extracted from actual n8n workflows:
 
 ### Example 1: Microsoft Graph Security
 
-**From workflow:** Microsoft GraphSecurity SecureScoreControlProfile GetAll Test
-
-**Parameters:**
-```json
-{
-  "resource": "secureScoreControlProfile",
-  "operation": "getAll",
-  "returnAll": true
-}
-```
-
-**Credentials:**
-- microsoftGraphSecurityOAuth2Api: `Microsoft Graph Security OAuth2`
-
-### Example 2: Microsoft Graph Security
-
 **From workflow:** Microsoft GraphSecurity SecureScoreControlProfile Get Test
 
 **Parameters:**
@@ -192,7 +176,39 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - microsoftGraphSecurityOAuth2Api: `Microsoft Graph Security OAuth2`
 
+### Example 2: Microsoft Graph Security
+
+**From workflow:** Microsoft GraphSecurity SecureScoreControlProfile GetAll Test
+
+**Parameters:**
+```json
+{
+  "resource": "secureScoreControlProfile",
+  "operation": "getAll",
+  "returnAll": true
+}
+```
+
+**Credentials:**
+- microsoftGraphSecurityOAuth2Api: `Microsoft Graph Security OAuth2`
+
 ### Example 3: Microsoft Graph Security
+
+**From workflow:** Microsoft GraphSecurity SecureScore GetAll Test
+
+**Parameters:**
+```json
+{
+  "resource": "secureScore",
+  "operation": "getAll",
+  "returnAll": true
+}
+```
+
+**Credentials:**
+- microsoftGraphSecurityOAuth2Api: `Microsoft Graph Security OAuth2`
+
+### Example 4: Microsoft Graph Security
 
 **From workflow:** Microsoft GraphSecurity SecureScoreControlProfile Update Test
 
@@ -207,22 +223,6 @@ These examples are extracted from actual n8n workflows:
   "updateFields": {
     "state": "Ignored"
   }
-}
-```
-
-**Credentials:**
-- microsoftGraphSecurityOAuth2Api: `Microsoft Graph Security OAuth2`
-
-### Example 4: Microsoft Graph Security
-
-**From workflow:** Microsoft GraphSecurity SecureScore GetAll Test
-
-**Parameters:**
-```json
-{
-  "resource": "secureScore",
-  "operation": "getAll",
-  "returnAll": true
 }
 ```
 
@@ -453,25 +453,21 @@ examples:
 - name: Microsoft Graph Security
   parameters:
     resource: secureScoreControlProfile
-    operation: getAll
-    returnAll: true
-  workflow: Microsoft GraphSecurity SecureScoreControlProfile GetAll Test
-- name: Microsoft Graph Security
-  parameters:
-    resource: secureScoreControlProfile
     operation: get
     secureScoreControlProfileId: test-control-profile-id
   workflow: Microsoft GraphSecurity SecureScoreControlProfile Get Test
 - name: Microsoft Graph Security
   parameters:
     resource: secureScoreControlProfile
-    operation: update
-    secureScoreControlProfileId: test-control-profile-id
-    provider: Microsoft
-    vendor: Microsoft
-    updateFields:
-      state: Ignored
-  workflow: Microsoft GraphSecurity SecureScoreControlProfile Update Test
+    operation: getAll
+    returnAll: true
+  workflow: Microsoft GraphSecurity SecureScoreControlProfile GetAll Test
+- name: Microsoft Graph Security
+  parameters:
+    resource: secureScore
+    operation: getAll
+    returnAll: true
+  workflow: Microsoft GraphSecurity SecureScore GetAll Test
 common_expressions:
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 api_patterns:
@@ -740,14 +736,6 @@ settings:
       "description": "Microsoft Graph Security",
       "value": {
         "resource": "secureScoreControlProfile",
-        "operation": "getAll",
-        "returnAll": true
-      }
-    },
-    {
-      "description": "Microsoft Graph Security",
-      "value": {
-        "resource": "secureScoreControlProfile",
         "operation": "get",
         "secureScoreControlProfileId": "test-control-profile-id"
       }
@@ -756,13 +744,16 @@ settings:
       "description": "Microsoft Graph Security",
       "value": {
         "resource": "secureScoreControlProfile",
-        "operation": "update",
-        "secureScoreControlProfileId": "test-control-profile-id",
-        "provider": "Microsoft",
-        "vendor": "Microsoft",
-        "updateFields": {
-          "state": "Ignored"
-        }
+        "operation": "getAll",
+        "returnAll": true
+      }
+    },
+    {
+      "description": "Microsoft Graph Security",
+      "value": {
+        "resource": "secureScore",
+        "operation": "getAll",
+        "returnAll": true
       }
     }
   ]
@@ -775,4 +766,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

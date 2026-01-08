@@ -2,7 +2,7 @@
 title: "Node: Item Lists"
 slug: "node-item-lists"
 version: "['2', '2.1', '2.2']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Helper for working with lists of items and transforming arrays"
 node_type: "regular"
 group: "['input']"
@@ -1380,4 +1380,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['2', '2.1', '2.2'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['2', '2.1', '2.2'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

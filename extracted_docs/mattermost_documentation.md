@@ -2,7 +2,7 @@
 title: "Node: Mattermost"
 slug: "node-mattermost"
 version: "1.0"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Sends data to Mattermost"
 node_type: "regular"
 group: "['output']"
@@ -36,14 +36,6 @@ group: "['output']"
 
 ## Operations
 
-### Reaction Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Create | `create` | Add a reaction to a post |
-| Delete | `delete` | Remove a reaction from a post |
-| Get Many | `getAll` | Get many reactions to one or more posts |
-
 ### Channel Resource Operations
 
 | Operation | ID | Description |
@@ -56,6 +48,22 @@ group: "['output']"
 | Search | `search` | Search for a channel |
 | Statistics | `statistics` | Get statistics for a channel |
 
+### Reaction Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Create | `create` | Add a reaction to a post |
+| Delete | `delete` | Remove a reaction from a post |
+| Get Many | `getAll` | Get many reactions to one or more posts |
+
+### Message Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Delete | `delete` | Soft delete a post, by marking the post as deleted in the database |
+| Post | `post` | Post a message into a channel |
+| Post Ephemeral | `postEphemeral` | Post an ephemeral message into a channel |
+
 ### User Resource Operations
 
 | Operation | ID | Description |
@@ -66,14 +74,6 @@ group: "['output']"
 | Get By ID | `getById` | Get a user by ID |
 | Get Many | `getAll` | Retrieve many users |
 | Invite | `invite` | Invite user to team |
-
-### Message Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Delete | `delete` | Soft delete a post, by marking the post as deleted in the database |
-| Post | `post` | Post a message into a channel |
-| Post Ephemeral | `postEphemeral` | Post an ephemeral message into a channel |
 
 ---
 
@@ -98,13 +98,17 @@ group: "['output']"
 
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Operation | `operation` | options | create | ✗ | Add a reaction to a post |  |
+| Operation | `operation` | options | create | ✗ | Add a user to a channel |  |
 
 **Operation options:**
 
-* **Create** (`create`) - Add a reaction to a post
-* **Delete** (`delete`) - Remove a reaction from a post
-* **Get Many** (`getAll`) - Get many reactions to one or more posts
+* **Add User** (`addUser`) - Add a user to a channel
+* **Create** (`create`) - Create a new channel
+* **Delete** (`delete`) - Soft delete a channel
+* **Member** (`members`) - Get a page of members for a channel
+* **Restore** (`restore`) - Restores a soft deleted channel
+* **Search** (`search`) - Search for a channel
+* **Statistics** (`statistics`) - Get statistics for a channel
 
 ---
 
@@ -159,18 +163,15 @@ nodeType: regular
 group:
 - output
 operations:
-- id: create
-  name: Create
-  description: Add a reaction to a post
-- id: delete
-  name: Delete
-  description: Remove a reaction from a post
-- id: getAll
-  name: Get Many
-  description: Get many reactions to one or more posts
 - id: addUser
   name: Add User
   description: Add a user to a channel
+- id: create
+  name: Create
+  description: Create a new channel
+- id: delete
+  name: Delete
+  description: Soft delete a channel
 - id: members
   name: Member
   description: Get a page of members for a channel
@@ -183,6 +184,15 @@ operations:
 - id: statistics
   name: Statistics
   description: Get statistics for a channel
+- id: getAll
+  name: Get Many
+  description: Get many reactions to one or more posts
+- id: post
+  name: Post
+  description: Post a message into a channel
+- id: postEphemeral
+  name: Post Ephemeral
+  description: Post an ephemeral message into a channel
 - id: deactive
   name: Deactive
   description: Deactivates the user and revokes all its sessions by archiving its
@@ -196,12 +206,6 @@ operations:
 - id: invite
   name: Invite
   description: Invite user to team
-- id: post
-  name: Post
-  description: Post a message into a channel
-- id: postEphemeral
-  name: Post Ephemeral
-  description: Post an ephemeral message into a channel
 common_expressions:
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 ui_elements:
@@ -302,20 +306,20 @@ settings:
     "operation": {
       "type": "string",
       "enum": [
+        "addUser",
         "create",
         "delete",
-        "getAll",
-        "addUser",
         "members",
         "restore",
         "search",
         "statistics",
+        "getAll",
+        "post",
+        "postEphemeral",
         "deactive",
         "getByEmail",
         "getById",
-        "invite",
-        "post",
-        "postEphemeral"
+        "invite"
       ],
       "description": "Operation to perform"
     },
@@ -335,14 +339,17 @@ settings:
           "default": "message"
         },
         "operation": {
-          "description": "Soft delete a post, by marking the post as deleted in the database",
+          "description": "Create a new user",
           "type": "string",
           "enum": [
-            "delete",
-            "post",
-            "postEphemeral"
+            "create",
+            "deactive",
+            "getByEmail",
+            "getById",
+            "getAll",
+            "invite"
           ],
-          "default": "post"
+          "default": ""
         }
       }
     },
@@ -415,4 +422,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1.0 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1.0 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -2,7 +2,7 @@
 title: "Node: AMQP Sender"
 slug: "node-amqp"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Sends a raw-message via AMQP 1.0, executed once per item"
 node_type: "regular"
 group: "['transform']"
@@ -377,4 +377,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

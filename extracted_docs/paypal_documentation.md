@@ -2,7 +2,7 @@
 title: "Node: PayPal"
 slug: "node-paypal"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume PayPal API"
 node_type: "regular"
 group: "['output']"
@@ -732,4 +732,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

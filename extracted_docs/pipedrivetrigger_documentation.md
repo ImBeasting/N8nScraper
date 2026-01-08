@@ -2,7 +2,7 @@
 title: "Node: Pipedrive Trigger"
 slug: "node-pipedrivetrigger"
 version: "['1', '1.1']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Starts the workflow when Pipedrive events occur"
 node_type: "trigger"
 group: "['trigger']"
@@ -357,4 +357,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '1.1'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

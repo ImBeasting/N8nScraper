@@ -2,7 +2,7 @@
 title: "Node: n8n Trigger"
 slug: "node-n8ntrigger"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Handle events and perform actions on your n8n instance"
 node_type: "trigger"
 group: "['trigger']"
@@ -49,16 +49,16 @@ group: "['trigger']"
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
 | Events | `events` | multiOptions | [] | ✓ | Specifies under which conditions an execution should happen:
 				<ul>
-					<li><b>Active Workflow Updated</b>: Triggers when this workflow is updated</li>
+					<li><b>Published Workflow Updated</b>: Triggers when workflow version is published from a published state (workflow was already published)</li>
 					<li><b>Instance Started</b>:  Triggers when this n8n instance is started or re-started</li>
-					<li><b>Workflow Activated</b>: Triggers when this workflow is activated</li>
+					<li><b>Workflow Published</b>: Triggers when workflow version is published from an unpublished state (workflow was unpublished)</li>
 				</ul> |  |
 
 **Events options:**
 
-* **Active Workflow Updated** (`update`) - Triggers when this workflow is updated
+* **Published Workflow Updated** (`update`) - Triggers when workflow version is published from a published state (workflow was already published)
 * **Instance Started** (`init`) - Triggers when this n8n instance is started or re-started
-* **Workflow Activated** (`activate`) - Triggers when this workflow is activated
+* **Workflow Published** (`activate`) - Triggers when workflow version is published from an unpublished state (workflow was not published)
 
 
 ---
@@ -100,10 +100,12 @@ params:
   default: []
   required: true
   description: "Specifies under which conditions an execution should happen:\n\t\t\
-    \t\t<ul>\n\t\t\t\t\t<li><b>Active Workflow Updated</b>: Triggers when this workflow\
-    \ is updated</li>\n\t\t\t\t\t<li><b>Instance Started</b>:  Triggers when this\
-    \ n8n instance is started or re-started</li>\n\t\t\t\t\t<li><b>Workflow Activated</b>:\
-    \ Triggers when this workflow is activated</li>\n\t\t\t\t</ul>"
+    \t\t<ul>\n\t\t\t\t\t<li><b>Published Workflow Updated</b>: Triggers when workflow\
+    \ version is published from a published state (workflow was already published)</li>\n\
+    \t\t\t\t\t<li><b>Instance Started</b>:  Triggers when this n8n instance is started\
+    \ or re-started</li>\n\t\t\t\t\t<li><b>Workflow Published</b>: Triggers when workflow\
+    \ version is published from an unpublished state (workflow was unpublished)</li>\n\
+    \t\t\t\t</ul>"
   validation:
     required: true
   typeInfo:
@@ -112,14 +114,16 @@ params:
     name: events
     possibleValues:
     - value: update
-      name: Active Workflow Updated
-      description: Triggers when this workflow is updated
+      name: Published Workflow Updated
+      description: Triggers when workflow version is published from a published state
+        (workflow was already published)
     - value: init
       name: Instance Started
       description: Triggers when this n8n instance is started or re-started
     - value: activate
-      name: Workflow Activated
-      description: Triggers when this workflow is activated
+      name: Workflow Published
+      description: Triggers when workflow version is published from an unpublished
+        state (workflow was not published)
 ui_elements:
   notices: []
   tooltips: []
@@ -158,7 +162,7 @@ settings:
       "additionalProperties": false,
       "properties": {
         "events": {
-          "description": "Specifies under which conditions an execution should happen:\n\t\t\t\t<ul>\n\t\t\t\t\t<li><b>Active Workflow Updated</b>: Triggers when this workflow is updated</li>\n\t\t\t\t\t<li><b>Instance Started</b>:  Triggers when this n8n instance is started or re-started</li>\n\t\t\t\t\t<li><b>Workflow Activated</b>: Triggers when this workflow is activated</li>\n\t\t\t\t</ul>",
+          "description": "Specifies under which conditions an execution should happen:\n\t\t\t\t<ul>\n\t\t\t\t\t<li><b>Published Workflow Updated</b>: Triggers when workflow version is published from a published state (workflow was already published)</li>\n\t\t\t\t\t<li><b>Instance Started</b>:  Triggers when this n8n instance is started or re-started</li>\n\t\t\t\t\t<li><b>Workflow Published</b>: Triggers when workflow version is published from an unpublished state (workflow was unpublished)</li>\n\t\t\t\t</ul>",
           "type": "string",
           "default": []
         }
@@ -194,4 +198,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

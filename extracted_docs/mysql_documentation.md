@@ -2,7 +2,7 @@
 title: "Node: MySQL"
 slug: "node-mysql"
 version: "['2', '2.1', '2.2', '2.3', '2.4', '2.5']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Get, add and update data in MySQL"
 node_type: "regular"
 group: "['input']"
@@ -390,4 +390,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['2', '2.1', '2.2', '2.3', '2.4', '2.5'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['2', '2.1', '2.2', '2.3', '2.4', '2.5'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -1,8 +1,8 @@
 ---
 title: "Node: Read/Write Files from Disk"
 slug: "node-readwritefile"
-version: "1"
-updated: "2025-11-13"
+version: "['1', '1.1']"
+updated: "2026-01-08"
 summary: "Read or write files from the computer that runs n8n"
 node_type: "regular"
 group: "['input']"
@@ -159,7 +159,9 @@ These examples are extracted from actual n8n workflows:
 node: readWriteFile
 displayName: Read/Write Files from Disk
 description: Read or write files from the computer that runs n8n
-version: '1'
+version:
+- '1'
+- '1.1'
 nodeType: regular
 group:
 - input
@@ -456,7 +458,10 @@ settings:
   },
   "metadata": {
     "nodeType": "regular",
-    "version": "1"
+    "version": [
+      "1",
+      "1.1"
+    ]
   },
   "examples": [
     {
@@ -484,4 +489,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

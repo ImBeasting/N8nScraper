@@ -2,7 +2,7 @@
 title: "Node: Google Docs"
 slug: "node-googledocs"
 version: "['1', '2']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Google Docs API."
 node_type: "regular"
 group: "['input']"
@@ -671,7 +671,8 @@ operations:
           type: string
           description: The ID of the positioned object to delete (An object that is
             tied to a paragraph and positioned relative to its beginning), See the
-            Google <a href="https://developers.google.com/docs/api/reference/rest/v1/PositionedObject">documentation</a>
+            Google <a href="https://developers.google.com/docs/api/reference/rest/v1/documents#positionedobject"
+            target="_blank">documentation</a>
           default: ''
           displayOptions:
             show:
@@ -1333,4 +1334,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '2'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '2'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

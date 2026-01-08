@@ -2,7 +2,8 @@
 
 **Project:** n8n Node Documentation Extractor for AI Training
 **Status:** ✅ Production Ready (96%+ quality)
-**Last Updated:** 2025-11-11
+**Last Updated:** 2026-01-08
+**n8n Version:** 2.3.0 (January 8, 2026)
 
 ---
 
@@ -10,7 +11,7 @@
 
 Python-based tool that extracts comprehensive documentation from n8n TypeScript node definitions, generating markdown docs and machine-readable schemas (YAML/JSON) optimized for AI training.
 
-**Current Quality:** 96%+ extraction accuracy across 450 nodes
+**Current Quality:** 96%+ extraction accuracy across 451 nodes
 
 ---
 
@@ -44,9 +45,9 @@ python3 generate_reports.py
 ## Repository Structure
 
 ```
-/media/tyler/fastraid/Projects/n8n Node Scrapper/
-├── n8n/                              # n8n source (530+ node definitions)
-├── extracted_docs/                   # Output (900 files: 450 JSON + 450 MD)
+/home/tyler/Projects/N8nScraper/
+├── n8n/                              # n8n source (531 node definitions, v2.3.0)
+├── extracted_docs/                   # Output (902 files: 451 JSON + 451 MD)
 ├── n8n_node_extractor.py             # Main extractor (2700+ lines)
 ├── validate_extraction.py            # Quality validation
 ├── ai_review_prompt.md               # AI audit protocol (use this!)
@@ -167,7 +168,7 @@ python3 apply_fix.py --agent claude_code --fix fix_022
 
 **Hardcoded paths** (update for your system):
 ```python
-CURRENT_DIR = Path("/media/tyler/fastraid/Projects/n8n Node Scrapper")
+CURRENT_DIR = Path("/home/tyler/Projects/N8nScraper")
 N8N_REPO = CURRENT_DIR / "n8n"
 OUTPUT_DIR = CURRENT_DIR / "extracted_docs"
 ```
@@ -176,14 +177,14 @@ OUTPUT_DIR = CURRENT_DIR / "extracted_docs"
 
 ## Quality Metrics
 
-### Current State (2025-11-11)
-- **Total nodes:** 450 (84.9% of 530 available)
-- **Files generated:** 900 (450 JSON + 450 MD)
+### Current State (2026-01-08)
+- **n8n version:** 2.3.0 (January 8, 2026)
+- **Total nodes:** 451 extracted (85.0% of 531 available)
+- **Files generated:** 902 (451 JSON + 451 MD)
 - **Duplicate groups:** 0 ✅
 - **Zero properties:** 1 (NoOp - correct by design) ✅
 - **Null displayNames:** 0 ✅
-- **Template variables:** 1 file (cosmetic only) ✅
-- **Missing outputs:** 5 files (edge cases)
+- **Template variables:** 0 ✅
 - **Overall quality:** 96%+
 
 ### Quality by Node Type
@@ -254,7 +255,7 @@ python3 cleanup_duplicates.py  # Remove duplicates, keep best version
 ### Quick Test
 ```bash
 python3 n8n_node_extractor.py extract GoogleSheets
-jq '.properties | length' extracted_docs/googlesheets_data.json  # Should be ~42
+jq '.properties | length' extracted_docs/googlesheets_data.json  # Should be ~23
 python3 validate_extraction.py
 ```
 
@@ -290,7 +291,7 @@ python3 generate_reports.py  # Regenerate all reports
 ## Performance Notes
 
 - **Single node extraction:** <1 second
-- **Bulk extraction (530 nodes):** ~7-10 seconds
+- **Bulk extraction (531 nodes):** ~7-10 seconds
 - **Memory usage:** <500MB typical
 - **Output size:** ~27MB total (JSON + MD)
 
@@ -316,12 +317,12 @@ python3 generate_reports.py  # Regenerate all reports
 
 ## Success Metrics - ACHIEVED ✅
 
-- ✅ Zero-property nodes: 49 → 1 (target: <5)
-- ✅ GoogleSheets: 5 → 42 properties (target: 40+)
-- ✅ Elasticsearch: 1 → 35 properties (target: 30+)
-- ✅ Dynamic outputs: Working (target: 6 nodes)
-- ✅ Constants: Resolved (target: 10-20 nodes)
-- ✅ Operation tagging: 90%+ (target: 80%+)
+- ✅ Zero-property nodes: 1 (NoOp only - by design)
+- ✅ GoogleSheets: 23 properties
+- ✅ Slack: 111 properties
+- ✅ HttpRequest: 42 properties
+- ✅ Dynamic outputs: Working
+- ✅ Operation tagging: 90%+
 - ✅ Overall quality: 96%+ (target: 92-95%)
 
 ---
@@ -353,12 +354,12 @@ python3 agent_start.py --agent claude_code
 
 ---
 
-**Version:** 3.0 (Production Ready)
-**Quality:** 96%+ across 450 nodes
+**Version:** 3.1 (Production Ready)
+**n8n Version:** 2.3.0 (January 8, 2026)
+**Quality:** 96%+ across 451 nodes
 **Status:** ✅ Active development
-**Last Major Update:** 2025-11-11 (6 critical fixes applied)
+**Last Extraction:** 2026-01-08
 
 For detailed technical documentation, see:
-- FIXES_APPLIED_2025-11-11_COMPREHENSIVE.md (latest fixes)
-- AGENT_COLLABORATION_GUIDE.md (complete workflow)
 - QUICK_START.md (quick reference)
+- docs/MULTI_AGENT_SYSTEM_README.md (multi-agent workflow)

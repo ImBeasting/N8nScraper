@@ -1,8 +1,8 @@
 ---
 title: "Node: Slack"
 slug: "node-slack"
-version: "['2', '2.1', '2.2', '2.3']"
-updated: "2025-11-13"
+version: "['2', '2.1', '2.2', '2.3', '2.4']"
+updated: "2026-01-08"
 summary: "Consume Slack API"
 node_type: "regular"
 group: "['output']"
@@ -796,6 +796,7 @@ version:
 - '2.1'
 - '2.2'
 - '2.3'
+- '2.4'
 nodeType: regular
 group:
 - output
@@ -2563,7 +2564,8 @@ settings:
       "2",
       "2.1",
       "2.2",
-      "2.3"
+      "2.3",
+      "2.4"
     ]
   },
   "credentials": [
@@ -2585,4 +2587,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['2', '2.1', '2.2', '2.3'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['2', '2.1', '2.2', '2.3', '2.4'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

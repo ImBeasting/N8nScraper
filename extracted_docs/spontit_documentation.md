@@ -2,7 +2,7 @@
 title: "Node: Spontit"
 slug: "node-spontit"
 version: "1"
-updated: "2025-11-13"
+updated: "2025-11-19"
 summary: "Consume Spontit API"
 node_type: "regular"
 group: "['output']"
@@ -50,7 +50,7 @@ group: "['output']"
 
 ## API Patterns
 
-**Headers Used:** X-Authorization, X-UserId
+**Headers Used:** X-UserId, X-Authorization
 
 ---
 
@@ -201,8 +201,8 @@ api_patterns:
   http_methods: []
   endpoints: []
   headers:
-  - X-Authorization
   - X-UserId
+  - X-Authorization
   query_params: []
 ui_elements:
   notices: []
@@ -418,4 +418,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2025-11-19 | Ultimate extraction with maximum detail for AI training |

@@ -1,8 +1,8 @@
 ---
 title: "Node: Switch"
 slug: "node-switch"
-version: "['3', '3.1', '3.2', '3.3']"
-updated: "2025-11-13"
+version: "['3', '3.1', '3.2', '3.3', '3.4']"
+updated: "2026-01-08"
 summary: "Route items depending on defined expression or rules"
 node_type: "regular"
 group: "['transform']"
@@ -81,9 +81,9 @@ group: "['transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{!$parameter.options.ignoreCase}}`
 - `={{}}`
-- `={{ $nodeVersion >= 3.2 ? 2 : 1 }}`
+- `={{!$parameter.options.ignoreCase}}`
+- `={{ $nodeVersion >=3.4 ? 3 : $nodeVersion >= 3.2 ? 2 : 1 }}`
 
 ---
 
@@ -127,6 +127,7 @@ version:
 - '3.1'
 - '3.2'
 - '3.3'
+- '3.4'
 nodeType: regular
 group:
 - transform
@@ -261,9 +262,9 @@ params:
     displayName: Convert types where required
     name: looseTypeValidation
 common_expressions:
-- ={{!$parameter.options.ignoreCase}}
 - ={{}}
-- '={{ $nodeVersion >= 3.2 ? 2 : 1 }}'
+- ={{!$parameter.options.ignoreCase}}
+- '={{ $nodeVersion >=3.4 ? 3 : $nodeVersion >= 3.2 ? 2 : 1 }}'
 ui_elements:
   notices: []
   tooltips: []
@@ -473,7 +474,8 @@ settings:
       "3",
       "3.1",
       "3.2",
-      "3.3"
+      "3.3",
+      "3.4"
     ]
   }
 }
@@ -485,4 +487,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['3', '3.1', '3.2', '3.3'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['3', '3.1', '3.2', '3.3', '3.4'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

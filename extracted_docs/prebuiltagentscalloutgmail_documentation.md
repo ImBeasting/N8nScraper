@@ -1,8 +1,8 @@
 ---
 title: "Node: Gmail"
 slug: "node-prebuiltagentscalloutgmail"
-version: "['2', '2.1']"
-updated: "2025-11-13"
+version: "['2', '2.1', '2.2']"
+updated: "2026-01-08"
 summary: "Consume the Gmail API"
 node_type: "regular"
 group: "['transform']"
@@ -500,6 +500,7 @@ description: Consume the Gmail API
 version:
 - '2'
 - '2.1'
+- '2.2'
 nodeType: regular
 group:
 - transform
@@ -1506,7 +1507,8 @@ settings:
     "nodeType": "regular",
     "version": [
       "2",
-      "2.1"
+      "2.1",
+      "2.2"
     ]
   },
   "credentials": [
@@ -1528,4 +1530,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['2', '2.1'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['2', '2.1', '2.2'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

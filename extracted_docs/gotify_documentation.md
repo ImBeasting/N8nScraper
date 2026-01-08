@@ -2,7 +2,7 @@
 title: "Node: Gotify"
 slug: "node-gotify"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Gotify API"
 node_type: "regular"
 group: "['input']"
@@ -50,7 +50,7 @@ group: "['input']"
 
 ## API Patterns
 
-**Headers Used:** POST, X-Gotify-Key
+**Headers Used:** X-Gotify-Key, POST
 
 ---
 
@@ -282,8 +282,8 @@ api_patterns:
   http_methods: []
   endpoints: []
   headers:
-  - POST
   - X-Gotify-Key
+  - POST
   query_params: []
 ui_elements:
   notices: []
@@ -528,4 +528,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

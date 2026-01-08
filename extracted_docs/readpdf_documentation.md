@@ -2,7 +2,7 @@
 title: "Node: Read PDF"
 slug: "node-readpdf"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Reads a PDF and extracts its content"
 node_type: "regular"
 group: "['input']"
@@ -49,16 +49,7 @@ group: "['input']"
 
 These examples are extracted from actual n8n workflows:
 
-### Example 1: Read PDF
-
-**From workflow:** Unnamed workflow
-
-**Parameters:**
-```json
-{}
-```
-
-### Example 2: Read PDF (encrypted)
+### Example 1: Read PDF (encrypted)
 
 **From workflow:** Unnamed workflow
 
@@ -68,6 +59,15 @@ These examples are extracted from actual n8n workflows:
   "encrypted": true,
   "password": "ReaderPassword"
 }
+```
+
+### Example 2: Read PDF
+
+**From workflow:** Unnamed workflow
+
+**Parameters:**
+```json
+{}
 ```
 
 
@@ -156,13 +156,13 @@ params:
     typeOptions:
       password: true
 examples:
-- name: Read PDF
-  parameters: {}
-  workflow: Unnamed workflow
 - name: Read PDF (encrypted)
   parameters:
     encrypted: true
     password: ReaderPassword
+  workflow: Unnamed workflow
+- name: Read PDF
+  parameters: {}
   workflow: Unnamed workflow
 ui_elements:
   notices: []
@@ -342,15 +342,15 @@ settings:
   },
   "examples": [
     {
-      "description": "Read PDF",
-      "value": {}
-    },
-    {
       "description": "Read PDF (encrypted)",
       "value": {
         "encrypted": true,
         "password": "ReaderPassword"
       }
+    },
+    {
+      "description": "Read PDF",
+      "value": {}
     }
   ]
 }
@@ -362,4 +362,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

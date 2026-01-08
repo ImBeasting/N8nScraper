@@ -2,7 +2,7 @@
 title: "Node: Google Contacts"
 slug: "node-googlecontacts"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Google Contacts API"
 node_type: "regular"
 group: "['input']"
@@ -301,19 +301,21 @@ group: "['input']"
 
 These examples are extracted from actual n8n workflows:
 
-### Example 1: Get Contact All Fields
+### Example 1: Get All Contacts Connections
 
-**From workflow:** Google Contacts Get All Fields Test
+**From workflow:** Google Contacts Get All Connections Test
 
 **Parameters:**
 ```json
 {
   "resource": "contact",
-  "operation": "get",
-  "contactId": "c123456789",
+  "operation": "getAll",
+  "returnAll": true,
   "fields": [
-    "*"
+    "names",
+    "emailAddresses"
   ],
+  "useQuery": false,
   "rawData": false
 }
 ```
@@ -343,22 +345,21 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - googleContactsOAuth2Api: `Test Google Contacts OAuth2`
 
-### Example 3: Get All Contacts Search
+### Example 3: Get Contact Fields
 
-**From workflow:** Google Contacts Get All Search Test
+**From workflow:** Google Contacts Get Fields Test
 
 **Parameters:**
 ```json
 {
   "resource": "contact",
-  "operation": "getAll",
-  "returnAll": true,
+  "operation": "get",
+  "contactId": "c123456789",
   "fields": [
     "names",
-    "emailAddresses"
+    "emailAddresses",
+    "phoneNumbers"
   ],
-  "useQuery": true,
-  "query": "John",
   "rawData": false
 }
 ```
@@ -366,21 +367,19 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - googleContactsOAuth2Api: `Test Google Contacts OAuth2`
 
-### Example 4: Get All Contacts Connections
+### Example 4: Get Contact All Fields
 
-**From workflow:** Google Contacts Get All Connections Test
+**From workflow:** Google Contacts Get All Fields Test
 
 **Parameters:**
 ```json
 {
   "resource": "contact",
-  "operation": "getAll",
-  "returnAll": true,
+  "operation": "get",
+  "contactId": "c123456789",
   "fields": [
-    "names",
-    "emailAddresses"
+    "*"
   ],
-  "useQuery": false,
   "rawData": false
 }
 ```
@@ -765,15 +764,17 @@ operations:
     validation: *id003
     typeInfo: *id004
 examples:
-- name: Get Contact All Fields
+- name: Get All Contacts Connections
   parameters:
     resource: contact
-    operation: get
-    contactId: c123456789
+    operation: getAll
+    returnAll: true
     fields:
-    - '*'
+    - names
+    - emailAddresses
+    useQuery: false
     rawData: false
-  workflow: Google Contacts Get All Fields Test
+  workflow: Google Contacts Get All Connections Test
 - name: Get All Contacts Limit
   parameters:
     resource: contact
@@ -785,18 +786,17 @@ examples:
     useQuery: false
     rawData: false
   workflow: Google Contacts Get All Limit Test
-- name: Get All Contacts Search
+- name: Get Contact Fields
   parameters:
     resource: contact
-    operation: getAll
-    returnAll: true
+    operation: get
+    contactId: c123456789
     fields:
     - names
     - emailAddresses
-    useQuery: true
-    query: John
+    - phoneNumbers
     rawData: false
-  workflow: Google Contacts Get All Search Test
+  workflow: Google Contacts Get Fields Test
 common_expressions:
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 api_patterns:
@@ -1080,14 +1080,16 @@ settings:
   ],
   "examples": [
     {
-      "description": "Get Contact All Fields",
+      "description": "Get All Contacts Connections",
       "value": {
         "resource": "contact",
-        "operation": "get",
-        "contactId": "c123456789",
+        "operation": "getAll",
+        "returnAll": true,
         "fields": [
-          "*"
+          "names",
+          "emailAddresses"
         ],
+        "useQuery": false,
         "rawData": false
       }
     },
@@ -1106,17 +1108,16 @@ settings:
       }
     },
     {
-      "description": "Get All Contacts Search",
+      "description": "Get Contact Fields",
       "value": {
         "resource": "contact",
-        "operation": "getAll",
-        "returnAll": true,
+        "operation": "get",
+        "contactId": "c123456789",
         "fields": [
           "names",
-          "emailAddresses"
+          "emailAddresses",
+          "phoneNumbers"
         ],
-        "useQuery": true,
-        "query": "John",
         "rawData": false
       }
     }
@@ -1130,4 +1131,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

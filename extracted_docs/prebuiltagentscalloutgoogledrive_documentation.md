@@ -2,7 +2,7 @@
 title: "Node: Retrieve, analyze, and answer questions using your Google Drive documents with our pre-built"
 slug: "node-prebuiltagentscalloutgoogledrive"
 version: "3"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Access data on Google Drive"
 node_type: "regular"
 group: "['input']"
@@ -454,4 +454,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 3 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 3 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -2,7 +2,7 @@
 title: "Node: n8n"
 slug: "node-n8n"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Handle events and perform actions on your n8n instance"
 node_type: "regular"
 group: "['transform']"
@@ -76,12 +76,13 @@ group: "['transform']"
 
 | Operation | ID | Description |
 | --------- | -- | ----------- |
-| Activate | `activate` | Activate a workflow |
+| Publish | `activate` | Publish a workflow |
 | Create | `create` | Create a workflow |
-| Deactivate | `deactivate` | Deactivate a workflow |
+| Unpublish | `deactivate` | Unpublish a workflow |
 | Delete | `delete` | Delete a workflow |
 | Get | `get` | Get a workflow |
 | Get Many | `getAll` | Get many workflows |
+| Get Version | `getVersion` | Get a workflow version |
 | Update | `update` | Update a workflow |
 
 ---
@@ -191,7 +192,7 @@ group: "['transform']"
 
 | Sub-Option | Field ID | Type | Default | Description |
 | ---------- | -------- | ---- | ------- | ----------- |
-| Return Only Active Workflows | `activeWorkflows` | boolean | True |  |
+| Return Only Published Workflows | `activeWorkflows` | boolean | True |  |
 | Tags | `tags` | string |  | Include only workflows with these tags |
 | Name | `name` | string |  |  |
 | Project ID | `projectId` | string |  |  |
@@ -199,6 +200,30 @@ group: "['transform']"
 
 </details>
 
+
+### Publish parameters (`activate`)
+
+| Name | Field ID | Type | Default | Required | Description | Validation |
+| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
+| Additional Fields | `additionalFields` | collection | {} | ✗ | The version ID of the workflow to publish | e.g. Add Field |  |
+
+<details>
+<summary><strong>Additional Fields sub-options</strong></summary>
+
+| Sub-Option | Field ID | Type | Default | Description |
+| ---------- | -------- | ---- | ------- | ----------- |
+| Version ID | `versionId` | string |  | The version ID of the workflow to publish |
+| Name | `name` | string |  | Published version name (will be overwritten) |
+| Description | `description` | string |  | Published version description (will be overwritten) |
+
+</details>
+
+
+### Get Version parameters (`getVersion`)
+
+| Name | Field ID | Type | Default | Required | Description | Validation |
+| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
+| Version ID | `versionId` | string |  | ✓ | The version ID to retrieve |  |
 
 ### Update parameters (`update`)
 
@@ -480,11 +505,34 @@ operations:
     validation: *id007
     typeInfo: *id008
 - id: activate
-  name: Activate
+  name: Publish
   description: ''
+  params: []
 - id: deactivate
-  name: Deactivate
+  name: Unpublish
   description: ''
+- id: getVersion
+  name: Get Version
+  description: ''
+  params:
+  - id: versionId
+    name: Version ID
+    type: string
+    default: ''
+    required: true
+    description: The version ID to retrieve
+    validation:
+      required: true
+      displayOptions:
+        show:
+          resource:
+          - workflow
+          operation:
+          - getVersion
+    typeInfo:
+      type: string
+      displayName: Version ID
+      name: versionId
 - id: update
   name: Update
   description: ''
@@ -530,6 +578,8 @@ ui_elements:
     text: Select a Workflow...
   - field: options
     text: Add option
+  - field: additionalFields
+    text: Add Field
   - field: workflowObject
     text: '{n  "name": "My workflow",n  "nodes": [],n  "connections": {},n  "settings":
       {}n}'
@@ -640,6 +690,7 @@ settings:
         "getAll",
         "activate",
         "deactivate",
+        "getVersion",
         "update"
       ],
       "description": "Operation to perform"
@@ -669,6 +720,7 @@ settings:
             "delete",
             "get",
             "getAll",
+            "getVersion",
             "update"
           ],
           "default": "getAll"
@@ -745,6 +797,14 @@ settings:
             "Select a Workflow..."
           ]
         },
+        "additionalFields": {
+          "description": "The version ID of the workflow to publish",
+          "type": "string",
+          "default": {},
+          "examples": [
+            "Add Field"
+          ]
+        },
         "workflowObject": {
           "description": "A valid JSON object with required fields: 'name', 'nodes', 'connections' and 'settings'. More information can be found in the <a href=\"https://docs.n8n.io/api/api-reference/#tag/workflow/paths/~1workflows~1%7bid%7d/put\">documentation</a>.",
           "type": "string",
@@ -752,6 +812,11 @@ settings:
           "examples": [
             "{n  \"name\": \"My workflow\",n  \"nodes\": [],n  \"connections\": {},n  \"settings\": {}n}"
           ]
+        },
+        "versionId": {
+          "description": "The version ID to retrieve",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -830,4 +895,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

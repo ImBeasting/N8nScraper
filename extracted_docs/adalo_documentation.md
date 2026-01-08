@@ -2,7 +2,7 @@
 title: "Node: Adalo"
 slug: "node-adalo"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Adalo API"
 node_type: "regular"
 group: "['transform']"
@@ -104,9 +104,9 @@ group: "['transform']"
 These expression patterns are commonly used with this node:
 
 - `={{$parameter["operation"] + ": " + $parameter["collectionId"]}}`
+- `={{$parameter["limit"]}}`
 - `={{$parameter["returnAll"]}}`
 - `={{ { "success": true } }}`
-- `={{$parameter["limit"]}}`
 
 ---
 
@@ -341,9 +341,9 @@ params:
       maxValue: 100
 common_expressions:
 - '={{$parameter["operation"] + ": " + $parameter["collectionId"]}}'
+- ={{$parameter["limit"]}}
 - ={{$parameter["returnAll"]}}
 - '={{ { "success": true } }}'
-- ={{$parameter["limit"]}}
 ui_elements:
   notices: []
   tooltips: []
@@ -584,4 +584,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -2,7 +2,7 @@
 title: "Node: Cron"
 slug: "node-cron"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Triggers the workflow at a specific time"
 node_type: "trigger"
 group: "['trigger', 'schedule']"
@@ -41,7 +41,7 @@ group: "['trigger', 'schedule']"
 
 **Node-Specific Tips:**
 
-- **notice**: This workflow will run on the schedule you define here once you <a data-key="activate">activate</a> it.<br><br>For testing, you can also trigger it manually: by going back to the canvas and clicking 'execute workflow'
+- **notice**: This workflow will run on the schedule you define here once you publish it.<br><br>For testing, you can also trigger it manually: by going back to the canvas and clicking 'execute workflow'
 
 ---
 
@@ -105,7 +105,7 @@ params:
 ui_elements:
   notices:
   - name: notice
-    text: 'This workflow will run on the schedule you define here once you <a data-key="activate">activate</a>
+    text: 'This workflow will run on the schedule you define here once you publish
       it.<br><br>For testing, you can also trigger it manually: by going back to the
       canvas and clicking ''execute workflow'''
     conditions: null
@@ -186,4 +186,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

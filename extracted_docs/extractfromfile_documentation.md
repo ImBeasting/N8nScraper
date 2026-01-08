@@ -1,8 +1,8 @@
 ---
 title: "Node: Extract from File"
 slug: "node-extractfromfile"
-version: "1"
-updated: "2025-11-13"
+version: "['1', '1.1']"
+updated: "2026-01-08"
 summary: "Convert binary data to JSON"
 node_type: "regular"
 group: "['input']"
@@ -135,7 +135,9 @@ group: "['input']"
 node: extractFromFile
 displayName: Extract from File
 description: Convert binary data to JSON
-version: '1'
+version:
+- '1'
+- '1.1'
 nodeType: regular
 group:
 - input
@@ -407,7 +409,10 @@ settings:
   },
   "metadata": {
     "nodeType": "regular",
-    "version": "1"
+    "version": [
+      "1",
+      "1.1"
+    ]
   }
 }
 ```
@@ -418,4 +423,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

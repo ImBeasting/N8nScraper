@@ -2,7 +2,7 @@
 title: "Node: TheHive Trigger"
 slug: "node-thehivetrigger"
 version: "['1', '2']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Starts the workflow when TheHive events occur"
 node_type: "trigger"
 group: "['trigger']"
@@ -257,4 +257,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '2'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '2'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

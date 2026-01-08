@@ -2,7 +2,7 @@
 title: "Node: Start"
 slug: "node-start"
 version: "1"
-updated: "2025-11-13"
+updated: "2025-11-19"
 summary: "Starts the workflow execution from this node"
 node_type: "regular"
 group: "['input']"
@@ -260,4 +260,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2025-11-19 | Ultimate extraction with maximum detail for AI training |

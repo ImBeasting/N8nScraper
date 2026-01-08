@@ -2,7 +2,7 @@
 title: "Node: Item Lists"
 slug: "node-itemlists"
 version: "1.0"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Helper for working with lists of items and transforming arrays"
 node_type: "regular"
 group: "['input']"
@@ -152,28 +152,12 @@ ui_elements:
   notices: []
   tooltips: []
   placeholders:
-  - field: fieldToSplitOut
-    text: Drag fields from the left or type their names
-  - field: fieldsToInclude
-    text: e.g. email, name
-  - field: options
-    text: Add Field
-  - field: sortFieldsUi
-    text: Add Field To Sort By
-  - field: options
-    text: Add Field
   - field: fieldsToExclude
     text: e.g. email, name
   - field: fieldsToCompare
     text: e.g. email, name
   - field: options
     text: Add Field
-  - field: fieldsToSummarize
-    text: Add Field
-  - field: fieldsToSplitBy
-    text: e.g. country, city
-  - field: fieldsToSplitBy
-    text: e.g. country, city
   - field: fieldsToAggregate
     text: Add Field To Aggregate
   - field: fieldsToExclude
@@ -182,7 +166,25 @@ ui_elements:
     text: e.g. email, name
   - field: options
     text: Add Field
+  - field: sortFieldsUi
+    text: Add Field To Sort By
+  - field: options
+    text: Add Field
+  - field: fieldToSplitOut
+    text: Drag fields from the left or type their names
+  - field: fieldsToInclude
+    text: e.g. email, name
+  - field: options
+    text: Add Field
+  - field: fieldsToSummarize
+    text: Add Field
+  - field: fieldsToSplitBy
+    text: e.g. country, city
+  - field: fieldsToSplitBy
+    text: e.g. country, city
   hints:
+  - field: fieldsToAggregate
+    text: Enter the field name as text
   - field: sortFieldsUi
     text: Enter the field name as text
   - field: fieldsToSummarize
@@ -191,8 +193,6 @@ ui_elements:
     text: Enter the name of the fields as text (separated by commas)
   - field: fieldsToSplitBy
     text: Enter the name of the fields as text (separated by commas)
-  - field: fieldsToAggregate
-    text: Enter the field name as text
 settings:
   common:
     notes:
@@ -304,62 +304,19 @@ settings:
           "type": "string",
           "default": "itemList"
         },
-        "fieldToSplitOut": {
-          "description": "The name of the input fields to break out into separate items. Separate multiple field names by commas. For binary data, use $binary.",
-          "type": "string",
-          "default": "",
-          "examples": [
-            "Drag fields from the left or type their names"
-          ]
+        "maxItems": {
+          "description": "If there are more items than this number, some are removed",
+          "type": "number",
+          "default": 1
         },
-        "include": {
-          "description": "",
+        "keep": {
+          "description": "When removing items, whether to keep the ones at the start or the ending",
           "type": "string",
           "enum": [
-            "allFields",
-            "specifiedFields",
-            "allFieldsExcept"
+            "firstItems",
+            "lastItems"
           ],
-          "default": "allFields"
-        },
-        "fieldsToInclude": {
-          "description": "",
-          "type": "string",
-          "default": "",
-          "examples": [
-            "e.g. email, name"
-          ]
-        },
-        "options": {
-          "description": "Whether to merge the output into a single flat list (rather than a list of lists), if the field to aggregate is a list",
-          "type": "string",
-          "default": {},
-          "examples": [
-            "Add Field"
-          ]
-        },
-        "type": {
-          "description": "The fields of the input items to compare to see if they are the same",
-          "type": "string",
-          "enum": [
-            "simple",
-            "random",
-            "code"
-          ],
-          "default": "simple"
-        },
-        "sortFieldsUi": {
-          "description": "The field to sort by",
-          "type": "string",
-          "default": "",
-          "examples": [
-            "Add Field To Sort By"
-          ]
-        },
-        "code": {
-          "description": "Javascript code to determine the order of any two items",
-          "type": "string",
-          "default": "// The two items to compare are in the variables a and b\n// Access the fields in a.json and b.json\n// Return -1 if a should go before b\n// Return 1 if b should go before a\n// Return 0 if there's no difference\n\nfieldName = 'myField';\n\nif (a.json[fieldName] < b.json[fieldName]) {\nreturn -1;\n}\nif (a.json[fieldName] > b.json[fieldName]) {\nreturn 1;\n}\nreturn 0;"
+          "default": "firstItems"
         },
         "compare": {
           "description": "The fields of the input items to compare to see if they are the same",
@@ -387,20 +344,12 @@ settings:
             "e.g. email, name"
           ]
         },
-        "fieldsToSummarize": {
-          "description": "How to combine the values of the field you want to summarize",
+        "options": {
+          "description": "The field in the output under which to put the split field contents",
           "type": "string",
-          "default": "count",
+          "default": {},
           "examples": [
             "Add Field"
-          ]
-        },
-        "fieldsToSplitBy": {
-          "description": "The name of the input fields that you want to split the summary by",
-          "type": "string",
-          "default": "",
-          "examples": [
-            "e.g. country, city"
           ]
         },
         "aggregate": {
@@ -425,24 +374,28 @@ settings:
           "type": "string",
           "default": "data"
         },
+        "include": {
+          "description": "Whether to copy any other fields into the new items",
+          "type": "string",
+          "enum": [
+            "noOtherFields",
+            "allOtherFields",
+            "selectedOtherFields"
+          ],
+          "default": "noOtherFields"
+        },
+        "fieldsToInclude": {
+          "description": "Fields in the input items to aggregate together",
+          "type": "string",
+          "default": "",
+          "examples": [
+            "e.g. email, name"
+          ]
+        },
         "disableDotNotation": {
           "description": "Whether to disallow referencing child fields using `parent.child` in the field name",
           "type": "boolean",
           "default": false
-        },
-        "maxItems": {
-          "description": "If there are more items than this number, some are removed",
-          "type": "number",
-          "default": 1
-        },
-        "keep": {
-          "description": "When removing items, whether to keep the ones at the start or the ending",
-          "type": "string",
-          "enum": [
-            "firstItems",
-            "lastItems"
-          ],
-          "default": "firstItems"
         },
         "operation": {
           "description": "Combine fields into a list in a single new item",
@@ -456,6 +409,53 @@ settings:
             "summarize"
           ],
           "default": "splitOutItems"
+        },
+        "type": {
+          "description": "The fields of the input items to compare to see if they are the same",
+          "type": "string",
+          "enum": [
+            "simple",
+            "random",
+            "code"
+          ],
+          "default": "simple"
+        },
+        "sortFieldsUi": {
+          "description": "The field to sort by",
+          "type": "string",
+          "default": "",
+          "examples": [
+            "Add Field To Sort By"
+          ]
+        },
+        "code": {
+          "description": "Javascript code to determine the order of any two items",
+          "type": "string",
+          "default": "// The two items to compare are in the variables a and b\n// Access the fields in a.json and b.json\n// Return -1 if a should go before b\n// Return 1 if b should go before a\n// Return 0 if there's no difference\n\nfieldName = 'myField';\n\nif (a.json[fieldName] < b.json[fieldName]) {\nreturn -1;\n}\nif (a.json[fieldName] > b.json[fieldName]) {\nreturn 1;\n}\nreturn 0;"
+        },
+        "fieldToSplitOut": {
+          "description": "The name of the input fields to break out into separate items. Separate multiple field names by commas. For binary data, use $binary.",
+          "type": "string",
+          "default": "",
+          "examples": [
+            "Drag fields from the left or type their names"
+          ]
+        },
+        "fieldsToSummarize": {
+          "description": "How to combine the values of the field you want to summarize",
+          "type": "string",
+          "default": "count",
+          "examples": [
+            "Add Field"
+          ]
+        },
+        "fieldsToSplitBy": {
+          "description": "The name of the input fields that you want to split the summary by",
+          "type": "string",
+          "default": "",
+          "examples": [
+            "e.g. country, city"
+          ]
         }
       }
     },
@@ -528,4 +528,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1.0 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1.0 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

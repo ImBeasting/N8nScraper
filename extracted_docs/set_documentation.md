@@ -2,7 +2,7 @@
 title: "Node: Set"
 slug: "node-set"
 version: "['3', '3.1', '3.2', '3.3', '3.4']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Add or edit fields on an input item and optionally remove other fields"
 node_type: "regular"
 group: "['input']"
@@ -754,4 +754,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['3', '3.1', '3.2', '3.3', '3.4'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['3', '3.1', '3.2', '3.3', '3.4'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -2,7 +2,7 @@
 title: "Node: Google Workspace Admin"
 slug: "node-gsuiteadmin"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Google Workspace Admin API"
 node_type: "regular"
 group: "['input']"
@@ -427,24 +427,96 @@ group: "['input']"
 
 These examples are extracted from actual n8n workflows:
 
-### Example 1: Get Many
+### Example 1: Get Device
 
 **From workflow:** Unnamed workflow
 
 **Parameters:**
 ```json
 {
-  "resource": "group",
-  "operation": "getAll",
-  "returnAll": true,
-  "filter": {}
+  "resource": "device",
+  "deviceId": {
+    "__rl": true,
+    "value": "9999ffff-7aa7-4444-8555-f7de48484b4a",
+    "mode": "list",
+    "cachedResultName": "5DD1155DD44"
+  }
 }
 ```
 
 **Credentials:**
 - gSuiteAdminOAuth2Api: `Google Workspace Admin account`
 
-### Example 2: Delete Group
+### Example 2: Get Many Device
+
+**From workflow:** Unnamed workflow
+
+**Parameters:**
+```json
+{
+  "resource": "device",
+  "operation": "getAll",
+  "filter": {
+    "orgUnitPath": "/admin-google Testing OU/Child OU"
+  },
+  "sort": {
+    "sortRules": {
+      "orderBy": "notes",
+      "sortBy": "ascending"
+    }
+  }
+}
+```
+
+**Credentials:**
+- gSuiteAdminOAuth2Api: `Google Workspace Admin account`
+
+### Example 3: Change Status
+
+**From workflow:** Unnamed workflow
+
+**Parameters:**
+```json
+{
+  "resource": "device",
+  "operation": "changeStatus",
+  "deviceId": {
+    "__rl": true,
+    "value": "9140fcff-7ba7-4324-8552-f7de68481b4c",
+    "mode": "list",
+    "cachedResultName": "5CC115NN33"
+  }
+}
+```
+
+**Credentials:**
+- gSuiteAdminOAuth2Api: `Google Workspace Admin account`
+
+### Example 4: Update Device
+
+**From workflow:** Unnamed workflow
+
+**Parameters:**
+```json
+{
+  "resource": "device",
+  "operation": "update",
+  "deviceId": {
+    "__rl": true,
+    "value": "9990fpff-8ba8-4444-8555-f7ee88881b4c",
+    "mode": "list",
+    "cachedResultName": "5CC115NN33"
+  },
+  "updateOptions": {
+    "notes": "test"
+  }
+}
+```
+
+**Credentials:**
+- gSuiteAdminOAuth2Api: `Google Workspace Admin account`
+
+### Example 5: Delete Group
 
 **From workflow:** Unnamed workflow
 
@@ -458,72 +530,6 @@ These examples are extracted from actual n8n workflows:
     "value": "01302m922pmp3e4",
     "mode": "list",
     "cachedResultName": "new2"
-  }
-}
-```
-
-**Credentials:**
-- gSuiteAdminOAuth2Api: `Google Workspace Admin account`
-
-### Example 3: Update Group
-
-**From workflow:** Unnamed workflow
-
-**Parameters:**
-```json
-{
-  "resource": "group",
-  "operation": "update",
-  "groupId": {
-    "__rl": true,
-    "value": "01302m922p525286",
-    "mode": "list",
-    "cachedResultName": "new"
-  },
-  "updateFields": {
-    "description": "new1",
-    "email": "new3@example.com",
-    "name": "new2"
-  }
-}
-```
-
-**Credentials:**
-- gSuiteAdminOAuth2Api: `Google Workspace Admin account`
-
-### Example 4: Get Group
-
-**From workflow:** Unnamed workflow
-
-**Parameters:**
-```json
-{
-  "resource": "group",
-  "operation": "get",
-  "groupId": {
-    "__rl": true,
-    "value": "01302m922pmp3e4",
-    "mode": "list",
-    "cachedResultName": "new2"
-  }
-}
-```
-
-**Credentials:**
-- gSuiteAdminOAuth2Api: `Google Workspace Admin account`
-
-### Example 5: Create Group
-
-**From workflow:** Unnamed workflow
-
-**Parameters:**
-```json
-{
-  "resource": "group",
-  "name": "Test",
-  "email": "NewOnes22@example.com",
-  "additionalFields": {
-    "description": "test"
   }
 }
 ```
@@ -1278,36 +1284,35 @@ operations:
     validation: *id017
     typeInfo: *id018
 examples:
-- name: Get Many
+- name: Get Device
   parameters:
-    resource: group
+    resource: device
+    deviceId:
+      __rl: true
+      value: 9999ffff-7aa7-4444-8555-f7de48484b4a
+      mode: list
+      cachedResultName: 5DD1155DD44
+  workflow: Unnamed workflow
+- name: Get Many Device
+  parameters:
+    resource: device
     operation: getAll
-    returnAll: true
-    filter: {}
+    filter:
+      orgUnitPath: /admin-google Testing OU/Child OU
+    sort:
+      sortRules:
+        orderBy: notes
+        sortBy: ascending
   workflow: Unnamed workflow
-- name: Delete Group
+- name: Change Status
   parameters:
-    resource: group
-    operation: delete
-    groupId:
+    resource: device
+    operation: changeStatus
+    deviceId:
       __rl: true
-      value: 01302m922pmp3e4
+      value: 9140fcff-7ba7-4324-8552-f7de68481b4c
       mode: list
-      cachedResultName: new2
-  workflow: Unnamed workflow
-- name: Update Group
-  parameters:
-    resource: group
-    operation: update
-    groupId:
-      __rl: true
-      value: 01302m922p525286
-      mode: list
-      cachedResultName: new
-    updateFields:
-      description: new1
-      email: new3@example.com
-      name: new2
+      cachedResultName: 5CC115NN33
   workflow: Unnamed workflow
 common_expressions:
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
@@ -1734,42 +1739,43 @@ settings:
   ],
   "examples": [
     {
-      "description": "Get Many",
+      "description": "Get Device",
       "value": {
-        "resource": "group",
-        "operation": "getAll",
-        "returnAll": true,
-        "filter": {}
-      }
-    },
-    {
-      "description": "Delete Group",
-      "value": {
-        "resource": "group",
-        "operation": "delete",
-        "groupId": {
+        "resource": "device",
+        "deviceId": {
           "__rl": true,
-          "value": "01302m922pmp3e4",
+          "value": "9999ffff-7aa7-4444-8555-f7de48484b4a",
           "mode": "list",
-          "cachedResultName": "new2"
+          "cachedResultName": "5DD1155DD44"
         }
       }
     },
     {
-      "description": "Update Group",
+      "description": "Get Many Device",
       "value": {
-        "resource": "group",
-        "operation": "update",
-        "groupId": {
-          "__rl": true,
-          "value": "01302m922p525286",
-          "mode": "list",
-          "cachedResultName": "new"
+        "resource": "device",
+        "operation": "getAll",
+        "filter": {
+          "orgUnitPath": "/admin-google Testing OU/Child OU"
         },
-        "updateFields": {
-          "description": "new1",
-          "email": "new3@example.com",
-          "name": "new2"
+        "sort": {
+          "sortRules": {
+            "orderBy": "notes",
+            "sortBy": "ascending"
+          }
+        }
+      }
+    },
+    {
+      "description": "Change Status",
+      "value": {
+        "resource": "device",
+        "operation": "changeStatus",
+        "deviceId": {
+          "__rl": true,
+          "value": "9140fcff-7ba7-4324-8552-f7de68481b4c",
+          "mode": "list",
+          "cachedResultName": "5CC115NN33"
         }
       }
     }
@@ -1783,4 +1789,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

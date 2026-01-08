@@ -2,7 +2,7 @@
 title: "Node: GitHub"
 slug: "node-github"
 version: "['1', '1.1']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume GitHub API"
 node_type: "regular"
 group: "['input']"
@@ -527,28 +527,7 @@ group: "['input']"
 
 These examples are extracted from actual n8n workflows:
 
-### Example 1: Get User Repositories
-
-**From workflow:** Github User getRepositories Test Workflow
-
-**Parameters:**
-```json
-{
-  "resource": "user",
-  "operation": "getRepositories",
-  "owner": {
-    "__rl": true,
-    "value": "testuser",
-    "mode": "name"
-  },
-  "returnAll": true
-}
-```
-
-**Credentials:**
-- githubApi: `Test Credentials`
-
-### Example 2: Get Organization Repositories
+### Example 1: Get Organization Repositories
 
 **From workflow:** Github Organization getRepositories Test Workflow
 
@@ -569,7 +548,77 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - githubApi: `Test Credentials`
 
-### Example 3: Get Repository Issues Filtered
+### Example 2: Get User Issues Filtered
+
+**From workflow:** Github User getUserIssues Filtered Test Workflow
+
+**Parameters:**
+```json
+{
+  "resource": "user",
+  "operation": "getUserIssues",
+  "returnAll": true,
+  "getUserIssuesFilters": {
+    "state": "closed",
+    "labels": "enhancement"
+  }
+}
+```
+
+**Credentials:**
+- githubApi: `Test Credentials`
+
+### Example 3: Get Repository Issues Limited
+
+**From workflow:** Github Repository getIssues Limit Test Workflow
+
+**Parameters:**
+```json
+{
+  "resource": "repository",
+  "operation": "getIssues",
+  "owner": {
+    "__rl": true,
+    "value": "testowner",
+    "mode": "name"
+  },
+  "repository": {
+    "__rl": true,
+    "value": "testrepo",
+    "mode": "name"
+  },
+  "returnAll": false,
+  "limit": 1,
+  "getRepositoryIssuesFilters": {}
+}
+```
+
+**Credentials:**
+- githubApi: `Test Credentials`
+
+### Example 4: Get User Repositories Limited
+
+**From workflow:** Github User getRepositories Limit Test Workflow
+
+**Parameters:**
+```json
+{
+  "resource": "user",
+  "operation": "getRepositories",
+  "owner": {
+    "__rl": true,
+    "value": "testuser",
+    "mode": "name"
+  },
+  "returnAll": false,
+  "limit": 1
+}
+```
+
+**Credentials:**
+- githubApi: `Test Credentials`
+
+### Example 5: Get Repository Issues Filtered
 
 **From workflow:** Github Repository getIssues Filtered Test Workflow
 
@@ -593,44 +642,6 @@ These examples are extracted from actual n8n workflows:
     "state": "closed",
     "labels": "bug",
     "assignee": "testuser"
-  }
-}
-```
-
-**Credentials:**
-- githubApi: `Test Credentials`
-
-### Example 4: Get User Issues Limited
-
-**From workflow:** Github User getUserIssues Limit Test Workflow
-
-**Parameters:**
-```json
-{
-  "resource": "user",
-  "operation": "getUserIssues",
-  "returnAll": false,
-  "limit": 1,
-  "getUserIssuesFilters": {}
-}
-```
-
-**Credentials:**
-- githubApi: `Test Credentials`
-
-### Example 5: Get User Issues Filtered
-
-**From workflow:** Github User getUserIssues Filtered Test Workflow
-
-**Parameters:**
-```json
-{
-  "resource": "user",
-  "operation": "getUserIssues",
-  "returnAll": true,
-  "getUserIssuesFilters": {
-    "state": "closed",
-    "labels": "enhancement"
   }
 }
 ```
@@ -1575,16 +1586,6 @@ operations:
     validation: *id026
     typeInfo: *id027
 examples:
-- name: Get User Repositories
-  parameters:
-    resource: user
-    operation: getRepositories
-    owner:
-      __rl: true
-      value: testuser
-      mode: name
-    returnAll: true
-  workflow: Github User getRepositories Test Workflow
 - name: Get Organization Repositories
   parameters:
     resource: organization
@@ -1595,7 +1596,16 @@ examples:
       mode: name
     returnAll: true
   workflow: Github Organization getRepositories Test Workflow
-- name: Get Repository Issues Filtered
+- name: Get User Issues Filtered
+  parameters:
+    resource: user
+    operation: getUserIssues
+    returnAll: true
+    getUserIssuesFilters:
+      state: closed
+      labels: enhancement
+  workflow: Github User getUserIssues Filtered Test Workflow
+- name: Get Repository Issues Limited
   parameters:
     resource: repository
     operation: getIssues
@@ -1607,12 +1617,10 @@ examples:
       __rl: true
       value: testrepo
       mode: name
-    returnAll: true
-    getRepositoryIssuesFilters:
-      state: closed
-      labels: bug
-      assignee: testuser
-  workflow: Github Repository getIssues Filtered Test Workflow
+    returnAll: false
+    limit: 1
+    getRepositoryIssuesFilters: {}
+  workflow: Github Repository getIssues Limit Test Workflow
 common_expressions:
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 api_patterns:
@@ -2086,19 +2094,6 @@ settings:
   ],
   "examples": [
     {
-      "description": "Get User Repositories",
-      "value": {
-        "resource": "user",
-        "operation": "getRepositories",
-        "owner": {
-          "__rl": true,
-          "value": "testuser",
-          "mode": "name"
-        },
-        "returnAll": true
-      }
-    },
-    {
       "description": "Get Organization Repositories",
       "value": {
         "resource": "organization",
@@ -2112,7 +2107,19 @@ settings:
       }
     },
     {
-      "description": "Get Repository Issues Filtered",
+      "description": "Get User Issues Filtered",
+      "value": {
+        "resource": "user",
+        "operation": "getUserIssues",
+        "returnAll": true,
+        "getUserIssuesFilters": {
+          "state": "closed",
+          "labels": "enhancement"
+        }
+      }
+    },
+    {
+      "description": "Get Repository Issues Limited",
       "value": {
         "resource": "repository",
         "operation": "getIssues",
@@ -2126,12 +2133,9 @@ settings:
           "value": "testrepo",
           "mode": "name"
         },
-        "returnAll": true,
-        "getRepositoryIssuesFilters": {
-          "state": "closed",
-          "labels": "bug",
-          "assignee": "testuser"
-        }
+        "returnAll": false,
+        "limit": 1,
+        "getRepositoryIssuesFilters": {}
       }
     }
   ]
@@ -2144,4 +2148,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '1.1'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -13,12 +13,7 @@
     "group": [
       "output"
     ],
-    "authentication": [
-      {
-        "name": "aws",
-        "required": true
-      }
-    ],
+    "authentication": [],
     "loadOptionsMethods": [
       "getLoadBalancers",
       "if"
@@ -72,6 +67,25 @@
           "name": "Load Balancer",
           "value": "loadBalancer",
           "displayName": "Load Balancer"
+        }
+      ]
+    },
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "iam",
+      "default": "iam",
+      "options": [
+        {
+          "name": "AWS (IAM)",
+          "value": "iam",
+          "displayName": "Aws (iam)"
+        },
+        {
+          "name": "AWS (Assume Role)",
+          "value": "assumeRole",
+          "displayName": "Aws (assume Role)"
         }
       ]
     },
@@ -711,6 +725,32 @@
       },
       "_operation": "remove",
       "_source": "ListenerCertificate_listenerCertificateFields"
+    },
+    {
+      "name": "aws",
+      "displayName": "Aws",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "iam"
+          ]
+        }
+      },
+      "_source": "utils_awsNodeCredentials"
+    },
+    {
+      "name": "awsAssumeRole",
+      "displayName": "Aws Assume Role",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "assumeRole"
+          ]
+        }
+      },
+      "_source": "utils_awsNodeCredentials"
     }
   ],
   "operations": [
@@ -812,13 +852,222 @@
       }
     ]
   },
-  "credentials": [
+  "credentials": [],
+  "workflow_examples": [
     {
-      "name": "aws",
-      "required": true
+      "name": "Get Many Load Balancers with Names",
+      "parameters": {
+        "resource": "loadBalancer",
+        "operation": "getMany",
+        "returnAll": true,
+        "filters": {
+          "names": "test-lb-1,test-lb-2"
+        }
+      },
+      "credentials": {
+        "aws": {
+          "id": "credential-id",
+          "name": "Test AWS Credentials"
+        }
+      },
+      "position": [
+        200,
+        0
+      ],
+      "workflow_file": "get-many-load-balancers-with-names.workflow.json",
+      "workflow_name": "AWS ELB Get Many Load Balancers with Names Test Workflow"
+    },
+    {
+      "name": "Get Many Listener Certificates All",
+      "parameters": {
+        "resource": "listenerCertificate",
+        "operation": "getMany",
+        "loadBalancerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/test-lb/1234567890123456",
+        "listenerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:listener/app/test-lb/1234567890123456/f2f7dc8efc522ab2",
+        "returnAll": true
+      },
+      "credentials": {
+        "aws": {
+          "id": "credential-id",
+          "name": "Test AWS Credentials"
+        }
+      },
+      "position": [
+        200,
+        0
+      ],
+      "workflow_file": "get-many-listener-certificates-all.workflow.json",
+      "workflow_name": "AWS ELB Get Many Listener Certificates All Test Workflow"
+    },
+    {
+      "name": "Remove Listener Certificate",
+      "parameters": {
+        "resource": "listenerCertificate",
+        "operation": "remove",
+        "loadBalancerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/test-lb/1234567890123456",
+        "listenerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:listener/app/test-lb/1234567890123456/f2f7dc8efc522ab2",
+        "certificateId": "arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012"
+      },
+      "credentials": {
+        "aws": {
+          "id": "credential-id",
+          "name": "Test AWS Credentials"
+        }
+      },
+      "position": [
+        200,
+        0
+      ],
+      "workflow_file": "remove-listener-certificate.workflow.json",
+      "workflow_name": "AWS ELB Remove Listener Certificate Test Workflow"
+    },
+    {
+      "name": "Create Load Balancer",
+      "parameters": {
+        "resource": "loadBalancer",
+        "operation": "create",
+        "ipAddressType": "ipv4",
+        "name": "test-lb",
+        "schema": "internet-facing",
+        "type": "application",
+        "subnets": [
+          "subnet-12345",
+          "subnet-67890"
+        ],
+        "additionalFields": {
+          "securityGroups": [
+            "sg-12345"
+          ],
+          "tagsUi": {
+            "tagValues": [
+              {
+                "key": "Environment",
+                "value": "test"
+              }
+            ]
+          }
+        }
+      },
+      "credentials": {
+        "aws": {
+          "id": "credential-id",
+          "name": "Test AWS Credentials"
+        }
+      },
+      "position": [
+        200,
+        0
+      ],
+      "workflow_file": "create-load-balancer.workflow.json",
+      "workflow_name": "AWS ELB Create Load Balancer Test Workflow"
+    },
+    {
+      "name": "Get Many Listener Certificates",
+      "parameters": {
+        "resource": "listenerCertificate",
+        "operation": "getMany",
+        "loadBalancerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/test-lb/1234567890123456",
+        "listenerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:listener/app/test-lb/1234567890123456/f2f7dc8efc522ab2",
+        "returnAll": false,
+        "limit": 10
+      },
+      "credentials": {
+        "aws": {
+          "id": "credential-id",
+          "name": "Test AWS Credentials"
+        }
+      },
+      "position": [
+        200,
+        0
+      ],
+      "workflow_file": "get-many-listener-certificates.workflow.json",
+      "workflow_name": "AWS ELB Get Many Listener Certificates Test Workflow"
+    },
+    {
+      "name": "Get Many Load Balancers",
+      "parameters": {
+        "resource": "loadBalancer",
+        "operation": "getMany",
+        "returnAll": false,
+        "limit": 10
+      },
+      "credentials": {
+        "aws": {
+          "id": "credential-id",
+          "name": "Test AWS Credentials"
+        }
+      },
+      "position": [
+        200,
+        0
+      ],
+      "workflow_file": "get-many-load-balancers.workflow.json",
+      "workflow_name": "AWS ELB Get Many Load Balancers Test Workflow"
+    },
+    {
+      "name": "Get Load Balancer",
+      "parameters": {
+        "resource": "loadBalancer",
+        "operation": "get",
+        "loadBalancerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/test-lb/1234567890123456"
+      },
+      "credentials": {
+        "aws": {
+          "id": "credential-id",
+          "name": "Test AWS Credentials"
+        }
+      },
+      "position": [
+        200,
+        0
+      ],
+      "workflow_file": "get-load-balancer.workflow.json",
+      "workflow_name": "AWS ELB Get Load Balancer Test Workflow"
+    },
+    {
+      "name": "Add Listener Certificate",
+      "parameters": {
+        "resource": "listenerCertificate",
+        "operation": "add",
+        "loadBalancerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/test-lb/1234567890123456",
+        "listenerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:listener/app/test-lb/1234567890123456/f2f7dc8efc522ab2",
+        "certificateId": "arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012"
+      },
+      "credentials": {
+        "aws": {
+          "id": "credential-id",
+          "name": "Test AWS Credentials"
+        }
+      },
+      "position": [
+        200,
+        0
+      ],
+      "workflow_file": "add-listener-certificate.workflow.json",
+      "workflow_name": "AWS ELB Add Listener Certificate Test Workflow"
+    },
+    {
+      "name": "Delete Load Balancer",
+      "parameters": {
+        "resource": "loadBalancer",
+        "operation": "delete",
+        "loadBalancerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/test-lb/1234567890123456"
+      },
+      "credentials": {
+        "aws": {
+          "id": "credential-id",
+          "name": "Test AWS Credentials"
+        }
+      },
+      "position": [
+        200,
+        0
+      ],
+      "workflow_file": "delete-load-balancer.workflow.json",
+      "workflow_name": "AWS ELB Delete Load Balancer Test Workflow"
     }
   ],
-  "workflow_examples": [],
   "expressions": [
     "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
   ],
@@ -989,6 +1238,26 @@
           ]
         }
       }
+    },
+    "aws": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "iam"
+          ]
+        }
+      }
+    },
+    "awsAssumeRole": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "assumeRole"
+          ]
+        }
+      }
     }
   },
   "type_info": {
@@ -1005,6 +1274,23 @@
         {
           "value": "loadBalancer",
           "name": "Load Balancer",
+          "description": ""
+        }
+      ]
+    },
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "iam",
+          "name": "AWS (IAM)",
+          "description": ""
+        },
+        {
+          "value": "assumeRole",
+          "name": "AWS (Assume Role)",
           "description": ""
         }
       ]
@@ -1199,6 +1485,16 @@
       "type": "string",
       "displayName": "Certificate ARN",
       "name": "certificateId"
+    },
+    "aws": {
+      "type": "unknown",
+      "displayName": "Aws",
+      "name": "aws"
+    },
+    "awsAssumeRole": {
+      "type": "unknown",
+      "displayName": "Aws Assume Role",
+      "name": "awsAssumeRole"
     }
   },
   "api_patterns": {

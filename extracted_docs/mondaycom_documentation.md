@@ -2,7 +2,7 @@
 title: "Node: Monday.com"
 slug: "node-mondaycom"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Monday.com API"
 node_type: "regular"
 group: "['output']"
@@ -54,7 +54,7 @@ group: "['output']"
 
 **HTTP Methods:** POST
 
-**Headers Used:** Content-Type, API-Version
+**Headers Used:** API-Version, Content-Type
 
 ---
 
@@ -954,8 +954,8 @@ api_patterns:
   - POST
   endpoints: []
   headers:
-  - Content-Type
   - API-Version
+  - Content-Type
   query_params: []
 ui_elements:
   notices: []
@@ -1296,4 +1296,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

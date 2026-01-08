@@ -1,8 +1,8 @@
 ---
 title: "Node: n8n Form"
 slug: "node-form"
-version: "['1', '2.3']"
-updated: "2025-11-13"
+version: "['1', '2.3', '2.4', '2.5']"
+updated: "2026-01-08"
 summary: "Generate webforms in n8n and pass their responses to the workflow"
 node_type: "regular"
 group: "['input']"
@@ -47,17 +47,7 @@ group: "['input']"
 * **Using JSON** (`json`)
 
 | Form Fields | `jsonOutput` | json | [\n  {\n     | ✗ | e.g. <a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.form/" target="_blank">See docs</a> for field syntax |  |
-| Form Elements | `formFields` | fixedCollection | {} | ✓ | Label that appears above the input field | e.g. Add Form Element |  |
-
-<details>
-<summary><strong>Form Elements sub-options</strong></summary>
-
-| Sub-Option | Field ID | Type | Default | Description |
-| ---------- | -------- | ---- | ------- | ----------- |
-| Values | `values` |  |  |  |
-
-</details>
-
+| Form Elements | `formFields` | fixedCollection | {} | ✗ | e.g. Add Form Element |  |
 | Limit Type | `limitType` | options | afterTimeInterval | ✗ | Sets the condition for the execution to resume. Can be a specified date or after some time. |  |
 
 **Limit Type options:**
@@ -127,6 +117,8 @@ description: Generate webforms in n8n and pass their responses to the workflow
 version:
 - '1'
 - '2.3'
+- '2.4'
+- '2.5'
 nodeType: regular
 group:
 - input
@@ -171,322 +163,16 @@ params:
   name: Form Elements
   type: fixedCollection
   default: {}
-  required: true
-  description: Label that appears above the input field
-  hint: Does not accept <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code> or
-    <code>&lt;input&gt;</code> tags
+  required: false
+  description: ''
   placeholder: Add Form Element
-  validation:
-    required: true
-    displayOptions:
-      hide:
-        fieldType:
-        - hiddenField
-        - html
   typeInfo:
     type: fixedCollection
     displayName: Form Elements
     name: formFields
     typeOptions:
       multipleValues: true
-    subProperties:
-    - name: values
-      displayName: Values
-      values:
-      - displayName: Field Name
-        name: fieldLabel
-        type: string
-        description: Label that appears above the input field
-        placeholder: e.g. What is your name?
-        default: ''
-        required: true
-        displayOptions:
-          hide:
-            fieldType:
-            - hiddenField
-            - html
-      - displayName: Field Name
-        name: fieldName
-        type: string
-        description: The name of the field, used in input attributes and referenced
-          by the workflow
-        default: ''
-        displayOptions:
-          show:
-            fieldType:
-            - hiddenField
-      - displayName: Element Type
-        name: fieldType
-        type: options
-        description: The type of field to add to the form
-        value: checkbox
-        default: text
-        required: true
-        options:
-        - name: Checkboxes
-          value: checkbox
-          displayName: Checkboxes
-        - name: Custom HTML
-          value: html
-          displayName: Custom Html
-        - name: Date
-          value: date
-          displayName: Date
-        - name: Dropdown
-          value: dropdown
-          displayName: Dropdown
-        - name: Email
-          value: email
-          displayName: Email
-        - name: File
-          value: file
-          displayName: File
-        - name: Hidden Field
-          value: hiddenField
-          displayName: Hidden Field
-        - name: Number
-          value: number
-          displayName: Number
-        - name: Password
-          value: password
-          displayName: Password
-        - name: Radio Buttons
-          value: radio
-          displayName: Radio Buttons
-        - name: Text
-          value: text
-          displayName: Text
-        - name: Textarea
-          value: textarea
-          displayName: Textarea
-      - displayName: Element Name
-        name: elementName
-        type: string
-        description: Optional field. It can be used to include the html in the output.
-        placeholder: e.g. content-section
-        default: ''
-        displayOptions:
-          show:
-            fieldType:
-            - html
-      - displayName: Placeholder
-        name: placeholder
-        type: string
-        description: Sample text to display inside the field
-        default: ''
-        displayOptions:
-          hide:
-            fieldType:
-            - dropdown
-            - date
-            - file
-            - html
-            - hiddenField
-            - radio
-            - checkbox
-      - displayName: Field Value
-        name: fieldValue
-        type: string
-        description: Input value can be set here or will be passed as a query parameter
-          via Field Name if no value is set
-        default: ''
-        displayOptions:
-          show:
-            fieldType:
-            - hiddenField
-      - displayName: Field Options
-        name: fieldOptions
-        type: fixedCollection
-        description: List of options that can be selected from the dropdown
-        placeholder: Add Field Option
-        default: ''
-        required: true
-        options:
-        - name: values
-          displayName: Values
-          values:
-          - displayName: Option
-            name: option
-            type: string
-            default: ''
-        typeOptions:
-          multipleValues: true
-        displayOptions:
-          show:
-            fieldType:
-            - dropdown
-      - displayName: Checkboxes
-        name: fieldOptions
-        type: fixedCollection
-        placeholder: Add Checkbox
-        default: ''
-        required: true
-        options:
-        - name: values
-          displayName: Values
-          values:
-          - displayName: Checkbox Label
-            name: option
-            type: string
-            default: ''
-        typeOptions:
-          multipleValues: true
-        displayOptions:
-          show:
-            fieldType:
-            - checkbox
-      - displayName: Radio Buttons
-        name: fieldOptions
-        type: fixedCollection
-        placeholder: Add Radio Button
-        default: ''
-        required: true
-        options:
-        - name: values
-          displayName: Values
-          values:
-          - displayName: Radio Button Label
-            name: option
-            type: string
-            default: ''
-        typeOptions:
-          multipleValues: true
-        displayOptions:
-          show:
-            fieldType:
-            - radio
-      - displayName: Multiple Choice is a legacy option, please use Checkboxes or
-          Radio Buttons field type instead
-        name: multiselectLegacyNotice
-        type: notice
-        default: ''
-        displayOptions:
-          show:
-            multiselect:
-            - true
-            fieldType:
-            - dropdown
-      - displayName: Multiple Choice
-        name: multiselect
-        type: boolean
-        description: Whether to allow the user to select multiple options from the
-          dropdown list
-        default: false
-        displayOptions:
-          show:
-            fieldType:
-            - dropdown
-      - displayName: Limit Selection
-        name: limitSelection
-        type: options
-        value: exact
-        default: unlimited
-        options:
-        - name: Exact Number
-          value: exact
-          displayName: Exact Number
-        - name: Range
-          value: range
-          displayName: Range
-        - name: Unlimited
-          value: unlimited
-          displayName: Unlimited
-        displayOptions:
-          show:
-            fieldType:
-            - checkbox
-      - displayName: Number of Selections
-        name: numberOfSelections
-        type: number
-        default: 1
-        typeOptions:
-          minValue: 1
-          numberPrecision: 0
-        displayOptions:
-          show:
-            fieldType:
-            - checkbox
-            limitSelection:
-            - exact
-      - displayName: Minimum Selections
-        name: minSelections
-        type: number
-        default: 0
-        typeOptions:
-          minValue: 0
-          numberPrecision: 0
-        displayOptions:
-          show:
-            fieldType:
-            - checkbox
-            limitSelection:
-            - range
-      - displayName: Maximum Selections
-        name: maxSelections
-        type: number
-        default: 1
-        typeOptions:
-          minValue: 1
-          numberPrecision: 0
-        displayOptions:
-          show:
-            fieldType:
-            - checkbox
-            limitSelection:
-            - range
-      - displayName: HTML
-        name: html
-        type: string
-        description: HTML elements to display on the form page
-        hint: Does not accept <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code>
-          or <code>&lt;input&gt;</code> tags
-        noDataExpression: true
-        typeOptions: {}
-        displayOptions:
-          show:
-            fieldType:
-            - html
-      - displayName: Multiple Files
-        name: multipleFiles
-        type: boolean
-        description: Whether to allow the user to select multiple files from the file
-          input or just one
-        default: true
-        displayOptions:
-          show:
-            fieldType:
-            - file
-      - displayName: Accepted File Types
-        name: acceptFileTypes
-        type: string
-        description: Comma-separated list of allowed file extensions
-        placeholder: e.g. .jpg, .png
-        hint: Leave empty to allow all file types
-        default: ''
-        displayOptions:
-          show:
-            fieldType:
-            - file
-      - displayName: The displayed date is formatted based on the locale of the user's
-          browser
-        name: formatDate
-        type: notice
-        default: ''
-        displayOptions:
-          show:
-            fieldType:
-            - date
-      - displayName: Required Field
-        name: requiredField
-        type: boolean
-        description: Whether to require the user to enter a value for this field before
-          submitting the form
-        default: false
-        displayOptions:
-          hide:
-            fieldType:
-            - html
-            - hiddenField
+    subProperties: []
 - id: limitType
   name: Limit Type
   type: options
@@ -576,9 +262,6 @@ ui_elements:
   - field: jsonOutput
     text: <a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.form/"
       target="_blank">See docs</a> for field syntax
-  - field: formFields
-    text: Does not accept <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code>
-      or <code>&lt;input&gt;</code> tags
 settings:
   common:
     notes:
@@ -688,7 +371,7 @@ settings:
           "default": "[\\n  {\\n    "
         },
         "formFields": {
-          "description": "Label that appears above the input field",
+          "description": "",
           "type": "string",
           "default": {},
           "examples": [
@@ -786,7 +469,9 @@ settings:
     "nodeType": "regular",
     "version": [
       "1",
-      "2.3"
+      "2.3",
+      "2.4",
+      "2.5"
     ]
   }
 }
@@ -798,4 +483,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '2.3'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '2.3', '2.4', '2.5'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

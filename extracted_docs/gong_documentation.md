@@ -2,7 +2,7 @@
 title: "Node: Gong"
 slug: "node-gong"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Interact with Gong API"
 node_type: "regular"
 group: "['transform']"
@@ -123,9 +123,9 @@ group: "['transform']"
 These expression patterns are commonly used with this node:
 
 - `={{ $credentials.baseUrl.replace(new RegExp("/$"), "") }}`
-- `={{ $if($response.body?.records.cursor, { cursor: $response.body.records.cursor }, {}) }}`
-- `={{$parameter["operation"] + ": " + $parameter["resource"]}}`
 - `={{ $response.body.records.cursor }}`
+- `={{$parameter["operation"] + ": " + $parameter["resource"]}}`
+- `={{ $if($response.body?.records.cursor, { cursor: $response.body.records.cursor }, {}) }}`
 
 ---
 
@@ -390,10 +390,10 @@ params:
   typeInfo: *id010
 common_expressions:
 - ={{ $credentials.baseUrl.replace(new RegExp("/$"), "") }}
+- ={{ $response.body.records.cursor }}
+- '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 - '={{ $if($response.body?.records.cursor, { cursor: $response.body.records.cursor
   }, {}) }}'
-- '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
-- ={{ $response.body.records.cursor }}
 api_patterns:
   http_methods: []
   endpoints: []
@@ -659,4 +659,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

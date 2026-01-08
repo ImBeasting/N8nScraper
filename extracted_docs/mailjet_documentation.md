@@ -2,7 +2,7 @@
 title: "Node: Mailjet"
 slug: "node-mailjet"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Mailjet API"
 node_type: "regular"
 group: "['output']"
@@ -125,6 +125,8 @@ group: "['output']"
 | Template Language | `templateLanguage` | boolean | False |  |
 | Track Clicks | `trackClicks` | options | account_default | Use the values specified in the Mailjet account |
 | Track Opens | `trackOpens` | options | account_default | Use the values specified in the Mailjet account |
+| Custom Campaign | `customCampaign` | string |  |  |
+| Deduplicate Campaign | `deduplicateCampaign` | boolean | False |  |
 
 </details>
 
@@ -168,6 +170,8 @@ group: "['output']"
 | Template Language | `templateLanguage` | boolean | False |  |
 | Track Clicks | `trackClicks` | string |  | Enable or disable open tracking on this message |
 | Track Opens | `trackOpens` | string |  | Enable or disable open tracking on this message |
+| Custom Campaign | `customCampaign` | string |  |  |
+| Deduplicate Campaign | `deduplicateCampaign` | boolean | False |  |
 
 </details>
 
@@ -820,4 +824,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

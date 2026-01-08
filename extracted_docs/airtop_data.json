@@ -29,7 +29,8 @@
     "description": "Scrape and control any site with Airtop",
     "subtitle": "={{ $parameter[\"operation\"] + \": \" + $parameter[\"resource\"] }}",
     "version": [
-      "1"
+      "1",
+      "1.1"
     ],
     "usableAsTool": true,
     "node_type": "regular"
@@ -60,10 +61,15 @@
       "displayName": "Resource",
       "name": "resource",
       "type": "options",
-      "value": "extraction",
+      "value": "agent",
       "default": "session",
       "noDataExpression": true,
       "options": [
+        {
+          "name": "Agent",
+          "value": "agent",
+          "displayName": "Agent"
+        },
         {
           "name": "Extraction",
           "value": "extraction",
@@ -90,6 +96,81 @@
           "displayName": "Window"
         }
       ]
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "description": "Run an Airtop agent",
+      "action": "Run an agent",
+      "value": "run",
+      "default": "run",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Run",
+          "description": "Run an Airtop agent",
+          "action": "Run an agent",
+          "value": "run",
+          "displayName": "Run"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "agent"
+          ]
+        }
+      },
+      "_source": "agent"
+    },
+    {
+      "displayName": "Webhook URL",
+      "name": "webhookUrl",
+      "type": "string",
+      "description": "Webhook URL to invoke the Airtop agent. Visit <a href=\"https://portal.airtop.ai/agents\" target=\"_blank\">Airtop Agents</a> for more information.",
+      "default": "",
+      "required": true,
+      "_source": "action_agent_Agent.resource"
+    },
+    {
+      "displayName": "Parameters",
+      "name": "agentParameters",
+      "type": "json",
+      "description": "Agent's input parameters in JSON format. Visit <a href=\"https://portal.airtop.ai/agents\" target=\"_blank\">Airtop Agents</a> for more information.",
+      "default": "{}",
+      "required": true,
+      "_source": "action_agent_Agent.resource"
+    },
+    {
+      "displayName": "Await Agent",
+      "name": "awaitExecution",
+      "type": "boolean",
+      "description": "Whether to wait for the agent to complete its execution",
+      "default": true,
+      "_source": "action_agent_Agent.resource"
+    },
+    {
+      "displayName": "Timeout",
+      "name": "timeout",
+      "type": "number",
+      "description": "Timeout in seconds to wait for the agent to finish",
+      "default": 600,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "agent"
+          ],
+          "operation": [
+            "run"
+          ],
+          "awaitExecution": [
+            true
+          ]
+        }
+      },
+      "_operation": "run",
+      "_source": "action_agent_Agent.resource"
     },
     {
       "displayName": "Operation",
@@ -275,7 +356,7 @@
       "placeholder": "e.g. my-x-profile",
       "hint": "<a href=\"https://docs.airtop.ai/guides/how-to/saving-a-profile\" target=\"_blank\">Learn more</a> about Airtop profiles",
       "default": "",
-      "_source": "action_session_save.operation"
+      "_source": "action_session_Session.resource"
     },
     {
       "displayName": "Note: This operation is not needed if you enabled 'Save Profile' in the 'Create Session' operation",
@@ -293,7 +374,7 @@
         }
       },
       "_operation": "save",
-      "_source": "action_session_save.operation"
+      "_source": "action_session_Session.resource"
     },
     {
       "displayName": "Session ID",
@@ -302,7 +383,7 @@
       "description": "The ID of the <a href=\"https://docs.airtop.ai/guides/how-to/creating-a-session\" target=\"_blank\">Session</a> to use",
       "default": "={{ $json[",
       "required": true,
-      "_source": "action_file_load.operation"
+      "_source": "action_interaction_Interaction.resource"
     },
     {
       "displayName": "Operation",
@@ -374,7 +455,7 @@
       "description": "The ID of the <a href=\"https://docs.airtop.ai/guides/how-to/creating-a-session#windows\" target=\"_blank\">Window</a> to use",
       "default": "={{ $json[",
       "required": true,
-      "_source": "action_file_load.operation"
+      "_source": "action_interaction_Interaction.resource"
     },
     {
       "displayName": "Get Live View",
@@ -526,7 +607,7 @@
       "description": "URL to load in the window",
       "placeholder": "e.g. https://google.com",
       "default": "",
-      "_source": "action_window_load.operation"
+      "_source": "action_window_Window.resource"
     },
     {
       "displayName": "Additional Fields",
@@ -570,7 +651,7 @@
         }
       },
       "_operation": "getLiveView",
-      "_source": "action_window_getLiveView.operation"
+      "_source": "action_window_Window.resource"
     },
     {
       "displayName": "Additional Fields",
@@ -627,7 +708,7 @@
         }
       },
       "_operation": "load",
-      "_source": "action_window_load.operation"
+      "_source": "action_window_Window.resource"
     },
     {
       "displayName": "Output Binary Image",
@@ -646,7 +727,7 @@
         }
       },
       "_operation": "takeScreenshot",
-      "_source": "action_window_takeScreenshot.operation"
+      "_source": "action_window_Window.resource"
     },
     {
       "displayName": "Operation",
@@ -738,7 +819,7 @@
       "type": "boolean",
       "description": "Whether to output the file in binary format if the file is ready for download",
       "default": false,
-      "_source": "action_file_get.operation"
+      "_source": "action_file_File.resource"
     },
     {
       "displayName": "Return All",
@@ -798,7 +879,7 @@
       "description": "A specific description of the element to execute the interaction on",
       "placeholder": "e.g. the search box at the top of the page",
       "default": "",
-      "_source": "action_file_load.operation"
+      "_source": "action_interaction_Interaction.resource"
     },
     {
       "displayName": "Include Hidden Elements",
@@ -1327,7 +1408,7 @@
         }
       },
       "_operation": "fill",
-      "_source": "action_interaction_fill.operation"
+      "_source": "action_interaction_Interaction.resource"
     },
     {
       "displayName": "Scroll Mode",
@@ -1547,7 +1628,7 @@
         }
       },
       "_operation": "type",
-      "_source": "action_interaction_type.operation"
+      "_source": "action_interaction_Interaction.resource"
     },
     {
       "displayName": "Press Enter Key",
@@ -1566,10 +1647,17 @@
         }
       },
       "_operation": "type",
-      "_source": "action_interaction_type.operation"
+      "_source": "action_interaction_Interaction.resource"
     }
   ],
   "operations": [
+    {
+      "name": "Run",
+      "description": "Run an Airtop agent",
+      "action": "Run an agent",
+      "value": "run",
+      "displayName": "Run"
+    },
     {
       "name": "Create Session",
       "description": "Create an Airtop browser session",
@@ -1719,6 +1807,15 @@
     }
   ],
   "operations_by_resource": {
+    "agent": [
+      {
+        "name": "Run",
+        "description": "Run an Airtop agent",
+        "action": "Run an agent",
+        "value": "run",
+        "displayName": "Run"
+      }
+    ],
     "session": [
       {
         "name": "Create Session",
@@ -1909,6 +2006,28 @@
         "show": {
           "resource": [
             "interaction"
+          ]
+        }
+      }
+    },
+    "webhookUrl": {
+      "required": true,
+      "format": "url"
+    },
+    "agentParameters": {
+      "required": true
+    },
+    "timeout": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "agent"
+          ],
+          "operation": [
+            "run"
+          ],
+          "awaitExecution": [
+            true
           ]
         }
       }
@@ -2218,6 +2337,11 @@
       "name": "resource",
       "possibleValues": [
         {
+          "value": "agent",
+          "name": "Agent",
+          "description": ""
+        },
+        {
           "value": "extraction",
           "name": "Extraction",
           "description": ""
@@ -2275,6 +2399,26 @@
           "description": "Execute a Type action on an element given a description"
         }
       ]
+    },
+    "webhookUrl": {
+      "type": "string",
+      "displayName": "Webhook URL",
+      "name": "webhookUrl"
+    },
+    "agentParameters": {
+      "type": "json",
+      "displayName": "Parameters",
+      "name": "agentParameters"
+    },
+    "awaitExecution": {
+      "type": "boolean",
+      "displayName": "Await Agent",
+      "name": "awaitExecution"
+    },
+    "timeout": {
+      "type": "number",
+      "displayName": "Timeout",
+      "name": "timeout"
     },
     "saveProfileOnTermination": {
       "type": "boolean",

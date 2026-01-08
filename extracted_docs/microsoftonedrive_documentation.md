@@ -1,8 +1,8 @@
 ---
 title: "Node: Microsoft OneDrive"
 slug: "node-microsoftonedrive"
-version: "1"
-updated: "2025-11-13"
+version: "['1', '1.1']"
+updated: "2026-01-08"
 summary: "Consume Microsoft OneDrive API"
 node_type: "regular"
 group: "['input']"
@@ -303,7 +303,9 @@ These expression patterns are commonly used with this node:
 node: microsoftOneDrive
 displayName: Microsoft OneDrive
 description: Consume Microsoft OneDrive API
-version: '1'
+version:
+- '1'
+- '1.1'
 nodeType: regular
 group:
 - input
@@ -1017,7 +1019,10 @@ settings:
   },
   "metadata": {
     "nodeType": "regular",
-    "version": "1"
+    "version": [
+      "1",
+      "1.1"
+    ]
   },
   "credentials": [
     {
@@ -1034,4 +1039,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

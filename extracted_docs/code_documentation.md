@@ -2,7 +2,7 @@
 title: "Node: Code"
 slug: "node-code"
 version: "['1', '2']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Run custom JavaScript or Python code"
 node_type: "regular"
 group: "['transform']"
@@ -34,8 +34,7 @@ group: "['transform']"
 **Node-Specific Tips:**
 
 - **notice** when language=['javaScript']: Type <code>$</code> for a list of <a target="_blank" href="https://docs.n8n.io/code-examples/methods-variables-reference/">special vars/methods</a>. Debug by using <code>console.log()</code> statements and viewing their output in the browser console.
-- **notice** when language=['python']: Notice
-- **notice** when language=['pythonNative']: (template: PRINT_INSTRUCTION)<br><br>The native Python option does not support <code>_</code> syntax and helpers, except for <code>_items</code> in all-items mode and <code>_item</code> in per-item mode.
+- **notice** when language=['pythonNative']: (template: PRINT_INSTRUCTION)<br><br>The Python option does not support <code>_</code> syntax and helpers, except for <code>_items</code> in all-items mode and <code>_item</code> in per-item mode.
 
 ---
 
@@ -57,8 +56,7 @@ group: "['transform']"
 **Language options:**
 
 * **JavaScript** (`javaScript`) - Code in JavaScript
-* **Python (Beta)** (`python`) - Code in Python (Beta)
-* **Python (Native) (Beta)** (`pythonNative`) - Code in Python (Native) (Beta)
+* **Python** (`pythonNative`) - Code in Python
 
 
 ---
@@ -205,11 +203,8 @@ params:
     - value: javaScript
       name: JavaScript
       description: ''
-    - value: python
-      name: Python (Beta)
-      description: ''
     - value: pythonNative
-      name: Python (Native) (Beta)
+      name: Python
       description: ''
 examples:
 - name: Sample Data
@@ -239,15 +234,9 @@ ui_elements:
         language:
         - javaScript
   - name: notice
-    text: Notice
-    conditions:
-      show:
-        language:
-        - python
-  - name: notice
-    text: '(template: PRINT_INSTRUCTION)<br><br>The native Python option does not
-      support <code>_</code> syntax and helpers, except for <code>_items</code> in
-      all-items mode and <code>_item</code> in per-item mode.'
+    text: '(template: PRINT_INSTRUCTION)<br><br>The Python option does not support
+      <code>_</code> syntax and helpers, except for <code>_items</code> in all-items
+      mode and <code>_item</code> in per-item mode.'
     conditions:
       show:
         language:
@@ -363,7 +352,6 @@ settings:
           "type": "string",
           "enum": [
             "javaScript",
-            "python",
             "pythonNative"
           ],
           "default": "javaScript"
@@ -462,4 +450,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '2'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '2'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

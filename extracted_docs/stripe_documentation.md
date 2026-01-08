@@ -2,7 +2,7 @@
 title: "Node: Stripe"
 slug: "node-stripe"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume the Stripe API"
 node_type: "regular"
 group: "['transform']"
@@ -96,6 +96,12 @@ group: "['transform']"
 | Get Many | `getAll` | Get many customers |
 | Update | `update` | Update a customer |
 
+### Meterevent Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Create | `create` | Create a meter event |
+
 ### Source Resource Operations
 
 | Operation | ID | Description |
@@ -121,6 +127,7 @@ group: "['transform']"
 * **Coupon** (`coupon`)
 * **Customer** (`customer`)
 * **Customer Card** (`customerCard`)
+* **Meter Event** (`meterEvent`)
 * **Source** (`source`)
 * **Token** (`token`)
 
@@ -201,6 +208,22 @@ group: "['transform']"
 | Metadata | `metadata` | fixedCollection | {} | Set of key-value pairs to attach to the customer to create |
 | Phone | `phone` | string |  | Telephone number of the customer to create |
 | Shipping | `shipping` | fixedCollection | {} | Shipping information for the customer |
+
+</details>
+
+| Event Name | `eventName` | string |  | ✓ | The name of the meter event. Corresponds with the event_name field on a meter. |  |
+| Customer ID | `customerId` | string |  | ✓ | The Stripe customer ID associated with this meter event |  |
+| Value | `value` | number | 1 | ✓ | The value of the meter event. Must be an integer. Can be positive or negative. |  |
+| Additional Fields | `additionalFields` | collection | {} | ✗ | A unique identifier for the event. If not provided, one will be generated. Uniqueness is enforced within a rolling 24 hour window. | e.g. Add Field |  |
+
+<details>
+<summary><strong>Additional Fields sub-options</strong></summary>
+
+| Sub-Option | Field ID | Type | Default | Description |
+| ---------- | -------- | ---- | ------- | ----------- |
+| Identifier | `identifier` | string |  | A unique identifier for the event. If not provided, one will be generated. Uniqueness is enforced within a rolling 24 hour window. |
+| Timestamp | `timestamp` | dateTime |  | The time of the event. Measured in seconds since the Unix epoch. Must be within the past 35 calendar days or up to 5 minutes in the future. Defaults to current time if not specified. |
+| Custom Payload Properties | `customPayload` | fixedCollection | {} | Additional custom properties to include in the event payload. Use this for custom meter configurations with non-default payload keys. |
 
 </details>
 
@@ -671,6 +694,52 @@ operations:
       type: string
       displayName: Name
       name: name
+  - id: eventName
+    name: Event Name
+    type: string
+    default: ''
+    required: true
+    description: The name of the meter event. Corresponds with the event_name field
+      on a meter.
+    validation:
+      required: true
+      displayOptions:
+        show:
+          resource:
+          - meterEvent
+          operation:
+          - create
+    typeInfo:
+      type: string
+      displayName: Event Name
+      name: eventName
+  - id: customerId
+    name: Customer ID
+    type: string
+    default: ''
+    required: true
+    description: The Stripe customer ID associated with this meter event
+    validation: *id005
+    typeInfo: *id006
+  - id: value
+    name: Value
+    type: number
+    default: 1
+    required: true
+    description: The value of the meter event. Must be an integer. Can be positive
+      or negative.
+    validation:
+      required: true
+      displayOptions:
+        show:
+          resource:
+          - meterEvent
+          operation:
+          - create
+    typeInfo:
+      type: number
+      displayName: Value
+      name: value
   - id: customerId
     name: Customer ID
     type: string
@@ -984,6 +1053,8 @@ ui_elements:
     text: Add Field
   - field: additionalFields
     text: Add Field
+  - field: additionalFields
+    text: Add Field
   hints: []
 settings:
   common:
@@ -1101,6 +1172,7 @@ settings:
             "coupon",
             "customer",
             "customerCard",
+            "meterEvent",
             "source",
             "token"
           ],
@@ -1256,6 +1328,16 @@ settings:
           "examples": [
             "Add Filter"
           ]
+        },
+        "eventName": {
+          "description": "The name of the meter event. Corresponds with the event_name field on a meter.",
+          "type": "string",
+          "default": ""
+        },
+        "value": {
+          "description": "The value of the meter event. Must be an integer. Can be positive or negative.",
+          "type": "number",
+          "default": 1
         }
       }
     },
@@ -1334,4 +1416,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

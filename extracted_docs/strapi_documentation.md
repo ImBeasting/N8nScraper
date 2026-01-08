@@ -2,7 +2,7 @@
 title: "Node: Strapi"
 slug: "node-strapi"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Strapi API"
 node_type: "regular"
 group: "['input']"
@@ -667,4 +667,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

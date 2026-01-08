@@ -2,7 +2,7 @@
 title: "Node: SeaTable Trigger"
 slug: "node-seatabletrigger"
 version: "2"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Starts the workflow when SeaTable events occur"
 node_type: "trigger"
 group: "['output']"
@@ -70,14 +70,6 @@ group: "['output']"
 
 ## Operations
 
-### Link Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Add | `add` | Create a link between two rows in a link column |
-| List | `list` | List all links of a specific row |
-| Remove | `remove` | Remove a link between two rows from a link column |
-
 ### Row Resource Operations
 
 | Operation | ID | Description |
@@ -106,6 +98,14 @@ group: "['output']"
 | Public URL | `getPublicURL` | Get the public URL from asset path |
 | Upload | `upload` | Add a file/image to an existing row |
 
+### Link Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Add | `add` | Create a link between two rows in a link column |
+| List | `list` | List all links of a specific row |
+| Remove | `remove` | Remove a link between two rows from a link column |
+
 ---
 
 ## Parameters
@@ -129,13 +129,18 @@ group: "['output']"
 
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Operation | `operation` | options | add | ✗ | Create a link between two rows in a link column |  |
+| Operation | `operation` | options | create | ✗ | Create a new row |  |
 
 **Operation options:**
 
-* **Add** (`add`) - Create a link between two rows in a link column
-* **List** (`list`) - List all links of a specific row
-* **Remove** (`remove`) - Remove a link between two rows from a link column
+* **Create** (`create`) - Create a new row
+* **Delete** (`remove`) - Delete a row
+* **Get** (`get`) - Get the content of a row
+* **Get Many** (`list`) - Get many rows from a table or a table view
+* **Lock** (`lock`) - Lock a row to prevent further changes
+* **Search** (`search`) - Search one or multiple rows
+* **Unlock** (`unlock`) - Remove the lock from a row
+* **Update** (`update`) - Update the content of a row
 
 ---
 
@@ -162,8 +167,8 @@ group: "['output']"
 
 These expression patterns are commonly used with this node:
 
-- `={{$parameter["event"]}}`
 - `={{$parameter["resource"] + ": " + $parameter["operation"]}}`
+- `={{$parameter["event"]}}`
 
 ---
 
@@ -201,21 +206,18 @@ credentials:
 - name: seaTableApi
   required: true
 operations:
-- id: add
-  name: Add
-  description: Create a link between two rows in a link column
-- id: list
-  name: List
-  description: List all links of a specific row
-- id: remove
-  name: Remove
-  description: Remove a link between two rows from a link column
 - id: create
   name: Create
   description: Create a new row
+- id: remove
+  name: Delete
+  description: Delete a row
 - id: get
   name: Get
   description: Get the content of a row
+- id: list
+  name: Get Many
+  description: Get many rows from a table or a table view
 - id: lock
   name: Lock
   description: Lock a row to prevent further changes
@@ -290,9 +292,12 @@ operations:
 - id: upload
   name: Upload
   description: Add a file/image to an existing row
+- id: add
+  name: Add
+  description: Create a link between two rows in a link column
 common_expressions:
-- ={{$parameter["event"]}}
 - '={{$parameter["resource"] + ": " + $parameter["operation"]}}'
+- ={{$parameter["event"]}}
 api_patterns:
   http_methods: []
   endpoints:
@@ -312,8 +317,6 @@ ui_elements:
       show: {}
   tooltips: []
   placeholders:
-  - field: tableName
-    text: Select a table
   - field: options
     text: Add Option
   - field: inputsToIgnore
@@ -328,6 +331,8 @@ ui_elements:
     text: Add Column
   - field: searchString
     text: Enter the name or the email or the collaborator
+  - field: tableName
+    text: Select a table
   - field: assetPath
     text: /images/2023-09/logo.png
   hints: []
@@ -362,11 +367,10 @@ settings:
     "operation": {
       "type": "string",
       "enum": [
-        "add",
-        "list",
-        "remove",
         "create",
+        "remove",
         "get",
+        "list",
         "lock",
         "search",
         "unlock",
@@ -375,7 +379,8 @@ settings:
         "metadata",
         "collaborator",
         "getPublicURL",
-        "upload"
+        "upload",
+        "add"
       ],
       "description": "Operation to perform"
     },
@@ -394,50 +399,18 @@ settings:
           ],
           "default": "row"
         },
-        "tableName": {
-          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
-          "type": "string",
-          "default": "",
-          "examples": [
-            "Select a table"
-          ]
-        },
-        "linkColumn": {
-          "description": "Choose from the list of specify the Link Column by using an expression. You have to provide it in the way \"column_name:::link_id:::other_table_id:::column_key\".",
+        "searchColumn": {
+          "description": "Select the column to be searched. Not all column types are supported for search. Choose from the list, or specify a name using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>.",
           "type": "string",
           "default": ""
         },
-        "rowId": {
-          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
-          "type": "string",
-          "default": ""
-        },
-        "linkColumnSourceId": {
-          "description": "Provide the row ID of table you selected",
-          "type": "string",
-          "default": ""
-        },
-        "linkColumnTargetId": {
-          "description": "Provide the row ID of table you want to link",
-          "type": "string",
-          "default": ""
-        },
-        "operation": {
-          "description": "Get the public URL from asset path",
-          "type": "string",
-          "enum": [
-            "getPublicURL",
-            "upload"
-          ],
-          "default": "upload"
-        },
-        "viewName": {
-          "description": "The name of SeaTable view to access, or specify by using an expression. Provide it in the way \"col.name:::col.type\".",
+        "searchTerm": {
+          "description": "What to look for?",
           "type": "string",
           "default": ""
         },
         "options": {
-          "description": "Whether to return a simplified version of the response instead of the raw data",
+          "description": "Whether the search ignores case sensitivity (true). Otherwise, it distinguishes between uppercase and lowercase characters.",
           "type": "string",
           "default": {},
           "examples": [
@@ -469,13 +442,16 @@ settings:
             "Add Column"
           ]
         },
-        "searchColumn": {
-          "description": "Select the column to be searched. Not all column types are supported for search. Choose from the list, or specify a name using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>.",
+        "tableName": {
+          "description": "Choose from the list, or specify a name using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>",
           "type": "string",
-          "default": ""
+          "default": "",
+          "examples": [
+            "Select a table"
+          ]
         },
-        "searchTerm": {
-          "description": "What to look for?",
+        "rowId": {
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
           "type": "string",
           "default": ""
         },
@@ -489,20 +465,27 @@ settings:
           "type": "boolean",
           "default": false
         },
+        "operation": {
+          "description": "Create a link between two rows in a link column",
+          "type": "string",
+          "enum": [
+            "add",
+            "list",
+            "remove"
+          ],
+          "default": "add"
+        },
+        "viewName": {
+          "description": "The name of SeaTable view to access, or specify by using an expression. Provide it in the way \"col.name:::col.type\".",
+          "type": "string",
+          "default": ""
+        },
         "searchString": {
           "description": "SeaTable identifies users with a unique username like 244b43hr6fy54bb4afa2c2cb7369d244@auth.local. Get this username from an email or the name of a collaborator.",
           "type": "string",
           "default": "",
           "examples": [
             "Enter the name or the email or the collaborator"
-          ]
-        },
-        "assetPath": {
-          "description": "",
-          "type": "string",
-          "default": "",
-          "examples": [
-            "/images/2023-09/logo.png"
           ]
         },
         "uploadColumn": {
@@ -514,6 +497,29 @@ settings:
           "description": "Name of the binary property which contains the data for the file to be written",
           "type": "string",
           "default": "data"
+        },
+        "assetPath": {
+          "description": "",
+          "type": "string",
+          "default": "",
+          "examples": [
+            "/images/2023-09/logo.png"
+          ]
+        },
+        "linkColumn": {
+          "description": "Choose from the list of specify the Link Column by using an expression. You have to provide it in the way \"column_name:::link_id:::other_table_id\".",
+          "type": "string",
+          "default": ""
+        },
+        "linkColumnSourceId": {
+          "description": "Provide the row ID of table you selected",
+          "type": "string",
+          "default": ""
+        },
+        "linkColumnTargetId": {
+          "description": "Provide the row ID of table you want to link",
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -553,4 +559,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 2 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 2 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

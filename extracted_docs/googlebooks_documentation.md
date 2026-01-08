@@ -2,7 +2,7 @@
 title: "Node: Google Books"
 slug: "node-googlebooks"
 version: "['1', '2']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Read data from Google Books"
 node_type: "regular"
 group: "['input', 'output']"
@@ -750,4 +750,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '2'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '2'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

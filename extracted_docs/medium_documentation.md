@@ -2,7 +2,7 @@
 title: "Node: Medium"
 slug: "node-medium"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Medium API"
 node_type: "regular"
 group: "['output']"
@@ -52,7 +52,7 @@ group: "['output']"
 
 ## API Patterns
 
-**Headers Used:** Content-Type, Accept-Charset
+**Headers Used:** Accept-Charset, Content-Type
 
 ---
 
@@ -355,8 +355,8 @@ api_patterns:
   http_methods: []
   endpoints: []
   headers:
-  - Content-Type
   - Accept-Charset
+  - Content-Type
   query_params: []
 ui_elements:
   notices: []
@@ -631,4 +631,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

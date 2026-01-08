@@ -2,7 +2,7 @@
 title: "Node: For adding columns from your dataset to the evaluation results. Anything you add here will be displayed in the ‘evaluations’ tab, not on the Google Sheet or Data table."
 slug: "node-setinputsnotice"
 version: "1.0"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "The expected output defined in your evaluation dataset, used as ground truth"
 node_type: "regular"
 ---
@@ -315,4 +315,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1.0 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1.0 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

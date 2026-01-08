@@ -2,7 +2,7 @@
 title: "Node: Salesforce Trigger"
 slug: "node-salesforcetrigger"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Fetches data from Salesforce and starts the workflow on specified polling intervals."
 node_type: "trigger"
 group: "['trigger']"
@@ -87,7 +87,7 @@ group: "['trigger']"
 * **Lead Created** (`leadCreated`) - When a new lead is created
 * **Lead Updated** (`leadUpdated`) - When an existing lead is modified
 * **Opportunity Created** (`opportunityCreated`) - When a new opportunity is created
-* **Opportunity Updated** (`opportunityUpdated`) - When an existing opportunity is created
+* **Opportunity Updated** (`opportunityUpdated`) - When an existing opportunity is modified
 * **Task Created** (`taskCreated`) - When a new task is created
 * **Task Updated** (`taskUpdated`) - When an existing task is modified
 * **User Created** (`userCreated`) - When a new user is created
@@ -198,7 +198,7 @@ params:
       description: When a new opportunity is created
     - value: opportunityUpdated
       name: Opportunity Updated
-      description: When an existing opportunity is created
+      description: When an existing opportunity is modified
     - value: taskCreated
       name: Task Created
       description: When a new task is created
@@ -346,4 +346,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -1,8 +1,8 @@
 ---
 title: "Node: Airtop"
 slug: "node-airtop"
-version: "['1']"
-updated: "2025-11-13"
+version: "['1', '1.1']"
+updated: "2026-01-08"
 summary: "Scrape and control any site with Airtop"
 node_type: "regular"
 group: "['transform']"
@@ -59,6 +59,12 @@ group: "['transform']"
 ---
 
 ## Operations
+
+### Agent Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Run | `run` | Run an Airtop agent |
 
 ### Session Resource Operations
 
@@ -120,6 +126,7 @@ group: "['transform']"
 
 **Resource options:**
 
+* **Agent** (`agent`)
 * **Extraction** (`extraction`)
 * **File** (`file`)
 * **Interaction** (`interaction`)
@@ -132,16 +139,19 @@ group: "['transform']"
 
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Operation | `operation` | options | create | ✗ | Create an Airtop browser session |  |
+| Operation | `operation` | options | run | ✗ | Run an Airtop agent |  |
 
 **Operation options:**
 
-* **Create Session** (`create`) - Create an Airtop browser session
-* **Save Profile on Termination** (`save`) - Save in a profile changes made in your browsing session such as cookies and local storage
-* **Terminate Session** (`terminate`) - Terminate a session
-* **Wait for Download** (`waitForDownload`) - Wait for a file download to become available
+* **Run** (`run`) - Run an Airtop agent
 
 ---
+
+### Run parameters (`run`)
+
+| Name | Field ID | Type | Default | Required | Description | Validation |
+| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
+| Timeout | `timeout` | number | 600 | ✗ | Timeout in seconds to wait for the agent to finish |  |
 
 ### Create Session parameters (`create`)
 
@@ -420,6 +430,7 @@ displayName: Airtop
 description: Scrape and control any site with Airtop
 version:
 - '1'
+- '1.1'
 nodeType: regular
 group:
 - transform
@@ -427,6 +438,29 @@ credentials:
 - name: airtopApi
   required: true
 operations:
+- id: run
+  name: Run
+  description: Run an Airtop agent
+  params:
+  - id: timeout
+    name: Timeout
+    type: number
+    default: 600
+    required: false
+    description: Timeout in seconds to wait for the agent to finish
+    validation:
+      displayOptions:
+        show:
+          resource:
+          - agent
+          operation:
+          - run
+          awaitExecution:
+          - true
+    typeInfo:
+      type: number
+      displayName: Timeout
+      name: timeout
 - id: create
   name: Create Session
   description: Create an Airtop browser session
@@ -1066,6 +1100,7 @@ settings:
     "operation": {
       "type": "string",
       "enum": [
+        "run",
         "create",
         "save",
         "terminate",
@@ -1098,6 +1133,7 @@ settings:
           "description": "",
           "type": "string",
           "enum": [
+            "agent",
             "extraction",
             "file",
             "interaction",
@@ -1117,6 +1153,27 @@ settings:
             "type"
           ],
           "default": "click"
+        },
+        "webhookUrl": {
+          "description": "Webhook URL to invoke the Airtop agent. Visit <a href=\"https://portal.airtop.ai/agents\" target=\"_blank\">Airtop Agents</a> for more information.",
+          "type": "string",
+          "default": "",
+          "format": "url"
+        },
+        "agentParameters": {
+          "description": "Agent's input parameters in JSON format. Visit <a href=\"https://portal.airtop.ai/agents\" target=\"_blank\">Airtop Agents</a> for more information.",
+          "type": "string",
+          "default": "{}"
+        },
+        "awaitExecution": {
+          "description": "Whether to wait for the agent to complete its execution",
+          "type": "boolean",
+          "default": true
+        },
+        "timeout": {
+          "description": "Timeout in seconds to wait for the agent to finish",
+          "type": "number",
+          "default": 600
         },
         "saveProfileOnTermination": {
           "description": "Whether to automatically save the <a href=\"https://docs.airtop.ai/guides/how-to/saving-a-profile\" target=\"_blank\">Airtop profile</a> for this session upon termination",
@@ -1449,7 +1506,8 @@ settings:
   "metadata": {
     "nodeType": "regular",
     "version": [
-      "1"
+      "1",
+      "1.1"
     ]
   },
   "credentials": [
@@ -1467,4 +1525,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

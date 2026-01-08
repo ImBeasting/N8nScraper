@@ -2,7 +2,7 @@
 title: "Node: Postgres"
 slug: "node-postgres"
 version: "['2', '2.1', '2.2', '2.3', '2.4', '2.5', '2.6']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Get, add and update data in Postgres"
 node_type: "regular"
 group: "['input']"
@@ -396,4 +396,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['2', '2.1', '2.2', '2.3', '2.4', '2.5', '2.6'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['2', '2.1', '2.2', '2.3', '2.4', '2.5', '2.6'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

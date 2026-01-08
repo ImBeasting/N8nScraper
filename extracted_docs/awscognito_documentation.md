@@ -2,7 +2,7 @@
 title: "Node: AWS Cognito"
 slug: "node-awscognito"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Sends data to AWS Cognito"
 node_type: "regular"
 group: "['output']"
@@ -83,30 +83,7 @@ group: "['output']"
 
 These examples are extracted from actual n8n workflows:
 
-### Example 1: getAllGroups
-
-**From workflow:** Unnamed workflow
-
-**Parameters:**
-```json
-{
-  "resource": "group",
-  "userPool": {
-    "__rl": true,
-    "value": "eu-central-1_KkXQgdCJv",
-    "mode": "list",
-    "cachedResultName": "AWS test"
-  },
-  "returnAll": true,
-  "includeUsers": true,
-  "requestOptions": {}
-}
-```
-
-**Credentials:**
-- aws: `AWS account Central Europe`
-
-### Example 2: AWS Cognito1
+### Example 1: AWS Cognito1
 
 **From workflow:** Unnamed workflow
 
@@ -134,7 +111,7 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - aws: `AWS account Central Europe`
 
-### Example 3: updateGroup
+### Example 2: createGroup
 
 **From workflow:** Unnamed workflow
 
@@ -142,22 +119,15 @@ These examples are extracted from actual n8n workflows:
 ```json
 {
   "resource": "group",
-  "operation": "update",
+  "operation": "create",
   "userPool": {
     "__rl": true,
-    "value": "eu-central-1_KkXQgdCJv",
+    "value": "eu-central-1_qqle3XBUA",
     "mode": "list",
-    "cachedResultName": "AWS test"
+    "cachedResultName": "UserPoolThree"
   },
-  "group": {
-    "__rl": true,
-    "value": "MyNewTesttttt",
-    "mode": "list",
-    "cachedResultName": "MyNewTesttttt"
-  },
-  "additionalFields": {
-    "description": "Updated description"
-  },
+  "newGroupName": "MyNewGroup11",
+  "additionalFields": {},
   "requestOptions": {}
 }
 ```
@@ -165,7 +135,7 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - aws: `AWS account Central Europe`
 
-### Example 4: AWS Cognito1
+### Example 3: AWS Cognito1
 
 **From workflow:** Unnamed workflow
 
@@ -193,7 +163,7 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - aws: `AWS account Central Europe`
 
-### Example 5: createGroup
+### Example 4: getAllGroups
 
 **From workflow:** Unnamed workflow
 
@@ -201,15 +171,45 @@ These examples are extracted from actual n8n workflows:
 ```json
 {
   "resource": "group",
-  "operation": "create",
   "userPool": {
     "__rl": true,
-    "value": "eu-central-1_qqle3XBUA",
+    "value": "eu-central-1_KkXQgdCJv",
     "mode": "list",
-    "cachedResultName": "UserPoolThree"
+    "cachedResultName": "AWS test"
   },
-  "newGroupName": "MyNewGroup11",
-  "additionalFields": {},
+  "returnAll": true,
+  "includeUsers": true,
+  "requestOptions": {}
+}
+```
+
+**Credentials:**
+- aws: `AWS account Central Europe`
+
+### Example 5: updateGroup
+
+**From workflow:** Unnamed workflow
+
+**Parameters:**
+```json
+{
+  "resource": "group",
+  "operation": "update",
+  "userPool": {
+    "__rl": true,
+    "value": "eu-central-1_KkXQgdCJv",
+    "mode": "list",
+    "cachedResultName": "AWS test"
+  },
+  "group": {
+    "__rl": true,
+    "value": "MyNewTesttttt",
+    "mode": "list",
+    "cachedResultName": "MyNewTesttttt"
+  },
+  "additionalFields": {
+    "description": "Updated description"
+  },
   "requestOptions": {}
 }
 ```
@@ -294,18 +294,6 @@ params:
       name: User Pool
       description: ''
 examples:
-- name: getAllGroups
-  parameters:
-    resource: group
-    userPool:
-      __rl: true
-      value: eu-central-1_KkXQgdCJv
-      mode: list
-      cachedResultName: AWS test
-    returnAll: true
-    includeUsers: true
-    requestOptions: {}
-  workflow: Unnamed workflow
 - name: AWS Cognito1
   parameters:
     resource: group
@@ -322,22 +310,33 @@ examples:
       cachedResultName: MyNewGroup22
     requestOptions: {}
   workflow: Unnamed workflow
-- name: updateGroup
+- name: createGroup
   parameters:
     resource: group
-    operation: update
+    operation: create
     userPool:
       __rl: true
-      value: eu-central-1_KkXQgdCJv
+      value: eu-central-1_qqle3XBUA
       mode: list
-      cachedResultName: AWS test
+      cachedResultName: UserPoolThree
+    newGroupName: MyNewGroup11
+    additionalFields: {}
+    requestOptions: {}
+  workflow: Unnamed workflow
+- name: AWS Cognito1
+  parameters:
+    resource: group
+    operation: get
+    userPool:
+      __rl: true
+      value: eu-central-1_qqle3XBUA
+      mode: list
+      cachedResultName: UserPoolThree
     group:
       __rl: true
-      value: MyNewTesttttt
+      value: MyNewGroup2
       mode: list
-      cachedResultName: MyNewTesttttt
-    additionalFields:
-      description: Updated description
+      cachedResultName: MyNewGroup2
     requestOptions: {}
   workflow: Unnamed workflow
 common_expressions:
@@ -522,21 +521,6 @@ settings:
   ],
   "examples": [
     {
-      "description": "getAllGroups",
-      "value": {
-        "resource": "group",
-        "userPool": {
-          "__rl": true,
-          "value": "eu-central-1_KkXQgdCJv",
-          "mode": "list",
-          "cachedResultName": "AWS test"
-        },
-        "returnAll": true,
-        "includeUsers": true,
-        "requestOptions": {}
-      }
-    },
-    {
       "description": "AWS Cognito1",
       "value": {
         "resource": "group",
@@ -557,24 +541,37 @@ settings:
       }
     },
     {
-      "description": "updateGroup",
+      "description": "createGroup",
       "value": {
         "resource": "group",
-        "operation": "update",
+        "operation": "create",
         "userPool": {
           "__rl": true,
-          "value": "eu-central-1_KkXQgdCJv",
+          "value": "eu-central-1_qqle3XBUA",
           "mode": "list",
-          "cachedResultName": "AWS test"
+          "cachedResultName": "UserPoolThree"
+        },
+        "newGroupName": "MyNewGroup11",
+        "additionalFields": {},
+        "requestOptions": {}
+      }
+    },
+    {
+      "description": "AWS Cognito1",
+      "value": {
+        "resource": "group",
+        "operation": "get",
+        "userPool": {
+          "__rl": true,
+          "value": "eu-central-1_qqle3XBUA",
+          "mode": "list",
+          "cachedResultName": "UserPoolThree"
         },
         "group": {
           "__rl": true,
-          "value": "MyNewTesttttt",
+          "value": "MyNewGroup2",
           "mode": "list",
-          "cachedResultName": "MyNewTesttttt"
-        },
-        "additionalFields": {
-          "description": "Updated description"
+          "cachedResultName": "MyNewGroup2"
         },
         "requestOptions": {}
       }
@@ -589,4 +586,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

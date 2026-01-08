@@ -2,7 +2,7 @@
 title: "Node: TheHiveProject"
 slug: "node-thehiveproject"
 version: "1.0"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume TheHive 5 API"
 node_type: "regular"
 group: "['transform']"
@@ -36,29 +36,6 @@ group: "['transform']"
 
 ## Operations
 
-### Task Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Create | `create` | Create a task |
-| Delete | `deleteTask` | Delete an task |
-| Execute Responder | `executeResponder` | Execute responder on a task |
-| Get | `get` | Get a task |
-| Search | `search` | Search tasks |
-| Update | `update` | Update a task |
-
-### Log Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Add Attachment | `addAttachment` | Add attachment to a task log |
-| Create | `create` | Create a task log |
-| Delete | `deleteLog` | Delete task log |
-| Delete Attachment | `deleteAttachment` | Delete attachment from a task log |
-| Execute Responder | `executeResponder` | Execute responder on a task log |
-| Get | `get` | Get a task log |
-| Search | `search` | Search task logs |
-
 ### Page Resource Operations
 
 | Operation | ID | Description |
@@ -67,35 +44,6 @@ group: "['transform']"
 | Delete | `deletePage` | Delete a page |
 | Search | `search` | Search pages |
 | Update | `update` | Update a page |
-
-### Alert Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Create | `create` | Create an alert |
-| Delete | `deleteAlert` | Delete an alert |
-| Execute Responder | `executeResponder` | Execute responder on an alert |
-| Get | `get` | Get an alert |
-| Merge Into Case | `merge` | Merge an alert into a case |
-| Promote to Case | `promote` | Promote an alert to a case |
-| Search | `search` | Search alerts |
-| Update | `update` | Update an alert |
-| Update Status | `status` | Update an alert status |
-
-### Comment Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Create | `add` | Create a comment in a case or alert |
-| Delete | `deleteComment` | Delete a comment |
-| Search | `search` | Search comments |
-| Update | `update` | Update a comment |
-
-### Query Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Execute Query | `executeQuery` | Execute a query |
 
 ### Observable Resource Operations
 
@@ -123,6 +71,58 @@ group: "['transform']"
 | Get Timeline | `getTimeline` | Get timeline of a case |
 | Search | `search` | Search cases |
 | Update | `update` | Update a case |
+
+### Alert Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Create | `create` | Create an alert |
+| Delete | `deleteAlert` | Delete an alert |
+| Execute Responder | `executeResponder` | Execute responder on an alert |
+| Get | `get` | Get an alert |
+| Merge Into Case | `merge` | Merge an alert into a case |
+| Promote to Case | `promote` | Promote an alert to a case |
+| Search | `search` | Search alerts |
+| Update | `update` | Update an alert |
+| Update Status | `status` | Update an alert status |
+
+### Log Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Add Attachment | `addAttachment` | Add attachment to a task log |
+| Create | `create` | Create a task log |
+| Delete | `deleteLog` | Delete task log |
+| Delete Attachment | `deleteAttachment` | Delete attachment from a task log |
+| Execute Responder | `executeResponder` | Execute responder on a task log |
+| Get | `get` | Get a task log |
+| Search | `search` | Search task logs |
+
+### Query Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Execute Query | `executeQuery` | Execute a query |
+
+### Task Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Create | `create` | Create a task |
+| Delete | `deleteTask` | Delete an task |
+| Execute Responder | `executeResponder` | Execute responder on a task |
+| Get | `get` | Get a task |
+| Search | `search` | Search tasks |
+| Update | `update` | Update a task |
+
+### Comment Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Create | `add` | Create a comment in a case or alert |
+| Delete | `deleteComment` | Delete a comment |
+| Search | `search` | Search comments |
+| Update | `update` | Update a comment |
 
 ---
 
@@ -155,12 +155,10 @@ group: "['transform']"
 
 **Operation options:**
 
-* **Create** (`create`) - Create a task
-* **Delete** (`deleteTask`) - Delete an task
-* **Execute Responder** (`executeResponder`) - Execute responder on a task
-* **Get** (`get`) - Get a task
-* **Search** (`search`) - Search tasks
-* **Update** (`update`) - Update a task
+* **Create** (`create`) - Create a page
+* **Delete** (`deletePage`) - Delete a page
+* **Search** (`search`) - Search pages
+* **Update** (`update`) - Update a page
 
 ---
 
@@ -170,33 +168,22 @@ group: "['transform']"
 
 These examples are extracted from actual n8n workflows:
 
-### Example 1: TheHive Observable Create
+### Example 1: TheHive Alert Get
 
-**From workflow:** TheHive Observable Create Test Workflow
+**From workflow:** TheHive Alert Get Test Workflow
 
 **Parameters:**
 ```json
 {
-  "resource": "observable",
-  "operation": "create",
-  "createIn": "case",
-  "id": {
+  "resource": "alert",
+  "operation": "get",
+  "alertId": {
     "__rl": true,
     "mode": "id",
-    "value": "~123789"
+    "value": "~123456"
   },
-  "dataType": "domain",
-  "data": "malicious.example.com",
-  "observableFields": {
-    "mappingMode": "defineBelow",
-    "value": {
-      "message": "Suspicious domain detected in analysis",
-      "tags": "malware,suspicious",
-      "tlp": 2,
-      "pap": 2,
-      "ioc": true,
-      "sighted": false
-    }
+  "options": {
+    "includeSimilarAlerts": true
   }
 }
 ```
@@ -204,25 +191,35 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - theHiveProjectApi: `TheHive API Credentials`
 
-### Example 2: TheHive Case Create
+### Example 2: TheHive Query Execute
 
-**From workflow:** TheHive Case Create Test Workflow
+**From workflow:** TheHive Query Execute Test Workflow
 
 **Parameters:**
 ```json
 {
-  "resource": "case",
-  "operation": "create",
-  "caseFields": {
-    "mappingMode": "defineBelow",
-    "value": {
-      "title": "Test Case",
-      "description": "Test case description",
-      "severity": 2,
-      "tags": "test,n8n",
-      "tlp": 2,
-      "pap": 2
-    }
+  "resource": "query",
+  "operation": "executeQuery",
+  "queryJson": "[\n  {\n    \"_name\": \"listOrganisation\"\n  }\n]"
+}
+```
+
+**Credentials:**
+- theHiveProjectApi: `TheHive API Credentials`
+
+### Example 3: TheHive Task Get
+
+**From workflow:** TheHive Task Get Test Workflow
+
+**Parameters:**
+```json
+{
+  "resource": "task",
+  "operation": "get",
+  "taskId": {
+    "__rl": true,
+    "mode": "id",
+    "value": "~654321"
   }
 }
 ```
@@ -230,7 +227,7 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - theHiveProjectApi: `TheHive API Credentials`
 
-### Example 3: TheHive Task Create
+### Example 4: TheHive Task Create
 
 **From workflow:** TheHive Task Create Test Workflow
 
@@ -260,47 +257,33 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - theHiveProjectApi: `TheHive API Credentials`
 
-### Example 4: TheHive Alert Create
+### Example 5: TheHive Observable Create
 
-**From workflow:** TheHive Alert Create Test Workflow
+**From workflow:** TheHive Observable Create Test Workflow
 
 **Parameters:**
 ```json
 {
-  "resource": "alert",
+  "resource": "observable",
   "operation": "create",
-  "alertFields": {
-    "mappingMode": "defineBelow",
-    "value": {
-      "title": "Test Alert",
-      "description": "Test alert description",
-      "type": "incident",
-      "source": "n8n-test",
-      "sourceRef": "test-ref-001",
-      "severity": 2,
-      "tags": "test,n8n",
-      "follow": true
-    }
-  }
-}
-```
-
-**Credentials:**
-- theHiveProjectApi: `TheHive API Credentials`
-
-### Example 5: TheHive Task Get
-
-**From workflow:** TheHive Task Get Test Workflow
-
-**Parameters:**
-```json
-{
-  "resource": "task",
-  "operation": "get",
-  "taskId": {
+  "createIn": "case",
+  "id": {
     "__rl": true,
     "mode": "id",
-    "value": "~654321"
+    "value": "~123789"
+  },
+  "dataType": "domain",
+  "data": "malicious.example.com",
+  "observableFields": {
+    "mappingMode": "defineBelow",
+    "value": {
+      "message": "Suspicious domain detected in analysis",
+      "tags": "malware,suspicious",
+      "tlp": 2,
+      "pap": 2,
+      "ioc": true,
+      "sighted": false
+    }
   }
 }
 ```
@@ -364,14 +347,8 @@ operations:
 - id: create
   name: Create
   description: ''
-- id: deleteTask
+- id: deletePage
   name: Delete
-  description: ''
-- id: executeResponder
-  name: Execute Responder
-  description: ''
-- id: get
-  name: Get
   description: ''
 - id: search
   name: Search
@@ -379,17 +356,32 @@ operations:
 - id: update
   name: Update
   description: ''
+- id: deleteObservable
+  name: Delete
+  description: ''
+- id: executeAnalyzer
+  name: Execute Analyzer
+  description: ''
+- id: executeResponder
+  name: Execute Responder
+  description: ''
+- id: get
+  name: Get
+  description: ''
 - id: addAttachment
   name: Add Attachment
-  description: ''
-- id: deleteLog
-  name: Delete
   description: ''
 - id: deleteAttachment
   name: Delete Attachment
   description: ''
-- id: deletePage
-  name: Delete
+- id: deleteCase
+  name: Delete Case
+  description: ''
+- id: getAttachment
+  name: Get Attachment
+  description: ''
+- id: getTimeline
+  name: Get Timeline
   description: ''
 - id: deleteAlert
   name: Delete
@@ -403,83 +395,48 @@ operations:
 - id: status
   name: Update Status
   description: ''
+- id: deleteLog
+  name: Delete
+  description: ''
+- id: executeQuery
+  name: Execute Query
+  description: ''
+- id: deleteTask
+  name: Delete
+  description: ''
 - id: add
   name: Create
   description: ''
 - id: deleteComment
   name: Delete
   description: ''
-- id: executeQuery
-  name: Execute Query
-  description: ''
-- id: deleteObservable
-  name: Delete
-  description: ''
-- id: executeAnalyzer
-  name: Execute Analyzer
-  description: ''
-- id: deleteCase
-  name: Delete Case
-  description: ''
-- id: getAttachment
-  name: Get Attachment
-  description: ''
-- id: getTimeline
-  name: Get Timeline
-  description: ''
 examples:
-- name: TheHive Observable Create
+- name: TheHive Alert Get
   parameters:
-    resource: observable
-    operation: create
-    createIn: case
-    id:
+    resource: alert
+    operation: get
+    alertId:
       __rl: true
       mode: id
-      value: ~123789
-    dataType: domain
-    data: malicious.example.com
-    observableFields:
-      mappingMode: defineBelow
-      value:
-        message: Suspicious domain detected in analysis
-        tags: malware,suspicious
-        tlp: 2
-        pap: 2
-        ioc: true
-        sighted: false
-  workflow: TheHive Observable Create Test Workflow
-- name: TheHive Case Create
+      value: ~123456
+    options:
+      includeSimilarAlerts: true
+  workflow: TheHive Alert Get Test Workflow
+- name: TheHive Query Execute
   parameters:
-    resource: case
-    operation: create
-    caseFields:
-      mappingMode: defineBelow
-      value:
-        title: Test Case
-        description: Test case description
-        severity: 2
-        tags: test,n8n
-        tlp: 2
-        pap: 2
-  workflow: TheHive Case Create Test Workflow
-- name: TheHive Task Create
+    resource: query
+    operation: executeQuery
+    queryJson: "[\n  {\n    \"_name\": \"listOrganisation\"\n  }\n]"
+  workflow: TheHive Query Execute Test Workflow
+- name: TheHive Task Get
   parameters:
     resource: task
-    operation: create
-    caseId:
+    operation: get
+    taskId:
       __rl: true
       mode: id
-      value: ~123789
-    taskFields:
-      mappingMode: defineBelow
-      value:
-        title: Test Task
-        description: Test task description
-        group: Investigation
-        flag: false
-        mandatory: true
-  workflow: TheHive Task Create Test Workflow
+      value: ~654321
+  workflow: TheHive Task Get Test Workflow
 common_expressions:
 - ={{$parameter["operation"]}}
 ui_elements:
@@ -595,27 +552,27 @@ settings:
       "type": "string",
       "enum": [
         "create",
-        "deleteTask",
-        "executeResponder",
-        "get",
+        "deletePage",
         "search",
         "update",
+        "deleteObservable",
+        "executeAnalyzer",
+        "executeResponder",
+        "get",
         "addAttachment",
-        "deleteLog",
         "deleteAttachment",
-        "deletePage",
+        "deleteCase",
+        "getAttachment",
+        "getTimeline",
         "deleteAlert",
         "merge",
         "promote",
         "status",
-        "add",
-        "deleteComment",
+        "deleteLog",
         "executeQuery",
-        "deleteObservable",
-        "executeAnalyzer",
-        "deleteCase",
-        "getAttachment",
-        "getTimeline"
+        "deleteTask",
+        "add",
+        "deleteComment"
       ],
       "description": "Operation to perform"
     },
@@ -638,16 +595,8 @@ settings:
           ],
           "default": "alert"
         },
-        "id": {
-          "description": "",
-          "type": "string"
-        },
-        "taskUpdateFields": {
-          "description": "",
-          "type": "string"
-        },
-        "allCases": {
-          "description": "Whether to search in all cases or only in a selected case",
+        "searchInKnowledgeBase": {
+          "description": "Whether to search in knowledge base or only in the selected case",
           "type": "boolean",
           "default": true
         },
@@ -666,41 +615,6 @@ settings:
           "examples": [
             "Add Sort Rule"
           ]
-        },
-        "taskFields": {
-          "description": "",
-          "type": "string"
-        },
-        "operation": {
-          "description": "",
-          "type": "string",
-          "enum": [
-            "addAttachment",
-            "create",
-            "deleteAttachment",
-            "deleteCase",
-            "executeResponder",
-            "get",
-            "getAttachment",
-            "getTimeline",
-            "search",
-            "update"
-          ],
-          "default": "create"
-        },
-        "attachmentId": {
-          "description": "ID of the attachment. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
-          "type": "string",
-          "default": ""
-        },
-        "allTasks": {
-          "description": "Whether to search in all tasks or only in selected task",
-          "type": "boolean",
-          "default": true
-        },
-        "logFields": {
-          "description": "",
-          "type": "string"
         },
         "location": {
           "description": "",
@@ -724,11 +638,6 @@ settings:
             "Add option"
           ]
         },
-        "searchInKnowledgeBase": {
-          "description": "Whether to search in knowledge base or only in the selected case",
-          "type": "boolean",
-          "default": true
-        },
         "title": {
           "description": "",
           "type": "string",
@@ -739,34 +648,19 @@ settings:
           "type": "string",
           "default": ""
         },
-        "alertUpdateFields": {
-          "description": "",
-          "type": "string"
-        },
-        "status": {
-          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
-          "type": "string",
-          "default": ""
-        },
-        "alertFields": {
-          "description": "",
-          "type": "string"
-        },
-        "observableUi": {
+        "operation": {
           "description": "",
           "type": "string",
-          "default": {},
-          "examples": [
-            "Add Observable"
-          ]
-        },
-        "message": {
-          "description": "",
-          "type": "string",
-          "default": ""
+          "enum": [
+            "add",
+            "deleteComment",
+            "search",
+            "update"
+          ],
+          "default": "add"
         },
         "searchIn": {
-          "description": "Whether to search for comments in all alerts and cases or in a specific case or alert",
+          "description": "Whether to search for observables in all alerts and cases or in a specific case or alert",
           "type": "string",
           "enum": [
             "all",
@@ -774,25 +668,6 @@ settings:
             "case"
           ],
           "default": "all"
-        },
-        "addTo": {
-          "description": "",
-          "type": "string",
-          "enum": [
-            "alert",
-            "case"
-          ],
-          "default": "alert"
-        },
-        "queryJson": {
-          "description": "Search for objects with filtering and sorting capabilities",
-          "type": "string",
-          "default": "=[\\n  {\\n    "
-        },
-        "analyzers": {
-          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
-          "type": "string",
-          "default": []
         },
         "observableUpdateFields": {
           "description": "",
@@ -806,6 +681,10 @@ settings:
             "alert"
           ],
           "default": "case"
+        },
+        "id": {
+          "description": "",
+          "type": "string"
         },
         "dataType": {
           "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
@@ -821,6 +700,16 @@ settings:
           "description": "",
           "type": "string"
         },
+        "analyzers": {
+          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "type": "string",
+          "default": []
+        },
+        "attachmentId": {
+          "description": "ID of the attachment. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "type": "string",
+          "default": ""
+        },
         "caseUpdateFields": {
           "description": "",
           "type": "string"
@@ -828,6 +717,68 @@ settings:
         "caseFields": {
           "description": "",
           "type": "string"
+        },
+        "alertUpdateFields": {
+          "description": "",
+          "type": "string"
+        },
+        "alertFields": {
+          "description": "",
+          "type": "string"
+        },
+        "observableUi": {
+          "description": "",
+          "type": "string",
+          "default": {},
+          "examples": [
+            "Add Observable"
+          ]
+        },
+        "status": {
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "type": "string",
+          "default": ""
+        },
+        "allTasks": {
+          "description": "Whether to search in all tasks or only in selected task",
+          "type": "boolean",
+          "default": true
+        },
+        "logFields": {
+          "description": "",
+          "type": "string"
+        },
+        "queryJson": {
+          "description": "Search for objects with filtering and sorting capabilities",
+          "type": "string",
+          "default": "=[\\n  {\\n    "
+        },
+        "allCases": {
+          "description": "Whether to search in all cases or only in a selected case",
+          "type": "boolean",
+          "default": true
+        },
+        "taskUpdateFields": {
+          "description": "",
+          "type": "string"
+        },
+        "taskFields": {
+          "description": "",
+          "type": "string"
+        },
+        "message": {
+          "description": "",
+          "type": "string",
+          "default": ""
+        },
+        "addTo": {
+          "description": "",
+          "type": "string",
+          "enum": [
+            "alert",
+            "case"
+          ],
+          "default": "alert"
         }
       }
     },
@@ -893,68 +844,37 @@ settings:
   },
   "examples": [
     {
-      "description": "TheHive Observable Create",
+      "description": "TheHive Alert Get",
       "value": {
-        "resource": "observable",
-        "operation": "create",
-        "createIn": "case",
-        "id": {
+        "resource": "alert",
+        "operation": "get",
+        "alertId": {
           "__rl": true,
           "mode": "id",
-          "value": "~123789"
+          "value": "~123456"
         },
-        "dataType": "domain",
-        "data": "malicious.example.com",
-        "observableFields": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "message": "Suspicious domain detected in analysis",
-            "tags": "malware,suspicious",
-            "tlp": 2,
-            "pap": 2,
-            "ioc": true,
-            "sighted": false
-          }
+        "options": {
+          "includeSimilarAlerts": true
         }
       }
     },
     {
-      "description": "TheHive Case Create",
+      "description": "TheHive Query Execute",
       "value": {
-        "resource": "case",
-        "operation": "create",
-        "caseFields": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "title": "Test Case",
-            "description": "Test case description",
-            "severity": 2,
-            "tags": "test,n8n",
-            "tlp": 2,
-            "pap": 2
-          }
-        }
+        "resource": "query",
+        "operation": "executeQuery",
+        "queryJson": "[\n  {\n    \"_name\": \"listOrganisation\"\n  }\n]"
       }
     },
     {
-      "description": "TheHive Task Create",
+      "description": "TheHive Task Get",
       "value": {
         "resource": "task",
-        "operation": "create",
-        "caseId": {
+        "operation": "get",
+        "taskId": {
           "__rl": true,
           "mode": "id",
-          "value": "~123789"
-        },
-        "taskFields": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "title": "Test Task",
-            "description": "Test task description",
-            "group": "Investigation",
-            "flag": false,
-            "mandatory": true
-          }
+          "value": "~654321"
         }
       }
     }
@@ -968,4 +888,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1.0 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1.0 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

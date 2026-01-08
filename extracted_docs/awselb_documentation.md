@@ -2,7 +2,7 @@
 title: "Node: AWS ELB"
 slug: "node-awselb"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Sends data to AWS ELB API"
 node_type: "regular"
 group: "['output']"
@@ -23,12 +23,6 @@ group: "['output']"
 - **Inputs:** `['Main']`
 - **Outputs:** `['Main']`
 
----
-
-## Authentication
-
-- **aws**: N/A
-
 
 ---
 
@@ -37,14 +31,6 @@ group: "['output']"
 **Expression Mode Tip:** When using expressions (switching from Fixed to Expression mode), n8n displays:
 
 > Anything inside `{{ }}` is JavaScript. [Learn more](https://docs.n8n.io/code-examples/expressions/)
-
----
-
-## Required Credentials
-
-| Credential Type | Required | Conditions |
-| --------------- | -------- | ---------- |
-| `aws` | ✓ | - |
 
 ---
 
@@ -198,6 +184,123 @@ group: "['output']"
 
 ---
 
+## Real-World Examples
+
+These examples are extracted from actual n8n workflows:
+
+### Example 1: Get Many Load Balancers with Names
+
+**From workflow:** AWS ELB Get Many Load Balancers with Names Test Workflow
+
+**Parameters:**
+```json
+{
+  "resource": "loadBalancer",
+  "operation": "getMany",
+  "returnAll": true,
+  "filters": {
+    "names": "test-lb-1,test-lb-2"
+  }
+}
+```
+
+**Credentials:**
+- aws: `Test AWS Credentials`
+
+### Example 2: Get Many Listener Certificates All
+
+**From workflow:** AWS ELB Get Many Listener Certificates All Test Workflow
+
+**Parameters:**
+```json
+{
+  "resource": "listenerCertificate",
+  "operation": "getMany",
+  "loadBalancerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/test-lb/1234567890123456",
+  "listenerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:listener/app/test-lb/1234567890123456/f2f7dc8efc522ab2",
+  "returnAll": true
+}
+```
+
+**Credentials:**
+- aws: `Test AWS Credentials`
+
+### Example 3: Remove Listener Certificate
+
+**From workflow:** AWS ELB Remove Listener Certificate Test Workflow
+
+**Parameters:**
+```json
+{
+  "resource": "listenerCertificate",
+  "operation": "remove",
+  "loadBalancerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/test-lb/1234567890123456",
+  "listenerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:listener/app/test-lb/1234567890123456/f2f7dc8efc522ab2",
+  "certificateId": "arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012"
+}
+```
+
+**Credentials:**
+- aws: `Test AWS Credentials`
+
+### Example 4: Create Load Balancer
+
+**From workflow:** AWS ELB Create Load Balancer Test Workflow
+
+**Parameters:**
+```json
+{
+  "resource": "loadBalancer",
+  "operation": "create",
+  "ipAddressType": "ipv4",
+  "name": "test-lb",
+  "schema": "internet-facing",
+  "type": "application",
+  "subnets": [
+    "subnet-12345",
+    "subnet-67890"
+  ],
+  "additionalFields": {
+    "securityGroups": [
+      "sg-12345"
+    ],
+    "tagsUi": {
+      "tagValues": [
+        {
+          "key": "Environment",
+          "value": "test"
+        }
+      ]
+    }
+  }
+}
+```
+
+**Credentials:**
+- aws: `Test AWS Credentials`
+
+### Example 5: Get Many Listener Certificates
+
+**From workflow:** AWS ELB Get Many Listener Certificates Test Workflow
+
+**Parameters:**
+```json
+{
+  "resource": "listenerCertificate",
+  "operation": "getMany",
+  "loadBalancerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/test-lb/1234567890123456",
+  "listenerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:listener/app/test-lb/1234567890123456/f2f7dc8efc522ab2",
+  "returnAll": false,
+  "limit": 10
+}
+```
+
+**Credentials:**
+- aws: `Test AWS Credentials`
+
+
+---
+
 ## Common Expression Patterns
 
 These expression patterns are commonly used with this node:
@@ -246,9 +349,6 @@ version: '1'
 nodeType: regular
 group:
 - output
-credentials:
-- name: aws
-  required: true
 operations:
 - id: create
   name: Create
@@ -568,6 +668,31 @@ operations:
     description: Unique identifier for a particular loadBalancer
     validation: *id009
     typeInfo: *id010
+examples:
+- name: Get Many Load Balancers with Names
+  parameters:
+    resource: loadBalancer
+    operation: getMany
+    returnAll: true
+    filters:
+      names: test-lb-1,test-lb-2
+  workflow: AWS ELB Get Many Load Balancers with Names Test Workflow
+- name: Get Many Listener Certificates All
+  parameters:
+    resource: listenerCertificate
+    operation: getMany
+    loadBalancerId: arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/test-lb/1234567890123456
+    listenerId: arn:aws:elasticloadbalancing:us-east-1:123456789012:listener/app/test-lb/1234567890123456/f2f7dc8efc522ab2
+    returnAll: true
+  workflow: AWS ELB Get Many Listener Certificates All Test Workflow
+- name: Remove Listener Certificate
+  parameters:
+    resource: listenerCertificate
+    operation: remove
+    loadBalancerId: arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/test-lb/1234567890123456
+    listenerId: arn:aws:elasticloadbalancing:us-east-1:123456789012:listener/app/test-lb/1234567890123456/f2f7dc8efc522ab2
+    certificateId: arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012
+  workflow: AWS ELB Remove Listener Certificate Test Workflow
 common_expressions:
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 api_patterns:
@@ -699,6 +824,15 @@ settings:
           ],
           "default": "loadBalancer"
         },
+        "authentication": {
+          "description": "",
+          "type": "string",
+          "enum": [
+            "iam",
+            "assumeRole"
+          ],
+          "default": "iam"
+        },
         "operation": {
           "description": "Add the specified SSL server certificate to the certificate list for the specified HTTPS or TLS listener",
           "type": "string",
@@ -786,6 +920,14 @@ settings:
           "description": "Unique identifier for a particular loadBalancer",
           "type": "string",
           "default": ""
+        },
+        "aws": {
+          "description": "",
+          "type": "string"
+        },
+        "awsAssumeRole": {
+          "description": "",
+          "type": "string"
         }
       }
     },
@@ -849,10 +991,37 @@ settings:
     "nodeType": "regular",
     "version": "1"
   },
-  "credentials": [
+  "examples": [
     {
-      "name": "aws",
-      "required": true
+      "description": "Get Many Load Balancers with Names",
+      "value": {
+        "resource": "loadBalancer",
+        "operation": "getMany",
+        "returnAll": true,
+        "filters": {
+          "names": "test-lb-1,test-lb-2"
+        }
+      }
+    },
+    {
+      "description": "Get Many Listener Certificates All",
+      "value": {
+        "resource": "listenerCertificate",
+        "operation": "getMany",
+        "loadBalancerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/test-lb/1234567890123456",
+        "listenerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:listener/app/test-lb/1234567890123456/f2f7dc8efc522ab2",
+        "returnAll": true
+      }
+    },
+    {
+      "description": "Remove Listener Certificate",
+      "value": {
+        "resource": "listenerCertificate",
+        "operation": "remove",
+        "loadBalancerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/test-lb/1234567890123456",
+        "listenerId": "arn:aws:elasticloadbalancing:us-east-1:123456789012:listener/app/test-lb/1234567890123456/f2f7dc8efc522ab2",
+        "certificateId": "arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012"
+      }
     }
   ]
 }
@@ -864,4 +1033,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -2,7 +2,7 @@
 title: "Node: Jira Trigger"
 slug: "node-jiratrigger"
 version: "['1', '1.1']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Starts the workflow when Jira events occur"
 node_type: "trigger"
 group: "['trigger']"
@@ -65,7 +65,7 @@ group: "['trigger']"
 
 ## API Patterns
 
-**Headers Used:** Content-Type, no-check, X-Atlassian-Token
+**Headers Used:** no-check, X-Atlassian-Token, Content-Type
 
 ---
 
@@ -463,9 +463,9 @@ api_patterns:
   http_methods: []
   endpoints: []
   headers:
-  - Content-Type
   - no-check
   - X-Atlassian-Token
+  - Content-Type
   query_params: []
 ui_elements:
   notices: []
@@ -600,4 +600,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '1.1'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

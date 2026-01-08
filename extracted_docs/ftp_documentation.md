@@ -2,7 +2,7 @@
 title: "Node: FTP"
 slug: "node-ftp"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Transfer files via FTP or SFTP"
 node_type: "regular"
 group: "['input']"
@@ -124,6 +124,7 @@ group: "['input']"
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
 | Path | `path` | string | / | ✓ | Path of directory to list contents of | e.g. e.g. /public/folder |  |
 | Recursive | `recursive` | boolean | False | ✓ | Whether to return object representing all directories / objects recursively found within SFTP server |  |
+| Options | `options` | collection | {} | ✗ | e.g. Add Field |  |
 
 ### Rename parameters (`rename`)
 
@@ -151,6 +152,7 @@ group: "['input']"
 | Binary File | `binaryData` | boolean | True | ✗ | The text content of the file to upload |  |
 | Input Binary Field | `binaryPropertyName` | string | data | ✓ | e.g. The name of the input binary field containing the file to be written |  |
 | File Content | `fileContent` | string |  | ✗ | The text content of the file to upload |  |
+| Options | `options` | collection | {} | ✗ | e.g. Add Field |  |
 
 ---
 
@@ -406,8 +408,12 @@ ui_elements:
     text: Add Field
   - field: path
     text: e.g. /public/documents/file-to-upload.txt
+  - field: options
+    text: Add Field
   - field: path
     text: e.g. /public/folder
+  - field: options
+    text: Add Field
   hints:
   - field: binaryPropertyName
     text: The name of the output binary field to put the file in
@@ -548,7 +554,7 @@ settings:
           ]
         },
         "options": {
-          "description": "Whether to recursively create destination directory when renaming an existing file or folder",
+          "description": "",
           "type": "string",
           "default": {},
           "examples": [
@@ -672,4 +678,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

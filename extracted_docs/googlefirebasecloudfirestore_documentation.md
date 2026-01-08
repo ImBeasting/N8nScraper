@@ -2,7 +2,7 @@
 title: "Node: Google Cloud Firestore"
 slug: "node-googlefirebasecloudfirestore"
 version: "['1', '1.1']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Interact with Google Firebase - Cloud Firestore API"
 node_type: "regular"
 group: "['input']"
@@ -129,7 +129,7 @@ group: "['input']"
 | Project Name or ID | `projectId` | options |  | ✓ | As displayed in firebase console URL. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>. |  |
 | Database | `database` | string | (default) | ✓ | Usually the provided default value will work |  |
 | Collection | `collection` | string |  | ✓ | Collection name |  |
-| Update Key | `updateKey` | string |  | ✓ | Must correspond to a document ID | e.g. documentId |  |
+| Update Key | `updateKey` | string |  | ✓ | Name of the field in an input item that contains the document ID | e.g. documentId |  |
 | Columns /Attributes | `columns` | string |  | ✓ | Columns to insert | e.g. age, city, location |  |
 
 ### Delete parameters (`delete`)
@@ -180,6 +180,112 @@ group: "['input']"
 ## Load Options Methods
 
 - `getProjects`
+
+---
+
+## Real-World Examples
+
+These examples are extracted from actual n8n workflows:
+
+### Example 1: Get Document
+
+**From workflow:** CloudFirestore Document Get Test
+
+**Parameters:**
+```json
+{
+  "authentication": "googleFirebaseCloudFirestoreOAuth2Api",
+  "resource": "document",
+  "operation": "get",
+  "projectId": "test-project",
+  "database": "(default)",
+  "collection": "users",
+  "documentId": "test-doc-id"
+}
+```
+
+**Credentials:**
+- googleFirebaseCloudFirestoreOAuth2Api: `CloudFirestore OAuth2`
+
+### Example 2: Query Documents
+
+**From workflow:** CloudFirestore Document Query Test
+
+**Parameters:**
+```json
+{
+  "authentication": "googleFirebaseCloudFirestoreOAuth2Api",
+  "resource": "document",
+  "operation": "query",
+  "projectId": "test-project",
+  "database": "(default)",
+  "query": "{\"structuredQuery\": {\"where\": {\"fieldFilter\": {\"field\": {\"fieldPath\": \"active\"}, \"op\": \"EQUAL\", \"value\": {\"booleanValue\": true}}}, \"from\": [{\"collectionId\": \"users\"}]}}"
+}
+```
+
+**Credentials:**
+- googleFirebaseCloudFirestoreOAuth2Api: `CloudFirestore OAuth2`
+
+### Example 3: Delete Document
+
+**From workflow:** CloudFirestore Document Delete Test
+
+**Parameters:**
+```json
+{
+  "authentication": "googleFirebaseCloudFirestoreOAuth2Api",
+  "resource": "document",
+  "operation": "delete",
+  "projectId": "test-project",
+  "database": "(default)",
+  "collection": "users",
+  "documentId": "test-doc-id"
+}
+```
+
+**Credentials:**
+- googleFirebaseCloudFirestoreOAuth2Api: `CloudFirestore OAuth2`
+
+### Example 4: Get All Documents
+
+**From workflow:** CloudFirestore Collection Get All Test
+
+**Parameters:**
+```json
+{
+  "authentication": "googleFirebaseCloudFirestoreOAuth2Api",
+  "resource": "document",
+  "operation": "getAll",
+  "projectId": "test-project",
+  "database": "(default)",
+  "collection": "users"
+}
+```
+
+**Credentials:**
+- googleFirebaseCloudFirestoreOAuth2Api: `CloudFirestore OAuth2`
+
+### Example 5: Update Document
+
+**From workflow:** CloudFirestore Document Update Test
+
+**Parameters:**
+```json
+{
+  "authentication": "googleFirebaseCloudFirestoreOAuth2Api",
+  "resource": "document",
+  "operation": "upsert",
+  "projectId": "test-project",
+  "database": "(default)",
+  "collection": "users",
+  "updateKey": "documentId",
+  "columns": "name,email,age,active"
+}
+```
+
+**Credentials:**
+- googleFirebaseCloudFirestoreOAuth2Api: `CloudFirestore OAuth2`
+
 
 ---
 
@@ -391,7 +497,7 @@ operations:
     type: string
     default: ''
     required: true
-    description: Must correspond to a document ID
+    description: Name of the field in an input item that contains the document ID
     placeholder: documentId
     validation:
       required: true
@@ -662,6 +768,38 @@ operations:
       the raw data
     validation: *id011
     typeInfo: *id012
+examples:
+- name: Get Document
+  parameters:
+    authentication: googleFirebaseCloudFirestoreOAuth2Api
+    resource: document
+    operation: get
+    projectId: test-project
+    database: (default)
+    collection: users
+    documentId: test-doc-id
+  workflow: CloudFirestore Document Get Test
+- name: Query Documents
+  parameters:
+    authentication: googleFirebaseCloudFirestoreOAuth2Api
+    resource: document
+    operation: query
+    projectId: test-project
+    database: (default)
+    query: '{"structuredQuery": {"where": {"fieldFilter": {"field": {"fieldPath":
+      "active"}, "op": "EQUAL", "value": {"booleanValue": true}}}, "from": [{"collectionId":
+      "users"}]}}'
+  workflow: CloudFirestore Document Query Test
+- name: Delete Document
+  parameters:
+    authentication: googleFirebaseCloudFirestoreOAuth2Api
+    resource: document
+    operation: delete
+    projectId: test-project
+    database: (default)
+    collection: users
+    documentId: test-doc-id
+  workflow: CloudFirestore Document Delete Test
 common_expressions:
 - '={{$parameter["resource"] + ": " + $parameter["operation"]}}'
 api_patterns:
@@ -865,7 +1003,7 @@ settings:
           "default": 100
         },
         "updateKey": {
-          "description": "Must correspond to a document ID",
+          "description": "Name of the field in an input item that contains the document ID",
           "type": "string",
           "default": "",
           "examples": [
@@ -954,6 +1092,43 @@ settings:
       "name": "googleApi",
       "required": true
     }
+  ],
+  "examples": [
+    {
+      "description": "Get Document",
+      "value": {
+        "authentication": "googleFirebaseCloudFirestoreOAuth2Api",
+        "resource": "document",
+        "operation": "get",
+        "projectId": "test-project",
+        "database": "(default)",
+        "collection": "users",
+        "documentId": "test-doc-id"
+      }
+    },
+    {
+      "description": "Query Documents",
+      "value": {
+        "authentication": "googleFirebaseCloudFirestoreOAuth2Api",
+        "resource": "document",
+        "operation": "query",
+        "projectId": "test-project",
+        "database": "(default)",
+        "query": "{\"structuredQuery\": {\"where\": {\"fieldFilter\": {\"field\": {\"fieldPath\": \"active\"}, \"op\": \"EQUAL\", \"value\": {\"booleanValue\": true}}}, \"from\": [{\"collectionId\": \"users\"}]}}"
+      }
+    },
+    {
+      "description": "Delete Document",
+      "value": {
+        "authentication": "googleFirebaseCloudFirestoreOAuth2Api",
+        "resource": "document",
+        "operation": "delete",
+        "projectId": "test-project",
+        "database": "(default)",
+        "collection": "users",
+        "documentId": "test-doc-id"
+      }
+    }
   ]
 }
 ```
@@ -964,4 +1139,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '1.1'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

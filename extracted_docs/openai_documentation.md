@@ -2,7 +2,7 @@
 title: "Node: OpenAI"
 slug: "node-openai"
 version: "['1', '1.1']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Open AI"
 node_type: "regular"
 group: "['transform']"
@@ -963,4 +963,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '1.1'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

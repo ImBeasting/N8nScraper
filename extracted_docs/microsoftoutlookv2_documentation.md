@@ -2,7 +2,7 @@
 title: "Node: Microsoft Outlook"
 slug: "node-microsoftoutlookv2"
 version: "1.0"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Microsoft Outlook API"
 node_type: "regular"
 group: "['transform']"
@@ -40,15 +40,6 @@ group: "['transform']"
 
 ## Operations
 
-### Messageattachment Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Add | `add` | Add an attachment to a message |
-| Download | `download` | Download an attachment from a message |
-| Get | `get` | Retrieve information about an attachment of a message |
-| Get Many | `getAll` | Retrieve information about the attachments of a message |
-
 ### Calendar Resource Operations
 
 | Operation | ID | Description |
@@ -58,16 +49,6 @@ group: "['transform']"
 | Get | `get` | Retrieve a calendar |
 | Get Many | `getAll` | List and search calendars |
 | Update | `update` | Update a calendar |
-
-### Contact Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Create | `create` | Create a new contact |
-| Delete | `delete` | Delete a contact |
-| Get | `get` | Retrieve a contact |
-| Get Many | `getAll` | List and search contacts |
-| Update | `update` | Update a contact |
 
 ### Folder Resource Operations
 
@@ -79,12 +60,6 @@ group: "['transform']"
 | Get Many | `getAll` | Get many folders |
 | Update | `update` | Update a folder |
 
-### Foldermessage Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Get Many | `getAll` | Retrieves the messages in a folder |
-
 ### Event Resource Operations
 
 | Operation | ID | Description |
@@ -94,6 +69,35 @@ group: "['transform']"
 | Get | `get` | Retrieve an event |
 | Get Many | `getAll` | List and search events |
 | Update | `update` | Update an event |
+
+### Messageattachment Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Add | `add` | Add an attachment to a message |
+| Download | `download` | Download an attachment from a message |
+| Get | `get` | Retrieve information about an attachment of a message |
+| Get Many | `getAll` | Retrieve information about the attachments of a message |
+
+### Draft Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Create | `create` | Create a new email draft |
+| Delete | `delete` | Delete an email draft |
+| Get | `get` | Retrieve an email draft |
+| Send | `send` | Send an existing email draft |
+| Update | `update` | Update an email draft |
+
+### Contact Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Create | `create` | Create a new contact |
+| Delete | `delete` | Delete a contact |
+| Get | `get` | Retrieve a contact |
+| Get Many | `getAll` | List and search contacts |
+| Update | `update` | Update a contact |
 
 ### Message Resource Operations
 
@@ -108,15 +112,11 @@ group: "['transform']"
 | Send and Wait for Response | `` | Send a message and wait for response |
 | Update | `update` | Update a message |
 
-### Draft Resource Operations
+### Foldermessage Resource Operations
 
 | Operation | ID | Description |
 | --------- | -- | ----------- |
-| Create | `create` | Create a new email draft |
-| Delete | `delete` | Delete an email draft |
-| Get | `get` | Retrieve an email draft |
-| Send | `send` | Send an existing email draft |
-| Update | `update` | Update an email draft |
+| Get Many | `getAll` | Retrieves the messages in a folder |
 
 ---
 
@@ -145,14 +145,15 @@ group: "['transform']"
 
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Operation | `operation` | options | add | ✗ | Add an attachment to a message |  |
+| Operation | `operation` | options | getAll | ✗ | Create a new calendar |  |
 
 **Operation options:**
 
-* **Add** (`add`) - Add an attachment to a message
-* **Download** (`download`) - Download an attachment from a message
-* **Get** (`get`) - Retrieve information about an attachment of a message
-* **Get Many** (`getAll`) - Retrieve information about the attachments of a message
+* **Create** (`create`) - Create a new calendar
+* **Delete** (`delete`) - Delete a calendar
+* **Get** (`get`) - Retrieve a calendar
+* **Get Many** (`getAll`) - List and search calendars
+* **Update** (`update`) - Update a calendar
 
 ---
 
@@ -206,36 +207,36 @@ nodeType: regular
 group:
 - transform
 operations:
-- id: add
-  name: Add
-  description: Add an attachment to a message
-- id: download
-  name: Download
-  description: Download an attachment from a message
-- id: get
-  name: Get
-  description: Retrieve information about an attachment of a message
-- id: getAll
-  name: Get Many
-  description: Retrieve information about the attachments of a message
 - id: create
   name: Create
   description: Create a new calendar
 - id: delete
   name: Delete
   description: Delete a calendar
+- id: get
+  name: Get
+  description: Retrieve a calendar
+- id: getAll
+  name: Get Many
+  description: List and search calendars
 - id: update
   name: Update
   description: Update a calendar
+- id: add
+  name: Add
+  description: Add an attachment to a message
+- id: download
+  name: Download
+  description: Download an attachment from a message
+- id: send
+  name: Send
+  description: Send an existing email draft
 - id: move
   name: Move
   description: Move a message to a folder
 - id: reply
   name: Reply
   description: Create a reply to a message
-- id: send
-  name: Send
-  description: Send a message
 - id: ''
   name: Send and Wait for Response
   description: Send a message and wait for response
@@ -252,10 +253,6 @@ ui_elements:
         - true
   tooltips: []
   placeholders:
-  - field: options
-    text: Add option
-  - field: binaryPropertyName
-    text: e.g. data
   - field: updateFields
     text: Add Field
   - field: filters
@@ -264,16 +261,18 @@ ui_elements:
     text: e.g. My Calendar
   - field: additionalFields
     text: Add Field
+  - field: options
+    text: Add Field
   - field: filtersUI
     text: Add Filters
   - field: additionalFields
     text: Add Field
   hints:
-  - field: binaryPropertyName
-    text: The name of the input field containing the binary file data to be attached
   - field: filters
     text: Search query to filter calendars. <a href="https://learn.microsoft.com/en-us/graph/filter-query-parameter">More
       info</a>.
+  - field: binaryPropertyName
+    text: The name of the output field to put the binary file data in
   - field: filtersUI
     text: Search query to filter messages. <a href="https://learn.microsoft.com/en-us/graph/filter-query-parameter">More
       info</a>.
@@ -372,16 +371,16 @@ settings:
     "operation": {
       "type": "string",
       "enum": [
-        "add",
-        "download",
-        "get",
-        "getAll",
         "create",
         "delete",
+        "get",
+        "getAll",
         "update",
+        "add",
+        "download",
+        "send",
         "move",
         "reply",
-        "send",
         ""
       ],
       "description": "Operation to perform"
@@ -405,44 +404,6 @@ settings:
           ],
           "default": "message"
         },
-        "options": {
-          "description": "The fields to add to the output",
-          "type": "string",
-          "default": {},
-          "examples": [
-            "Add option"
-          ]
-        },
-        "returnAll": {
-          "description": "Whether to return all results or only up to a given limit",
-          "type": "boolean",
-          "default": false
-        },
-        "limit": {
-          "description": "Max number of results to return",
-          "type": "number",
-          "default": 100
-        },
-        "binaryPropertyName": {
-          "description": "",
-          "type": "string",
-          "default": "data",
-          "examples": [
-            "e.g. data"
-          ]
-        },
-        "operation": {
-          "description": "Create a new email draft",
-          "type": "string",
-          "enum": [
-            "create",
-            "delete",
-            "get",
-            "send",
-            "update"
-          ],
-          "default": "create"
-        },
         "updateFields": {
           "description": "Specify the color to distinguish the calendar from the others",
           "type": "string",
@@ -458,6 +419,16 @@ settings:
           "examples": [
             "Add Filter"
           ]
+        },
+        "returnAll": {
+          "description": "Whether to return all results or only up to a given limit",
+          "type": "boolean",
+          "default": false
+        },
+        "limit": {
+          "description": "Max number of results to return",
+          "type": "number",
+          "default": 100
         },
         "name": {
           "description": "The name of the calendar to create",
@@ -475,6 +446,32 @@ settings:
             "Add Field"
           ]
         },
+        "operation": {
+          "description": "Retrieves the messages in a folder",
+          "type": "string",
+          "enum": [
+            "getAll"
+          ],
+          "default": "getAll"
+        },
+        "displayName": {
+          "description": "Name of the folder",
+          "type": "string",
+          "default": ""
+        },
+        "options": {
+          "description": "The fields to add to the output",
+          "type": "string",
+          "default": {},
+          "examples": [
+            "Add Field"
+          ]
+        },
+        "fromAllCalendars": {
+          "description": "",
+          "type": "boolean",
+          "default": true
+        },
         "output": {
           "description": "",
           "type": "string",
@@ -490,34 +487,6 @@ settings:
           "type": "string",
           "default": []
         },
-        "givenName": {
-          "description": "",
-          "type": "string",
-          "default": ""
-        },
-        "surname": {
-          "description": "",
-          "type": "string",
-          "default": ""
-        },
-        "displayName": {
-          "description": "Name of the folder",
-          "type": "string",
-          "default": ""
-        },
-        "filtersUI": {
-          "description": "Only return messages that contains search term. Without specific message properties, the search is carried out on the default search properties of from, subject, and body. <a href=\"https://docs.microsoft.com/en-us/graph/query-parameters#search-parameter target=\"_blank\">More info</a>.",
-          "type": "string",
-          "default": {},
-          "examples": [
-            "Add Filters"
-          ]
-        },
-        "fromAllCalendars": {
-          "description": "",
-          "type": "boolean",
-          "default": true
-        },
         "subject": {
           "description": "",
           "type": "string",
@@ -531,6 +500,39 @@ settings:
           "description": "",
           "type": "string"
         },
+        "binaryPropertyName": {
+          "description": "",
+          "type": "string",
+          "default": "data"
+        },
+        "bodyContent": {
+          "description": "Message body content",
+          "type": "string",
+          "default": ""
+        },
+        "to": {
+          "description": "Comma-separated list of email addresses of recipients",
+          "type": "string",
+          "default": ""
+        },
+        "givenName": {
+          "description": "",
+          "type": "string",
+          "default": ""
+        },
+        "surname": {
+          "description": "",
+          "type": "string",
+          "default": ""
+        },
+        "filtersUI": {
+          "description": "Only return messages that contains search term. Without specific message properties, the search is carried out on the default search properties of from, subject, and body. <a href=\"https://docs.microsoft.com/en-us/graph/query-parameters#search-parameter target=\"_blank\">More info</a>.",
+          "type": "string",
+          "default": {},
+          "examples": [
+            "Add Filters"
+          ]
+        },
         "replyToSenderOnly": {
           "description": "Whether to reply to the sender only or to the entire list of recipients",
           "type": "boolean",
@@ -542,16 +544,6 @@ settings:
           "default": ""
         },
         "toRecipients": {
-          "description": "Comma-separated list of email addresses of recipients",
-          "type": "string",
-          "default": ""
-        },
-        "bodyContent": {
-          "description": "Message body content",
-          "type": "string",
-          "default": ""
-        },
-        "to": {
           "description": "Comma-separated list of email addresses of recipients",
           "type": "string",
           "default": ""
@@ -627,4 +619,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1.0 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1.0 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

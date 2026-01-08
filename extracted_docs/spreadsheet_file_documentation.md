@@ -2,7 +2,7 @@
 title: "Node: Spreadsheet File"
 slug: "node-spreadsheet-file"
 version: "2"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Reads and writes data from a spreadsheet file like CSV, XLS, ODS, etc"
 node_type: "regular"
 group: "['transform']"
@@ -93,6 +93,7 @@ group: "['transform']"
 | Read As String | `readAsString` | boolean | False | In some cases and file formats, it is necessary to read as string to ensure special characters are interpreted correctly |
 | Sheet Name | `sheetName` | string | Sheet | Name of the sheet to read from in the spreadsheet (if supported). If not set, the first one will be chosen. |
 | Starting Line | `fromLine` | number | 0 | Start handling records from the requested line number. Starts at 0. |
+| Skip Records With Errors | `skipRecordsWithErrors` | fixedCollection | False | Whether to skip records with errors when reading from file |
 
 </details>
 
@@ -467,4 +468,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 2 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 2 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

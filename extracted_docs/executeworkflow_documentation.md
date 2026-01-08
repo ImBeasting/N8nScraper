@@ -2,7 +2,7 @@
 title: "Node: Execute Sub-workflow"
 slug: "node-executeworkflow"
 version: "['1', '1.1', '1.2', '1.3']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Execute another workflow"
 node_type: "regular"
 group: "['transform']"
@@ -91,8 +91,8 @@ group: "['transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{ $rawParameter.workflowId.startsWith("=") && $parameter.mode === "once" && $nodeVersion >= 1.2 }}`
 - `={{"Workflow: " + $parameter["workflowId"]}}`
+- `={{ $rawParameter.workflowId.startsWith("=") && $parameter.mode === "once" && $nodeVersion >= 1.2 }}`
 
 ---
 
@@ -307,9 +307,9 @@ params:
         its execution before proceeding
       default: true
 common_expressions:
+- '={{"Workflow: " + $parameter["workflowId"]}}'
 - ={{ $rawParameter.workflowId.startsWith("=") && $parameter.mode === "once" && $nodeVersion
   >= 1.2 }}
-- '={{"Workflow: " + $parameter["workflowId"]}}'
 api_patterns:
   http_methods:
   - GET
@@ -574,4 +574,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '1.1', '1.2', '1.3'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1', '1.2', '1.3'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

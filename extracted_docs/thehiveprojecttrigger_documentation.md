@@ -2,7 +2,7 @@
 title: "Node: TheHive 5 Trigger"
 slug: "node-thehiveprojecttrigger"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Starts the workflow when TheHive events occur"
 node_type: "trigger"
 group: "['trigger']"
@@ -47,29 +47,6 @@ group: "['trigger']"
 
 ## Operations
 
-### Task Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Create | `create` | Create a task |
-| Delete | `deleteTask` | Delete an task |
-| Execute Responder | `executeResponder` | Execute responder on a task |
-| Get | `get` | Get a task |
-| Search | `search` | Search tasks |
-| Update | `update` | Update a task |
-
-### Log Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Add Attachment | `addAttachment` | Add attachment to a task log |
-| Create | `create` | Create a task log |
-| Delete | `deleteLog` | Delete task log |
-| Delete Attachment | `deleteAttachment` | Delete attachment from a task log |
-| Execute Responder | `executeResponder` | Execute responder on a task log |
-| Get | `get` | Get a task log |
-| Search | `search` | Search task logs |
-
 ### Page Resource Operations
 
 | Operation | ID | Description |
@@ -78,35 +55,6 @@ group: "['trigger']"
 | Delete | `deletePage` | Delete a page |
 | Search | `search` | Search pages |
 | Update | `update` | Update a page |
-
-### Alert Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Create | `create` | Create an alert |
-| Delete | `deleteAlert` | Delete an alert |
-| Execute Responder | `executeResponder` | Execute responder on an alert |
-| Get | `get` | Get an alert |
-| Merge Into Case | `merge` | Merge an alert into a case |
-| Promote to Case | `promote` | Promote an alert to a case |
-| Search | `search` | Search alerts |
-| Update | `update` | Update an alert |
-| Update Status | `status` | Update an alert status |
-
-### Comment Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Create | `add` | Create a comment in a case or alert |
-| Delete | `deleteComment` | Delete a comment |
-| Search | `search` | Search comments |
-| Update | `update` | Update a comment |
-
-### Query Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Execute Query | `executeQuery` | Execute a query |
 
 ### Observable Resource Operations
 
@@ -134,6 +82,58 @@ group: "['trigger']"
 | Get Timeline | `getTimeline` | Get timeline of a case |
 | Search | `search` | Search cases |
 | Update | `update` | Update a case |
+
+### Alert Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Create | `create` | Create an alert |
+| Delete | `deleteAlert` | Delete an alert |
+| Execute Responder | `executeResponder` | Execute responder on an alert |
+| Get | `get` | Get an alert |
+| Merge Into Case | `merge` | Merge an alert into a case |
+| Promote to Case | `promote` | Promote an alert to a case |
+| Search | `search` | Search alerts |
+| Update | `update` | Update an alert |
+| Update Status | `status` | Update an alert status |
+
+### Log Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Add Attachment | `addAttachment` | Add attachment to a task log |
+| Create | `create` | Create a task log |
+| Delete | `deleteLog` | Delete task log |
+| Delete Attachment | `deleteAttachment` | Delete attachment from a task log |
+| Execute Responder | `executeResponder` | Execute responder on a task log |
+| Get | `get` | Get a task log |
+| Search | `search` | Search task logs |
+
+### Query Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Execute Query | `executeQuery` | Execute a query |
+
+### Task Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Create | `create` | Create a task |
+| Delete | `deleteTask` | Delete an task |
+| Execute Responder | `executeResponder` | Execute responder on a task |
+| Get | `get` | Get a task |
+| Search | `search` | Search tasks |
+| Update | `update` | Update a task |
+
+### Comment Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Create | `add` | Create a comment in a case or alert |
+| Delete | `deleteComment` | Delete a comment |
+| Search | `search` | Search comments |
+| Update | `update` | Update a comment |
 
 ---
 
@@ -166,12 +166,10 @@ group: "['trigger']"
 
 **Operation options:**
 
-* **Create** (`create`) - Create a task
-* **Delete** (`deleteTask`) - Delete an task
-* **Execute Responder** (`executeResponder`) - Execute responder on a task
-* **Get** (`get`) - Get a task
-* **Search** (`search`) - Search tasks
-* **Update** (`update`) - Update a task
+* **Create** (`create`) - Create a page
+* **Delete** (`deletePage`) - Delete a page
+* **Search** (`search`) - Search pages
+* **Update** (`update`) - Update a page
 
 ---
 
@@ -219,14 +217,8 @@ operations:
 - id: create
   name: Create
   description: ''
-- id: deleteTask
+- id: deletePage
   name: Delete
-  description: ''
-- id: executeResponder
-  name: Execute Responder
-  description: ''
-- id: get
-  name: Get
   description: ''
 - id: search
   name: Search
@@ -234,17 +226,32 @@ operations:
 - id: update
   name: Update
   description: ''
+- id: deleteObservable
+  name: Delete
+  description: ''
+- id: executeAnalyzer
+  name: Execute Analyzer
+  description: ''
+- id: executeResponder
+  name: Execute Responder
+  description: ''
+- id: get
+  name: Get
+  description: ''
 - id: addAttachment
   name: Add Attachment
-  description: ''
-- id: deleteLog
-  name: Delete
   description: ''
 - id: deleteAttachment
   name: Delete Attachment
   description: ''
-- id: deletePage
-  name: Delete
+- id: deleteCase
+  name: Delete Case
+  description: ''
+- id: getAttachment
+  name: Get Attachment
+  description: ''
+- id: getTimeline
+  name: Get Timeline
   description: ''
 - id: deleteAlert
   name: Delete
@@ -258,29 +265,20 @@ operations:
 - id: status
   name: Update Status
   description: ''
-- id: add
-  name: Create
-  description: ''
-- id: deleteComment
+- id: deleteLog
   name: Delete
   description: ''
 - id: executeQuery
   name: Execute Query
   description: ''
-- id: deleteObservable
+- id: deleteTask
   name: Delete
   description: ''
-- id: executeAnalyzer
-  name: Execute Analyzer
+- id: add
+  name: Create
   description: ''
-- id: deleteCase
-  name: Delete Case
-  description: ''
-- id: getAttachment
-  name: Get Attachment
-  description: ''
-- id: getTimeline
-  name: Get Timeline
+- id: deleteComment
+  name: Delete
   description: ''
 common_expressions:
 - ={{$parameter["operation"]}}
@@ -343,27 +341,27 @@ settings:
       "type": "string",
       "enum": [
         "create",
-        "deleteTask",
-        "executeResponder",
-        "get",
+        "deletePage",
         "search",
         "update",
+        "deleteObservable",
+        "executeAnalyzer",
+        "executeResponder",
+        "get",
         "addAttachment",
-        "deleteLog",
         "deleteAttachment",
-        "deletePage",
+        "deleteCase",
+        "getAttachment",
+        "getTimeline",
         "deleteAlert",
         "merge",
         "promote",
         "status",
-        "add",
-        "deleteComment",
+        "deleteLog",
         "executeQuery",
-        "deleteObservable",
-        "executeAnalyzer",
-        "deleteCase",
-        "getAttachment",
-        "getTimeline"
+        "deleteTask",
+        "add",
+        "deleteComment"
       ],
       "description": "Operation to perform"
     },
@@ -407,16 +405,8 @@ settings:
           ],
           "default": "alert"
         },
-        "id": {
-          "description": "",
-          "type": "string"
-        },
-        "taskUpdateFields": {
-          "description": "",
-          "type": "string"
-        },
-        "allCases": {
-          "description": "Whether to search in all cases or only in a selected case",
+        "searchInKnowledgeBase": {
+          "description": "Whether to search in knowledge base or only in the selected case",
           "type": "boolean",
           "default": true
         },
@@ -427,41 +417,6 @@ settings:
           "examples": [
             "Add Sort Rule"
           ]
-        },
-        "taskFields": {
-          "description": "",
-          "type": "string"
-        },
-        "operation": {
-          "description": "",
-          "type": "string",
-          "enum": [
-            "addAttachment",
-            "create",
-            "deleteAttachment",
-            "deleteCase",
-            "executeResponder",
-            "get",
-            "getAttachment",
-            "getTimeline",
-            "search",
-            "update"
-          ],
-          "default": "create"
-        },
-        "attachmentId": {
-          "description": "ID of the attachment. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
-          "type": "string",
-          "default": ""
-        },
-        "allTasks": {
-          "description": "Whether to search in all tasks or only in selected task",
-          "type": "boolean",
-          "default": true
-        },
-        "logFields": {
-          "description": "",
-          "type": "string"
         },
         "location": {
           "description": "",
@@ -477,11 +432,6 @@ settings:
           "type": "string",
           "default": ""
         },
-        "searchInKnowledgeBase": {
-          "description": "Whether to search in knowledge base or only in the selected case",
-          "type": "boolean",
-          "default": true
-        },
         "title": {
           "description": "",
           "type": "string",
@@ -492,34 +442,19 @@ settings:
           "type": "string",
           "default": ""
         },
-        "alertUpdateFields": {
-          "description": "",
-          "type": "string"
-        },
-        "status": {
-          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
-          "type": "string",
-          "default": ""
-        },
-        "alertFields": {
-          "description": "",
-          "type": "string"
-        },
-        "observableUi": {
+        "operation": {
           "description": "",
           "type": "string",
-          "default": {},
-          "examples": [
-            "Add Observable"
-          ]
-        },
-        "message": {
-          "description": "",
-          "type": "string",
-          "default": ""
+          "enum": [
+            "add",
+            "deleteComment",
+            "search",
+            "update"
+          ],
+          "default": "add"
         },
         "searchIn": {
-          "description": "Whether to search for comments in all alerts and cases or in a specific case or alert",
+          "description": "Whether to search for observables in all alerts and cases or in a specific case or alert",
           "type": "string",
           "enum": [
             "all",
@@ -527,25 +462,6 @@ settings:
             "case"
           ],
           "default": "all"
-        },
-        "addTo": {
-          "description": "",
-          "type": "string",
-          "enum": [
-            "alert",
-            "case"
-          ],
-          "default": "alert"
-        },
-        "queryJson": {
-          "description": "Search for objects with filtering and sorting capabilities",
-          "type": "string",
-          "default": "=[\\n  {\\n    "
-        },
-        "analyzers": {
-          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
-          "type": "string",
-          "default": []
         },
         "observableUpdateFields": {
           "description": "",
@@ -559,6 +475,10 @@ settings:
             "alert"
           ],
           "default": "case"
+        },
+        "id": {
+          "description": "",
+          "type": "string"
         },
         "dataType": {
           "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
@@ -574,6 +494,16 @@ settings:
           "description": "",
           "type": "string"
         },
+        "analyzers": {
+          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "type": "string",
+          "default": []
+        },
+        "attachmentId": {
+          "description": "ID of the attachment. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "type": "string",
+          "default": ""
+        },
         "caseUpdateFields": {
           "description": "",
           "type": "string"
@@ -581,6 +511,68 @@ settings:
         "caseFields": {
           "description": "",
           "type": "string"
+        },
+        "alertUpdateFields": {
+          "description": "",
+          "type": "string"
+        },
+        "alertFields": {
+          "description": "",
+          "type": "string"
+        },
+        "observableUi": {
+          "description": "",
+          "type": "string",
+          "default": {},
+          "examples": [
+            "Add Observable"
+          ]
+        },
+        "status": {
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "type": "string",
+          "default": ""
+        },
+        "allTasks": {
+          "description": "Whether to search in all tasks or only in selected task",
+          "type": "boolean",
+          "default": true
+        },
+        "logFields": {
+          "description": "",
+          "type": "string"
+        },
+        "queryJson": {
+          "description": "Search for objects with filtering and sorting capabilities",
+          "type": "string",
+          "default": "=[\\n  {\\n    "
+        },
+        "allCases": {
+          "description": "Whether to search in all cases or only in a selected case",
+          "type": "boolean",
+          "default": true
+        },
+        "taskUpdateFields": {
+          "description": "",
+          "type": "string"
+        },
+        "taskFields": {
+          "description": "",
+          "type": "string"
+        },
+        "message": {
+          "description": "",
+          "type": "string",
+          "default": ""
+        },
+        "addTo": {
+          "description": "",
+          "type": "string",
+          "enum": [
+            "alert",
+            "case"
+          ],
+          "default": "alert"
         }
       }
     },
@@ -614,4 +606,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

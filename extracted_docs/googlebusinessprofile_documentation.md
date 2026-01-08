@@ -2,7 +2,7 @@
 title: "Node: Google Business Profile"
 slug: "node-googlebusinessprofile"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Google Business Profile API"
 node_type: "regular"
 group: "['input']"
@@ -199,8 +199,8 @@ group: "['input']"
 
 These expression patterns are commonly used with this node:
 
-- `={{$parameter["operation"] + ": " + $parameter["resource"]}}`
 - `={{$parameter["resource"] === "post" && $parameter["operation"] === "update" && Object.keys($parameter["additionalOptions"]).length === 0}}`
+- `={{$parameter["operation"] + ": " + $parameter["resource"]}}`
 
 ---
 
@@ -953,9 +953,9 @@ params:
     typeOptions:
       rows: 5
 common_expressions:
-- '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 - ={{$parameter["resource"] === "post" && $parameter["operation"] === "update" &&
   Object.keys($parameter["additionalOptions"]).length === 0}}
+- '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 api_patterns:
   http_methods: []
   endpoints:
@@ -1361,4 +1361,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

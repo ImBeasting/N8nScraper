@@ -2,7 +2,7 @@
 title: "Node: Respond to Webhook"
 slug: "node-respondtowebhook"
 version: "['1', '1.1', '1.2', '1.3', '1.4', '1.5']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Returns data for Webhook"
 node_type: "regular"
 group: "['transform']"
@@ -597,4 +597,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '1.1', '1.2', '1.3', '1.4', '1.5'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1', '1.2', '1.3', '1.4', '1.5'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -2,7 +2,7 @@
 title: "Node: Azure Storage"
 slug: "node-azurestorage"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Interact with Azure Storage API"
 node_type: "regular"
 group: "['transform']"
@@ -143,18 +143,23 @@ These examples are extracted from actual n8n workflows:
 **Parameters:**
 ```json
 {
-  "operation": "delete",
+  "authentication": "oAuth2",
+  "resource": "container",
+  "operation": "get",
   "container": {
     "__rl": true,
-    "mode": "list",
-    "value": "mycontainer"
+    "value": "mycontainer",
+    "mode": "id"
+  },
+  "options": {
+    "simplify": false
   },
   "requestOptions": {}
 }
 ```
 
 **Credentials:**
-- azureStorageSharedKeyApi: `Azure Storage Shared Key account`
+- azureStorageOAuth2Api: `Azure Storage OAuth2 account`
 
 ### Example 2: Azure Storage
 
@@ -163,15 +168,15 @@ These examples are extracted from actual n8n workflows:
 **Parameters:**
 ```json
 {
-  "operation": "getAll",
-  "limit": 1,
+  "resource": "container",
+  "operation": "get",
+  "container": {
+    "__rl": true,
+    "value": "mycontainer",
+    "mode": "id"
+  },
   "options": {
-    "fields": [
-      "metadata",
-      "deleted",
-      "system"
-    ],
-    "filter": "mycontainer"
+    "simplify": false
   },
   "requestOptions": {}
 }
@@ -187,18 +192,16 @@ These examples are extracted from actual n8n workflows:
 **Parameters:**
 ```json
 {
-  "operation": "create",
-  "containerCreate": "mycontainer",
+  "resource": "blob",
+  "operation": "getAll",
+  "container": {
+    "__rl": true,
+    "value": "mycontainer",
+    "mode": "list"
+  },
+  "returnAll": true,
   "options": {
-    "accessLevel": "blob",
-    "metadata": {
-      "metadataValues": [
-        {
-          "fieldName": "key1",
-          "fieldValue": "value1"
-        }
-      ]
-    }
+    "simplify": false
   },
   "requestOptions": {}
 }
@@ -214,14 +217,23 @@ These examples are extracted from actual n8n workflows:
 **Parameters:**
 ```json
 {
+  "resource": "blob",
   "operation": "get",
   "container": {
     "__rl": true,
-    "mode": "list",
-    "value": "mycontainer"
+    "value": "mycontainer",
+    "mode": "list"
+  },
+  "blob": {
+    "__rl": true,
+    "value": "myblob",
+    "mode": "list"
   },
   "options": {
-    "simplify": false
+    "leaseId": "leaseId123",
+    "origin": "origin123",
+    "simplify": false,
+    "upn": true
   },
   "requestOptions": {}
 }
@@ -237,14 +249,42 @@ These examples are extracted from actual n8n workflows:
 **Parameters:**
 ```json
 {
+  "resource": "blob",
   "operation": "getAll",
-  "returnAll": true,
+  "container": {
+    "__rl": true,
+    "value": "mycontainer",
+    "mode": "list"
+  },
+  "limit": 1,
+  "options": {
+    "fields": [
+      "copy",
+      "deleted",
+      "deletedwithversions",
+      "immutabilitypolicy",
+      "metadata",
+      "legalhold",
+      "versions",
+      "uncommittedblobs",
+      "tags",
+      "snapshots",
+      "permissions"
+    ],
+    "filter": [
+      "deleted",
+      "files",
+      "directories"
+    ],
+    "simplify": true,
+    "upn": true
+  },
   "requestOptions": {}
 }
 ```
 
 **Credentials:**
-- azureStorageSharedKeyApi: `Azure Storage Shared Key account`
+- azureStorageSharedKeyApi: `Azure Storage account`
 
 
 ---
@@ -697,35 +737,40 @@ params:
 examples:
 - name: Azure Storage
   parameters:
-    operation: delete
+    authentication: oAuth2
+    resource: container
+    operation: get
     container:
       __rl: true
-      mode: list
       value: mycontainer
+      mode: id
+    options:
+      simplify: false
     requestOptions: {}
   workflow: Unnamed workflow
 - name: Azure Storage
   parameters:
+    resource: container
+    operation: get
+    container:
+      __rl: true
+      value: mycontainer
+      mode: id
+    options:
+      simplify: false
+    requestOptions: {}
+  workflow: Unnamed workflow
+- name: Azure Storage
+  parameters:
+    resource: blob
     operation: getAll
-    limit: 1
+    container:
+      __rl: true
+      value: mycontainer
+      mode: list
+    returnAll: true
     options:
-      fields:
-      - metadata
-      - deleted
-      - system
-      filter: mycontainer
-    requestOptions: {}
-  workflow: Unnamed workflow
-- name: Azure Storage
-  parameters:
-    operation: create
-    containerCreate: mycontainer
-    options:
-      accessLevel: blob
-      metadata:
-        metadataValues:
-        - fieldName: key1
-          fieldValue: value1
+      simplify: false
     requestOptions: {}
   workflow: Unnamed workflow
 common_expressions:
@@ -1043,11 +1088,16 @@ settings:
     {
       "description": "Azure Storage",
       "value": {
-        "operation": "delete",
+        "authentication": "oAuth2",
+        "resource": "container",
+        "operation": "get",
         "container": {
           "__rl": true,
-          "mode": "list",
-          "value": "mycontainer"
+          "value": "mycontainer",
+          "mode": "id"
+        },
+        "options": {
+          "simplify": false
         },
         "requestOptions": {}
       }
@@ -1055,34 +1105,32 @@ settings:
     {
       "description": "Azure Storage",
       "value": {
+        "resource": "container",
+        "operation": "get",
+        "container": {
+          "__rl": true,
+          "value": "mycontainer",
+          "mode": "id"
+        },
+        "options": {
+          "simplify": false
+        },
+        "requestOptions": {}
+      }
+    },
+    {
+      "description": "Azure Storage",
+      "value": {
+        "resource": "blob",
         "operation": "getAll",
-        "limit": 1,
-        "options": {
-          "fields": [
-            "metadata",
-            "deleted",
-            "system"
-          ],
-          "filter": "mycontainer"
+        "container": {
+          "__rl": true,
+          "value": "mycontainer",
+          "mode": "list"
         },
-        "requestOptions": {}
-      }
-    },
-    {
-      "description": "Azure Storage",
-      "value": {
-        "operation": "create",
-        "containerCreate": "mycontainer",
+        "returnAll": true,
         "options": {
-          "accessLevel": "blob",
-          "metadata": {
-            "metadataValues": [
-              {
-                "fieldName": "key1",
-                "fieldValue": "value1"
-              }
-            ]
-          }
+          "simplify": false
         },
         "requestOptions": {}
       }
@@ -1097,4 +1145,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -2,7 +2,7 @@
 title: "Node: Odoo"
 slug: "node-odoo"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Odoo API"
 node_type: "regular"
 group: "['transform']"
@@ -52,7 +52,7 @@ group: "['transform']"
 
 **HTTP Methods:** POST
 
-**Headers Used:** keep-alive, Content-Type, User-Agent
+**Headers Used:** keep-alive, User-Agent, Content-Type
 
 ---
 
@@ -181,8 +181,8 @@ api_patterns:
   endpoints: []
   headers:
   - keep-alive
-  - Content-Type
   - User-Agent
+  - Content-Type
   query_params: []
 ui_elements:
   notices: []
@@ -371,4 +371,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

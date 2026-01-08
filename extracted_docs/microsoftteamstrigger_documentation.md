@@ -2,7 +2,7 @@
 title: "Node: Microsoft Teams Trigger"
 slug: "node-microsoftteamstrigger"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Triggers workflows in n8n based on events from Microsoft Teams, such as new messages or team updates, using specified configurations."
 node_type: "trigger"
 group: "['trigger']"
@@ -381,4 +381,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

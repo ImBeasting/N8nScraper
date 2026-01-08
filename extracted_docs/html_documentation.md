@@ -2,7 +2,7 @@
 title: "Node: HTML"
 slug: "node-html"
 version: "['1', '1.1', '1.2']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Work with HTML"
 node_type: "regular"
 group: "['transform']"
@@ -681,4 +681,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '1.1', '1.2'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1', '1.2'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

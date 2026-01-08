@@ -2,7 +2,7 @@
 title: "Node: Remove Duplicates"
 slug: "node-removeduplicates"
 version: "['2']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Delete items with matching field values"
 node_type: "regular"
 group: "['transform']"
@@ -593,4 +593,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['2'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['2'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

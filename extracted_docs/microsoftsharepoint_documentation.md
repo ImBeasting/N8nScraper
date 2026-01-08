@@ -2,7 +2,7 @@
 title: "Node: Microsoft SharePoint"
 slug: "node-microsoftsharepoint"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Interact with Microsoft SharePoint API"
 node_type: "regular"
 group: "['transform']"
@@ -90,104 +90,8 @@ These examples are extracted from actual n8n workflows:
 **Parameters:**
 ```json
 {
-  "operation": "update",
-  "site": {
-    "__rl": true,
-    "value": "site1",
-    "mode": "list",
-    "cachedResultName": "site1"
-  },
-  "folder": {
-    "__rl": true,
-    "value": "folder1",
-    "mode": "list",
-    "cachedResultName": "folder1"
-  },
-  "file": {
-    "__rl": true,
-    "value": "item1",
-    "mode": "list",
-    "cachedResultName": "file1.json"
-  },
-  "fileName": "file2.json",
-  "changeFileContent": true,
-  "fileContents": "data",
-  "requestOptions": {}
-}
-```
-
-**Credentials:**
-- microsoftSharePointOAuth2Api: `Microsoft SharePoint account`
-
-### Example 2: Microsoft SharePoint
-
-**From workflow:** Unnamed workflow
-
-**Parameters:**
-```json
-{
-  "operation": "upload",
-  "site": {
-    "__rl": true,
-    "value": "site1",
-    "mode": "list",
-    "cachedResultName": "site1"
-  },
-  "folder": {
-    "__rl": true,
-    "value": "folder1",
-    "mode": "list",
-    "cachedResultName": "folder1"
-  },
-  "fileName": "file1.json",
-  "fileContents": "data",
-  "requestOptions": {}
-}
-```
-
-**Credentials:**
-- microsoftSharePointOAuth2Api: `Microsoft SharePoint account`
-
-### Example 3: Microsoft SharePoint
-
-**From workflow:** Unnamed workflow
-
-**Parameters:**
-```json
-{
-  "site": {
-    "__rl": true,
-    "value": "site1",
-    "mode": "list",
-    "cachedResultName": "site1"
-  },
-  "folder": {
-    "__rl": true,
-    "value": "folder1",
-    "mode": "list",
-    "cachedResultName": "folder1"
-  },
-  "file": {
-    "__rl": true,
-    "value": "item1",
-    "mode": "list",
-    "cachedResultName": "file.json"
-  },
-  "requestOptions": {}
-}
-```
-
-**Credentials:**
-- microsoftSharePointOAuth2Api: `Microsoft SharePoint account`
-
-### Example 4: Microsoft SharePoint
-
-**From workflow:** Unnamed workflow
-
-**Parameters:**
-```json
-{
-  "resource": "item",
+  "resource": "list",
+  "operation": "get",
   "site": {
     "__rl": true,
     "value": "site1",
@@ -200,22 +104,6 @@ These examples are extracted from actual n8n workflows:
     "mode": "list",
     "cachedResultName": "list1"
   },
-  "filter": "fields/Title eq 'item1'",
-  "returnAll": true,
-  "options": {
-    "fields": [
-      "contentType",
-      "createdDateTime",
-      "createdBy",
-      "fields",
-      "id",
-      "lastModifiedDateTime",
-      "lastModifiedBy",
-      "parentReference",
-      "webUrl"
-    ]
-  },
-  "simplify": false,
   "requestOptions": {}
 }
 ```
@@ -223,7 +111,7 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - microsoftSharePointOAuth2Api: `Microsoft SharePoint account`
 
-### Example 5: Microsoft SharePoint
+### Example 2: Microsoft SharePoint
 
 **From workflow:** Unnamed workflow
 
@@ -250,6 +138,260 @@ These examples are extracted from actual n8n workflows:
     "mode": "list",
     "cachedResultName": "item1"
   },
+  "requestOptions": {}
+}
+```
+
+**Credentials:**
+- microsoftSharePointOAuth2Api: `Microsoft SharePoint account`
+
+### Example 3: Microsoft SharePoint
+
+**From workflow:** Unnamed workflow
+
+**Parameters:**
+```json
+{
+  "resource": "item",
+  "operation": "create",
+  "site": {
+    "__rl": true,
+    "value": "site1",
+    "mode": "list",
+    "cachedResultName": "site1"
+  },
+  "list": {
+    "__rl": true,
+    "value": "list1",
+    "mode": "list",
+    "cachedResultName": "list1"
+  },
+  "columns": {
+    "mappingMode": "defineBelow",
+    "value": {
+      "bool": true,
+      "Title": "Title 1",
+      "choice": "Choice 1",
+      "datetime": "2025-03-24T00:00:00",
+      "number": 1,
+      "currency": 1,
+      "LikesCount": 1,
+      "RatingCount": 1,
+      "AverageRating": 1,
+      "person": "1",
+      "lookup": "1",
+      "image": "{\"type\":\"thumbnail\",\"fileName\":\"file.jpg\",\"nativeFile\":{},\"fieldName\":\"Picture\",\"serverUrl\":\"https://mydomain.sharepoint.com\",\"fieldId\":\"image\",\"serverRelativeUrl\":\"/sites/site1/SiteAssets/Lists/list1/file.jpg\",\"id\":\"image\"}"
+    },
+    "matchingColumns": [],
+    "schema": [
+      {
+        "id": "Title",
+        "canBeUsedToMatch": true,
+        "defaultMatch": false,
+        "display": true,
+        "displayName": "Title",
+        "readOnly": false,
+        "required": true,
+        "type": "string"
+      },
+      {
+        "id": "choice",
+        "canBeUsedToMatch": false,
+        "defaultMatch": false,
+        "display": true,
+        "displayName": "choice",
+        "readOnly": false,
+        "required": false,
+        "type": "options",
+        "options": [
+          {
+            "name": "Choice 1",
+            "value": "Choice 1"
+          },
+          {
+            "name": "Choice 2",
+            "value": "Choice 2"
+          },
+          {
+            "name": "Choice 3",
+            "value": "Choice 3"
+          }
+        ]
+      },
+      {
+        "id": "datetime",
+        "canBeUsedToMatch": false,
+        "defaultMatch": false,
+        "display": true,
+        "displayName": "datetime",
+        "readOnly": false,
+        "required": false,
+        "type": "dateTime"
+      },
+      {
+        "id": "person",
+        "canBeUsedToMatch": false,
+        "defaultMatch": false,
+        "display": true,
+        "displayName": "person",
+        "readOnly": false,
+        "required": false,
+        "type": "string",
+        "removed": false
+      },
+      {
+        "id": "number",
+        "canBeUsedToMatch": false,
+        "defaultMatch": false,
+        "display": true,
+        "displayName": "number",
+        "readOnly": false,
+        "required": false,
+        "type": "number"
+      },
+      {
+        "id": "bool",
+        "canBeUsedToMatch": false,
+        "defaultMatch": false,
+        "display": true,
+        "displayName": "bool",
+        "readOnly": false,
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "id": "currency",
+        "canBeUsedToMatch": false,
+        "defaultMatch": false,
+        "display": true,
+        "displayName": "currency",
+        "readOnly": false,
+        "required": false,
+        "type": "number",
+        "removed": false
+      },
+      {
+        "id": "image",
+        "canBeUsedToMatch": false,
+        "defaultMatch": false,
+        "display": true,
+        "displayName": "image",
+        "readOnly": false,
+        "required": false,
+        "type": "object",
+        "removed": false
+      },
+      {
+        "id": "lookup",
+        "canBeUsedToMatch": false,
+        "defaultMatch": false,
+        "display": true,
+        "displayName": "lookup",
+        "readOnly": false,
+        "required": false,
+        "type": "string",
+        "removed": false
+      },
+      {
+        "id": "AverageRating",
+        "canBeUsedToMatch": false,
+        "defaultMatch": false,
+        "display": true,
+        "displayName": "Rating (0-5)",
+        "readOnly": false,
+        "required": false,
+        "type": "number",
+        "removed": false
+      },
+      {
+        "id": "RatingCount",
+        "canBeUsedToMatch": false,
+        "defaultMatch": false,
+        "display": true,
+        "displayName": "Number of Ratings",
+        "readOnly": false,
+        "required": false,
+        "type": "number",
+        "removed": false
+      },
+      {
+        "id": "LikesCount",
+        "canBeUsedToMatch": false,
+        "defaultMatch": false,
+        "display": true,
+        "displayName": "Number of Likes",
+        "readOnly": false,
+        "required": false,
+        "type": "number",
+        "removed": false
+      }
+    ],
+    "attemptToConvertTypes": false,
+    "convertFieldsToString": false
+  },
+  "requestOptions": {}
+}
+```
+
+**Credentials:**
+- microsoftSharePointOAuth2Api: `Microsoft SharePoint account`
+
+### Example 4: Microsoft SharePoint
+
+**From workflow:** Unnamed workflow
+
+**Parameters:**
+```json
+{
+  "resource": "item",
+  "operation": "get",
+  "site": {
+    "__rl": true,
+    "value": "site1",
+    "mode": "list",
+    "cachedResultName": "site1"
+  },
+  "list": {
+    "__rl": true,
+    "value": "list1",
+    "mode": "list",
+    "cachedResultName": "list1"
+  },
+  "item": {
+    "__rl": true,
+    "value": "item1",
+    "mode": "list",
+    "cachedResultName": "item1"
+  },
+  "requestOptions": {}
+}
+```
+
+**Credentials:**
+- microsoftSharePointOAuth2Api: `Microsoft SharePoint account`
+
+### Example 5: Microsoft SharePoint
+
+**From workflow:** Unnamed workflow
+
+**Parameters:**
+```json
+{
+  "resource": "item",
+  "site": {
+    "__rl": true,
+    "value": "site1",
+    "mode": "list",
+    "cachedResultName": "site1"
+  },
+  "list": {
+    "__rl": true,
+    "value": "list1",
+    "mode": "list",
+    "cachedResultName": "list1"
+  },
+  "limit": 2,
+  "options": {},
   "requestOptions": {}
 }
 ```
@@ -334,61 +476,184 @@ params:
 examples:
 - name: Microsoft SharePoint
   parameters:
-    operation: update
+    resource: list
+    operation: get
     site:
       __rl: true
       value: site1
       mode: list
       cachedResultName: site1
-    folder:
+    list:
       __rl: true
-      value: folder1
+      value: list1
       mode: list
-      cachedResultName: folder1
-    file:
-      __rl: true
-      value: item1
-      mode: list
-      cachedResultName: file1.json
-    fileName: file2.json
-    changeFileContent: true
-    fileContents: data
+      cachedResultName: list1
     requestOptions: {}
   workflow: Unnamed workflow
 - name: Microsoft SharePoint
   parameters:
-    operation: upload
+    resource: item
+    operation: delete
     site:
       __rl: true
       value: site1
       mode: list
       cachedResultName: site1
-    folder:
+    list:
       __rl: true
-      value: folder1
+      value: list1
       mode: list
-      cachedResultName: folder1
-    fileName: file1.json
-    fileContents: data
+      cachedResultName: list1
+    item:
+      __rl: true
+      value: item1
+      mode: list
+      cachedResultName: item1
     requestOptions: {}
   workflow: Unnamed workflow
 - name: Microsoft SharePoint
   parameters:
+    resource: item
+    operation: create
     site:
       __rl: true
       value: site1
       mode: list
       cachedResultName: site1
-    folder:
+    list:
       __rl: true
-      value: folder1
+      value: list1
       mode: list
-      cachedResultName: folder1
-    file:
-      __rl: true
-      value: item1
-      mode: list
-      cachedResultName: file.json
+      cachedResultName: list1
+    columns:
+      mappingMode: defineBelow
+      value:
+        bool: true
+        Title: Title 1
+        choice: Choice 1
+        datetime: '2025-03-24T00:00:00'
+        number: 1
+        currency: 1
+        LikesCount: 1
+        RatingCount: 1
+        AverageRating: 1
+        person: '1'
+        lookup: '1'
+        image: '{"type":"thumbnail","fileName":"file.jpg","nativeFile":{},"fieldName":"Picture","serverUrl":"https://mydomain.sharepoint.com","fieldId":"image","serverRelativeUrl":"/sites/site1/SiteAssets/Lists/list1/file.jpg","id":"image"}'
+      matchingColumns: []
+      schema:
+      - id: Title
+        canBeUsedToMatch: true
+        defaultMatch: false
+        display: true
+        displayName: Title
+        readOnly: false
+        required: true
+        type: string
+      - id: choice
+        canBeUsedToMatch: false
+        defaultMatch: false
+        display: true
+        displayName: choice
+        readOnly: false
+        required: false
+        type: options
+        options:
+        - name: Choice 1
+          value: Choice 1
+        - name: Choice 2
+          value: Choice 2
+        - name: Choice 3
+          value: Choice 3
+      - id: datetime
+        canBeUsedToMatch: false
+        defaultMatch: false
+        display: true
+        displayName: datetime
+        readOnly: false
+        required: false
+        type: dateTime
+      - id: person
+        canBeUsedToMatch: false
+        defaultMatch: false
+        display: true
+        displayName: person
+        readOnly: false
+        required: false
+        type: string
+        removed: false
+      - id: number
+        canBeUsedToMatch: false
+        defaultMatch: false
+        display: true
+        displayName: number
+        readOnly: false
+        required: false
+        type: number
+      - id: bool
+        canBeUsedToMatch: false
+        defaultMatch: false
+        display: true
+        displayName: bool
+        readOnly: false
+        required: false
+        type: boolean
+      - id: currency
+        canBeUsedToMatch: false
+        defaultMatch: false
+        display: true
+        displayName: currency
+        readOnly: false
+        required: false
+        type: number
+        removed: false
+      - id: image
+        canBeUsedToMatch: false
+        defaultMatch: false
+        display: true
+        displayName: image
+        readOnly: false
+        required: false
+        type: object
+        removed: false
+      - id: lookup
+        canBeUsedToMatch: false
+        defaultMatch: false
+        display: true
+        displayName: lookup
+        readOnly: false
+        required: false
+        type: string
+        removed: false
+      - id: AverageRating
+        canBeUsedToMatch: false
+        defaultMatch: false
+        display: true
+        displayName: Rating (0-5)
+        readOnly: false
+        required: false
+        type: number
+        removed: false
+      - id: RatingCount
+        canBeUsedToMatch: false
+        defaultMatch: false
+        display: true
+        displayName: Number of Ratings
+        readOnly: false
+        required: false
+        type: number
+        removed: false
+      - id: LikesCount
+        canBeUsedToMatch: false
+        defaultMatch: false
+        display: true
+        displayName: Number of Likes
+        readOnly: false
+        required: false
+        type: number
+        removed: false
+      attemptToConvertTypes: false
+      convertFieldsToString: false
     requestOptions: {}
   workflow: Unnamed workflow
 common_expressions:
@@ -574,72 +839,228 @@ settings:
     {
       "description": "Microsoft SharePoint",
       "value": {
-        "operation": "update",
+        "resource": "list",
+        "operation": "get",
         "site": {
           "__rl": true,
           "value": "site1",
           "mode": "list",
           "cachedResultName": "site1"
         },
-        "folder": {
+        "list": {
           "__rl": true,
-          "value": "folder1",
+          "value": "list1",
           "mode": "list",
-          "cachedResultName": "folder1"
+          "cachedResultName": "list1"
         },
-        "file": {
-          "__rl": true,
-          "value": "item1",
-          "mode": "list",
-          "cachedResultName": "file1.json"
-        },
-        "fileName": "file2.json",
-        "changeFileContent": true,
-        "fileContents": "data",
         "requestOptions": {}
       }
     },
     {
       "description": "Microsoft SharePoint",
       "value": {
-        "operation": "upload",
+        "resource": "item",
+        "operation": "delete",
         "site": {
           "__rl": true,
           "value": "site1",
           "mode": "list",
           "cachedResultName": "site1"
         },
-        "folder": {
+        "list": {
           "__rl": true,
-          "value": "folder1",
+          "value": "list1",
           "mode": "list",
-          "cachedResultName": "folder1"
+          "cachedResultName": "list1"
         },
-        "fileName": "file1.json",
-        "fileContents": "data",
+        "item": {
+          "__rl": true,
+          "value": "item1",
+          "mode": "list",
+          "cachedResultName": "item1"
+        },
         "requestOptions": {}
       }
     },
     {
       "description": "Microsoft SharePoint",
       "value": {
+        "resource": "item",
+        "operation": "create",
         "site": {
           "__rl": true,
           "value": "site1",
           "mode": "list",
           "cachedResultName": "site1"
         },
-        "folder": {
+        "list": {
           "__rl": true,
-          "value": "folder1",
+          "value": "list1",
           "mode": "list",
-          "cachedResultName": "folder1"
+          "cachedResultName": "list1"
         },
-        "file": {
-          "__rl": true,
-          "value": "item1",
-          "mode": "list",
-          "cachedResultName": "file.json"
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "bool": true,
+            "Title": "Title 1",
+            "choice": "Choice 1",
+            "datetime": "2025-03-24T00:00:00",
+            "number": 1,
+            "currency": 1,
+            "LikesCount": 1,
+            "RatingCount": 1,
+            "AverageRating": 1,
+            "person": "1",
+            "lookup": "1",
+            "image": "{\"type\":\"thumbnail\",\"fileName\":\"file.jpg\",\"nativeFile\":{},\"fieldName\":\"Picture\",\"serverUrl\":\"https://mydomain.sharepoint.com\",\"fieldId\":\"image\",\"serverRelativeUrl\":\"/sites/site1/SiteAssets/Lists/list1/file.jpg\",\"id\":\"image\"}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "canBeUsedToMatch": true,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "Title",
+              "readOnly": false,
+              "required": true,
+              "type": "string"
+            },
+            {
+              "id": "choice",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "choice",
+              "readOnly": false,
+              "required": false,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Choice 1",
+                  "value": "Choice 1"
+                },
+                {
+                  "name": "Choice 2",
+                  "value": "Choice 2"
+                },
+                {
+                  "name": "Choice 3",
+                  "value": "Choice 3"
+                }
+              ]
+            },
+            {
+              "id": "datetime",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "datetime",
+              "readOnly": false,
+              "required": false,
+              "type": "dateTime"
+            },
+            {
+              "id": "person",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "person",
+              "readOnly": false,
+              "required": false,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "number",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "number",
+              "readOnly": false,
+              "required": false,
+              "type": "number"
+            },
+            {
+              "id": "bool",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "bool",
+              "readOnly": false,
+              "required": false,
+              "type": "boolean"
+            },
+            {
+              "id": "currency",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "currency",
+              "readOnly": false,
+              "required": false,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "image",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "image",
+              "readOnly": false,
+              "required": false,
+              "type": "object",
+              "removed": false
+            },
+            {
+              "id": "lookup",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "lookup",
+              "readOnly": false,
+              "required": false,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "AverageRating",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "Rating (0-5)",
+              "readOnly": false,
+              "required": false,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "RatingCount",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "Number of Ratings",
+              "readOnly": false,
+              "required": false,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "LikesCount",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "Number of Likes",
+              "readOnly": false,
+              "required": false,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         },
         "requestOptions": {}
       }
@@ -654,4 +1075,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

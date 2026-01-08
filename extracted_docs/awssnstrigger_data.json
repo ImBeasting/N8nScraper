@@ -11,12 +11,7 @@
     "group": [
       "trigger"
     ],
-    "authentication": [
-      {
-        "name": "aws",
-        "required": true
-      }
-    ],
+    "authentication": [],
     "loadOptionsMethods": [],
     "eventTriggerDescription": "",
     "activationMessage": "",
@@ -79,16 +74,56 @@
         }
       ],
       "typeOptions": {}
+    },
+    {
+      "displayName": "Authentication",
+      "name": "authentication",
+      "type": "options",
+      "value": "iam",
+      "default": "iam",
+      "options": [
+        {
+          "name": "AWS (IAM)",
+          "value": "iam",
+          "displayName": "Aws (iam)"
+        },
+        {
+          "name": "AWS (Assume Role)",
+          "value": "assumeRole",
+          "displayName": "Aws (assume Role)"
+        }
+      ]
+    },
+    {
+      "name": "aws",
+      "displayName": "Aws",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "iam"
+          ]
+        }
+      },
+      "_source": "utils_awsNodeCredentials"
+    },
+    {
+      "name": "awsAssumeRole",
+      "displayName": "Aws Assume Role",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "assumeRole"
+          ]
+        }
+      },
+      "_source": "utils_awsNodeCredentials"
     }
   ],
   "operations": [],
   "operations_by_resource": {},
-  "credentials": [
-    {
-      "name": "aws",
-      "required": true
-    }
-  ],
+  "credentials": [],
   "workflow_examples": [],
   "expressions": [
     "={{$parameter[\"topic\"].split(\\':\\')[5]}}"
@@ -96,6 +131,26 @@
   "validation_rules": {
     "topic": {
       "required": true
+    },
+    "aws": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "iam"
+          ]
+        }
+      }
+    },
+    "awsAssumeRole": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "authentication": [
+            "assumeRole"
+          ]
+        }
+      }
     }
   },
   "type_info": {
@@ -103,6 +158,33 @@
       "type": "resourceLocator",
       "displayName": "Topic",
       "name": "topic"
+    },
+    "authentication": {
+      "type": "options",
+      "displayName": "Authentication",
+      "name": "authentication",
+      "possibleValues": [
+        {
+          "value": "iam",
+          "name": "AWS (IAM)",
+          "description": ""
+        },
+        {
+          "value": "assumeRole",
+          "name": "AWS (Assume Role)",
+          "description": ""
+        }
+      ]
+    },
+    "aws": {
+      "type": "unknown",
+      "displayName": "Aws",
+      "name": "aws"
+    },
+    "awsAssumeRole": {
+      "type": "unknown",
+      "displayName": "Aws Assume Role",
+      "name": "awsAssumeRole"
     }
   },
   "api_patterns": {

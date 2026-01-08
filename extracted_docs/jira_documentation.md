@@ -2,7 +2,7 @@
 title: "Node: Jira Software"
 slug: "node-jira"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Jira Software API"
 node_type: "regular"
 group: "['output']"
@@ -54,7 +54,7 @@ group: "['output']"
 
 ## API Patterns
 
-**Headers Used:** Content-Type, no-check, X-Atlassian-Token
+**Headers Used:** no-check, X-Atlassian-Token, Content-Type
 
 ---
 
@@ -1301,9 +1301,9 @@ api_patterns:
   http_methods: []
   endpoints: []
   headers:
-  - Content-Type
   - no-check
   - X-Atlassian-Token
+  - Content-Type
   query_params: []
 ui_elements:
   notices: []
@@ -1729,4 +1729,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

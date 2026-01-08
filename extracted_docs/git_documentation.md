@@ -1,8 +1,8 @@
 ---
 title: "Node: Git"
 slug: "node-git"
-version: "1"
-updated: "2025-11-13"
+version: "['1', '1.1']"
+updated: "2026-01-08"
 summary: "Control git."
 node_type: "regular"
 group: "['transform']"
@@ -61,6 +61,7 @@ group: "['transform']"
 | Pull | `pull` | Pull from remote repository |
 | Push | `push` | Push to remote repository |
 | Push Tags | `pushTags` | Push Tags to remote repository |
+| Reflog | `reflog` | Return reference log |
 | Status | `status` | Return status of current repository |
 | Switch Branch | `switchBranch` | Switch to a different branch |
 | Tag | `tag` | Create a new tag |
@@ -88,6 +89,7 @@ group: "['transform']"
 * **Pull** (`pull`) - Pull from remote repository
 * **Push** (`push`) - Push to remote repository
 * **Push Tags** (`pushTags`) - Push Tags to remote repository
+* **Reflog** (`reflog`) - Return reference log
 * **Status** (`status`) - Return status of current repository
 * **Switch Branch** (`switchBranch`) - Switch to a different branch
 * **Tag** (`tag`) - Create a new tag
@@ -105,7 +107,7 @@ group: "['transform']"
 
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Key | `key` | string |  | ✓ | Name of the key to set | e.g. user.email |  |
+| Key | `key` | options |  | ✓ | Name of the key to set |  |
 | Value | `value` | string |  | ✓ | Value of the key to set | e.g. name@example.com |  |
 | Options | `options` | collection | {} | ✗ | Append setting rather than set it in the local config | e.g. Add option |  |
 
@@ -193,6 +195,24 @@ group: "['transform']"
 </details>
 
 
+### Reflog parameters (`reflog`)
+
+| Name | Field ID | Type | Default | Required | Description | Validation |
+| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
+| Return All | `returnAll` | boolean | False | ✗ | Whether to return all results or only up to a given limit |  |
+| Limit | `limit` | number | 100 | ✗ | Max number of results to return | min:1, max:100 |
+| Options | `options` | collection | {} | ✗ | The reference to show the reflog for (e.g., HEAD, branch name). Leave empty for HEAD. | e.g. Add option |  |
+
+<details>
+<summary><strong>Options sub-options</strong></summary>
+
+| Sub-Option | Field ID | Type | Default | Description |
+| ---------- | -------- | ---- | ------- | ----------- |
+| Reference | `reference` | string |  | The reference to show the reflog for (e.g., HEAD, branch name). Leave empty for HEAD. |
+
+</details>
+
+
 ### Switch Branch parameters (`switchBranch`)
 
 | Name | Field ID | Type | Default | Required | Description | Validation |
@@ -258,7 +278,9 @@ group: "['transform']"
 node: git
 displayName: Git
 description: Control git.
-version: '1'
+version:
+- '1'
+- '1.1'
 nodeType: regular
 group:
 - transform
@@ -294,11 +316,10 @@ operations:
   params:
   - id: key
     name: Key
-    type: string
+    type: options
     default: ''
     required: true
     description: Name of the key to set
-    placeholder: user.email
     validation:
       required: true
       displayOptions:
@@ -306,9 +327,10 @@ operations:
           operation:
           - addConfig
     typeInfo:
-      type: string
+      type: options
       displayName: Key
       name: key
+      possibleValues: []
   - id: value
     name: Value
     type: string
@@ -422,12 +444,12 @@ operations:
     default: false
     required: false
     description: Whether to return all results or only up to a given limit
-    validation:
+    validation: &id003
       displayOptions:
         show:
           operation:
-          - log
-    typeInfo:
+          - reflog
+    typeInfo: &id004
       type: boolean
       displayName: Return All
       name: returnAll
@@ -437,14 +459,14 @@ operations:
     default: 100
     required: false
     description: Max number of results to return
-    validation:
+    validation: &id005
       displayOptions:
         show:
           operation:
-          - log
+          - reflog
           returnAll:
           - false
-    typeInfo:
+    typeInfo: &id006
       type: number
       displayName: Limit
       name: limit
@@ -469,6 +491,26 @@ operations:
 - id: pushTags
   name: Push Tags
   description: Push Tags to remote repository
+- id: reflog
+  name: Reflog
+  description: Return reference log
+  params:
+  - id: returnAll
+    name: Return All
+    type: boolean
+    default: false
+    required: false
+    description: Whether to return all results or only up to a given limit
+    validation: *id003
+    typeInfo: *id004
+  - id: limit
+    name: Limit
+    type: number
+    default: 100
+    required: false
+    description: Max number of results to return
+    validation: *id005
+    typeInfo: *id006
 - id: status
   name: Status
   description: Return status of current repository
@@ -516,6 +558,11 @@ operations:
 - id: userSetup
   name: User Setup
   description: Set the user
+api_patterns:
+  http_methods: []
+  endpoints: []
+  headers: []
+  query_params: []
 ui_elements:
   notices: []
   tooltips: []
@@ -526,14 +573,14 @@ ui_elements:
     text: /tmp/repository
   - field: pathsToAdd
     text: README.md
-  - field: key
-    text: user.email
   - field: value
     text: name@example.com
   - field: options
     text: Add option
   - field: sourceRepository
     text: https://github.com/n8n-io/n8n
+  - field: options
+    text: Add option
   - field: options
     text: Add option
   - field: options
@@ -648,6 +695,7 @@ settings:
         "pull",
         "push",
         "pushTags",
+        "reflog",
         "status",
         "switchBranch",
         "tag",
@@ -682,6 +730,7 @@ settings:
             "pull",
             "push",
             "pushTags",
+            "reflog",
             "status",
             "switchBranch",
             "tag",
@@ -713,10 +762,7 @@ settings:
         "key": {
           "description": "Name of the key to set",
           "type": "string",
-          "default": "",
-          "examples": [
-            "user.email"
-          ]
+          "default": ""
         },
         "value": {
           "description": "Value of the key to set",
@@ -825,7 +871,10 @@ settings:
   },
   "metadata": {
     "nodeType": "regular",
-    "version": "1"
+    "version": [
+      "1",
+      "1.1"
+    ]
   },
   "credentials": [
     {
@@ -842,4 +891,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -2,7 +2,7 @@
 title: "Node: Webhook"
 slug: "node-webhook"
 version: "['1', '1.1', '2', '2.1']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Starts the workflow when a webhook is called"
 node_type: "webhook"
 group: "['trigger']"
@@ -33,7 +33,7 @@ group: "['trigger']"
 - **Trigger Panel:**
 ```json
 {
-  "executionsHelp": "{\n\t\t\t\tinactive:\n\t\t\t\t\t'Webhooks have two modes: test and production. <br /> <br /> <b>Use test mode while you build your workflow</b>. Click the \\'listen\\' button, then make a request to the test URL. The executions will show up in the editor.<br /> <br /> <b>Use production mode to run your workflow automatically</b>. <a data-key=\"activate\">Activate</a> the workflow, then make requests to the production URL. These executions will show up in the executions list, but not in the editor.',\n\t\t\t\tactive:\n\t\t\t\t\t'Webhooks have two modes: test and production. <br /> <br /> <b>Use test mode while you build your workflow</b>. Click the \\'listen\\' button, then make a request to the test URL. The executions will show up in the editor.<br /> <br /> <b>Use production mode to run your workflow automatically</b>. Since the workflow is activated, you can make requests to the production URL. These executions will show up in the <a data-key=\"executions\">executions list</a>, but not in the editor.',\n\t\t\t}",
+  "executionsHelp": "{\n\t\t\t\tinactive:\n\t\t\t\t\t\"Webhooks have two modes: test and production. <br /> <br /> <b>Use test mode while you build your workflow</b>. Click the 'listen' button, then make a request to the test URL. The executions will show up in the editor.<br /> <br /> <b>Use production mode to run your workflow automatically</b>. Publish the workflow, then make requests to the production URL. These executions will show up in the executions list, but not in the editor.\",\n\t\t\t\tactive:\n\t\t\t\t\t'Webhooks have two modes: test and production. <br /> <br /> <b>Use test mode while you build your workflow</b>. Click the \\'listen\\' button, then make a request to the test URL. The executions will show up in the editor.<br /> <br /> <b>Use production mode to run your workflow automatically</b>. Since the workflow is activated, you can make requests to the production URL. These executions will show up in the <a data-key=\"executions\">executions list</a>, but not in the editor.',\n\t\t\t}",
   "activationHint": "Once you"
 }
 ```
@@ -621,4 +621,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '1.1', '2', '2.1'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1', '2', '2.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

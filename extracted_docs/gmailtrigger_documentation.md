@@ -2,7 +2,7 @@
 title: "Node: Gmail Trigger"
 slug: "node-gmailtrigger"
 version: "['1', '1.1', '1.2', '1.3']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Fetches emails from Gmail and starts the workflow on specified polling intervals."
 node_type: "trigger"
 group: "['trigger']"
@@ -447,4 +447,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '1.1', '1.2', '1.3'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1', '1.2', '1.3'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

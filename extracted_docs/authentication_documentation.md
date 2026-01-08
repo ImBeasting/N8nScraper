@@ -2,7 +2,7 @@
 title: "Node: Authentication"
 slug: "node-authentication"
 version: "['3', '4', '4.1', '4.2', '4.3', '4.4', '4.5', '4.6', '4.7']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Read, update and write data to Google Sheets"
 node_type: "regular"
 group: "['input', 'output']"
@@ -336,11 +336,11 @@ group: "['input', 'output']"
 
 These expression patterns are commonly used with this node:
 
-- `={{ ["appendOrUpdate", "append"].includes($parameter["operation"]) && $parameter?.columns?.mappingMode === "defineBelow" && !$parameter?.columns?.schema?.length }}`
-- `={{ $rawParameter.documentId?.startsWith("=") && $input.all().length > 1 }}`
 - `={{ $rawParameter.sheetName?.startsWith("=") && $input.all().length > 1 }}`
 - `={{$parameter["operation"] + ": " + $parameter["resource"]}}`
 - `={{$parameter["operation"] === "append" && !$parameter["options"]["useAppend"]}}`
+- `={{ ["appendOrUpdate", "append"].includes($parameter["operation"]) && $parameter?.columns?.mappingMode === "defineBelow" && !$parameter?.columns?.schema?.length }}`
+- `={{ $rawParameter.documentId?.startsWith("=") && $input.all().length > 1 }}`
 
 ---
 
@@ -1012,12 +1012,12 @@ operations:
       displayName: Document
       name: documentId
 common_expressions:
-- ={{ ["appendOrUpdate", "append"].includes($parameter["operation"]) && $parameter?.columns?.mappingMode
-  === "defineBelow" && !$parameter?.columns?.schema?.length }}
-- ={{ $rawParameter.documentId?.startsWith("=") && $input.all().length > 1 }}
 - ={{ $rawParameter.sheetName?.startsWith("=") && $input.all().length > 1 }}
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 - ={{$parameter["operation"] === "append" && !$parameter["options"]["useAppend"]}}
+- ={{ ["appendOrUpdate", "append"].includes($parameter["operation"]) && $parameter?.columns?.mappingMode
+  === "defineBelow" && !$parameter?.columns?.schema?.length }}
+- ={{ $rawParameter.documentId?.startsWith("=") && $input.all().length > 1 }}
 ui_elements:
   notices:
   - name: autoMapNotice
@@ -1402,4 +1402,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['3', '4', '4.1', '4.2', '4.3', '4.4', '4.5', '4.6', '4.7'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['3', '4', '4.1', '4.2', '4.3', '4.4', '4.5', '4.6', '4.7'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

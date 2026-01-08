@@ -2,7 +2,7 @@
 title: "Node: Google Calendar Trigger"
 slug: "node-googlecalendartrigger"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Starts the workflow when Google Calendar events occur"
 node_type: "trigger"
 group: "['trigger']"
@@ -309,4 +309,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -2,7 +2,7 @@
 title: "Node: Mandrill"
 slug: "node-mandrill"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume Mandrill API"
 node_type: "regular"
 group: "['output']"
@@ -207,6 +207,26 @@ These examples are extracted from actual n8n workflows:
 
 ### Example 2: Mandrill
 
+**From workflow:** sendHtml
+
+**Parameters:**
+```json
+{
+  "operation": "sendHtml",
+  "fromEmail": "sender@example.com",
+  "toEmail": "recipient@example.com",
+  "options": {
+    "html": "<h1>Test HTML Content</h1>",
+    "subject": "Test HTML Subject"
+  }
+}
+```
+
+**Credentials:**
+- mandrillApi: `Test Mandrill API`
+
+### Example 3: Mandrill
+
 **From workflow:** sendTemplate
 
 **Parameters:**
@@ -219,26 +239,6 @@ These examples are extracted from actual n8n workflows:
   "toEmail": "recipient@example.com",
   "options": {
     "subAccount": "test-subaccount"
-  }
-}
-```
-
-**Credentials:**
-- mandrillApi: `Test Mandrill API`
-
-### Example 3: Mandrill
-
-**From workflow:** sendHtml
-
-**Parameters:**
-```json
-{
-  "operation": "sendHtml",
-  "fromEmail": "sender@example.com",
-  "toEmail": "recipient@example.com",
-  "options": {
-    "html": "<h1>Test HTML Content</h1>",
-    "subject": "Test HTML Subject"
   }
 }
 ```
@@ -425,6 +425,15 @@ examples:
   workflow: sendTemplateWithSubaccount
 - name: Mandrill
   parameters:
+    operation: sendHtml
+    fromEmail: sender@example.com
+    toEmail: recipient@example.com
+    options:
+      html: <h1>Test HTML Content</h1>
+      subject: Test HTML Subject
+  workflow: sendHtml
+- name: Mandrill
+  parameters:
     resource: message
     operation: sendTemplate
     template: test-template
@@ -433,15 +442,6 @@ examples:
     options:
       subAccount: test-subaccount
   workflow: sendTemplate
-- name: Mandrill
-  parameters:
-    operation: sendHtml
-    fromEmail: sender@example.com
-    toEmail: recipient@example.com
-    options:
-      html: <h1>Test HTML Content</h1>
-      subject: Test HTML Subject
-  workflow: sendHtml
 common_expressions:
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 api_patterns:
@@ -784,6 +784,18 @@ settings:
     {
       "description": "Mandrill",
       "value": {
+        "operation": "sendHtml",
+        "fromEmail": "sender@example.com",
+        "toEmail": "recipient@example.com",
+        "options": {
+          "html": "<h1>Test HTML Content</h1>",
+          "subject": "Test HTML Subject"
+        }
+      }
+    },
+    {
+      "description": "Mandrill",
+      "value": {
         "resource": "message",
         "operation": "sendTemplate",
         "template": "test-template",
@@ -791,18 +803,6 @@ settings:
         "toEmail": "recipient@example.com",
         "options": {
           "subAccount": "test-subaccount"
-        }
-      }
-    },
-    {
-      "description": "Mandrill",
-      "value": {
-        "operation": "sendHtml",
-        "fromEmail": "sender@example.com",
-        "toEmail": "recipient@example.com",
-        "options": {
-          "html": "<h1>Test HTML Content</h1>",
-          "subject": "Test HTML Subject"
         }
       }
     }
@@ -816,4 +816,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

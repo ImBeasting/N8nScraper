@@ -2,7 +2,7 @@
 title: "Node: AWS SQS"
 slug: "node-awssqs"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Sends messages to AWS SQS"
 node_type: "regular"
 group: "['output']"
@@ -23,12 +23,6 @@ group: "['output']"
 - **Inputs:** `['Main']`
 - **Outputs:** `['Main']`
 
----
-
-## Authentication
-
-- **aws**: N/A
-
 
 ---
 
@@ -37,14 +31,6 @@ group: "['output']"
 **Expression Mode Tip:** When using expressions (switching from Fixed to Expression mode), n8n displays:
 
 > Anything inside `{{ }}` is JavaScript. [Learn more](https://docs.n8n.io/code-examples/expressions/)
-
----
-
-## Required Credentials
-
-| Credential Type | Required | Conditions |
-| --------------- | -------- | ---------- |
-| `aws` | ✓ | - |
 
 ---
 
@@ -146,9 +132,6 @@ version: '1'
 nodeType: regular
 group:
 - output
-credentials:
-- name: aws
-  required: true
 operations:
 - id: sendMessage
   name: Send Message
@@ -346,6 +329,23 @@ settings:
           "examples": [
             "Add option"
           ]
+        },
+        "authentication": {
+          "description": "",
+          "type": "string",
+          "enum": [
+            "iam",
+            "assumeRole"
+          ],
+          "default": "iam"
+        },
+        "aws": {
+          "description": "",
+          "type": "string"
+        },
+        "awsAssumeRole": {
+          "description": "",
+          "type": "string"
         }
       }
     },
@@ -408,13 +408,7 @@ settings:
   "metadata": {
     "nodeType": "regular",
     "version": "1"
-  },
-  "credentials": [
-    {
-      "name": "aws",
-      "required": true
-    }
-  ]
+  }
 }
 ```
 
@@ -424,4 +418,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

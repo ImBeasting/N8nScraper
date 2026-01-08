@@ -2,7 +2,7 @@
 title: "Node: Azure Cosmos DB"
 slug: "node-azurecosmosdb"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Interact with Azure Cosmos DB API"
 node_type: "regular"
 group: "['transform']"
@@ -81,56 +81,7 @@ group: "['transform']"
 
 These examples are extracted from actual n8n workflows:
 
-### Example 1: queryItems
-
-**From workflow:** Unnamed workflow
-
-**Parameters:**
-```json
-{
-  "resource": "item",
-  "operation": "query",
-  "container": {
-    "__rl": true,
-    "value": "newId",
-    "mode": "list",
-    "cachedResultName": "newId"
-  },
-  "query": "SELECT * FROM c WHERE c.id = $1",
-  "options": {
-    "queryOptions": {
-      "queryParameters": "User1"
-    }
-  },
-  "requestOptions": {}
-}
-```
-
-**Credentials:**
-- microsoftAzureCosmosDbSharedKeyApi: `Azure Cosmos DB account `
-
-### Example 2: getAllItems
-
-**From workflow:** Unnamed workflow
-
-**Parameters:**
-```json
-{
-  "resource": "item",
-  "container": {
-    "__rl": true,
-    "value": "newOne3",
-    "mode": "list",
-    "cachedResultName": "newOne3"
-  },
-  "requestOptions": {}
-}
-```
-
-**Credentials:**
-- microsoftAzureCosmosDbSharedKeyApi: `Azure Cosmos DB account `
-
-### Example 3: Azure Cosmos Db
+### Example 1: Azure Cosmos Db
 
 **From workflow:** Unnamed workflow
 
@@ -159,7 +110,7 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - microsoftAzureCosmosDbSharedKeyApi: `Azure Cosmos DB account`
 
-### Example 4: Azure Cosmos Db
+### Example 2: queryItems
 
 **From workflow:** Unnamed workflow
 
@@ -167,21 +118,42 @@ These examples are extracted from actual n8n workflows:
 ```json
 {
   "resource": "item",
-  "operation": "update",
+  "operation": "query",
+  "container": {
+    "__rl": true,
+    "value": "newId",
+    "mode": "list",
+    "cachedResultName": "newId"
+  },
+  "query": "SELECT * FROM c WHERE c.id = $1",
+  "options": {
+    "queryOptions": {
+      "queryParameters": "User1"
+    }
+  },
+  "requestOptions": {}
+}
+```
+
+**Credentials:**
+- microsoftAzureCosmosDbSharedKeyApi: `Azure Cosmos DB account `
+
+### Example 3: Azure Cosmos Db
+
+**From workflow:** Unnamed workflow
+
+**Parameters:**
+```json
+{
+  "resource": "item",
+  "operation": "create",
   "container": {
     "__rl": true,
     "value": "container1",
     "mode": "list",
     "cachedResultName": "container1"
   },
-  "item": {
-    "__rl": true,
-    "value": "item1",
-    "mode": "list",
-    "cachedResultName": "item1"
-  },
-  "customProperties": "{\n  \"key1\": \"value1\"\n}",
-  "additionalFields": {},
+  "customProperties": "{\n\t\"id\": \"item1\"\n}",
   "requestOptions": {}
 }
 ```
@@ -189,7 +161,7 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - microsoftAzureCosmosDbSharedKeyApi: `Azure Cosmos DB account`
 
-### Example 5: Azure Cosmos Db
+### Example 4: Azure Cosmos Db
 
 **From workflow:** Unnamed workflow
 
@@ -219,6 +191,27 @@ These examples are extracted from actual n8n workflows:
 
 **Credentials:**
 - microsoftAzureCosmosDbSharedKeyApi: `Azure Cosmos DB account`
+
+### Example 5: getAllItems
+
+**From workflow:** Unnamed workflow
+
+**Parameters:**
+```json
+{
+  "resource": "item",
+  "container": {
+    "__rl": true,
+    "value": "newOne3",
+    "mode": "list",
+    "cachedResultName": "newOne3"
+  },
+  "requestOptions": {}
+}
+```
+
+**Credentials:**
+- microsoftAzureCosmosDbSharedKeyApi: `Azure Cosmos DB account `
 
 
 ---
@@ -293,31 +286,6 @@ params:
       name: Item
       description: ''
 examples:
-- name: queryItems
-  parameters:
-    resource: item
-    operation: query
-    container:
-      __rl: true
-      value: newId
-      mode: list
-      cachedResultName: newId
-    query: SELECT * FROM c WHERE c.id = $1
-    options:
-      queryOptions:
-        queryParameters: User1
-    requestOptions: {}
-  workflow: Unnamed workflow
-- name: getAllItems
-  parameters:
-    resource: item
-    container:
-      __rl: true
-      value: newOne3
-      mode: list
-      cachedResultName: newOne3
-    requestOptions: {}
-  workflow: Unnamed workflow
 - name: Azure Cosmos Db
   parameters:
     resource: item
@@ -333,6 +301,33 @@ examples:
       mode: list
       cachedResultName: item1
     additionalFields: {}
+    requestOptions: {}
+  workflow: Unnamed workflow
+- name: queryItems
+  parameters:
+    resource: item
+    operation: query
+    container:
+      __rl: true
+      value: newId
+      mode: list
+      cachedResultName: newId
+    query: SELECT * FROM c WHERE c.id = $1
+    options:
+      queryOptions:
+        queryParameters: User1
+    requestOptions: {}
+  workflow: Unnamed workflow
+- name: Azure Cosmos Db
+  parameters:
+    resource: item
+    operation: create
+    container:
+      __rl: true
+      value: container1
+      mode: list
+      cachedResultName: container1
+    customProperties: "{\n\t\"id\": \"item1\"\n}"
     requestOptions: {}
   workflow: Unnamed workflow
 common_expressions:
@@ -515,6 +510,27 @@ settings:
   ],
   "examples": [
     {
+      "description": "Azure Cosmos Db",
+      "value": {
+        "resource": "item",
+        "operation": "delete",
+        "container": {
+          "__rl": true,
+          "value": "container1",
+          "mode": "list",
+          "cachedResultName": "container1"
+        },
+        "item": {
+          "__rl": true,
+          "value": "item1",
+          "mode": "list",
+          "cachedResultName": "item1"
+        },
+        "additionalFields": {},
+        "requestOptions": {}
+      }
+    },
+    {
       "description": "queryItems",
       "value": {
         "resource": "item",
@@ -535,36 +551,17 @@ settings:
       }
     },
     {
-      "description": "getAllItems",
-      "value": {
-        "resource": "item",
-        "container": {
-          "__rl": true,
-          "value": "newOne3",
-          "mode": "list",
-          "cachedResultName": "newOne3"
-        },
-        "requestOptions": {}
-      }
-    },
-    {
       "description": "Azure Cosmos Db",
       "value": {
         "resource": "item",
-        "operation": "delete",
+        "operation": "create",
         "container": {
           "__rl": true,
           "value": "container1",
           "mode": "list",
           "cachedResultName": "container1"
         },
-        "item": {
-          "__rl": true,
-          "value": "item1",
-          "mode": "list",
-          "cachedResultName": "item1"
-        },
-        "additionalFields": {},
+        "customProperties": "{\n\t\"id\": \"item1\"\n}",
         "requestOptions": {}
       }
     }
@@ -578,4 +575,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

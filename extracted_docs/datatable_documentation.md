@@ -1,8 +1,8 @@
 ---
 title: "Node: Data table"
 slug: "node-datatable"
-version: "1"
-updated: "2025-11-13"
+version: "['1', '1.1']"
+updated: "2026-01-08"
 summary: "Permanently save data across workflow executions in a table"
 node_type: "regular"
 group: "['input', 'transform']"
@@ -32,6 +32,10 @@ group: "['input', 'transform']"
 
 > Anything inside `{{ }}` is JavaScript. [Learn more](https://docs.n8n.io/code-examples/expressions/)
 
+**Node-Specific Tips:**
+
+- **deleteWarning**: This will permanently delete the data table and all its data. This action cannot be undone.
+
 ---
 
 ## Operations
@@ -48,6 +52,15 @@ group: "['input', 'transform']"
 | Update | `` | Update row(s) matching certain fields |
 | Upsert | `` | Update row(s), or insert if there is no match |
 
+### Table Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Create | `` | Create a new data table |
+| Delete | `` | Delete a data table |
+| List | `` | List all data tables |
+| Update | `` | Update a data table name |
+
 ---
 
 ## Parameters
@@ -61,6 +74,7 @@ group: "['input', 'transform']"
 **Resource options:**
 
 * **Row** (`row`)
+* **Table** (`table`)
 
 ---
 
@@ -88,8 +102,8 @@ group: "['input', 'transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{$parameter["action"]}}`
 - `={{ $parameter.dataTableId !== "" && $parameter?.columns?.mappingMode === "defineBelow" && !$parameter?.columns?.schema?.length }}`
+- `={{$parameter["action"]}}`
 - `{{ $parameter.dataTableId !== "" && $parameter?.columns?.mappingMode === "defineBelow" && !$parameter?.columns?.schema?.length }}`
 
 ---
@@ -119,7 +133,7 @@ These expression patterns are commonly used with this node:
 
 * This node is part of n8n-nodes-base
 * Categories: Core Nodes, Development
-* Aliases: data, table, knowledge, data table, table, sheet
+* Aliases: data, table, knowledge, data table, table, sheet, database, data base, mysql, postgres, postgresql, airtable, supabase, noco, notion
 
 ---
 
@@ -131,7 +145,9 @@ These expression patterns are commonly used with this node:
 node: dataTable
 displayName: Data table
 description: Permanently save data across workflow executions in a table
-version: '1'
+version:
+- '1'
+- '1.1'
 nodeType: regular
 group:
 - input
@@ -158,18 +174,36 @@ operations:
 - id: ''
   name: Upsert
   description: Update row(s), or insert if there is no match
+- id: ''
+  name: Create
+  description: Create a new data table
+- id: ''
+  name: List
+  description: List all data tables
 common_expressions:
-- ={{$parameter["action"]}}
 - ={{ $parameter.dataTableId !== "" && $parameter?.columns?.mappingMode === "defineBelow"
   && !$parameter?.columns?.schema?.length }}
+- ={{$parameter["action"]}}
 - '{{ $parameter.dataTableId !== "" && $parameter?.columns?.mappingMode === "defineBelow"
   && !$parameter?.columns?.schema?.length }}'
 ui_elements:
-  notices: []
+  notices:
+  - name: deleteWarning
+    text: This will permanently delete the data table and all its data. This action
+      cannot be undone.
+    conditions: null
   tooltips: []
   placeholders:
+  - field: list
+    text: e.g. My Table
   - field: options
     text: Add option
+  - field: tableName
+    text: e.g. My Data Table
+  - field: columns
+    text: Add Column
+  - field: newName
+    text: e.g. Renamed Data Table
   hints: []
 settings:
   common:
@@ -270,6 +304,8 @@ settings:
         "",
         "",
         "",
+        "",
+        "",
         ""
       ],
       "description": "Operation to perform"
@@ -282,27 +318,28 @@ settings:
           "description": "",
           "type": "string",
           "enum": [
-            "row"
+            "row",
+            "table"
           ],
           "default": "row"
         },
         "operation": {
-          "description": "Delete row(s)",
+          "description": "Create a new data table",
           "type": "string",
           "enum": [
+            "Create",
             "Delete",
-            "Get",
-            "If Row Exists",
-            "If Row Does Not Exist",
-            "Insert",
-            "Update",
-            "Upsert"
+            "List",
+            "Update"
           ],
-          "default": "insert"
+          "default": "list"
         },
         "list": {
           "description": "",
-          "type": "string"
+          "type": "string",
+          "examples": [
+            "e.g. My Table"
+          ]
         },
         "options": {
           "description": "",
@@ -320,6 +357,30 @@ settings:
         "limit": {
           "description": "Max number of results to return",
           "type": "number"
+        },
+        "tableName": {
+          "description": "The name of the data table to create",
+          "type": "string",
+          "default": "",
+          "examples": [
+            "e.g. My Data Table"
+          ]
+        },
+        "columns": {
+          "description": "The columns to create in the data table",
+          "type": "string",
+          "default": {},
+          "examples": [
+            "Add Column"
+          ]
+        },
+        "newName": {
+          "description": "The new name for the data table",
+          "type": "string",
+          "default": "",
+          "examples": [
+            "e.g. Renamed Data Table"
+          ]
         }
       }
     },
@@ -381,7 +442,10 @@ settings:
   },
   "metadata": {
     "nodeType": "regular",
-    "version": "1"
+    "version": [
+      "1",
+      "1.1"
+    ]
   }
 }
 ```
@@ -392,4 +456,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

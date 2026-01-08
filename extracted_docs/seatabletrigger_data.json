@@ -82,123 +82,51 @@
           "displayName": "Asset"
         }
       ],
-      "_source": "action_versionDescription"
+      "_source": "action_SeaTable.node"
     },
     {
-      "displayName": "Table Name",
-      "name": "tableName",
+      "displayName": "Column Name or ID",
+      "name": "searchColumn",
       "type": "options",
-      "description": "Choose from the list, of specify by using an expression. Provide it in the way \"table_name:::table_id\".",
-      "placeholder": "Select a table",
+      "description": "Select the column to be searched. Not all column types are supported for search. Choose from the list, or specify a name using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>.",
       "default": "",
       "required": true,
       "typeOptions": {
-        "loadOptionsMethod": "getTableNameAndId"
+        "loadOptionsMethod": "getSearchableColumns"
       },
-      "_source": "action_link_list.operation"
+      "_source": "action_row_search.operation"
     },
     {
-      "displayName": "Link Column",
-      "name": "linkColumn",
-      "type": "options",
-      "description": "Choose from the list of specify the Link Column by using an expression. You have to provide it in the way \"column_name:::link_id:::other_table_id:::column_key\".",
-      "default": "",
-      "required": true,
-      "typeOptions": {
-        "loadOptionsMethod": "getLinkColumnsWithColumnKey"
-      },
-      "_source": "action_link_list.operation"
-    },
-    {
-      "displayName": "Row ID",
-      "name": "rowId",
-      "type": "options",
-      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
-      "default": "",
-      "required": true,
-      "typeOptions": {
-        "loadOptionsMethod": "getRowIds"
-      },
-      "_source": "action_link_list.operation"
-    },
-    {
-      "displayName": "Row ID From the Source Table",
-      "name": "linkColumnSourceId",
+      "displayName": "Search Term",
+      "name": "searchTerm",
       "type": "string",
-      "description": "Provide the row ID of table you selected",
+      "description": "What to look for?",
       "default": "",
       "required": true,
-      "_source": "action_link_add.operation"
-    },
-    {
-      "displayName": "Row ID From the Target",
-      "name": "linkColumnTargetId",
-      "type": "string",
-      "description": "Provide the row ID of table you want to link",
-      "default": "",
-      "required": true,
-      "_source": "action_link_add.operation"
-    },
-    {
-      "displayName": "Operation",
-      "name": "operation",
-      "type": "options",
-      "description": "Create a link between two rows in a link column",
-      "action": "Add a row link",
-      "value": "add",
-      "default": "add",
-      "noDataExpression": true,
-      "options": [
-        {
-          "name": "Add",
-          "description": "Create a link between two rows in a link column",
-          "action": "Add a row link",
-          "value": "add",
-          "displayName": "Add"
-        },
-        {
-          "name": "List",
-          "description": "List all links of a specific row",
-          "action": "List row links",
-          "value": "list",
-          "displayName": "List"
-        },
-        {
-          "name": "Remove",
-          "description": "Remove a link between two rows from a link column",
-          "action": "Remove a row link",
-          "value": "remove",
-          "displayName": "Remove"
-        }
-      ],
-      "displayOptions": {
-        "show": {
-          "resource": [
-            "link"
-          ]
-        }
-      },
-      "_source": "action_link_index"
-    },
-    {
-      "displayName": "View Name",
-      "name": "viewName",
-      "type": "options",
-      "description": "The name of SeaTable view to access, or specify by using an expression. Provide it in the way \"col.name:::col.type\".",
-      "default": "",
-      "typeOptions": {
-        "loadOptionsMethod": "getTableViews"
-      },
-      "_source": "action_row_list.operation"
+      "_source": "action_row_search.operation"
     },
     {
       "displayName": "Options",
       "name": "options",
       "type": "collection",
-      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "description": "Whether the search ignores case sensitivity (true). Otherwise, it distinguishes between uppercase and lowercase characters.",
       "placeholder": "Add Option",
       "default": {},
       "options": [
+        {
+          "displayName": "Case Insensitive Search",
+          "name": "insensitive",
+          "type": "boolean",
+          "description": "Whether the search ignores case sensitivity (true). Otherwise, it distinguishes between uppercase and lowercase characters.",
+          "default": false
+        },
+        {
+          "displayName": "Activate Wildcard Search",
+          "name": "wildcard",
+          "type": "boolean",
+          "description": "Whether the search only results perfect matches (true). Otherwise, it finds a row even if the search value is part of a string (false).",
+          "default": true
+        },
         {
           "displayName": "Simplify",
           "name": "simple",
@@ -214,7 +142,7 @@
           "default": true
         }
       ],
-      "_source": "action_row_list.operation"
+      "_source": "action_row_search.operation"
     },
     {
       "displayName": "Data to Send",
@@ -318,27 +246,6 @@
       "type": "notice",
       "default": "",
       "_source": "action_row_update.operation"
-    },
-    {
-      "displayName": "Column Name or ID",
-      "name": "searchColumn",
-      "type": "options",
-      "description": "Select the column to be searched. Not all column types are supported for search. Choose from the list, or specify a name using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>.",
-      "default": "",
-      "required": true,
-      "typeOptions": {
-        "loadOptionsMethod": "getSearchableColumns"
-      },
-      "_source": "action_row_search.operation"
-    },
-    {
-      "displayName": "Search Term",
-      "name": "searchTerm",
-      "type": "string",
-      "description": "What to look for?",
-      "default": "",
-      "required": true,
-      "_source": "action_row_search.operation"
     },
     {
       "displayName": "Table Name",
@@ -547,14 +454,15 @@
       "_source": "action_row_index"
     },
     {
-      "displayName": "Name or email of the collaborator",
-      "name": "searchString",
-      "type": "string",
-      "description": "SeaTable identifies users with a unique username like 244b43hr6fy54bb4afa2c2cb7369d244@auth.local. Get this username from an email or the name of a collaborator.",
-      "placeholder": "Enter the name or the email or the collaborator",
+      "displayName": "View Name",
+      "name": "viewName",
+      "type": "options",
+      "description": "The name of SeaTable view to access, or specify by using an expression. Provide it in the way \"col.name:::col.type\".",
       "default": "",
-      "required": true,
-      "_source": "action_base_collaborator.operation"
+      "typeOptions": {
+        "loadOptionsMethod": "getTableViews"
+      },
+      "_source": "action_row_list.operation"
     },
     {
       "displayName": "Operation",
@@ -598,13 +506,14 @@
       "_source": "action_base_index"
     },
     {
-      "displayName": "Asset Path",
-      "name": "assetPath",
+      "displayName": "Name or email of the collaborator",
+      "name": "searchString",
       "type": "string",
-      "placeholder": "/images/2023-09/logo.png",
+      "description": "SeaTable identifies users with a unique username like 244b43hr6fy54bb4afa2c2cb7369d244@auth.local. Get this username from an email or the name of a collaborator.",
+      "placeholder": "Enter the name or the email or the collaborator",
       "default": "",
       "required": true,
-      "_source": "action_asset_getPublicURL.operation"
+      "_source": "action_base_collaborator.operation"
     },
     {
       "displayName": "Operation",
@@ -641,6 +550,19 @@
       "_source": "action_asset_index"
     },
     {
+      "displayName": "Table Name",
+      "name": "tableName",
+      "type": "options",
+      "description": "Choose from the list, or specify a name using an <a href=\"https://docs.n8n.io/code-examples/expressions/\">expression</a>",
+      "placeholder": "Select a table",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getTableNames"
+      },
+      "_source": "action_asset_upload.operation"
+    },
+    {
       "displayName": "Column Name",
       "name": "uploadColumn",
       "type": "options",
@@ -653,6 +575,18 @@
       "_source": "action_asset_upload.operation"
     },
     {
+      "displayName": "Row ID",
+      "name": "rowId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getRowIds"
+      },
+      "_source": "action_asset_upload.operation"
+    },
+    {
       "displayName": "Property Name",
       "name": "dataPropertyName",
       "type": "string",
@@ -660,30 +594,89 @@
       "default": "data",
       "required": true,
       "_source": "action_asset_upload.operation"
-    }
-  ],
-  "operations": [
+    },
     {
-      "name": "Add",
+      "displayName": "Asset Path",
+      "name": "assetPath",
+      "type": "string",
+      "placeholder": "/images/2023-09/logo.png",
+      "default": "",
+      "required": true,
+      "_source": "action_asset_getPublicURL.operation"
+    },
+    {
+      "displayName": "Link Column",
+      "name": "linkColumn",
+      "type": "options",
+      "description": "Choose from the list of specify the Link Column by using an expression. You have to provide it in the way \"column_name:::link_id:::other_table_id\".",
+      "default": "",
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getLinkColumns"
+      },
+      "_source": "action_link_remove.operation"
+    },
+    {
+      "displayName": "Row ID From the Source Table",
+      "name": "linkColumnSourceId",
+      "type": "string",
+      "description": "Provide the row ID of table you selected",
+      "default": "",
+      "required": true,
+      "_source": "action_link_remove.operation"
+    },
+    {
+      "displayName": "Row ID From the Target Table",
+      "name": "linkColumnTargetId",
+      "type": "string",
+      "description": "Provide the row ID of table you want to link",
+      "default": "",
+      "required": true,
+      "_source": "action_link_remove.operation"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
       "description": "Create a link between two rows in a link column",
       "action": "Add a row link",
       "value": "add",
-      "displayName": "Add"
-    },
-    {
-      "name": "List",
-      "description": "List all links of a specific row",
-      "action": "List row links",
-      "value": "list",
-      "displayName": "List"
-    },
-    {
-      "name": "Remove",
-      "description": "Remove a link between two rows from a link column",
-      "action": "Remove a row link",
-      "value": "remove",
-      "displayName": "Remove"
-    },
+      "default": "add",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Add",
+          "description": "Create a link between two rows in a link column",
+          "action": "Add a row link",
+          "value": "add",
+          "displayName": "Add"
+        },
+        {
+          "name": "List",
+          "description": "List all links of a specific row",
+          "action": "List row links",
+          "value": "list",
+          "displayName": "List"
+        },
+        {
+          "name": "Remove",
+          "description": "Remove a link between two rows from a link column",
+          "action": "Remove a row link",
+          "value": "remove",
+          "displayName": "Remove"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "link"
+          ]
+        }
+      },
+      "_source": "action_link_index"
+    }
+  ],
+  "operations": [
     {
       "name": "Create",
       "description": "Create a new row",
@@ -692,11 +685,25 @@
       "displayName": "Create"
     },
     {
+      "name": "Delete",
+      "description": "Delete a row",
+      "action": "Delete a row",
+      "value": "remove",
+      "displayName": "Delete"
+    },
+    {
       "name": "Get",
       "description": "Get the content of a row",
       "action": "Get a row",
       "value": "get",
       "displayName": "Get"
+    },
+    {
+      "name": "Get Many",
+      "description": "Get many rows from a table or a table view",
+      "action": "Get many rows",
+      "value": "list",
+      "displayName": "Get Many"
     },
     {
       "name": "Lock",
@@ -760,32 +767,16 @@
       "action": "Upload a file or image",
       "value": "upload",
       "displayName": "Upload"
+    },
+    {
+      "name": "Add",
+      "description": "Create a link between two rows in a link column",
+      "action": "Add a row link",
+      "value": "add",
+      "displayName": "Add"
     }
   ],
   "operations_by_resource": {
-    "link": [
-      {
-        "name": "Add",
-        "description": "Create a link between two rows in a link column",
-        "action": "Add a row link",
-        "value": "add",
-        "displayName": "Add"
-      },
-      {
-        "name": "List",
-        "description": "List all links of a specific row",
-        "action": "List row links",
-        "value": "list",
-        "displayName": "List"
-      },
-      {
-        "name": "Remove",
-        "description": "Remove a link between two rows from a link column",
-        "action": "Remove a row link",
-        "value": "remove",
-        "displayName": "Remove"
-      }
-    ],
     "row": [
       {
         "name": "Create",
@@ -882,6 +873,29 @@
         "value": "upload",
         "displayName": "Upload"
       }
+    ],
+    "link": [
+      {
+        "name": "Add",
+        "description": "Create a link between two rows in a link column",
+        "action": "Add a row link",
+        "value": "add",
+        "displayName": "Add"
+      },
+      {
+        "name": "List",
+        "description": "List all links of a specific row",
+        "action": "List row links",
+        "value": "list",
+        "displayName": "List"
+      },
+      {
+        "name": "Remove",
+        "description": "Remove a link between two rows from a link column",
+        "action": "Remove a row link",
+        "value": "remove",
+        "displayName": "Remove"
+      }
     ]
   },
   "credentials": [
@@ -892,54 +906,15 @@
   ],
   "workflow_examples": [],
   "expressions": [
-    "={{$parameter[\"event\"]}}",
-    "={{$parameter[\"resource\"] + \": \" + $parameter[\"operation\"]}}"
+    "={{$parameter[\"resource\"] + \": \" + $parameter[\"operation\"]}}",
+    "={{$parameter[\"event\"]}}"
   ],
   "validation_rules": {
-    "tableName": {
-      "required": true,
-      "displayOptions": {
-        "show": {
-          "resource": [
-            "row"
-          ]
-        }
-      }
-    },
-    "linkColumn": {
+    "searchColumn": {
       "required": true
     },
-    "rowId": {
-      "required": true,
-      "displayOptions": {
-        "show": {
-          "resource": [
-            "row"
-          ]
-        },
-        "hide": {
-          "operation": [
-            "create",
-            "list",
-            "search"
-          ]
-        }
-      }
-    },
-    "linkColumnSourceId": {
+    "searchTerm": {
       "required": true
-    },
-    "linkColumnTargetId": {
-      "required": true
-    },
-    "operation": {
-      "displayOptions": {
-        "show": {
-          "resource": [
-            "asset"
-          ]
-        }
-      }
     },
     "inputsToIgnore": {
       "displayOptions": {
@@ -951,10 +926,10 @@
         "show": {}
       }
     },
-    "searchColumn": {
+    "tableName": {
       "required": true
     },
-    "searchTerm": {
+    "rowId": {
       "required": true
     },
     "apply_default": {
@@ -971,16 +946,34 @@
         "show": {}
       }
     },
-    "searchString": {
-      "required": true
+    "operation": {
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "link"
+          ]
+        }
+      }
     },
-    "assetPath": {
+    "searchString": {
       "required": true
     },
     "uploadColumn": {
       "required": true
     },
     "dataPropertyName": {
+      "required": true
+    },
+    "assetPath": {
+      "required": true
+    },
+    "linkColumn": {
+      "required": true
+    },
+    "linkColumnSourceId": {
+      "required": true
+    },
+    "linkColumnTargetId": {
       "required": true
     }
   },
@@ -1012,74 +1005,39 @@
         }
       ]
     },
-    "tableName": {
+    "searchColumn": {
       "type": "options",
-      "displayName": "Table Name",
-      "name": "tableName",
+      "displayName": "Column Name or ID",
+      "name": "searchColumn",
       "typeOptions": {
-        "loadOptionsMethod": "getTableNames"
+        "loadOptionsMethod": "getSearchableColumns"
       },
       "possibleValues": []
     },
-    "linkColumn": {
-      "type": "options",
-      "displayName": "Link Column",
-      "name": "linkColumn",
-      "typeOptions": {
-        "loadOptionsMethod": "getLinkColumnsWithColumnKey"
-      },
-      "possibleValues": []
-    },
-    "rowId": {
-      "type": "options",
-      "displayName": "Row ID",
-      "name": "rowId",
-      "typeOptions": {
-        "loadOptionsMethod": "getRowIds"
-      },
-      "possibleValues": []
-    },
-    "linkColumnSourceId": {
+    "searchTerm": {
       "type": "string",
-      "displayName": "Row ID From the Source Table",
-      "name": "linkColumnSourceId"
-    },
-    "linkColumnTargetId": {
-      "type": "string",
-      "displayName": "Row ID From the Target",
-      "name": "linkColumnTargetId"
-    },
-    "operation": {
-      "type": "options",
-      "displayName": "Operation",
-      "name": "operation",
-      "possibleValues": [
-        {
-          "value": "getPublicURL",
-          "name": "Public URL",
-          "description": "Get the public URL from asset path"
-        },
-        {
-          "value": "upload",
-          "name": "Upload",
-          "description": "Add a file/image to an existing row"
-        }
-      ]
-    },
-    "viewName": {
-      "type": "options",
-      "displayName": "View Name",
-      "name": "viewName",
-      "typeOptions": {
-        "loadOptionsMethod": "getTableViews"
-      },
-      "possibleValues": []
+      "displayName": "Search Term",
+      "name": "searchTerm"
     },
     "options": {
       "type": "collection",
       "displayName": "Options",
       "name": "options",
       "subProperties": [
+        {
+          "displayName": "Case Insensitive Search",
+          "name": "insensitive",
+          "type": "boolean",
+          "description": "Whether the search ignores case sensitivity (true). Otherwise, it distinguishes between uppercase and lowercase characters.",
+          "default": false
+        },
+        {
+          "displayName": "Activate Wildcard Search",
+          "name": "wildcard",
+          "type": "boolean",
+          "description": "Whether the search only results perfect matches (true). Otherwise, it finds a row even if the search value is part of a string (false).",
+          "default": true
+        },
         {
           "displayName": "Simplify",
           "name": "simple",
@@ -1155,19 +1113,23 @@
       "displayName": "In this mode, make sure the incoming data fields are named the same as the columns in SeaTable. (Use an \"Edit Fields\" node before this node to change them if required.)",
       "name": "notice"
     },
-    "searchColumn": {
+    "tableName": {
       "type": "options",
-      "displayName": "Column Name or ID",
-      "name": "searchColumn",
+      "displayName": "Table Name",
+      "name": "tableName",
       "typeOptions": {
-        "loadOptionsMethod": "getSearchableColumns"
+        "loadOptionsMethod": "getTableNames"
       },
       "possibleValues": []
     },
-    "searchTerm": {
-      "type": "string",
-      "displayName": "Search Term",
-      "name": "searchTerm"
+    "rowId": {
+      "type": "options",
+      "displayName": "Row ID",
+      "name": "rowId",
+      "typeOptions": {
+        "loadOptionsMethod": "getRowIds"
+      },
+      "possibleValues": []
     },
     "apply_default": {
       "type": "boolean",
@@ -1179,15 +1141,41 @@
       "displayName": "Save to \"Big Data\" Backend",
       "name": "bigdata"
     },
+    "operation": {
+      "type": "options",
+      "displayName": "Operation",
+      "name": "operation",
+      "possibleValues": [
+        {
+          "value": "add",
+          "name": "Add",
+          "description": "Create a link between two rows in a link column"
+        },
+        {
+          "value": "list",
+          "name": "List",
+          "description": "List all links of a specific row"
+        },
+        {
+          "value": "remove",
+          "name": "Remove",
+          "description": "Remove a link between two rows from a link column"
+        }
+      ]
+    },
+    "viewName": {
+      "type": "options",
+      "displayName": "View Name",
+      "name": "viewName",
+      "typeOptions": {
+        "loadOptionsMethod": "getTableViews"
+      },
+      "possibleValues": []
+    },
     "searchString": {
       "type": "string",
       "displayName": "Name or email of the collaborator",
       "name": "searchString"
-    },
-    "assetPath": {
-      "type": "string",
-      "displayName": "Asset Path",
-      "name": "assetPath"
     },
     "uploadColumn": {
       "type": "options",
@@ -1202,6 +1190,30 @@
       "type": "string",
       "displayName": "Property Name",
       "name": "dataPropertyName"
+    },
+    "assetPath": {
+      "type": "string",
+      "displayName": "Asset Path",
+      "name": "assetPath"
+    },
+    "linkColumn": {
+      "type": "options",
+      "displayName": "Link Column",
+      "name": "linkColumn",
+      "typeOptions": {
+        "loadOptionsMethod": "getLinkColumns"
+      },
+      "possibleValues": []
+    },
+    "linkColumnSourceId": {
+      "type": "string",
+      "displayName": "Row ID From the Source Table",
+      "name": "linkColumnSourceId"
+    },
+    "linkColumnTargetId": {
+      "type": "string",
+      "displayName": "Row ID From the Target Table",
+      "name": "linkColumnTargetId"
     }
   },
   "api_patterns": {
@@ -1230,10 +1242,6 @@
     "tooltips": [],
     "placeholders": [
       {
-        "field": "tableName",
-        "text": "Select a table"
-      },
-      {
         "field": "options",
         "text": "Add Option"
       },
@@ -1260,6 +1268,10 @@
       {
         "field": "searchString",
         "text": "Enter the name or the email or the collaborator"
+      },
+      {
+        "field": "tableName",
+        "text": "Select a table"
       },
       {
         "field": "assetPath",

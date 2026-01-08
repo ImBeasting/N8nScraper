@@ -2,7 +2,7 @@
 title: "Node: Date & Time"
 slug: "node-datetime"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Allows you to manipulate date and time values"
 node_type: "regular"
 group: "['transform']"
@@ -77,8 +77,8 @@ group: "['transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{$parameter["action"]}}`
 - `{{ $now.plus(1, 'week') }}`
+- `={{$parameter["action"]}}`
 
 ---
 
@@ -129,8 +129,8 @@ operations:
   name: Subtract
   description: Subtract time from Date Value
 common_expressions:
-- ={{$parameter["action"]}}
 - '{{ $now.plus(1, ''week'') }}'
+- ={{$parameter["action"]}}
 ui_elements:
   notices:
   - name: noticeDateTime
@@ -395,4 +395,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

@@ -2,7 +2,7 @@
 title: "Node: AWS DynamoDB"
 slug: "node-awsdynamodb"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Consume the AWS DynamoDB API"
 node_type: "regular"
 group: "['transform']"
@@ -23,12 +23,6 @@ group: "['transform']"
 - **Inputs:** `['Main']`
 - **Outputs:** `['Main']`
 
----
-
-## Authentication
-
-- **aws**: N/A
-
 
 ---
 
@@ -37,14 +31,6 @@ group: "['transform']"
 **Expression Mode Tip:** When using expressions (switching from Fixed to Expression mode), n8n displays:
 
 > Anything inside `{{ }}` is JavaScript. [Learn more](https://docs.n8n.io/code-examples/expressions/)
-
----
-
-## Required Credentials
-
-| Credential Type | Required | Conditions |
-| --------------- | -------- | ---------- |
-| `aws` | ✓ | - |
 
 ---
 
@@ -302,9 +288,6 @@ version: '1'
 nodeType: regular
 group:
 - transform
-credentials:
-- name: aws
-  required: true
 operations:
 - id: upsert
   name: Create or Update
@@ -826,6 +809,15 @@ settings:
           ],
           "default": "item"
         },
+        "authentication": {
+          "description": "",
+          "type": "string",
+          "enum": [
+            "iam",
+            "assumeRole"
+          ],
+          "default": "iam"
+        },
         "operation": {
           "description": "Create a new record, or update the current one if it already exists (upsert)",
           "type": "string",
@@ -951,6 +943,14 @@ settings:
           "examples": [
             "Add Field"
           ]
+        },
+        "aws": {
+          "description": "",
+          "type": "string"
+        },
+        "awsAssumeRole": {
+          "description": "",
+          "type": "string"
         }
       }
     },
@@ -1013,13 +1013,7 @@ settings:
   "metadata": {
     "nodeType": "regular",
     "version": "1"
-  },
-  "credentials": [
-    {
-      "name": "aws",
-      "required": true
-    }
-  ]
+  }
 }
 ```
 
@@ -1029,4 +1023,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

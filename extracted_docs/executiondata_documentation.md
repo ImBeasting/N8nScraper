@@ -2,7 +2,7 @@
 title: "Node: Execution Data"
 slug: "node-executiondata"
 version: "['1', '1.1']"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Add execution data for search"
 node_type: "regular"
 group: "['input']"
@@ -106,10 +106,10 @@ These examples are extracted from actual n8n workflows:
 
 These expression patterns are commonly used with this node:
 
-- `{{ $parameter.dataToSave.values.some((x) => x.value.length > 512) }}`
-- `={{ $parameter.dataToSave.values.some((x) => x.value.length > 512) }}`
-- `{{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}`
 - `={{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}`
+- `{{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}`
+- `={{ $parameter.dataToSave.values.some((x) => x.value.length > 512) }}`
+- `{{ $parameter.dataToSave.values.some((x) => x.value.length > 512) }}`
 
 ---
 
@@ -202,10 +202,10 @@ examples:
         value: ={{ $json.id }}
   workflow: '[TEST] Execution Data'
 common_expressions:
-- '{{ $parameter.dataToSave.values.some((x) => x.value.length > 512) }}'
-- ={{ $parameter.dataToSave.values.some((x) => x.value.length > 512) }}
-- '{{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}'
 - ={{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}
+- '{{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}'
+- ={{ $parameter.dataToSave.values.some((x) => x.value.length > 512) }}
+- '{{ $parameter.dataToSave.values.some((x) => x.value.length > 512) }}'
 ui_elements:
   notices:
   - name: notice
@@ -425,4 +425,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '1.1'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['1', '1.1'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

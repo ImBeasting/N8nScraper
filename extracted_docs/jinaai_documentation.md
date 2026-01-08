@@ -2,7 +2,7 @@
 title: "Node: Jina AI"
 slug: "node-jinaai"
 version: "1"
-updated: "2025-11-13"
+updated: "2026-01-08"
 summary: "Interact with Jina AI API"
 node_type: "regular"
 group: "['transform']"
@@ -147,6 +147,63 @@ These examples are extracted from actual n8n workflows:
 
 ### Example 1: No options
 
+**From workflow:** Jina AI -> Reader -> Search
+
+**Parameters:**
+```json
+{
+  "operation": "search",
+  "searchQuery": "Jina AI",
+  "simplify": false,
+  "options": {},
+  "requestOptions": {}
+}
+```
+
+**Credentials:**
+- jinaAiApi: `Jina AI account`
+
+### Example 2: With options
+
+**From workflow:** Jina AI -> Reader -> Search
+
+**Parameters:**
+```json
+{
+  "operation": "search",
+  "searchQuery": "Jina AI",
+  "simplify": false,
+  "options": {
+    "outputFormat": "markdown",
+    "siteFilter": "jina.ai",
+    "pageNumber": 2
+  },
+  "requestOptions": {}
+}
+```
+
+**Credentials:**
+- jinaAiApi: `Jina AI account`
+
+### Example 3: Simplified
+
+**From workflow:** Jina AI -> Reader -> Search
+
+**Parameters:**
+```json
+{
+  "operation": "search",
+  "searchQuery": "Jina AI",
+  "options": {},
+  "requestOptions": {}
+}
+```
+
+**Credentials:**
+- jinaAiApi: `Jina AI account`
+
+### Example 4: No options
+
 **From workflow:** Jina AI -> Reader -> Read
 
 **Parameters:**
@@ -162,7 +219,7 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - jinaAiApi: `Jina AI account`
 
-### Example 2: With options
+### Example 5: With options
 
 **From workflow:** Jina AI -> Reader -> Read
 
@@ -185,63 +242,6 @@ These examples are extracted from actual n8n workflows:
 **Credentials:**
 - jinaAiApi: `Jina AI account`
 
-### Example 3: Simplified
-
-**From workflow:** Jina AI -> Reader -> Read
-
-**Parameters:**
-```json
-{
-  "url": "https://first.com/some/path",
-  "options": {},
-  "requestOptions": {}
-}
-```
-
-**Credentials:**
-- jinaAiApi: `Jina AI account`
-
-### Example 4: No options
-
-**From workflow:** Jina AI -> Research -> Deep Research
-
-**Parameters:**
-```json
-{
-  "resource": "research",
-  "researchQuery": "Describe the latest features in Jina AI",
-  "simplify": false,
-  "options": {},
-  "requestOptions": {}
-}
-```
-
-**Credentials:**
-- jinaAiApi: `Jina AI account`
-
-### Example 5: With options
-
-**From workflow:** Jina AI -> Research -> Deep Research
-
-**Parameters:**
-```json
-{
-  "resource": "research",
-  "researchQuery": "Describe the latest features in Jina AI",
-  "simplify": false,
-  "options": {
-    "maxReturnedSources": 5,
-    "prioritizeSources": "jina.ai",
-    "excludeSources": "medium.com",
-    "siteFilter": "jina.ai, github.com"
-  },
-  "requestOptions": {}
-}
-```
-
-**Credentials:**
-- jinaAiApi: `Jina AI account`
-
 
 ---
 
@@ -249,16 +249,16 @@ These examples are extracted from actual n8n workflows:
 
 These expression patterns are commonly used with this node:
 
-- `={{ $parameter["options"]["excludeSelector"] }}`
 - `={{ $parameter["options"]["waitForSelector"] }}`
-- `={{ $parameter["options"]["maxReturnedSources"] }}`
 - `={{ $parameter["simplify"] }}`
-- `={{ $parameter["operation"] + ": " + $parameter["resource"] }}`
+- `={{ $parameter["options"]["excludeSelector"] }}`
+- `={{ $parameter["options"]["maxReturnedSources"] }}`
+- `={{ $responseItem["usage"] }}`
+- `={{ $responseItem["choices"][0]["message"]["annotations"] }}`
+- `={{ $parameter["options"]["targetSelector"] }}`
 - `={{ $parameter["options"]["prioritizeSources"].split(/,\\s*/) }}`
 - `={{ $parameter["options"]["pageNumber"] }}`
-- `={{ $parameter["options"]["siteFilter"].split(/,\\s*/) }}`
-- `={{ $responseItem["choices"][0]["message"]["annotations"] }}`
-- `={{ $parameter["researchQuery"] }}`
+- `={{ $responseItem["choices"][0]["message"]["content"] }}`
 
 ---
 
@@ -515,40 +515,41 @@ params:
 examples:
 - name: No options
   parameters:
-    url: https://first.com/some/path
+    operation: search
+    searchQuery: Jina AI
     simplify: false
     options: {}
     requestOptions: {}
-  workflow: Jina AI -> Reader -> Read
+  workflow: Jina AI -> Reader -> Search
 - name: With options
   parameters:
-    url: https://second.com/other?foo=bar
+    operation: search
+    searchQuery: Jina AI
     simplify: false
     options:
       outputFormat: markdown
-      targetSelector: article
-      excludeSelector: .ad
-      enableImageCaptioning: true
-      waitForSelector: '#posts'
+      siteFilter: jina.ai
+      pageNumber: 2
     requestOptions: {}
-  workflow: Jina AI -> Reader -> Read
+  workflow: Jina AI -> Reader -> Search
 - name: Simplified
   parameters:
-    url: https://first.com/some/path
+    operation: search
+    searchQuery: Jina AI
     options: {}
     requestOptions: {}
-  workflow: Jina AI -> Reader -> Read
+  workflow: Jina AI -> Reader -> Search
 common_expressions:
-- ={{ $parameter["options"]["excludeSelector"] }}
 - ={{ $parameter["options"]["waitForSelector"] }}
-- ={{ $parameter["options"]["maxReturnedSources"] }}
 - ={{ $parameter["simplify"] }}
-- '={{ $parameter["operation"] + ": " + $parameter["resource"] }}'
+- ={{ $parameter["options"]["excludeSelector"] }}
+- ={{ $parameter["options"]["maxReturnedSources"] }}
+- ={{ $responseItem["usage"] }}
+- ={{ $responseItem["choices"][0]["message"]["annotations"] }}
+- ={{ $parameter["options"]["targetSelector"] }}
 - ={{ $parameter["options"]["prioritizeSources"].split(/,\\s*/) }}
 - ={{ $parameter["options"]["pageNumber"] }}
-- ={{ $parameter["options"]["siteFilter"].split(/,\\s*/) }}
-- ={{ $responseItem["choices"][0]["message"]["annotations"] }}
-- ={{ $parameter["researchQuery"] }}
+- ={{ $responseItem["choices"][0]["message"]["content"] }}
 ui_elements:
   notices: []
   tooltips: []
@@ -784,7 +785,8 @@ settings:
     {
       "description": "No options",
       "value": {
-        "url": "https://first.com/some/path",
+        "operation": "search",
+        "searchQuery": "Jina AI",
         "simplify": false,
         "options": {},
         "requestOptions": {}
@@ -793,14 +795,13 @@ settings:
     {
       "description": "With options",
       "value": {
-        "url": "https://second.com/other?foo=bar",
+        "operation": "search",
+        "searchQuery": "Jina AI",
         "simplify": false,
         "options": {
           "outputFormat": "markdown",
-          "targetSelector": "article",
-          "excludeSelector": ".ad",
-          "enableImageCaptioning": true,
-          "waitForSelector": "#posts"
+          "siteFilter": "jina.ai",
+          "pageNumber": 2
         },
         "requestOptions": {}
       }
@@ -808,7 +809,8 @@ settings:
     {
       "description": "Simplified",
       "value": {
-        "url": "https://first.com/some/path",
+        "operation": "search",
+        "searchQuery": "Jina AI",
         "options": {},
         "requestOptions": {}
       }
@@ -823,4 +825,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

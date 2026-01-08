@@ -1,8 +1,8 @@
 ---
 title: "Node: If"
 slug: "node-if"
-version: "['2', '2.1', '2.2']"
-updated: "2025-11-13"
+version: "['2', '2.1', '2.2', '2.3']"
+updated: "2026-01-08"
 summary: "Route items to different branches (true/false)"
 node_type: "regular"
 group: "['transform']"
@@ -59,7 +59,7 @@ group: "['transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{ $nodeVersion >= 2.2 ? 2 : 1 }}`
+- `={{ $nodeVersion >= 2.3 ? 3 : $nodeVersion >= 2.2 ? 2 : 1 }}`
 - `={{!$parameter.options.ignoreCase}}`
 
 ---
@@ -103,6 +103,7 @@ version:
 - '2'
 - '2.1'
 - '2.2'
+- '2.3'
 nodeType: regular
 group:
 - transform
@@ -151,7 +152,7 @@ params:
     displayName: Convert types where required
     name: looseTypeValidation
 common_expressions:
-- '={{ $nodeVersion >= 2.2 ? 2 : 1 }}'
+- '={{ $nodeVersion >= 2.3 ? 3 : $nodeVersion >= 2.2 ? 2 : 1 }}'
 - ={{!$parameter.options.ignoreCase}}
 ui_elements:
   notices: []
@@ -340,7 +341,8 @@ settings:
     "version": [
       "2",
       "2.1",
-      "2.2"
+      "2.2",
+      "2.3"
     ]
   }
 }
@@ -352,4 +354,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['2', '2.1', '2.2'] | 2025-11-13 | Ultimate extraction with maximum detail for AI training |
+| ['2', '2.1', '2.2', '2.3'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |
