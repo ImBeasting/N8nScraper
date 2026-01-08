@@ -18,7 +18,7 @@ from typing import Dict, List, Any, Tuple
 from collections import defaultdict
 
 # Configuration
-BASE_DIR = Path("/media/tyler/fastraid/Projects/n8n Node Scrapper")
+BASE_DIR = Path(__file__).parent.resolve()
 ISSUES_DIR = BASE_DIR / "issues"
 BACKUP_DIR = BASE_DIR / "issues_backup_20251106"
 MAPPING_FILE = BASE_DIR / "issue_migration_mapping.json"

@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 
-BASE_DIR = Path("/media/tyler/fastraid/Projects/n8n Node Scrapper")
+BASE_DIR = Path(__file__).parent.resolve()
 ISSUES_DIR = BASE_DIR / "issues"
 INDEX_FILE = ISSUES_DIR / "index.json"
 

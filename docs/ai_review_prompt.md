@@ -10,7 +10,7 @@
 
 ### Prerequisites Check
 ```bash
-cd "/media/tyler/fastraid/Projects/n8n Node Scrapper"
+cd "/home/tyler/Projects/N8nScraper"
 ls extracted_docs/*.json | wc -l  # Should show ~450 files
 python3 validate_extraction.py    # Baseline metrics
 ```
@@ -31,7 +31,7 @@ python3 validate_extraction.py    # Baseline metrics
 
 ### Run Automated Validation
 ```bash
-cd "/media/tyler/fastraid/Projects/n8n Node Scrapper"
+cd "/home/tyler/Projects/N8nScraper"
 python3 validate_extraction.py
 cat validation_report.json | jq '.stats'
 ```
@@ -869,7 +869,7 @@ If Node A works perfectly but Node B (similar structure) fails, you've found a s
 
 ```bash
 # Navigate to project
-cd "/media/tyler/fastraid/Projects/n8n Node Scrapper"
+cd "/home/tyler/Projects/N8nScraper"
 
 # Run validation
 python3 validate_extraction.py
