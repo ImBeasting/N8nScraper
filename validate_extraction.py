@@ -11,8 +11,8 @@ from pathlib import Path
 from collections import defaultdict
 from typing import Dict, List, Tuple, Any
 
-# Configuration
-CURRENT_DIR = Path("/media/tyler/fastraid/Projects/n8n Node Scrapper")
+# Configuration - use relative path from script location
+CURRENT_DIR = Path(__file__).parent.resolve()
 OUTPUT_DIR = CURRENT_DIR / "extracted_docs"
 
 class ExtractionValidator:

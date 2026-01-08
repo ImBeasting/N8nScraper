@@ -15,8 +15,8 @@ from datetime import datetime, timedelta
 import fcntl
 import errno
 
-# Project paths
-PROJECT_ROOT = Path("/media/tyler/fastraid/Projects/n8n Node Scrapper")
+# Project paths - use relative path from script location
+PROJECT_ROOT = Path(__file__).parent.resolve()
 COLLABORATION_DIR = PROJECT_ROOT / "collaboration"
 ISSUES_DIR = PROJECT_ROOT / "issues"
 FIXES_DIR = PROJECT_ROOT / "fixes"

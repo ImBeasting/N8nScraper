@@ -1,3 +1,69 @@
+# CLAUDE.md - N8nScraper
+
+---
+
+## AI Layer (Multi-Agent Framework)
+
+This repository uses a multi-agent framework with quality-controlled operations.
+
+### Quality Contract
+
+All agent outputs must comply with the quality contract at `docs/quality_contract.md`.
+
+**Non-Negotiables:**
+| Rule | Requirement |
+|------|-------------|
+| N1 | Every claim cites source or marked `UNKNOWN - TODO: verify [target]` |
+| N2 | Performance claims state mechanism + conditions |
+| N3 | No config values without `__MEASURED__` / `__TUNED__` / derivation |
+| N4 | Primary sources preferred |
+| N5 | Cache sharing requires token-identical prefix contract |
+| N6 | Math uses declared formula + consistent units |
+| N7 | Memory/cache topics require DOES/DOESN'T table |
+| N8 | All model references verified against registry |
+| N9 | All version/count claims include verification date |
+| N10 | Papers >6 months cite model used + current equivalent |
+| N11 | High-volatility claims flagged for 30-day refresh |
+| N12 | Direct source verification required (no web search for versions) |
+
+### Subagent Roster
+
+| Agent | Model | Purpose | Trigger |
+|-------|-------|---------|---------|
+| typescript-parser | opus | TypeScript AST analysis, spread resolution | Zero-property extraction failures, critical patterns |
+| extraction-validator | sonnet | Quality verification, accuracy audits | Post-extraction validation, weekly audits |
+| issue-triage | sonnet | Backlog analysis, priority assignment | 5+ new issues, backlog review requests |
+| property-auditor | sonnet | Cross-check extracted vs source properties | Node re-extraction, random sampling |
+| edge-case-hunter | opus | Proactive pattern detection | After major fix, n8n version updates |
+| documentation-sync | haiku | CLAUDE.md/README.md consistency | After extract-all, after n8n update |
+| coordination-enforcer | haiku | Locking protocol, audit log hygiene | Hourly health check, lock conflicts |
+
+Agent definitions: `.claude/agents/`
+
+### Validation Gates
+
+Run before committing:
+```bash
+./scripts/validate.sh
+```
+
+### UNKNOWN/TODO Policy
+
+If you cannot verify a claim:
+```
+UNKNOWN - TODO: verify [specific claim] at [verification target]
+```
+
+Never assert unverified facts.
+
+---
+
+## PRESERVED DOMAIN CONTENT
+
+**The following content is the authoritative domain documentation. It MUST NOT be modified, summarized, or deleted.**
+
+---
+
 # CLAUDE.md
 
 **Project:** n8n Node Documentation Extractor for AI Training
