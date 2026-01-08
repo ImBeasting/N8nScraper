@@ -122,10 +122,10 @@ group: "['transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{ $credentials.baseUrl.replace(new RegExp("/$"), "") }}`
 - `={{ $response.body.records.cursor }}`
-- `={{$parameter["operation"] + ": " + $parameter["resource"]}}`
 - `={{ $if($response.body?.records.cursor, { cursor: $response.body.records.cursor }, {}) }}`
+- `={{$parameter["operation"] + ": " + $parameter["resource"]}}`
+- `={{ $credentials.baseUrl.replace(new RegExp("/$"), "") }}`
 
 ---
 
@@ -389,11 +389,11 @@ params:
   validation: *id009
   typeInfo: *id010
 common_expressions:
-- ={{ $credentials.baseUrl.replace(new RegExp("/$"), "") }}
 - ={{ $response.body.records.cursor }}
-- '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 - '={{ $if($response.body?.records.cursor, { cursor: $response.body.records.cursor
   }, {}) }}'
+- '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
+- ={{ $credentials.baseUrl.replace(new RegExp("/$"), "") }}
 api_patterns:
   http_methods: []
   endpoints: []

@@ -189,8 +189,8 @@ These examples are extracted from actual n8n workflows:
 
 These expression patterns are commonly used with this node:
 
-- `={{$credentials.developerToken}}`
 - `={{$parameter["operation"] + ": " + $parameter["resource"]}}`
+- `={{$credentials.developerToken}}`
 
 ---
 
@@ -432,8 +432,8 @@ examples:
     requestOptions: {}
   workflow: Google Ads Get Many
 common_expressions:
-- ={{$credentials.developerToken}}
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
+- ={{$credentials.developerToken}}
 ui_elements:
   notices:
   - name: campaigsNotice

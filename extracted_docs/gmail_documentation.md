@@ -1,7 +1,7 @@
 ---
 title: "Node: Gmail"
 slug: "node-gmail"
-version: "1"
+version: "['2', '2.1', '2.2']"
 updated: "2026-01-08"
 summary: "Consume the Gmail API"
 node_type: "regular"
@@ -39,6 +39,12 @@ group: "['transform']"
 
 > Anything inside `{{ }}` is JavaScript. [Learn more](https://docs.n8n.io/code-examples/expressions/)
 
+**Node-Specific Tips:**
+
+- **threadNotice** when resource=['draft'], operation=['create']: To reply to an existing thread, specify the exact subject title of that thread.
+- **filtersNotice** when operation=['getAll'], resource=['message'], returnAll=[True]: Fetching a lot of messages may take a long time. Consider using filters to speed things up
+- **filtersNotice** when operation=['getAll'], resource=['thread'], returnAll=[True]: Fetching a lot of messages may take a long time. Consider using filters to speed things up
+
 ---
 
 ## Required Credentials
@@ -67,25 +73,36 @@ group: "['transform']"
 | --------- | -- | ----------- |
 | Create | `create` | Create a label |
 | Delete | `delete` | Delete a label |
-| Get | `get` | Get a label |
+| Get | `get` | Get a label info |
 | Get Many | `getAll` | Get many labels |
 
 ### Message Resource Operations
 
 | Operation | ID | Description |
 | --------- | -- | ----------- |
+| Add Label | `addLabels` | Add label to message |
 | Delete | `delete` | Delete a message |
 | Get | `get` | Get a message |
 | Get Many | `getAll` | Get many messages |
+| Mark as Read | `markAsRead` | Mark a message as read |
+| Mark as Unread | `markAsUnread` | Mark a message as unread |
+| Remove Label | `removeLabels` | Remove label from message |
 | Reply | `reply` | Reply to a message |
 | Send | `send` | Send a message |
+| Send and Wait for Response | `` | Send message and wait for response |
 
-### Messagelabel Resource Operations
+### Thread Resource Operations
 
 | Operation | ID | Description |
 | --------- | -- | ----------- |
-| Add | `add` | Add a label to a message |
-| Remove | `remove` | Remove a label from a message |
+| Add Label | `addLabels` | Add label to thread |
+| Delete | `delete` | Delete a thread |
+| Get | `get` | Get a thread |
+| Get Many | `getAll` | Get many threads |
+| Remove Label | `removeLabels` | Remove label from thread |
+| Reply | `reply` | Reply to a message |
+| Trash | `trash` | Trash a thread |
+| Untrash | `untrash` | Untrash a thread |
 
 ---
 
@@ -95,14 +112,14 @@ group: "['transform']"
 
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Resource | `resource` | options | draft | ✗ | Resource to operate on |  |
+| Resource | `resource` | options | message | ✗ | Resource to operate on |  |
 
 **Resource options:**
 
-* **Draft** (`draft`)
-* **Label** (`label`)
 * **Message** (`message`)
-* **Message Label** (`messageLabel`)
+* **Label** (`label`)
+* **Draft** (`draft`)
+* **Thread** (`thread`)
 
 ---
 
@@ -126,38 +143,43 @@ group: "['transform']"
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
 | Subject | `subject` | string |  | ✓ | e.g. Hello World! |  |
-| HTML | `includeHtml` | boolean | False | ✗ | Whether the message should also be included as HTML |  |
-| HTML Message | `htmlMessage` | string |  | ✓ | The HTML message body |  |
-| Message | `message` | string |  | ✓ | The message body. If HTML formatted, then you have to add and activate the option "HTML content" in the "Additional Options" section. | e.g. Hello World! |  |
-| Additional Fields | `additionalFields` | collection | {} | ✗ | The email addresses of the recipients | e.g. Add Field |  |
+| Email Type | `emailType` | options | text | ✓ |  | email |
+
+**Email Type options:**
+
+* **HTML** (`html`)
+* **Text** (`text`)
+
+| Message | `message` | string |  | ✓ |  |  |
+| Options | `options` | collection | {} | ✗ | Add the field name from the input node. Multiple properties can be set separated by comma. | e.g. Add option |  |
 
 <details>
-<summary><strong>Additional Fields sub-options</strong></summary>
+<summary><strong>Options sub-options</strong></summary>
 
 | Sub-Option | Field ID | Type | Default | Description |
 | ---------- | -------- | ---- | ------- | ----------- |
-| To Email | `toList` | string | [] | The email addresses of the recipients |
-| CC Email | `ccList` | string | [] | The email addresses of the copy recipients |
-| BCC Email | `bccList` | string | [] | The email addresses of the blind copy recipients |
-| Attachment | `attachmentsUi` | fixedCollection |  | Name of the binary property containing the data to be added to the email as an attachment. Multiple properties can be set separated by comma. |
+| Attachments | `attachmentsUi` | fixedCollection |  | Add the field name from the input node. Multiple properties can be set separated by comma. |
+| BCC | `bccList` | string |  | The email addresses of the blind copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com. |
+| CC | `ccList` | string |  | The email addresses of the copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com. |
+| From Alias Name or ID | `fromAlias` | options |  | Select the alias to send the email from. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>. |
+| Send Replies To | `replyTo` | string |  | The email address that the reply message is sent to |
+| Thread ID | `threadId` | string |  | The identifier of the thread to attach the draft |
+| To Email | `sendTo` | string |  | The email addresses of the recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com. |
 
 </details>
 
 | Name | `name` | string |  | ✓ | Label Name | e.g. invoices |  |
-| Label List Visibility | `labelListVisibility` | options | labelShow | ✓ | The visibility of the label in the label list in the Gmail web interface |  |
+| Options | `options` | collection | {} | ✗ | The visibility of the label in the label list in the Gmail web interface | e.g. Add option |  |
 
-**Label List Visibility options:**
+<details>
+<summary><strong>Options sub-options</strong></summary>
 
-* **Hide** (`labelHide`)
-* **Show** (`labelShow`)
-* **Show If Unread** (`labelShowIfUnread`)
+| Sub-Option | Field ID | Type | Default | Description |
+| ---------- | -------- | ---- | ------- | ----------- |
+| Label List Visibility | `labelListVisibility` | options | labelShow | The visibility of the label in the label list in the Gmail web interface |
+| Message List Visibility | `messageListVisibility` | options | show | The visibility of messages with this label in the message list in the Gmail web interface |
 
-| Message List Visibility | `messageListVisibility` | options | show | ✓ | The visibility of messages with this label in the message list in the Gmail web interface |  |
-
-**Message List Visibility options:**
-
-* **Hide** (`hide`)
-* **Show** (`show`)
+</details>
 
 
 ### Delete parameters (`delete`)
@@ -167,35 +189,50 @@ group: "['transform']"
 | Draft ID | `messageId` | string |  | ✓ | e.g. r-3254521568507167962 |  |
 | Label ID | `labelId` | string |  | ✓ | The ID of the label |  |
 | Message ID | `messageId` | string |  | ✓ | e.g. 172ce2c4a72cc243 |  |
+| Thread ID | `threadId` | string |  | ✓ | The ID of the thread you are operating on |  |
 
 ### Get parameters (`get`)
 
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
 | Draft ID | `messageId` | string |  | ✓ | e.g. r-3254521568507167962 |  |
-| Additional Fields | `additionalFields` | collection | {} | ✗ | Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is "attachment_" the first attachment is saved to "attachment_0" | e.g. Add Field |  |
+| Options | `options` | collection | {} | ✗ | Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'. | e.g. Add option |  |
 
 <details>
-<summary><strong>Additional Fields sub-options</strong></summary>
+<summary><strong>Options sub-options</strong></summary>
 
 | Sub-Option | Field ID | Type | Default | Description |
 | ---------- | -------- | ---- | ------- | ----------- |
-| Attachment Prefix | `dataPropertyAttachmentsPrefixName` | string | attachment_ | Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is "attachment_" the first attachment is saved to "attachment_0" |
-| Format | `format` | options | resolved | Returns the full email message data with body content parsed in the payload field |
+| Attachment Prefix | `dataPropertyAttachmentsPrefixName` | string | attachment_ | Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'. |
+| Download Attachments | `downloadAttachments` | boolean | False | Whether the draft's attachments will be downloaded |
 
 </details>
 
 | Label ID | `labelId` | string |  | ✓ | The ID of the label |  |
 | Message ID | `messageId` | string |  | ✓ | e.g. 172ce2c4a72cc243 |  |
-| Additional Fields | `additionalFields` | collection | {} | ✗ | Returns the full email message data with body content parsed in the payload field | e.g. Add Field |  |
+| Simplify | `simple` | boolean | True | ✗ | Whether to return a simplified version of the response instead of the raw data |  |
+| Options | `options` | collection | {} | ✗ | Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'. | e.g. Add option |  |
 
 <details>
-<summary><strong>Additional Fields sub-options</strong></summary>
+<summary><strong>Options sub-options</strong></summary>
 
 | Sub-Option | Field ID | Type | Default | Description |
 | ---------- | -------- | ---- | ------- | ----------- |
-| Format | `format` | options | resolved | Returns the full email message data with body content parsed in the payload field |
-| Attachment Prefix | `dataPropertyAttachmentsPrefixName` | string | attachment_ | Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is "attachment_" the first attachment is saved to "attachment_0" |
+| Attachment Prefix | `dataPropertyAttachmentsPrefixName` | string | attachment_ | Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'. |
+| Download Attachments | `downloadAttachments` | boolean | False | Whether the email's attachments will be downloaded and included in the output |
+
+</details>
+
+| Thread ID | `threadId` | string |  | ✓ | The ID of the thread you are operating on |  |
+| Simplify | `simple` | boolean | True | ✗ | Whether to return a simplified version of the response instead of the raw data |  |
+| Options | `options` | collection | {} | ✗ | Whether to return only thread messages | e.g. Add Field |  |
+
+<details>
+<summary><strong>Options sub-options</strong></summary>
+
+| Sub-Option | Field ID | Type | Default | Description |
+| ---------- | -------- | ---- | ------- | ----------- |
+| Return Only Messages | `returnOnlyMessages` | boolean | True | Whether to return only thread messages |
 
 </details>
 
@@ -205,16 +242,16 @@ group: "['transform']"
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
 | Return All | `returnAll` | boolean | False | ✗ | Whether to return all results or only up to a given limit |  |
-| Limit | `limit` | number | 10 | ✗ | Max number of results to return | min:1, max:500 |
-| Additional Fields | `additionalFields` | collection | {} | ✗ | Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is "attachment_" the first attachment is saved to "attachment_0" | e.g. Add Field |  |
+| Limit | `limit` | number | 50 | ✗ | Max number of results to return | min:1, max:500 |
+| Options | `options` | collection | {} | ✗ | Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'. | e.g. Add option |  |
 
 <details>
-<summary><strong>Additional Fields sub-options</strong></summary>
+<summary><strong>Options sub-options</strong></summary>
 
 | Sub-Option | Field ID | Type | Default | Description |
 | ---------- | -------- | ---- | ------- | ----------- |
-| Attachment Prefix | `dataPropertyAttachmentsPrefixName` | string | attachment_ | Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is "attachment_" the first attachment is saved to "attachment_0" |
-| Format | `format` | options | resolved | Returns the full email message data with body content parsed in the payload field |
+| Attachment Prefix | `dataPropertyAttachmentsPrefixName` | string | attachment_ | Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'. |
+| Download Attachments | `downloadAttachments` | boolean | False | Whether the draft's attachments will be downloaded |
 | Include Spam and Trash | `includeSpamTrash` | boolean | False | Whether to include messages from SPAM and TRASH in the results |
 
 </details>
@@ -222,45 +259,145 @@ group: "['transform']"
 | Return All | `returnAll` | boolean | False | ✗ | Whether to return all results or only up to a given limit |  |
 | Limit | `limit` | number | 50 | ✗ | Max number of results to return | min:1, max:500 |
 | Return All | `returnAll` | boolean | False | ✗ | Whether to return all results or only up to a given limit |  |
-| Limit | `limit` | number | 10 | ✗ | Max number of results to return | min:1, max:500 |
-| Additional Fields | `additionalFields` | collection | {} | ✗ | Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is "attachment_" the first attachment is saved to "attachment_0". | e.g. Add Field |  |
+| Limit | `limit` | number | 50 | ✗ | Max number of results to return | min:1, max:500 |
+| Simplify | `simple` | boolean | True | ✗ | Whether to return a simplified version of the response instead of the raw data |  |
+| Filters | `filters` | collection | {} | ✗ | Whether to include messages from SPAM and TRASH in the results | e.g. Add Filter |  |
 
 <details>
-<summary><strong>Additional Fields sub-options</strong></summary>
+<summary><strong>Filters sub-options</strong></summary>
 
 | Sub-Option | Field ID | Type | Default | Description |
 | ---------- | -------- | ---- | ------- | ----------- |
-| Attachment Prefix | `dataPropertyAttachmentsPrefixName` | string | attachment_ | Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is "attachment_" the first attachment is saved to "attachment_0". |
-| Format | `format` | options | resolved | Returns the full email message data with body content parsed in the payload field |
 | Include Spam and Trash | `includeSpamTrash` | boolean | False | Whether to include messages from SPAM and TRASH in the results |
 | Label Names or IDs | `labelIds` | multiOptions | [] | Only return messages with labels that match all of the specified label IDs. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>. |
-| Query | `q` | string |  | Only return messages matching the specified query. Supports the same query format as the Gmail search box. For example, "from:someuser@example.com rfc822msgid:&lt;somemsgid@example.com&gt; is:unread". Parameter cannot be used when accessing the api using the gmail.metadata scope. |
+| Search | `q` | string |  | Only return messages matching the specified query |
+| Read Status | `readStatus` | options | unread |  |
+| Received After | `receivedAfter` | dateTime |  | Get all emails received after the specified date. In an expression you can set date using string in ISO format or a timestamp in miliseconds. |
+| Received Before | `receivedBefore` | dateTime |  | Get all emails received before the specified date. In an expression you can set date using string in ISO format or a timestamp in miliseconds. |
+| Sender | `sender` | string |  | Sender name or email to filter by |
 
 </details>
 
+| Options | `options` | collection | {} | ✗ | Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'. | e.g. Add option |  |
+
+<details>
+<summary><strong>Options sub-options</strong></summary>
+
+| Sub-Option | Field ID | Type | Default | Description |
+| ---------- | -------- | ---- | ------- | ----------- |
+| Attachment Prefix | `dataPropertyAttachmentsPrefixName` | string | attachment_ | Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'. |
+| Download Attachments | `downloadAttachments` | boolean | False | Whether the email's attachments will be downloaded and included in the output |
+
+</details>
+
+| Return All | `returnAll` | boolean | False | ✗ | Whether to return all results or only up to a given limit |  |
+| Limit | `limit` | number | 50 | ✗ | Max number of results to return | min:1, max:500 |
+| Filters | `filters` | collection | {} | ✗ | Whether to include threads from SPAM and TRASH in the results | e.g. Add Filter |  |
+
+<details>
+<summary><strong>Filters sub-options</strong></summary>
+
+| Sub-Option | Field ID | Type | Default | Description |
+| ---------- | -------- | ---- | ------- | ----------- |
+| Include Spam and Trash | `includeSpamTrash` | boolean | False | Whether to include threads from SPAM and TRASH in the results |
+| Label ID Names or IDs | `labelIds` | multiOptions | [] | Only return threads with labels that match all of the specified label IDs. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>. |
+| Search | `q` | string |  | Only return messages matching the specified query |
+| Read Status | `readStatus` | options | unread |  |
+| Received After | `receivedAfter` | dateTime |  | Get all emails received after the specified date. In an expression you can set date using string in ISO format or a timestamp in miliseconds. |
+| Received Before | `receivedBefore` | dateTime |  | Get all emails received before the specified date. In an expression you can set date using string in ISO format or a timestamp in miliseconds. |
+
+</details>
+
+
+### Add Label parameters (`addLabels`)
+
+| Name | Field ID | Type | Default | Required | Description | Validation |
+| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
+| Message ID | `messageId` | string |  | ✓ | e.g. 172ce2c4a72cc243 |  |
+| Label Names or IDs | `labelIds` | multiOptions | [] | ✓ | Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a> |  |
+| Thread ID | `threadId` | string |  | ✓ | e.g. 172ce2c4a72cc243 |  |
+| Label Names or IDs | `labelIds` | multiOptions | [] | ✓ | Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a> |  |
+
+### Mark as Read parameters (`markAsRead`)
+
+| Name | Field ID | Type | Default | Required | Description | Validation |
+| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
+| Message ID | `messageId` | string |  | ✓ | e.g. 172ce2c4a72cc243 |  |
+
+### Mark as Unread parameters (`markAsUnread`)
+
+| Name | Field ID | Type | Default | Required | Description | Validation |
+| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
+| Message ID | `messageId` | string |  | ✓ | e.g. 172ce2c4a72cc243 |  |
+
+### Remove Label parameters (`removeLabels`)
+
+| Name | Field ID | Type | Default | Required | Description | Validation |
+| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
+| Message ID | `messageId` | string |  | ✓ | e.g. 172ce2c4a72cc243 |  |
+| Label Names or IDs | `labelIds` | multiOptions | [] | ✓ | Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a> |  |
+| Thread ID | `threadId` | string |  | ✓ | e.g. 172ce2c4a72cc243 |  |
+| Label Names or IDs | `labelIds` | multiOptions | [] | ✓ | Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a> |  |
 
 ### Reply parameters (`reply`)
 
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Thread ID | `threadId` | string |  | ✓ | e.g. 172ce2c4a72cc243 |  |
-| Message ID | `messageId` | string |  | ✓ | e.g. CAHNQoFsC6JMMbOBJgtjsqN0eEc+gDg2a=SQj-tWUebQeHMDgqQ@mail.gmail.com |  |
-| Subject | `subject` | string |  | ✓ | e.g. Hello World! |  |
-| HTML | `includeHtml` | boolean | False | ✗ | Whether the message should also be included as HTML |  |
-| HTML Message | `htmlMessage` | string |  | ✓ | The HTML message body |  |
-| Message | `message` | string |  | ✓ | Plain text message body |  |
-| To Email | `toList` | string | [] | ✓ | The email addresses of the recipients | e.g. info@example.com |  |
-| Additional Fields | `additionalFields` | collection | {} | ✗ | Add the field name from the input node. Multiple properties can be set separated by comma. | e.g. Add Field |  |
+| Message ID | `messageId` | string |  | ✓ | e.g. 172ce2c4a72cc243 |  |
+| Email Type | `emailType` | options | html | ✓ |  | email |
+
+**Email Type options:**
+
+* **Text** (`text`)
+* **HTML** (`html`)
+
+| Email Type | `emailType` | options | html | ✓ |  | email |
+
+**Email Type options:**
+
+* **Text** (`text`)
+* **HTML** (`html`)
+
+| Message | `message` | string |  | ✓ |  |  |
+| Options | `options` | collection | {} | ✗ | Whether to include the phrase “This email was sent automatically with n8n” to the end of the email | e.g. Add option |  |
 
 <details>
-<summary><strong>Additional Fields sub-options</strong></summary>
+<summary><strong>Options sub-options</strong></summary>
 
 | Sub-Option | Field ID | Type | Default | Description |
 | ---------- | -------- | ---- | ------- | ----------- |
-| Attachment | `attachmentsUi` | fixedCollection |  | Add the field name from the input node. Multiple properties can be set separated by comma. |
-| BCC Email | `bccList` | string | [] | The email addresses of the blind copy recipients |
-| CC Email | `ccList` | string | [] | The email addresses of the copy recipients |
-| Override Sender Name | `senderName` | string |  | The name displayed in your contacts inboxes. It has to be in the format: "Display-Name &#60;name@gmail.com&#62;". The email address has to match the email address of the logged in user for the API. |
+| Attachments | `attachmentsUi` | fixedCollection | data | Add the field name from the input node. Multiple properties can be set separated by comma. |
+| BCC | `bccList` | string |  | The email addresses of the blind copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com. |
+| CC | `ccList` | string |  | The email addresses of the copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com. |
+| Sender Name | `senderName` | string |  | The name that will be shown in recipients' inboxes |
+| Send Replies To | `replyTo` | string |  | The email address that the reply message is sent to |
+| Reply to Sender Only | `replyToSenderOnly` | boolean | False | Whether to reply to the sender only or to the entire list of recipients |
+
+</details>
+
+| Thread ID | `threadId` | string |  | ✓ | The ID of the thread you are operating on |  |
+| Message Snippet or ID | `messageId` | options |  | ✗ | Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a> |  |
+| Email Type | `emailType` | options | text | ✓ |  | email |
+
+**Email Type options:**
+
+* **Text** (`text`)
+* **HTML** (`html`)
+
+| Message | `message` | string |  | ✓ | e.g. Get better Text and Expressions writing experience by using the expression editor |  |
+| Options | `options` | collection | {} | ✗ | Add the field name from the input node. Multiple properties can be set separated by comma. | e.g. Add option |  |
+
+<details>
+<summary><strong>Options sub-options</strong></summary>
+
+| Sub-Option | Field ID | Type | Default | Description |
+| ---------- | -------- | ---- | ------- | ----------- |
+| Attachments | `attachmentsUi` | fixedCollection |  | Add the field name from the input node. Multiple properties can be set separated by comma. |
+| BCC | `bccList` | string |  | The email addresses of the blind copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com. |
+| CC | `ccList` | string |  | The email addresses of the copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com. |
+| Sender Name | `senderName` | string |  | The name displayed in your contacts inboxes |
+| Reply to Sender Only | `replyToSenderOnly` | boolean | False | Whether to reply to the sender only or to the entire list of recipients |
+| Reply to Recipients Only | `replyToRecipientsOnly` | boolean | False | Whether to exclude the sender from the reply |
 
 </details>
 
@@ -269,39 +406,51 @@ group: "['transform']"
 
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
+| To | `sendTo` | string |  | ✓ | The email addresses of the recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com. | e.g. info@example.com |  |
 | Subject | `subject` | string |  | ✓ | e.g. Hello World! |  |
-| HTML | `includeHtml` | boolean | False | ✗ | Whether the message should also be included as HTML |  |
-| HTML Message | `htmlMessage` | string |  | ✓ | The HTML message body |  |
-| Message | `message` | string |  | ✓ | Plain text message body |  |
-| To Email | `toList` | string | [] | ✓ | The email addresses of the recipients | e.g. info@example.com |  |
-| Additional Fields | `additionalFields` | collection | {} | ✗ | Add the field name from the input node. Multiple properties can be set separated by comma. | e.g. Add Field |  |
+| Email Type | `emailType` | options | html | ✓ |  | email |
+
+**Email Type options:**
+
+* **Text** (`text`)
+* **HTML** (`html`)
+
+| Email Type | `emailType` | options | html | ✓ |  | email |
+
+**Email Type options:**
+
+* **Text** (`text`)
+* **HTML** (`html`)
+
+| Message | `message` | string |  | ✓ |  |  |
+| Options | `options` | collection | {} | ✗ | Whether to include the phrase “This email was sent automatically with n8n” to the end of the email | e.g. Add option |  |
 
 <details>
-<summary><strong>Additional Fields sub-options</strong></summary>
+<summary><strong>Options sub-options</strong></summary>
 
 | Sub-Option | Field ID | Type | Default | Description |
 | ---------- | -------- | ---- | ------- | ----------- |
-| Attachment | `attachmentsUi` | fixedCollection |  | Add the field name from the input node. Multiple properties can be set separated by comma. |
-| BCC Email | `bccList` | string | [] | The email addresses of the blind copy recipients |
-| CC Email | `ccList` | string | [] | The email addresses of the copy recipients |
-| Override Sender Name | `senderName` | string |  | The name displayed in your contacts inboxes. It has to be in the format: "Display-Name &#60;name@gmail.com&#62;". The email address has to match the email address of the logged in user for the API. |
+| Attachments | `attachmentsUi` | fixedCollection | data | Add the field name from the input node. Multiple properties can be set separated by comma. |
+| BCC | `bccList` | string |  | The email addresses of the blind copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com. |
+| CC | `ccList` | string |  | The email addresses of the copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com. |
+| Sender Name | `senderName` | string |  | The name that will be shown in recipients' inboxes |
+| Send Replies To | `replyTo` | string |  | The email address that the reply message is sent to |
+| Reply to Sender Only | `replyToSenderOnly` | boolean | False | Whether to reply to the sender only or to the entire list of recipients |
 
 </details>
 
 
-### Add parameters (`add`)
+### Trash parameters (`trash`)
 
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Message ID | `messageId` | string |  | ✓ | e.g. 172ce2c4a72cc243 |  |
-| Label Names or IDs | `labelIds` | multiOptions | [] | ✓ | The ID of the label. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>. |  |
+| Thread ID | `threadId` | string |  | ✓ | The ID of the thread you are operating on |  |
 
-### Remove parameters (`remove`)
+### Untrash parameters (`untrash`)
 
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Message ID | `messageId` | string |  | ✓ | e.g. 172ce2c4a72cc243 |  |
-| Label Names or IDs | `labelIds` | multiOptions | [] | ✓ | The ID of the label. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>. |  |
+| Thread ID | `threadId` | string |  | ✓ | The ID of the thread you are operating on |  |
 
 ---
 
@@ -348,7 +497,10 @@ These expression patterns are commonly used with this node:
 node: gmail
 displayName: Gmail
 description: Consume the Gmail API
-version: '1'
+version:
+- '2'
+- '2.1'
+- '2.2'
 nodeType: regular
 group:
 - transform
@@ -369,76 +521,59 @@ operations:
     required: true
     description: ''
     placeholder: Hello World!
-    validation: &id009
+    validation: &id021
       required: true
       displayOptions:
         show:
           resource:
           - message
           operation:
-          - reply
           - send
-    typeInfo: &id010
+    typeInfo: &id022
       type: string
       displayName: Subject
       name: subject
-  - id: includeHtml
-    name: HTML
-    type: boolean
-    default: false
-    required: false
-    description: Whether the message should also be included as HTML
-    validation: &id011
-      displayOptions:
-        show:
-          resource:
-          - message
-          operation:
-          - send
-          - reply
-    typeInfo: &id012
-      type: boolean
-      displayName: HTML
-      name: includeHtml
-  - id: htmlMessage
-    name: HTML Message
-    type: string
-    default: ''
+  - id: emailType
+    name: Email Type
+    type: options
+    default: text
     required: true
-    description: The HTML message body
-    validation: &id013
+    description: ''
+    validation: &id017
       required: true
+      format: email
       displayOptions:
         show:
-          includeHtml:
-          - true
           resource:
-          - message
+          - thread
           operation:
           - reply
-          - send
-    typeInfo: &id014
-      type: string
-      displayName: HTML Message
-      name: htmlMessage
+    typeInfo: &id018
+      type: options
+      displayName: Email Type
+      name: emailType
+      possibleValues:
+      - value: text
+        name: Text
+        description: ''
+      - value: html
+        name: HTML
+        description: ''
   - id: message
     name: Message
     type: string
     default: ''
     required: true
-    description: The message body. If HTML formatted, then you have to add and activate
-      the option "HTML content" in the "Additional Options" section.
-    placeholder: Hello World!
-    validation: &id015
+    description: ''
+    validation: &id019
       required: true
       displayOptions:
         show:
           resource:
-          - message
+          - thread
           operation:
           - reply
-          - send
-    typeInfo: &id016
+    typeInfo: &id020
       type: string
       displayName: Message
       name: message
@@ -461,60 +596,6 @@ operations:
       type: string
       displayName: Name
       name: name
-  - id: labelListVisibility
-    name: Label List Visibility
-    type: options
-    default: labelShow
-    required: true
-    description: The visibility of the label in the label list in the Gmail web interface
-    validation:
-      required: true
-      displayOptions:
-        show:
-          resource:
-          - label
-          operation:
-          - create
-    typeInfo:
-      type: options
-      displayName: Label List Visibility
-      name: labelListVisibility
-      possibleValues:
-      - value: labelHide
-        name: Hide
-        description: ''
-      - value: labelShow
-        name: Show
-        description: ''
-      - value: labelShowIfUnread
-        name: Show If Unread
-        description: ''
-  - id: messageListVisibility
-    name: Message List Visibility
-    type: options
-    default: show
-    required: true
-    description: The visibility of messages with this label in the message list in
-      the Gmail web interface
-    validation:
-      required: true
-      displayOptions:
-        show:
-          resource:
-          - label
-          operation:
-          - create
-    typeInfo:
-      type: options
-      displayName: Message List Visibility
-      name: messageListVisibility
-      possibleValues:
-      - value: hide
-        name: Hide
-        description: ''
-      - value: show
-        name: Show
-        description: ''
 - id: delete
   name: Delete
   description: ''
@@ -527,18 +608,19 @@ operations:
     description: ''
     placeholder: r-3254521568507167962
     validation: &id001
-      required: true
       displayOptions:
         show:
           resource:
-          - messageLabel
+          - thread
           operation:
-          - add
-          - remove
+          - reply
     typeInfo: &id002
-      type: string
-      displayName: Message ID
+      type: options
+      displayName: Message Snippet or ID
       name: messageId
+      typeOptions:
+        loadOptionsMethod: getThreadMessages
+      possibleValues: []
   - id: labelId
     name: Label ID
     type: string
@@ -567,6 +649,25 @@ operations:
     placeholder: 172ce2c4a72cc243
     validation: *id001
     typeInfo: *id002
+  - id: threadId
+    name: Thread ID
+    type: string
+    default: ''
+    required: true
+    description: The ID of the thread you are operating on
+    validation: &id005
+      required: true
+      displayOptions:
+        show:
+          resource:
+          - thread
+          operation:
+          - addLabels
+          - removeLabels
+    typeInfo: &id006
+      type: string
+      displayName: Thread ID
+      name: threadId
 - id: get
   name: Get
   description: ''
@@ -597,6 +698,41 @@ operations:
     placeholder: 172ce2c4a72cc243
     validation: *id001
     typeInfo: *id002
+  - id: simple
+    name: Simplify
+    type: boolean
+    default: true
+    required: false
+    description: Whether to return a simplified version of the response instead of
+      the raw data
+    validation: &id007
+      displayOptions:
+        show:
+          operation:
+          - get
+          resource:
+          - thread
+    typeInfo: &id008
+      type: boolean
+      displayName: Simplify
+      name: simple
+  - id: threadId
+    name: Thread ID
+    type: string
+    default: ''
+    required: true
+    description: The ID of the thread you are operating on
+    validation: *id005
+    typeInfo: *id006
+  - id: simple
+    name: Simplify
+    type: boolean
+    default: true
+    required: false
+    description: Whether to return a simplified version of the response instead of
+      the raw data
+    validation: *id007
+    typeInfo: *id008
 - id: getAll
   name: Get Many
   description: ''
@@ -607,33 +743,33 @@ operations:
     default: false
     required: false
     description: Whether to return all results or only up to a given limit
-    validation: &id005
+    validation: &id009
       displayOptions:
         show:
           operation:
           - getAll
           resource:
-          - message
-    typeInfo: &id006
+          - thread
+    typeInfo: &id010
       type: boolean
       displayName: Return All
       name: returnAll
   - id: limit
     name: Limit
     type: number
-    default: 10
+    default: 50
     required: false
     description: Max number of results to return
-    validation: &id007
+    validation: &id011
       displayOptions:
         show:
           operation:
           - getAll
           resource:
-          - message
+          - thread
           returnAll:
           - false
-    typeInfo: &id008
+    typeInfo: &id012
       type: number
       displayName: Limit
       name: limit
@@ -646,14 +782,39 @@ operations:
     default: false
     required: false
     description: Whether to return all results or only up to a given limit
-    validation: *id005
-    typeInfo: *id006
+    validation: *id009
+    typeInfo: *id010
   - id: limit
     name: Limit
     type: number
     default: 50
     required: false
     description: Max number of results to return
+    validation: *id011
+    typeInfo: *id012
+  - id: returnAll
+    name: Return All
+    type: boolean
+    default: false
+    required: false
+    description: Whether to return all results or only up to a given limit
+    validation: *id009
+    typeInfo: *id010
+  - id: limit
+    name: Limit
+    type: number
+    default: 50
+    required: false
+    description: Max number of results to return
+    validation: *id011
+    typeInfo: *id012
+  - id: simple
+    name: Simplify
+    type: boolean
+    default: true
+    required: false
+    description: Whether to return a simplified version of the response instead of
+      the raw data
     validation: *id007
     typeInfo: *id008
   - id: returnAll
@@ -662,20 +823,51 @@ operations:
     default: false
     required: false
     description: Whether to return all results or only up to a given limit
-    validation: *id005
-    typeInfo: *id006
+    validation: *id009
+    typeInfo: *id010
   - id: limit
     name: Limit
     type: number
-    default: 10
+    default: 50
     required: false
     description: Max number of results to return
-    validation: *id007
-    typeInfo: *id008
-- id: reply
-  name: Reply
+    validation: *id011
+    typeInfo: *id012
+- id: addLabels
+  name: Add Label
   description: ''
   params:
+  - id: messageId
+    name: Message ID
+    type: string
+    default: ''
+    required: true
+    description: ''
+    placeholder: 172ce2c4a72cc243
+    validation: *id001
+    typeInfo: *id002
+  - id: labelIds
+    name: Label Names or IDs
+    type: multiOptions
+    default: &id015 []
+    required: true
+    description: Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>
+    validation: &id013
+      required: true
+      displayOptions:
+        show:
+          resource:
+          - thread
+          operation:
+          - addLabels
+          - removeLabels
+    typeInfo: &id014
+      type: multiOptions
+      displayName: Label Names or IDs
+      name: labelIds
+      typeOptions:
+        loadOptionsMethod: getLabels
+      possibleValues: []
   - id: threadId
     name: Thread ID
     type: string
@@ -683,6 +875,163 @@ operations:
     required: true
     description: ''
     placeholder: 172ce2c4a72cc243
+    validation: *id005
+    typeInfo: *id006
+  - id: labelIds
+    name: Label Names or IDs
+    type: multiOptions
+    default: &id016 []
+    required: true
+    description: Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>
+    validation: *id013
+    typeInfo: *id014
+- id: markAsRead
+  name: Mark as Read
+  description: ''
+  params:
+  - id: messageId
+    name: Message ID
+    type: string
+    default: ''
+    required: true
+    description: ''
+    placeholder: 172ce2c4a72cc243
+    validation: *id001
+    typeInfo: *id002
+- id: markAsUnread
+  name: Mark as Unread
+  description: ''
+  params:
+  - id: messageId
+    name: Message ID
+    type: string
+    default: ''
+    required: true
+    description: ''
+    placeholder: 172ce2c4a72cc243
+    validation: *id001
+    typeInfo: *id002
+- id: removeLabels
+  name: Remove Label
+  description: ''
+  params:
+  - id: messageId
+    name: Message ID
+    type: string
+    default: ''
+    required: true
+    description: ''
+    placeholder: 172ce2c4a72cc243
+    validation: *id001
+    typeInfo: *id002
+  - id: labelIds
+    name: Label Names or IDs
+    type: multiOptions
+    default: *id015
+    required: true
+    description: Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>
+    validation: *id013
+    typeInfo: *id014
+  - id: threadId
+    name: Thread ID
+    type: string
+    default: ''
+    required: true
+    description: ''
+    placeholder: 172ce2c4a72cc243
+    validation: *id005
+    typeInfo: *id006
+  - id: labelIds
+    name: Label Names or IDs
+    type: multiOptions
+    default: *id016
+    required: true
+    description: Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>
+    validation: *id013
+    typeInfo: *id014
+- id: reply
+  name: Reply
+  description: ''
+  params:
+  - id: messageId
+    name: Message ID
+    type: string
+    default: ''
+    required: true
+    description: ''
+    placeholder: 172ce2c4a72cc243
+    validation: *id001
+    typeInfo: *id002
+  - id: emailType
+    name: Email Type
+    type: options
+    default: html
+    required: true
+    description: ''
+    validation: *id017
+    typeInfo: *id018
+  - id: emailType
+    name: Email Type
+    type: options
+    default: html
+    required: true
+    description: ''
+    validation: *id017
+    typeInfo: *id018
+  - id: message
+    name: Message
+    type: string
+    default: ''
+    required: true
+    description: ''
+    validation: *id019
+    typeInfo: *id020
+  - id: threadId
+    name: Thread ID
+    type: string
+    default: ''
+    required: true
+    description: The ID of the thread you are operating on
+    validation: *id005
+    typeInfo: *id006
+  - id: messageId
+    name: Message Snippet or ID
+    type: options
+    default: ''
+    required: false
+    description: Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>
+    validation: *id001
+    typeInfo: *id002
+  - id: emailType
+    name: Email Type
+    type: options
+    default: text
+    required: true
+    description: ''
+    validation: *id017
+    typeInfo: *id018
+  - id: message
+    name: Message
+    type: string
+    default: ''
+    required: true
+    description: ''
+    hint: Get better Text and Expressions writing experience by using the expression
+      editor
+    validation: *id019
+    typeInfo: *id020
+- id: send
+  name: Send
+  description: ''
+  params:
+  - id: sendTo
+    name: To
+    type: string
+    default: ''
+    required: true
+    description: The email addresses of the recipients. Multiple addresses can be
+      separated by a comma. e.g. jay@getsby.com, jon@smith.com.
+    placeholder: info@example.com
     validation:
       required: true
       displayOptions:
@@ -690,20 +1039,11 @@ operations:
           resource:
           - message
           operation:
-          - reply
+          - send
     typeInfo:
       type: string
-      displayName: Thread ID
-      name: threadId
-  - id: messageId
-    name: Message ID
-    type: string
-    default: ''
-    required: true
-    description: ''
-    placeholder: CAHNQoFsC6JMMbOBJgtjsqN0eEc+gDg2a=SQj-tWUebQeHMDgqQ@mail.gmail.com
-    validation: *id001
-    typeInfo: *id002
+      displayName: To
+      name: sendTo
   - id: subject
     name: Subject
     type: string
@@ -711,197 +1051,150 @@ operations:
     required: true
     description: ''
     placeholder: Hello World!
-    validation: *id009
-    typeInfo: *id010
-  - id: includeHtml
-    name: HTML
-    type: boolean
-    default: false
-    required: false
-    description: Whether the message should also be included as HTML
-    validation: *id011
-    typeInfo: *id012
-  - id: htmlMessage
-    name: HTML Message
-    type: string
-    default: ''
-    required: true
-    description: The HTML message body
-    validation: *id013
-    typeInfo: *id014
-  - id: message
-    name: Message
-    type: string
-    default: ''
-    required: true
-    description: Plain text message body
-    validation: *id015
-    typeInfo: *id016
-  - id: toList
-    name: To Email
-    type: string
-    default: &id017 []
-    required: true
-    description: The email addresses of the recipients
-    placeholder: info@example.com
-    validation: &id018
-      required: true
-      displayOptions:
-        show:
-          resource:
-          - message
-          operation:
-          - reply
-          - send
-    typeInfo: &id019
-      type: string
-      displayName: To Email
-      name: toList
-      typeOptions:
-        multipleValues: true
-- id: send
-  name: Send
-  description: ''
-  params:
-  - id: subject
-    name: Subject
-    type: string
-    default: ''
-    required: true
-    description: ''
-    placeholder: Hello World!
-    validation: *id009
-    typeInfo: *id010
-  - id: includeHtml
-    name: HTML
-    type: boolean
-    default: false
-    required: false
-    description: Whether the message should also be included as HTML
-    validation: *id011
-    typeInfo: *id012
-  - id: htmlMessage
-    name: HTML Message
-    type: string
-    default: ''
-    required: true
-    description: The HTML message body
-    validation: *id013
-    typeInfo: *id014
-  - id: message
-    name: Message
-    type: string
-    default: ''
-    required: true
-    description: Plain text message body
-    validation: *id015
-    typeInfo: *id016
-  - id: toList
-    name: To Email
-    type: string
-    default: *id017
-    required: true
-    description: The email addresses of the recipients
-    placeholder: info@example.com
-    validation: *id018
-    typeInfo: *id019
-- id: add
-  name: Add
-  description: ''
-  params:
-  - id: messageId
-    name: Message ID
-    type: string
-    default: ''
-    required: true
-    description: ''
-    placeholder: 172ce2c4a72cc243
-    validation: *id001
-    typeInfo: *id002
-  - id: labelIds
-    name: Label Names or IDs
-    type: multiOptions
-    default: &id020 []
-    required: true
-    description: The ID of the label. Choose from the list, or specify IDs using an
-      <a href="https://docs.n8n.io/code/expressions/">expression</a>.
-    validation: &id021
-      required: true
-      displayOptions:
-        show:
-          resource:
-          - messageLabel
-          operation:
-          - add
-          - remove
-    typeInfo: &id022
-      type: multiOptions
-      displayName: Label Names or IDs
-      name: labelIds
-      typeOptions:
-        loadOptionsMethod: getLabels
-      possibleValues: []
-- id: remove
-  name: Remove
-  description: ''
-  params:
-  - id: messageId
-    name: Message ID
-    type: string
-    default: ''
-    required: true
-    description: ''
-    placeholder: 172ce2c4a72cc243
-    validation: *id001
-    typeInfo: *id002
-  - id: labelIds
-    name: Label Names or IDs
-    type: multiOptions
-    default: *id020
-    required: true
-    description: The ID of the label. Choose from the list, or specify IDs using an
-      <a href="https://docs.n8n.io/code/expressions/">expression</a>.
     validation: *id021
     typeInfo: *id022
+  - id: emailType
+    name: Email Type
+    type: options
+    default: html
+    required: true
+    description: ''
+    validation: *id017
+    typeInfo: *id018
+  - id: emailType
+    name: Email Type
+    type: options
+    default: html
+    required: true
+    description: ''
+    validation: *id017
+    typeInfo: *id018
+  - id: message
+    name: Message
+    type: string
+    default: ''
+    required: true
+    description: ''
+    validation: *id019
+    typeInfo: *id020
+- id: ''
+  name: Send and Wait for Response
+  description: ''
+- id: trash
+  name: Trash
+  description: ''
+  params:
+  - id: threadId
+    name: Thread ID
+    type: string
+    default: ''
+    required: true
+    description: The ID of the thread you are operating on
+    validation: *id005
+    typeInfo: *id006
+- id: untrash
+  name: Untrash
+  description: ''
+  params:
+  - id: threadId
+    name: Thread ID
+    type: string
+    default: ''
+    required: true
+    description: The ID of the thread you are operating on
+    validation: *id005
+    typeInfo: *id006
 common_expressions:
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 ui_elements:
-  notices: []
+  notices:
+  - name: threadNotice
+    text: To reply to an existing thread, specify the exact subject title of that
+      thread.
+    conditions:
+      show:
+        resource:
+        - draft
+        operation:
+        - create
+  - name: filtersNotice
+    text: Fetching a lot of messages may take a long time. Consider using filters
+      to speed things up
+    conditions:
+      show:
+        operation:
+        - getAll
+        resource:
+        - message
+        returnAll:
+        - true
+  - name: filtersNotice
+    text: Fetching a lot of messages may take a long time. Consider using filters
+      to speed things up
+    conditions:
+      show:
+        operation:
+        - getAll
+        resource:
+        - thread
+        returnAll:
+        - true
   tooltips: []
   placeholders:
+  - field: sendTo
+    text: e.g. info@example.com
   - field: messageId
     text: r-3254521568507167962
   - field: subject
     text: Hello World!
-  - field: message
-    text: Hello World!
-  - field: additionalFields
-    text: Add Field
-  - field: additionalFields
-    text: Add Field
-  - field: additionalFields
-    text: Add Field
+  - field: options
+    text: Add option
+  - field: options
+    text: Add option
+  - field: options
+    text: Add option
   - field: name
     text: invoices
+  - field: options
+    text: Add option
   - field: messageId
     text: 172ce2c4a72cc243
-  - field: threadId
-    text: 172ce2c4a72cc243
   - field: messageId
-    text: CAHNQoFsC6JMMbOBJgtjsqN0eEc+gDg2a=SQj-tWUebQeHMDgqQ@mail.gmail.com
+    text: 172ce2c4a72cc243
+  - field: sendTo
+    text: info@example.com
   - field: subject
     text: Hello World!
-  - field: toList
-    text: info@example.com
-  - field: additionalFields
-    text: Add Field
-  - field: additionalFields
-    text: Add Field
-  - field: additionalFields
-    text: Add Field
+  - field: options
+    text: Add option
+  - field: options
+    text: Add option
+  - field: filters
+    text: Add Filter
+  - field: options
+    text: Add option
   - field: messageId
     text: 172ce2c4a72cc243
-  hints: []
+  - field: options
+    text: Add option
+  - field: options
+    text: Add Field
+  - field: filters
+    text: Add Filter
+  - field: threadId
+    text: 172ce2c4a72cc243
+  hints:
+  - field: options
+    text: The name of the field with the attachment in the node input
+  - field: filters
+    text: Use the same format as in the Gmail search box. <a href="https://support.google.com/mail/answer/7190?hl=en">More
+      info</a>.
+  - field: message
+    text: Get better Text and Expressions writing experience by using the expression
+      editor
+  - field: filters
+    text: Use the same format as in the Gmail search box. <a href="https://support.google.com/mail/answer/7190?hl=en">More
+      info</a>.
 settings:
   common:
     notes:
@@ -999,10 +1292,15 @@ settings:
         "delete",
         "get",
         "getAll",
+        "addLabels",
+        "markAsRead",
+        "markAsUnread",
+        "removeLabels",
         "reply",
         "send",
-        "add",
-        "remove"
+        "",
+        "trash",
+        "untrash"
       ],
       "description": "Operation to perform"
     },
@@ -1023,29 +1321,40 @@ settings:
           "description": "",
           "type": "string",
           "enum": [
-            "draft",
-            "label",
             "message",
-            "messageLabel"
+            "label",
+            "draft",
+            "thread"
           ],
-          "default": "draft"
+          "default": "message"
+        },
+        "sendTo": {
+          "description": "The email addresses of the recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com.",
+          "type": "string",
+          "default": "",
+          "examples": [
+            "info@example.com"
+          ]
         },
         "operation": {
           "description": "",
           "type": "string",
           "enum": [
-            "add",
-            "remove"
+            "addLabels",
+            "delete",
+            "get",
+            "getAll",
+            "removeLabels",
+            "reply",
+            "trash",
+            "untrash"
           ],
-          "default": "add"
+          "default": "getAll"
         },
         "messageId": {
-          "description": "",
+          "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
           "type": "string",
-          "default": "",
-          "examples": [
-            "172ce2c4a72cc243"
-          ]
+          "default": ""
         },
         "subject": {
           "description": "",
@@ -1055,23 +1364,23 @@ settings:
             "Hello World!"
           ]
         },
-        "includeHtml": {
-          "description": "Whether the message should also be included as HTML",
-          "type": "boolean",
-          "default": false
-        },
-        "htmlMessage": {
-          "description": "The HTML message body",
+        "emailType": {
+          "description": "",
           "type": "string",
-          "default": ""
+          "enum": [
+            "text",
+            "html"
+          ],
+          "default": "text",
+          "format": "email"
         },
         "message": {
-          "description": "Plain text message body",
+          "description": "",
           "type": "string",
           "default": ""
         },
-        "additionalFields": {
-          "description": "Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is \"attachment_\" the first attachment is saved to \"attachment_0\".",
+        "options": {
+          "description": "Whether to return only thread messages",
           "type": "string",
           "default": {},
           "examples": [
@@ -1086,7 +1395,7 @@ settings:
         "limit": {
           "description": "Max number of results to return",
           "type": "number",
-          "default": 10
+          "default": 50
         },
         "name": {
           "description": "Label Name",
@@ -1101,24 +1410,28 @@ settings:
           "type": "string",
           "default": ""
         },
-        "labelListVisibility": {
-          "description": "The visibility of the label in the label list in the Gmail web interface",
-          "type": "string",
-          "enum": [
-            "labelHide",
-            "labelShow",
-            "labelShowIfUnread"
-          ],
-          "default": "labelShow"
+        "simple": {
+          "description": "Whether to return a simplified version of the response instead of the raw data",
+          "type": "boolean",
+          "default": true
         },
-        "messageListVisibility": {
-          "description": "The visibility of messages with this label in the message list in the Gmail web interface",
+        "filters": {
+          "description": "Whether to include threads from SPAM and TRASH in the results",
           "type": "string",
-          "enum": [
-            "hide",
-            "show"
-          ],
-          "default": "show"
+          "default": {},
+          "examples": [
+            "Add Filter"
+          ]
+        },
+        "labelIds": {
+          "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+          "type": "string",
+          "default": []
+        },
+        "appendAttribution": {
+          "description": "",
+          "type": "boolean",
+          "default": true
         },
         "threadId": {
           "description": "",
@@ -1128,18 +1441,9 @@ settings:
             "172ce2c4a72cc243"
           ]
         },
-        "toList": {
-          "description": "The email addresses of the recipients",
-          "type": "string",
-          "default": [],
-          "examples": [
-            "info@example.com"
-          ]
-        },
-        "labelIds": {
-          "description": "The ID of the label. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
-          "type": "string",
-          "default": []
+        "default": {
+          "description": "",
+          "type": "string"
         }
       }
     },
@@ -1201,7 +1505,11 @@ settings:
   },
   "metadata": {
     "nodeType": "regular",
-    "version": "1"
+    "version": [
+      "2",
+      "2.1",
+      "2.2"
+    ]
   },
   "credentials": [
     {
@@ -1222,4 +1530,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| 1 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |
+| ['2', '2.1', '2.2'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

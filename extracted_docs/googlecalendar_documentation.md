@@ -18,7 +18,7 @@ group: "['input']"
 
 ## Node Details
 
-- **Icon:** `bot`
+- **Icon:** `file:googleCalendar.svg`
 - **Group:** `['input']`
 - **Inputs:** `['Main']`
 - **Outputs:** `['Main']`

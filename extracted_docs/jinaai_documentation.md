@@ -249,16 +249,16 @@ These examples are extracted from actual n8n workflows:
 
 These expression patterns are commonly used with this node:
 
-- `={{ $parameter["options"]["waitForSelector"] }}`
-- `={{ $parameter["simplify"] }}`
-- `={{ $parameter["options"]["excludeSelector"] }}`
-- `={{ $parameter["options"]["maxReturnedSources"] }}`
-- `={{ $responseItem["usage"] }}`
-- `={{ $responseItem["choices"][0]["message"]["annotations"] }}`
-- `={{ $parameter["options"]["targetSelector"] }}`
-- `={{ $parameter["options"]["prioritizeSources"].split(/,\\s*/) }}`
-- `={{ $parameter["options"]["pageNumber"] }}`
+- `={{ $parameter["searchQuery"] }}`
 - `={{ $responseItem["choices"][0]["message"]["content"] }}`
+- `={{ $parameter["operation"] + ": " + $parameter["resource"] }}`
+- `={{ $parameter["options"]["enableImageCaptioning"] }}`
+- `={{ $responseItem["usage"] }}`
+- `={{ $parameter["options"]["siteFilter"] }}`
+- `={{ $parameter["options"]["pageNumber"] }}`
+- `={{ $parameter["options"]["excludeSources"].split(/,\\s*/) }}`
+- `={{ $responseItem["choices"][0]["message"]["annotations"] }}`
+- `={{ $parameter["options"]["waitForSelector"] }}`
 
 ---
 
@@ -540,16 +540,16 @@ examples:
     requestOptions: {}
   workflow: Jina AI -> Reader -> Search
 common_expressions:
-- ={{ $parameter["options"]["waitForSelector"] }}
-- ={{ $parameter["simplify"] }}
-- ={{ $parameter["options"]["excludeSelector"] }}
-- ={{ $parameter["options"]["maxReturnedSources"] }}
-- ={{ $responseItem["usage"] }}
-- ={{ $responseItem["choices"][0]["message"]["annotations"] }}
-- ={{ $parameter["options"]["targetSelector"] }}
-- ={{ $parameter["options"]["prioritizeSources"].split(/,\\s*/) }}
-- ={{ $parameter["options"]["pageNumber"] }}
+- ={{ $parameter["searchQuery"] }}
 - ={{ $responseItem["choices"][0]["message"]["content"] }}
+- '={{ $parameter["operation"] + ": " + $parameter["resource"] }}'
+- ={{ $parameter["options"]["enableImageCaptioning"] }}
+- ={{ $responseItem["usage"] }}
+- ={{ $parameter["options"]["siteFilter"] }}
+- ={{ $parameter["options"]["pageNumber"] }}
+- ={{ $parameter["options"]["excludeSources"].split(/,\\s*/) }}
+- ={{ $responseItem["choices"][0]["message"]["annotations"] }}
+- ={{ $parameter["options"]["waitForSelector"] }}
 ui_elements:
   notices: []
   tooltips: []

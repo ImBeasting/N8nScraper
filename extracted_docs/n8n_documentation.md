@@ -237,8 +237,8 @@ group: "['transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{ $credentials.baseUrl.replace(new RegExp("/$"), "") }}`
 - `={{$parameter["operation"] + ": " + $parameter["resource"]}}`
+- `={{ $credentials.baseUrl.replace(new RegExp("/$"), "") }}`
 
 ---
 
@@ -549,8 +549,8 @@ operations:
     validation: *id009
     typeInfo: *id010
 common_expressions:
-- ={{ $credentials.baseUrl.replace(new RegExp("/$"), "") }}
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
+- ={{ $credentials.baseUrl.replace(new RegExp("/$"), "") }}
 api_patterns:
   http_methods: []
   endpoints: []

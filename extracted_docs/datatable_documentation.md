@@ -102,8 +102,8 @@ group: "['input', 'transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{ $parameter.dataTableId !== "" && $parameter?.columns?.mappingMode === "defineBelow" && !$parameter?.columns?.schema?.length }}`
 - `={{$parameter["action"]}}`
+- `={{ $parameter.dataTableId !== "" && $parameter?.columns?.mappingMode === "defineBelow" && !$parameter?.columns?.schema?.length }}`
 - `{{ $parameter.dataTableId !== "" && $parameter?.columns?.mappingMode === "defineBelow" && !$parameter?.columns?.schema?.length }}`
 
 ---
@@ -181,9 +181,9 @@ operations:
   name: List
   description: List all data tables
 common_expressions:
+- ={{$parameter["action"]}}
 - ={{ $parameter.dataTableId !== "" && $parameter?.columns?.mappingMode === "defineBelow"
   && !$parameter?.columns?.schema?.length }}
-- ={{$parameter["action"]}}
 - '{{ $parameter.dataTableId !== "" && $parameter?.columns?.mappingMode === "defineBelow"
   && !$parameter?.columns?.schema?.length }}'
 ui_elements:

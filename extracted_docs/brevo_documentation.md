@@ -50,7 +50,7 @@ group: "['transform']"
 
 ## API Patterns
 
-**HTTP Methods:** DELETE, GET, POST
+**HTTP Methods:** POST, DELETE, GET
 
 ---
 
@@ -738,9 +738,9 @@ common_expressions:
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
 api_patterns:
   http_methods:
+  - POST
   - DELETE
   - GET
-  - POST
   endpoints: []
   headers: []
   query_params: []

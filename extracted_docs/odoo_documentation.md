@@ -52,7 +52,7 @@ group: "['transform']"
 
 **HTTP Methods:** POST
 
-**Headers Used:** keep-alive, User-Agent, Content-Type
+**Headers Used:** User-Agent, Content-Type, keep-alive
 
 ---
 
@@ -180,9 +180,9 @@ api_patterns:
   - POST
   endpoints: []
   headers:
-  - keep-alive
   - User-Agent
   - Content-Type
+  - keep-alive
   query_params: []
 ui_elements:
   notices: []

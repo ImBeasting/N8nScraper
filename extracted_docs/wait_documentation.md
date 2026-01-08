@@ -86,8 +86,8 @@ These expression patterns are commonly used with this node:
 
 - `={{$parameter["responseData"]}}`
 - `={{$parameter["responseMode"] === "lastNode" ? "noData" : undefined}}`
-- `={{$parameter["responseMode"]}}`
 - `{{ $execution.resumeFormUrl }}`
+- `={{$parameter["responseMode"]}}`
 - `={{$parameter["options"]["webhookSuffix"] || ""}}`
 
 ---
@@ -264,8 +264,8 @@ examples:
 common_expressions:
 - ={{$parameter["responseData"]}}
 - '={{$parameter["responseMode"] === "lastNode" ? "noData" : undefined}}'
-- ={{$parameter["responseMode"]}}
 - '{{ $execution.resumeFormUrl }}'
+- ={{$parameter["responseMode"]}}
 - ={{$parameter["options"]["webhookSuffix"] || ""}}
 ui_elements:
   notices: []

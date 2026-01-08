@@ -163,9 +163,9 @@ group: "['transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{ !!$response.body?.["@odata.nextLink"] }}`
-- `={{ $response.body?.["@odata.nextLink"] ?? $request.url }}`
 - `={{$parameter["operation"] + ": " + $parameter["resource"]}}`
+- `={{ $response.body?.["@odata.nextLink"] ?? $request.url }}`
+- `={{ !!$response.body?.["@odata.nextLink"] }}`
 
 ---
 
@@ -809,9 +809,9 @@ params:
   validation: *id023
   typeInfo: *id024
 common_expressions:
-- ={{ !!$response.body?.["@odata.nextLink"] }}
-- ={{ $response.body?.["@odata.nextLink"] ?? $request.url }}
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
+- ={{ $response.body?.["@odata.nextLink"] ?? $request.url }}
+- ={{ !!$response.body?.["@odata.nextLink"] }}
 api_patterns:
   http_methods: []
   endpoints:

@@ -191,8 +191,8 @@ group: "['input']"
 
 These expression patterns are commonly used with this node:
 
-- `={{ $rawParameter.schema?.startsWith("=") && $input.all().length > 1 }}`
 - `={{$parameter["operation"] + ": " + $parameter["resource"]}}`
+- `={{ $rawParameter.schema?.startsWith("=") && $input.all().length > 1 }}`
 
 ---
 
@@ -503,8 +503,8 @@ operations:
     validation: *id008
     typeInfo: *id009
 common_expressions:
-- ={{ $rawParameter.schema?.startsWith("=") && $input.all().length > 1 }}
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
+- ={{ $rawParameter.schema?.startsWith("=") && $input.all().length > 1 }}
 api_patterns:
   http_methods:
   - GET

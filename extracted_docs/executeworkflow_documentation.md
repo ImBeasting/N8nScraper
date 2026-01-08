@@ -91,8 +91,8 @@ group: "['transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{"Workflow: " + $parameter["workflowId"]}}`
 - `={{ $rawParameter.workflowId.startsWith("=") && $parameter.mode === "once" && $nodeVersion >= 1.2 }}`
+- `={{"Workflow: " + $parameter["workflowId"]}}`
 
 ---
 
@@ -307,9 +307,9 @@ params:
         its execution before proceeding
       default: true
 common_expressions:
-- '={{"Workflow: " + $parameter["workflowId"]}}'
 - ={{ $rawParameter.workflowId.startsWith("=") && $parameter.mode === "once" && $nodeVersion
   >= 1.2 }}
+- '={{"Workflow: " + $parameter["workflowId"]}}'
 api_patterns:
   http_methods:
   - GET

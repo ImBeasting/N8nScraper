@@ -65,7 +65,7 @@ group: "['trigger']"
 
 ## API Patterns
 
-**Headers Used:** no-check, X-Atlassian-Token, Content-Type
+**Headers Used:** no-check, Content-Type, X-Atlassian-Token
 
 ---
 
@@ -464,8 +464,8 @@ api_patterns:
   endpoints: []
   headers:
   - no-check
-  - X-Atlassian-Token
   - Content-Type
+  - X-Atlassian-Token
   query_params: []
 ui_elements:
   notices: []

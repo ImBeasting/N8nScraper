@@ -103,10 +103,10 @@ group: "['transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{$parameter["operation"] + ": " + $parameter["collectionId"]}}`
 - `={{$parameter["limit"]}}`
-- `={{$parameter["returnAll"]}}`
+- `={{$parameter["operation"] + ": " + $parameter["collectionId"]}}`
 - `={{ { "success": true } }}`
+- `={{$parameter["returnAll"]}}`
 
 ---
 
@@ -340,10 +340,10 @@ params:
       minValue: 1
       maxValue: 100
 common_expressions:
-- '={{$parameter["operation"] + ": " + $parameter["collectionId"]}}'
 - ={{$parameter["limit"]}}
-- ={{$parameter["returnAll"]}}
+- '={{$parameter["operation"] + ": " + $parameter["collectionId"]}}'
 - '={{ { "success": true } }}'
+- ={{$parameter["returnAll"]}}
 ui_elements:
   notices: []
   tooltips: []

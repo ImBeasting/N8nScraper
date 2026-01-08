@@ -50,7 +50,7 @@ group: "['output']"
 
 ## API Patterns
 
-**Headers Used:** Content-Type, x-linkname
+**Headers Used:** x-linkname, Content-Type
 
 ---
 
@@ -1147,8 +1147,8 @@ api_patterns:
   http_methods: []
   endpoints: []
   headers:
-  - Content-Type
   - x-linkname
+  - Content-Type
   query_params: []
 ui_elements:
   notices: []

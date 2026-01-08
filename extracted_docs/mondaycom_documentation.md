@@ -54,7 +54,7 @@ group: "['output']"
 
 **HTTP Methods:** POST
 
-**Headers Used:** API-Version, Content-Type
+**Headers Used:** Content-Type, API-Version
 
 ---
 
@@ -954,8 +954,8 @@ api_patterns:
   - POST
   endpoints: []
   headers:
-  - API-Version
   - Content-Type
+  - API-Version
   query_params: []
 ui_elements:
   notices: []

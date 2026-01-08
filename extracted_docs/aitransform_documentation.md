@@ -47,8 +47,8 @@ group: "['transform']"
 
 These expression patterns are commonly used with this node:
 
-- `{{ $input.all().some(i => i.binary) }}`
 - `={{ $input.all().some(i => i.binary) }}`
+- `{{ $input.all().some(i => i.binary) }}`
 
 ---
 
@@ -108,8 +108,8 @@ params:
     displayName: Instructions
     name: instructions
 common_expressions:
-- '{{ $input.all().some(i => i.binary) }}'
 - ={{ $input.all().some(i => i.binary) }}
+- '{{ $input.all().some(i => i.binary) }}'
 ui_elements:
   notices: []
   tooltips: []

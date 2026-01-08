@@ -18,7 +18,7 @@ group: "['output']"
 
 ## Node Details
 
-- **Icon:** `bot`
+- **Icon:** `file:telegram.svg`
 - **Group:** `['output']`
 - **Inputs:** `['Main']`
 - **Outputs:** `['Main']`

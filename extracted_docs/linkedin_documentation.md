@@ -52,7 +52,7 @@ group: "['input']"
 
 ## API Patterns
 
-**Headers Used:** LinkedIn-Version, X-Restli-Protocol-Version
+**Headers Used:** X-Restli-Protocol-Version, LinkedIn-Version
 
 ---
 
@@ -307,8 +307,8 @@ api_patterns:
   http_methods: []
   endpoints: []
   headers:
-  - LinkedIn-Version
   - X-Restli-Protocol-Version
+  - LinkedIn-Version
   query_params: []
 ui_elements:
   notices: []

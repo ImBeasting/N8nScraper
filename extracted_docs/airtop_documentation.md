@@ -386,8 +386,8 @@ group: "['transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{ $json["sessionId"] }}`
 - `={{ $json["windowId"] }}`
+- `={{ $json["sessionId"] }}`
 - `={{ $parameter["operation"] + ": " + $parameter["resource"] }}`
 
 ---
@@ -935,8 +935,8 @@ operations:
       displayName: Press Enter Key
       name: pressEnterKey
 common_expressions:
-- ={{ $json["sessionId"] }}
 - ={{ $json["windowId"] }}
+- ={{ $json["sessionId"] }}
 - '={{ $parameter["operation"] + ": " + $parameter["resource"] }}'
 api_patterns:
   http_methods:

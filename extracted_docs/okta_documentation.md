@@ -102,8 +102,8 @@ group: "['transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{$credentials.url.replace(new RegExp("/$"), "")}}`
 - `={{$parameter["operation"] + ": " + $parameter["resource"]}}`
+- `={{$credentials.url.replace(new RegExp("/$"), "")}}`
 
 ---
 
@@ -434,8 +434,8 @@ params:
     displayName: Send Email
     name: sendEmail
 common_expressions:
-- ={{$credentials.url.replace(new RegExp("/$"), "")}}
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
+- ={{$credentials.url.replace(new RegExp("/$"), "")}}
 ui_elements:
   notices: []
   tooltips: []

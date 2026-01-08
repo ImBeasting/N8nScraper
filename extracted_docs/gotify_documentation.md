@@ -50,7 +50,7 @@ group: "['input']"
 
 ## API Patterns
 
-**Headers Used:** X-Gotify-Key, POST
+**Headers Used:** POST, X-Gotify-Key
 
 ---
 
@@ -282,8 +282,8 @@ api_patterns:
   http_methods: []
   endpoints: []
   headers:
-  - X-Gotify-Key
   - POST
+  - X-Gotify-Key
   query_params: []
 ui_elements:
   notices: []

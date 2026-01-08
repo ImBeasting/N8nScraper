@@ -46,7 +46,12 @@
     "subtitle": "={{$parameter[",
     "description": "Consume the Gmail API",
     "name": "gmail",
-    "version": "1",
+    "version": [
+      "2",
+      "2.1",
+      "2.2"
+    ],
+    "usableAsTool": true,
     "node_type": "regular"
   },
   "metadata": {},
@@ -74,14 +79,14 @@
       "displayName": "Resource",
       "name": "resource",
       "type": "options",
-      "value": "draft",
-      "default": "draft",
+      "value": "message",
+      "default": "message",
       "noDataExpression": true,
       "options": [
         {
-          "name": "Draft",
-          "value": "draft",
-          "displayName": "Draft"
+          "name": "Message",
+          "value": "message",
+          "displayName": "Message"
         },
         {
           "name": "Label",
@@ -89,16 +94,24 @@
           "displayName": "Label"
         },
         {
-          "name": "Message",
-          "value": "message",
-          "displayName": "Message"
+          "name": "Draft",
+          "value": "draft",
+          "displayName": "Draft"
         },
         {
-          "name": "Message Label",
-          "value": "messageLabel",
-          "displayName": "Message Label"
+          "name": "Thread",
+          "value": "thread",
+          "displayName": "Thread"
         }
       ]
+    },
+    {
+      "displayName": "To",
+      "name": "sendTo",
+      "type": "string",
+      "placeholder": "e.g. info@example.com",
+      "default": "",
+      "required": true
     },
     {
       "displayName": "Operation",
@@ -185,11 +198,10 @@
       "_source": "Draft_draftFields"
     },
     {
-      "displayName": "HTML",
-      "name": "includeHtml",
-      "type": "boolean",
-      "description": "Whether the message should also be included as HTML",
-      "default": false,
+      "displayName": "To reply to an existing thread, specify the exact subject title of that thread.",
+      "name": "threadNotice",
+      "type": "notice",
+      "default": "",
       "displayOptions": {
         "show": {
           "resource": [
@@ -204,17 +216,27 @@
       "_source": "Draft_draftFields"
     },
     {
-      "displayName": "HTML Message",
-      "name": "htmlMessage",
-      "type": "string",
-      "description": "The HTML message body",
-      "default": "",
+      "displayName": "Email Type",
+      "name": "emailType",
+      "type": "options",
+      "value": "html",
+      "default": "text",
       "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "HTML",
+          "value": "html",
+          "displayName": "Html"
+        },
+        {
+          "name": "Text",
+          "value": "text",
+          "displayName": "Text"
+        }
+      ],
       "displayOptions": {
         "show": {
-          "includeHtml": [
-            true
-          ],
           "resource": [
             "draft"
           ],
@@ -230,8 +252,6 @@
       "displayName": "Message",
       "name": "message",
       "type": "string",
-      "description": "The message body. If HTML formatted, then you have to add and activate the option \"HTML content\" in the \"Additional Options\" section.",
-      "placeholder": "Hello World!",
       "default": "",
       "required": true,
       "displayOptions": {
@@ -248,51 +268,18 @@
       "_source": "Draft_draftFields"
     },
     {
-      "displayName": "Additional Fields",
-      "name": "additionalFields",
+      "displayName": "Options",
+      "name": "options",
       "type": "collection",
-      "description": "The email addresses of the recipients",
-      "placeholder": "Add Field",
+      "description": "Add the field name from the input node. Multiple properties can be set separated by comma.",
+      "placeholder": "Add option",
       "default": {},
       "options": [
         {
-          "displayName": "To Email",
-          "name": "toList",
-          "type": "string",
-          "description": "The email addresses of the recipients",
-          "placeholder": "info@example.com",
-          "default": [],
-          "typeOptions": {
-            "multipleValues": true
-          }
-        },
-        {
-          "displayName": "CC Email",
-          "name": "ccList",
-          "type": "string",
-          "description": "The email addresses of the copy recipients",
-          "placeholder": "info@example.com",
-          "default": [],
-          "typeOptions": {
-            "multipleValues": true
-          }
-        },
-        {
-          "displayName": "BCC Email",
-          "name": "bccList",
-          "type": "string",
-          "description": "The email addresses of the blind copy recipients",
-          "placeholder": "info@example.com",
-          "default": [],
-          "typeOptions": {
-            "multipleValues": true
-          }
-        },
-        {
-          "displayName": "Attachment",
+          "displayName": "Attachments",
           "name": "attachmentsUi",
           "type": "fixedCollection",
-          "description": "Name of the binary property containing the data to be added to the email as an attachment. Multiple properties can be set separated by comma.",
+          "description": "Add the field name from the input node. Multiple properties can be set separated by comma.",
           "placeholder": "Add Attachment",
           "default": "",
           "options": [
@@ -304,7 +291,7 @@
                   "displayName": "Attachment Field Name (in Input)",
                   "name": "property",
                   "type": "string",
-                  "description": "Name of the binary property containing the data to be added to the email as an attachment. Multiple properties can be set separated by comma.",
+                  "description": "Add the field name from the input node. Multiple properties can be set separated by comma.",
                   "default": ""
                 }
               ]
@@ -313,6 +300,56 @@
           "typeOptions": {
             "multipleValues": true
           }
+        },
+        {
+          "displayName": "BCC",
+          "name": "bccList",
+          "type": "string",
+          "description": "The email addresses of the blind copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com.",
+          "placeholder": "info@example.com",
+          "default": ""
+        },
+        {
+          "displayName": "CC",
+          "name": "ccList",
+          "type": "string",
+          "description": "The email addresses of the copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com.",
+          "placeholder": "info@example.com",
+          "default": ""
+        },
+        {
+          "displayName": "From Alias Name or ID",
+          "name": "fromAlias",
+          "type": "options",
+          "description": "Select the alias to send the email from. Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": "",
+          "typeOptions": {
+            "loadOptionsMethod": "getGmailAliases"
+          }
+        },
+        {
+          "displayName": "Send Replies To",
+          "name": "replyTo",
+          "type": "string",
+          "description": "The email address that the reply message is sent to",
+          "placeholder": "reply@example.com",
+          "default": ""
+        },
+        {
+          "displayName": "Thread ID",
+          "name": "threadId",
+          "type": "string",
+          "description": "The identifier of the thread to attach the draft",
+          "placeholder": "18cc573e2431878f",
+          "default": ""
+        },
+        {
+          "displayName": "To Email",
+          "name": "sendTo",
+          "type": "string",
+          "description": "The email addresses of the recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com.",
+          "placeholder": "info@example.com",
+          "default": ""
         }
       ],
       "typeOptions": {
@@ -332,70 +369,26 @@
       "_source": "Draft_draftFields"
     },
     {
-      "displayName": "Additional Fields",
-      "name": "additionalFields",
+      "displayName": "Options",
+      "name": "options",
       "type": "collection",
-      "description": "Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is \"attachment_\" the first attachment is saved to \"attachment_0\"",
-      "placeholder": "Add Field",
-      "value": "full",
+      "description": "Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'.",
+      "placeholder": "Add option",
       "default": {},
       "options": [
         {
           "displayName": "Attachment Prefix",
           "name": "dataPropertyAttachmentsPrefixName",
           "type": "string",
-          "description": "Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is \"attachment_\" the first attachment is saved to \"attachment_0\"",
-          "default": "attachment_",
-          "displayOptions": {
-            "hide": {
-              "format": [
-                "full",
-                "metadata",
-                "minimal",
-                "raw"
-              ]
-            }
-          }
+          "description": "Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'.",
+          "default": "attachment_"
         },
         {
-          "displayName": "Format",
-          "name": "format",
-          "type": "options",
-          "description": "Returns the full email message data with body content parsed in the payload field",
-          "value": "full",
-          "default": "resolved",
-          "options": [
-            {
-              "name": "Full",
-              "description": "Returns the full email message data with body content parsed in the payload field",
-              "value": "full",
-              "displayName": "Full"
-            },
-            {
-              "name": "Metadata",
-              "description": "Returns only email message ID, labels, and email headers",
-              "value": "metadata",
-              "displayName": "Metadata"
-            },
-            {
-              "name": "Minimal",
-              "description": "Returns only email message ID and labels; does not return the email headers, body, or payload",
-              "value": "minimal",
-              "displayName": "Minimal"
-            },
-            {
-              "name": "RAW",
-              "description": "Returns the full email message data with body content in the raw field as a base64url encoded string; the payload field is not used",
-              "value": "raw",
-              "displayName": "Raw"
-            },
-            {
-              "name": "Resolved",
-              "description": "Returns the full email with all data resolved and attachments saved as binary data",
-              "value": "resolved",
-              "displayName": "Resolved"
-            }
-          ]
+          "displayName": "Download Attachments",
+          "name": "downloadAttachments",
+          "type": "boolean",
+          "description": "Whether the draft's attachments will be downloaded",
+          "default": false
         }
       ],
       "displayOptions": {
@@ -435,7 +428,7 @@
       "name": "limit",
       "type": "number",
       "description": "Max number of results to return",
-      "default": 10,
+      "default": 50,
       "typeOptions": {
         "minValue": 1,
         "maxValue": 500
@@ -457,77 +450,26 @@
       "_source": "Draft_draftFields"
     },
     {
-      "displayName": "Additional Fields",
-      "name": "additionalFields",
+      "displayName": "Options",
+      "name": "options",
       "type": "collection",
-      "description": "Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is \"attachment_\" the first attachment is saved to \"attachment_0\"",
-      "placeholder": "Add Field",
-      "value": "full",
+      "description": "Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'.",
+      "placeholder": "Add option",
       "default": {},
       "options": [
         {
           "displayName": "Attachment Prefix",
           "name": "dataPropertyAttachmentsPrefixName",
           "type": "string",
-          "description": "Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is \"attachment_\" the first attachment is saved to \"attachment_0\"",
-          "default": "attachment_",
-          "displayOptions": {
-            "hide": {
-              "format": [
-                "full",
-                "ids",
-                "metadata",
-                "minimal",
-                "raw"
-              ]
-            }
-          }
+          "description": "Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'.",
+          "default": "attachment_"
         },
         {
-          "displayName": "Format",
-          "name": "format",
-          "type": "options",
-          "description": "Returns the full email message data with body content parsed in the payload field",
-          "value": "full",
-          "default": "resolved",
-          "options": [
-            {
-              "name": "Full",
-              "description": "Returns the full email message data with body content parsed in the payload field",
-              "value": "full",
-              "displayName": "Full"
-            },
-            {
-              "name": "IDs",
-              "description": "Returns only the IDs of the emails",
-              "value": "ids",
-              "displayName": "Ids"
-            },
-            {
-              "name": "Metadata",
-              "description": "Returns only email message ID, labels, and email headers",
-              "value": "metadata",
-              "displayName": "Metadata"
-            },
-            {
-              "name": "Minimal",
-              "description": "Returns only email message ID and labels; does not return the email headers, body, or payload",
-              "value": "minimal",
-              "displayName": "Minimal"
-            },
-            {
-              "name": "RAW",
-              "description": "Returns the full email message data with body content in the raw field as a base64url encoded string; the payload field is not used",
-              "value": "raw",
-              "displayName": "Raw"
-            },
-            {
-              "name": "Resolved",
-              "description": "Returns the full email with all data resolved and attachments saved as binary data",
-              "value": "resolved",
-              "displayName": "Resolved"
-            }
-          ]
+          "displayName": "Download Attachments",
+          "name": "downloadAttachments",
+          "type": "boolean",
+          "description": "Whether the draft's attachments will be downloaded",
+          "default": false
         },
         {
           "displayName": "Include Spam and Trash",
@@ -556,7 +498,7 @@
       "type": "options",
       "action": "Create a label",
       "value": "create",
-      "default": "create",
+      "default": "getAll",
       "noDataExpression": true,
       "options": [
         {
@@ -573,7 +515,7 @@
         },
         {
           "name": "Get",
-          "action": "Get a label",
+          "action": "Get a label info",
           "value": "get",
           "displayName": "Get"
         },
@@ -636,61 +578,58 @@
       "_source": "Label_labelFields"
     },
     {
-      "displayName": "Label List Visibility",
-      "name": "labelListVisibility",
-      "type": "options",
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
       "description": "The visibility of the label in the label list in the Gmail web interface",
+      "placeholder": "Add option",
       "value": "labelHide",
-      "default": "labelShow",
-      "required": true,
+      "default": {},
       "options": [
         {
-          "name": "Hide",
+          "displayName": "Label List Visibility",
+          "name": "labelListVisibility",
+          "type": "options",
+          "description": "The visibility of the label in the label list in the Gmail web interface",
           "value": "labelHide",
-          "displayName": "Hide"
-        },
-        {
-          "name": "Show",
-          "value": "labelShow",
-          "displayName": "Show"
-        },
-        {
-          "name": "Show If Unread",
-          "value": "labelShowIfUnread",
-          "displayName": "Show If Unread"
-        }
-      ],
-      "displayOptions": {
-        "show": {
-          "resource": [
-            "label"
-          ],
-          "operation": [
-            "create"
+          "default": "labelShow",
+          "options": [
+            {
+              "name": "Hide",
+              "value": "labelHide",
+              "displayName": "Hide"
+            },
+            {
+              "name": "Show",
+              "value": "labelShow",
+              "displayName": "Show"
+            },
+            {
+              "name": "Show If Unread",
+              "value": "labelShowIfUnread",
+              "displayName": "Show If Unread"
+            }
           ]
-        }
-      },
-      "_operation": "create",
-      "_source": "Label_labelFields"
-    },
-    {
-      "displayName": "Message List Visibility",
-      "name": "messageListVisibility",
-      "type": "options",
-      "description": "The visibility of messages with this label in the message list in the Gmail web interface",
-      "value": "hide",
-      "default": "show",
-      "required": true,
-      "options": [
-        {
-          "name": "Hide",
-          "value": "hide",
-          "displayName": "Hide"
         },
         {
-          "name": "Show",
-          "value": "show",
-          "displayName": "Show"
+          "displayName": "Message List Visibility",
+          "name": "messageListVisibility",
+          "type": "options",
+          "description": "The visibility of messages with this label in the message list in the Gmail web interface",
+          "value": "hide",
+          "default": "show",
+          "options": [
+            {
+              "name": "Hide",
+              "value": "hide",
+              "displayName": "Hide"
+            },
+            {
+              "name": "Show",
+              "value": "show",
+              "displayName": "Show"
+            }
+          ]
         }
       ],
       "displayOptions": {
@@ -755,11 +694,17 @@
       "displayName": "Operation",
       "name": "operation",
       "type": "options",
-      "action": "Delete a message",
-      "value": "delete",
+      "action": "Add label to message",
+      "value": "addLabels",
       "default": "send",
       "noDataExpression": true,
       "options": [
+        {
+          "name": "Add Label",
+          "action": "Add label to message",
+          "value": "addLabels",
+          "displayName": "Add Label"
+        },
         {
           "name": "Delete",
           "action": "Delete a message",
@@ -779,6 +724,24 @@
           "displayName": "Get Many"
         },
         {
+          "name": "Mark as Read",
+          "action": "Mark a message as read",
+          "value": "markAsRead",
+          "displayName": "Mark As Read"
+        },
+        {
+          "name": "Mark as Unread",
+          "action": "Mark a message as unread",
+          "value": "markAsUnread",
+          "displayName": "Mark As Unread"
+        },
+        {
+          "name": "Remove Label",
+          "action": "Remove label from message",
+          "value": "removeLabels",
+          "displayName": "Remove Label"
+        },
+        {
           "name": "Reply",
           "action": "Reply to a message",
           "value": "reply",
@@ -789,6 +752,11 @@
           "action": "Send a message",
           "value": "send",
           "displayName": "Send"
+        },
+        {
+          "name": "Send and Wait for Response",
+          "action": "Send message and wait for response",
+          "displayName": "Send And Wait For Response"
         }
       ],
       "displayOptions": {
@@ -814,16 +782,18 @@
           ],
           "operation": [
             "get",
-            "delete"
+            "delete",
+            "markAsRead",
+            "markAsUnread"
           ]
         }
       },
-      "_operation": "get,delete",
+      "_operation": "get,delete,markAsRead,markAsUnread",
       "_source": "Message_messageFields"
     },
     {
-      "displayName": "Thread ID",
-      "name": "threadId",
+      "displayName": "Message ID",
+      "name": "messageId",
       "type": "string",
       "placeholder": "172ce2c4a72cc243",
       "default": "",
@@ -842,10 +812,11 @@
       "_source": "Message_messageFields"
     },
     {
-      "displayName": "Message ID",
-      "name": "messageId",
+      "displayName": "To",
+      "name": "sendTo",
       "type": "string",
-      "placeholder": "CAHNQoFsC6JMMbOBJgtjsqN0eEc+gDg2a=SQj-tWUebQeHMDgqQ@mail.gmail.com",
+      "description": "The email addresses of the recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com.",
+      "placeholder": "info@example.com",
       "default": "",
       "required": true,
       "displayOptions": {
@@ -854,11 +825,11 @@
             "message"
           ],
           "operation": [
-            "reply"
+            "send"
           ]
         }
       },
-      "_operation": "reply",
+      "_operation": "send",
       "_source": "Message_messageFields"
     },
     {
@@ -874,20 +845,68 @@
             "message"
           ],
           "operation": [
-            "reply",
             "send"
           ]
         }
       },
-      "_operation": "reply,send",
+      "_operation": "send",
       "_source": "Message_messageFields"
     },
     {
-      "displayName": "HTML",
-      "name": "includeHtml",
-      "type": "boolean",
-      "description": "Whether the message should also be included as HTML",
-      "default": false,
+      "displayName": "Email Type",
+      "name": "emailType",
+      "type": "options",
+      "value": "text",
+      "default": "html",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Text",
+          "value": "text",
+          "displayName": "Text"
+        },
+        {
+          "name": "HTML",
+          "value": "html",
+          "displayName": "Html"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "send",
+            "reply"
+          ]
+        },
+        "hide": {}
+      },
+      "_operation": "send,reply",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Email Type",
+      "name": "emailType",
+      "type": "options",
+      "value": "text",
+      "default": "html",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Text",
+          "value": "text",
+          "displayName": "Text"
+        },
+        {
+          "name": "HTML",
+          "value": "html",
+          "displayName": "Html"
+        }
+      ],
       "displayOptions": {
         "show": {
           "resource": [
@@ -903,34 +922,9 @@
       "_source": "Message_messageFields"
     },
     {
-      "displayName": "HTML Message",
-      "name": "htmlMessage",
-      "type": "string",
-      "description": "The HTML message body",
-      "default": "",
-      "required": true,
-      "displayOptions": {
-        "show": {
-          "includeHtml": [
-            true
-          ],
-          "resource": [
-            "message"
-          ],
-          "operation": [
-            "reply",
-            "send"
-          ]
-        }
-      },
-      "_operation": "reply,send",
-      "_source": "Message_messageFields"
-    },
-    {
       "displayName": "Message",
       "name": "message",
       "type": "string",
-      "description": "Plain text message body",
       "default": "",
       "required": true,
       "displayOptions": {
@@ -948,56 +942,34 @@
       "_source": "Message_messageFields"
     },
     {
-      "displayName": "To Email",
-      "name": "toList",
-      "type": "string",
-      "description": "The email addresses of the recipients",
-      "placeholder": "info@example.com",
-      "default": [],
-      "required": true,
-      "typeOptions": {
-        "multipleValues": true
-      },
-      "displayOptions": {
-        "show": {
-          "resource": [
-            "message"
-          ],
-          "operation": [
-            "reply",
-            "send"
-          ]
-        }
-      },
-      "_operation": "reply,send",
-      "_source": "Message_messageFields"
-    },
-    {
-      "displayName": "Additional Fields",
-      "name": "additionalFields",
+      "displayName": "Options",
+      "name": "options",
       "type": "collection",
-      "description": "Add the field name from the input node. Multiple properties can be set separated by comma.",
-      "placeholder": "Add Field",
+      "description": "Whether to include the phrase \u201cThis email was sent automatically with n8n\u201d to the end of the email",
+      "placeholder": "Add option",
+      "hint": "The name of the field with the attachment in the node input",
       "default": {},
       "options": [
         {
-          "displayName": "Attachment",
+          "displayName": "Attachments",
           "name": "attachmentsUi",
           "type": "fixedCollection",
           "description": "Add the field name from the input node. Multiple properties can be set separated by comma.",
           "placeholder": "Add Attachment",
-          "default": "",
+          "hint": "The name of the field with the attachment in the node input",
+          "default": "data",
           "options": [
             {
               "name": "attachmentsBinary",
               "displayName": "Attachment Binary",
               "values": [
                 {
-                  "displayName": "Attachment Field Name (in Input)",
+                  "displayName": "Attachment Field Name",
                   "name": "property",
                   "type": "string",
                   "description": "Add the field name from the input node. Multiple properties can be set separated by comma.",
-                  "default": ""
+                  "hint": "The name of the field with the attachment in the node input",
+                  "default": "data"
                 }
               ]
             }
@@ -1007,34 +979,46 @@
           }
         },
         {
-          "displayName": "BCC Email",
+          "displayName": "BCC",
           "name": "bccList",
           "type": "string",
-          "description": "The email addresses of the blind copy recipients",
+          "description": "The email addresses of the blind copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com.",
           "placeholder": "info@example.com",
-          "default": [],
-          "typeOptions": {
-            "multipleValues": true
-          }
+          "default": ""
         },
         {
-          "displayName": "CC Email",
+          "displayName": "CC",
           "name": "ccList",
           "type": "string",
-          "description": "The email addresses of the copy recipients",
+          "description": "The email addresses of the copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com.",
           "placeholder": "info@example.com",
-          "default": [],
-          "typeOptions": {
-            "multipleValues": true
+          "default": ""
+        },
+        {
+          "displayName": "Sender Name",
+          "name": "senderName",
+          "type": "string",
+          "description": "The name that will be shown in recipients' inboxes",
+          "placeholder": "e.g. Nathan",
+          "default": ""
+        },
+        {
+          "displayName": "Send Replies To",
+          "name": "replyTo",
+          "type": "string",
+          "description": "The email address that the reply message is sent to",
+          "placeholder": "reply@example.com",
+          "default": "",
+          "displayOptions": {
+            "hide": {}
           }
         },
         {
-          "displayName": "Override Sender Name",
-          "name": "senderName",
-          "type": "string",
-          "description": "The name displayed in your contacts inboxes. It has to be in the format: \"Display-Name &#60;name@gmail.com&#62;\". The email address has to match the email address of the logged in user for the API.",
-          "placeholder": "Name <test@gmail.com>",
-          "default": ""
+          "displayName": "Reply to Sender Only",
+          "name": "replyToSenderOnly",
+          "type": "boolean",
+          "description": "Whether to reply to the sender only or to the entire list of recipients",
+          "default": false
         }
       ],
       "typeOptions": {
@@ -1055,70 +1039,45 @@
       "_source": "Message_messageFields"
     },
     {
-      "displayName": "Additional Fields",
-      "name": "additionalFields",
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "message"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
       "type": "collection",
-      "description": "Returns the full email message data with body content parsed in the payload field",
-      "placeholder": "Add Field",
-      "value": "full",
+      "description": "Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'.",
+      "placeholder": "Add option",
       "default": {},
       "options": [
-        {
-          "displayName": "Format",
-          "name": "format",
-          "type": "options",
-          "description": "Returns the full email message data with body content parsed in the payload field",
-          "value": "full",
-          "default": "resolved",
-          "options": [
-            {
-              "name": "Full",
-              "description": "Returns the full email message data with body content parsed in the payload field",
-              "value": "full",
-              "displayName": "Full"
-            },
-            {
-              "name": "Metadata",
-              "description": "Returns only email message ID, labels, and email headers",
-              "value": "metadata",
-              "displayName": "Metadata"
-            },
-            {
-              "name": "Minimal",
-              "description": "Returns only email message ID and labels; does not return the email headers, body, or payload",
-              "value": "minimal",
-              "displayName": "Minimal"
-            },
-            {
-              "name": "RAW",
-              "description": "Returns the full email message data with body content in the raw field as a base64url encoded string; the payload field is not used",
-              "value": "raw",
-              "displayName": "Raw"
-            },
-            {
-              "name": "Resolved",
-              "description": "Returns the full email with all data resolved and attachments saved as binary data",
-              "value": "resolved",
-              "displayName": "Resolved"
-            }
-          ]
-        },
         {
           "displayName": "Attachment Prefix",
           "name": "dataPropertyAttachmentsPrefixName",
           "type": "string",
-          "description": "Prefix for name of the binary property to which to write the attachments. An index starting with 0 will be added. So if name is \"attachment_\" the first attachment is saved to \"attachment_0\"",
-          "default": "attachment_",
-          "displayOptions": {
-            "hide": {
-              "format": [
-                "full",
-                "metadata",
-                "minimal",
-                "raw"
-              ]
-            }
-          }
+          "description": "Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'.",
+          "default": "attachment_"
+        },
+        {
+          "displayName": "Download Attachments",
+          "name": "downloadAttachments",
+          "type": "boolean",
+          "description": "Whether the email's attachments will be downloaded and included in the output",
+          "default": false
         }
       ],
       "displayOptions": {
@@ -1128,6 +1087,11 @@
           ],
           "operation": [
             "get"
+          ]
+        },
+        "hide": {
+          "simple": [
+            true
           ]
         }
       },
@@ -1158,7 +1122,7 @@
       "name": "limit",
       "type": "number",
       "description": "Max number of results to return",
-      "default": 10,
+      "default": 50,
       "typeOptions": {
         "minValue": 1,
         "maxValue": 500
@@ -1180,78 +1144,55 @@
       "_source": "Message_messageFields"
     },
     {
-      "displayName": "Additional Fields",
-      "name": "additionalFields",
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "message"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Fetching a lot of messages may take a long time. Consider using filters to speed things up",
+      "name": "filtersNotice",
+      "type": "notice",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "message"
+          ],
+          "returnAll": [
+            true
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
       "type": "collection",
-      "description": "Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is \"attachment_\" the first attachment is saved to \"attachment_0\".",
-      "placeholder": "Add Field",
-      "value": "full",
+      "description": "Whether to include messages from SPAM and TRASH in the results",
+      "placeholder": "Add Filter",
+      "hint": "Use the same format as in the Gmail search box. <a href=\"https://support.google.com/mail/answer/7190?hl=en\">More info</a>.",
+      "value": "both",
       "default": {},
       "options": [
-        {
-          "displayName": "Attachment Prefix",
-          "name": "dataPropertyAttachmentsPrefixName",
-          "type": "string",
-          "description": "Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is \"attachment_\" the first attachment is saved to \"attachment_0\".",
-          "default": "attachment_",
-          "displayOptions": {
-            "hide": {
-              "format": [
-                "full",
-                "ids",
-                "metadata",
-                "minimal",
-                "raw"
-              ]
-            }
-          }
-        },
-        {
-          "displayName": "Format",
-          "name": "format",
-          "type": "options",
-          "description": "Returns the full email message data with body content parsed in the payload field",
-          "value": "full",
-          "default": "resolved",
-          "options": [
-            {
-              "name": "Full",
-              "description": "Returns the full email message data with body content parsed in the payload field",
-              "value": "full",
-              "displayName": "Full"
-            },
-            {
-              "name": "IDs",
-              "description": "Returns only the IDs of the emails",
-              "value": "ids",
-              "displayName": "Ids"
-            },
-            {
-              "name": "Metadata",
-              "description": "Returns only email message ID, labels, and email headers",
-              "value": "metadata",
-              "displayName": "Metadata"
-            },
-            {
-              "name": "Minimal",
-              "description": "Returns only email message ID and labels; does not return the email headers, body, or payload",
-              "value": "minimal",
-              "displayName": "Minimal"
-            },
-            {
-              "name": "RAW",
-              "description": "Returns the full email message data with body content in the raw field as a base64url encoded string; the payload field is not used",
-              "value": "raw",
-              "displayName": "Raw"
-            },
-            {
-              "name": "Resolved",
-              "description": "Returns the full email with all data resolved and attachments saved as binary data",
-              "value": "resolved",
-              "displayName": "Resolved"
-            }
-          ]
-        },
         {
           "displayName": "Include Spam and Trash",
           "name": "includeSpamTrash",
@@ -1270,10 +1211,59 @@
           }
         },
         {
-          "displayName": "Query",
+          "displayName": "Search",
           "name": "q",
           "type": "string",
-          "description": "Only return messages matching the specified query. Supports the same query format as the Gmail search box. For example, \"from:someuser@example.com rfc822msgid:&lt;somemsgid@example.com&gt; is:unread\". Parameter cannot be used when accessing the api using the gmail.metadata scope.",
+          "description": "Only return messages matching the specified query",
+          "placeholder": "has:attachment",
+          "hint": "Use the same format as in the Gmail search box. <a href=\"https://support.google.com/mail/answer/7190?hl=en\">More info</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Read Status",
+          "name": "readStatus",
+          "type": "options",
+          "hint": "Filter emails by whether they have been read or not",
+          "value": "both",
+          "default": "unread",
+          "options": [
+            {
+              "name": "Unread and read emails",
+              "value": "both",
+              "displayName": "Unread And Read Emails"
+            },
+            {
+              "name": "Unread emails only",
+              "value": "unread",
+              "displayName": "Unread Emails Only"
+            },
+            {
+              "name": "Read emails only",
+              "value": "read",
+              "displayName": "Read Emails Only"
+            }
+          ]
+        },
+        {
+          "displayName": "Received After",
+          "name": "receivedAfter",
+          "type": "dateTime",
+          "description": "Get all emails received after the specified date. In an expression you can set date using string in ISO format or a timestamp in miliseconds.",
+          "default": ""
+        },
+        {
+          "displayName": "Received Before",
+          "name": "receivedBefore",
+          "type": "dateTime",
+          "description": "Get all emails received before the specified date. In an expression you can set date using string in ISO format or a timestamp in miliseconds.",
+          "default": ""
+        },
+        {
+          "displayName": "Sender",
+          "name": "sender",
+          "type": "string",
+          "description": "Sender name or email to filter by",
+          "hint": "Enter an email or part of a sender name",
           "default": ""
         }
       ],
@@ -1294,35 +1284,45 @@
       "_source": "Message_messageFields"
     },
     {
-      "displayName": "Operation",
-      "name": "operation",
-      "type": "options",
-      "action": "Add a label to a message",
-      "value": "add",
-      "default": "add",
-      "noDataExpression": true,
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'.",
+      "placeholder": "Add option",
+      "default": {},
       "options": [
         {
-          "name": "Add",
-          "action": "Add a label to a message",
-          "value": "add",
-          "displayName": "Add"
+          "displayName": "Attachment Prefix",
+          "name": "dataPropertyAttachmentsPrefixName",
+          "type": "string",
+          "description": "Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is 'attachment_' the first attachment is saved to 'attachment_0'.",
+          "default": "attachment_"
         },
         {
-          "name": "Remove",
-          "action": "Remove a label from a message",
-          "value": "remove",
-          "displayName": "Remove"
+          "displayName": "Download Attachments",
+          "name": "downloadAttachments",
+          "type": "boolean",
+          "description": "Whether the email's attachments will be downloaded and included in the output",
+          "default": false
         }
       ],
       "displayOptions": {
         "show": {
+          "operation": [
+            "getAll"
+          ],
           "resource": [
-            "messageLabel"
+            "message"
+          ]
+        },
+        "hide": {
+          "simple": [
+            true
           ]
         }
       },
-      "_source": "MessageLabel_messageLabelOperations"
+      "_operation": "getAll",
+      "_source": "Message_messageFields"
     },
     {
       "displayName": "Message ID",
@@ -1334,22 +1334,22 @@
       "displayOptions": {
         "show": {
           "resource": [
-            "messageLabel"
+            "message"
           ],
           "operation": [
-            "add",
-            "remove"
+            "addLabels",
+            "removeLabels"
           ]
         }
       },
-      "_operation": "add,remove",
-      "_source": "MessageLabel_messageLabelFields"
+      "_operation": "addLabels,removeLabels",
+      "_source": "Message_messageFields"
     },
     {
       "displayName": "Label Names or IDs",
       "name": "labelIds",
       "type": "multiOptions",
-      "description": "The ID of the label. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+      "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
       "default": [],
       "required": true,
       "typeOptions": {
@@ -1358,16 +1358,548 @@
       "displayOptions": {
         "show": {
           "resource": [
-            "messageLabel"
+            "message"
           ],
           "operation": [
-            "add",
-            "remove"
+            "addLabels",
+            "removeLabels"
           ]
         }
       },
-      "_operation": "add,remove",
-      "_source": "MessageLabel_messageLabelFields"
+      "_operation": "addLabels,removeLabels",
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Append n8n Attribution",
+      "name": "appendAttribution",
+      "type": "boolean",
+      "default": true,
+      "_source": "Message_messageFields"
+    },
+    {
+      "displayName": "Operation",
+      "name": "operation",
+      "type": "options",
+      "action": "Add label to thread",
+      "value": "addLabels",
+      "default": "getAll",
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Add Label",
+          "action": "Add label to thread",
+          "value": "addLabels",
+          "displayName": "Add Label"
+        },
+        {
+          "name": "Delete",
+          "action": "Delete a thread",
+          "value": "delete",
+          "displayName": "Delete"
+        },
+        {
+          "name": "Get",
+          "action": "Get a thread",
+          "value": "get",
+          "displayName": "Get"
+        },
+        {
+          "name": "Get Many",
+          "action": "Get many threads",
+          "value": "getAll",
+          "displayName": "Get Many"
+        },
+        {
+          "name": "Remove Label",
+          "action": "Remove label from thread",
+          "value": "removeLabels",
+          "displayName": "Remove Label"
+        },
+        {
+          "name": "Reply",
+          "action": "Reply to a message",
+          "value": "reply",
+          "displayName": "Reply"
+        },
+        {
+          "name": "Trash",
+          "action": "Trash a thread",
+          "value": "trash",
+          "displayName": "Trash"
+        },
+        {
+          "name": "Untrash",
+          "action": "Untrash a thread",
+          "value": "untrash",
+          "displayName": "Untrash"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "thread"
+          ]
+        }
+      },
+      "_source": "Thread_threadOperations"
+    },
+    {
+      "displayName": "Thread ID",
+      "name": "threadId",
+      "type": "string",
+      "description": "The ID of the thread you are operating on",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "thread"
+          ],
+          "operation": [
+            "get",
+            "delete",
+            "reply",
+            "trash",
+            "untrash"
+          ]
+        }
+      },
+      "_operation": "get,delete,reply,trash,untrash",
+      "_source": "Thread_threadFields"
+    },
+    {
+      "displayName": "Message Snippet or ID",
+      "name": "messageId",
+      "type": "options",
+      "description": "Choose from the list, or specify an ID using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": "",
+      "typeOptions": {
+        "loadOptionsMethod": "getThreadMessages"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "thread"
+          ],
+          "operation": [
+            "reply"
+          ]
+        }
+      },
+      "_operation": "reply",
+      "_source": "Thread_threadFields"
+    },
+    {
+      "displayName": "Email Type",
+      "name": "emailType",
+      "type": "options",
+      "value": "text",
+      "default": "text",
+      "required": true,
+      "noDataExpression": true,
+      "options": [
+        {
+          "name": "Text",
+          "value": "text",
+          "displayName": "Text"
+        },
+        {
+          "name": "HTML",
+          "value": "html",
+          "displayName": "Html"
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "thread"
+          ],
+          "operation": [
+            "reply"
+          ]
+        }
+      },
+      "_operation": "reply",
+      "_source": "Thread_threadFields"
+    },
+    {
+      "displayName": "Message",
+      "name": "message",
+      "type": "string",
+      "hint": "Get better Text and Expressions writing experience by using the expression editor",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "thread"
+          ],
+          "operation": [
+            "reply"
+          ]
+        }
+      },
+      "_operation": "reply",
+      "_source": "Thread_threadFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Add the field name from the input node. Multiple properties can be set separated by comma.",
+      "placeholder": "Add option",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Attachments",
+          "name": "attachmentsUi",
+          "type": "fixedCollection",
+          "description": "Add the field name from the input node. Multiple properties can be set separated by comma.",
+          "placeholder": "Add Attachment",
+          "default": "",
+          "options": [
+            {
+              "name": "attachmentsBinary",
+              "displayName": "Attachment Binary",
+              "values": [
+                {
+                  "displayName": "Attachment Field Name",
+                  "name": "property",
+                  "type": "string",
+                  "description": "Add the field name from the input node. Multiple properties can be set separated by comma.",
+                  "default": ""
+                }
+              ]
+            }
+          ],
+          "typeOptions": {
+            "multipleValues": true
+          }
+        },
+        {
+          "displayName": "BCC",
+          "name": "bccList",
+          "type": "string",
+          "description": "The email addresses of the blind copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com.",
+          "placeholder": "info@example.com",
+          "default": ""
+        },
+        {
+          "displayName": "CC",
+          "name": "ccList",
+          "type": "string",
+          "description": "The email addresses of the copy recipients. Multiple addresses can be separated by a comma. e.g. jay@getsby.com, jon@smith.com.",
+          "placeholder": "info@example.com",
+          "default": ""
+        },
+        {
+          "displayName": "Sender Name",
+          "name": "senderName",
+          "type": "string",
+          "description": "The name displayed in your contacts inboxes",
+          "placeholder": "e.g. Nathan",
+          "default": ""
+        },
+        {
+          "displayName": "Reply to Sender Only",
+          "name": "replyToSenderOnly",
+          "type": "boolean",
+          "description": "Whether to reply to the sender only or to the entire list of recipients",
+          "default": false,
+          "displayOptions": {
+            "hide": {
+              "replyToRecipientsOnly": [
+                true
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Reply to Recipients Only",
+          "name": "replyToRecipientsOnly",
+          "type": "boolean",
+          "description": "Whether to exclude the sender from the reply",
+          "default": false,
+          "displayOptions": {
+            "hide": {
+              "replyToSenderOnly": [
+                true
+              ]
+            }
+          }
+        }
+      ],
+      "typeOptions": {
+        "multipleValues": true
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "thread"
+          ],
+          "operation": [
+            "reply"
+          ]
+        }
+      },
+      "_operation": "reply",
+      "_source": "Thread_threadFields"
+    },
+    {
+      "displayName": "Simplify",
+      "name": "simple",
+      "type": "boolean",
+      "description": "Whether to return a simplified version of the response instead of the raw data",
+      "default": true,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "get"
+          ],
+          "resource": [
+            "thread"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Thread_threadFields"
+    },
+    {
+      "displayName": "Options",
+      "name": "options",
+      "type": "collection",
+      "description": "Whether to return only thread messages",
+      "placeholder": "Add Field",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Return Only Messages",
+          "name": "returnOnlyMessages",
+          "type": "boolean",
+          "description": "Whether to return only thread messages",
+          "default": true
+        }
+      ],
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "thread"
+          ],
+          "operation": [
+            "get"
+          ]
+        }
+      },
+      "_operation": "get",
+      "_source": "Thread_threadFields"
+    },
+    {
+      "displayName": "Return All",
+      "name": "returnAll",
+      "type": "boolean",
+      "description": "Whether to return all results or only up to a given limit",
+      "default": false,
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "thread"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Thread_threadFields"
+    },
+    {
+      "displayName": "Limit",
+      "name": "limit",
+      "type": "number",
+      "description": "Max number of results to return",
+      "default": 50,
+      "typeOptions": {
+        "minValue": 1,
+        "maxValue": 500
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "thread"
+          ],
+          "returnAll": [
+            false
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Thread_threadFields"
+    },
+    {
+      "displayName": "Fetching a lot of messages may take a long time. Consider using filters to speed things up",
+      "name": "filtersNotice",
+      "type": "notice",
+      "default": "",
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "thread"
+          ],
+          "returnAll": [
+            true
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Thread_threadFields"
+    },
+    {
+      "displayName": "Filters",
+      "name": "filters",
+      "type": "collection",
+      "description": "Whether to include threads from SPAM and TRASH in the results",
+      "placeholder": "Add Filter",
+      "hint": "Use the same format as in the Gmail search box. <a href=\"https://support.google.com/mail/answer/7190?hl=en\">More info</a>.",
+      "value": "both",
+      "default": {},
+      "options": [
+        {
+          "displayName": "Include Spam and Trash",
+          "name": "includeSpamTrash",
+          "type": "boolean",
+          "description": "Whether to include threads from SPAM and TRASH in the results",
+          "default": false
+        },
+        {
+          "displayName": "Label ID Names or IDs",
+          "name": "labelIds",
+          "type": "multiOptions",
+          "description": "Only return threads with labels that match all of the specified label IDs. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          }
+        },
+        {
+          "displayName": "Search",
+          "name": "q",
+          "type": "string",
+          "description": "Only return messages matching the specified query",
+          "placeholder": "has:attachment",
+          "hint": "Use the same format as in the Gmail search box. <a href=\"https://support.google.com/mail/answer/7190?hl=en\">More info</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Read Status",
+          "name": "readStatus",
+          "type": "options",
+          "hint": "Filter emails by whether they have been read or not",
+          "value": "both",
+          "default": "unread",
+          "options": [
+            {
+              "name": "Unread and read emails",
+              "value": "both",
+              "displayName": "Unread And Read Emails"
+            },
+            {
+              "name": "Unread emails only",
+              "value": "unread",
+              "displayName": "Unread Emails Only"
+            },
+            {
+              "name": "Read emails only",
+              "value": "read",
+              "displayName": "Read Emails Only"
+            }
+          ]
+        },
+        {
+          "displayName": "Received After",
+          "name": "receivedAfter",
+          "type": "dateTime",
+          "description": "Get all emails received after the specified date. In an expression you can set date using string in ISO format or a timestamp in miliseconds.",
+          "default": ""
+        },
+        {
+          "displayName": "Received Before",
+          "name": "receivedBefore",
+          "type": "dateTime",
+          "description": "Get all emails received before the specified date. In an expression you can set date using string in ISO format or a timestamp in miliseconds.",
+          "default": ""
+        }
+      ],
+      "typeOptions": {
+        "loadOptionsMethod": "getLabels"
+      },
+      "displayOptions": {
+        "show": {
+          "operation": [
+            "getAll"
+          ],
+          "resource": [
+            "thread"
+          ]
+        }
+      },
+      "_operation": "getAll",
+      "_source": "Thread_threadFields"
+    },
+    {
+      "displayName": "Thread ID",
+      "name": "threadId",
+      "type": "string",
+      "placeholder": "172ce2c4a72cc243",
+      "default": "",
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "thread"
+          ],
+          "operation": [
+            "addLabels",
+            "removeLabels"
+          ]
+        }
+      },
+      "_operation": "addLabels,removeLabels",
+      "_source": "Thread_threadFields"
+    },
+    {
+      "displayName": "Label Names or IDs",
+      "name": "labelIds",
+      "type": "multiOptions",
+      "description": "Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>",
+      "default": [],
+      "required": true,
+      "typeOptions": {
+        "loadOptionsMethod": "getLabels"
+      },
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "thread"
+          ],
+          "operation": [
+            "addLabels",
+            "removeLabels"
+          ]
+        }
+      },
+      "_operation": "addLabels,removeLabels",
+      "_source": "Thread_threadFields"
+    },
+    {
+      "name": "default",
+      "displayName": "Default",
+      "_source": "descriptions_sendAndWaitWebhooksDescription"
     }
   ],
   "operations": [
@@ -1396,6 +1928,30 @@
       "displayName": "Get Many"
     },
     {
+      "name": "Add Label",
+      "action": "Add label to message",
+      "value": "addLabels",
+      "displayName": "Add Label"
+    },
+    {
+      "name": "Mark as Read",
+      "action": "Mark a message as read",
+      "value": "markAsRead",
+      "displayName": "Mark As Read"
+    },
+    {
+      "name": "Mark as Unread",
+      "action": "Mark a message as unread",
+      "value": "markAsUnread",
+      "displayName": "Mark As Unread"
+    },
+    {
+      "name": "Remove Label",
+      "action": "Remove label from message",
+      "value": "removeLabels",
+      "displayName": "Remove Label"
+    },
+    {
       "name": "Reply",
       "action": "Reply to a message",
       "value": "reply",
@@ -1408,16 +1964,21 @@
       "displayName": "Send"
     },
     {
-      "name": "Add",
-      "action": "Add a label to a message",
-      "value": "add",
-      "displayName": "Add"
+      "name": "Send and Wait for Response",
+      "action": "Send message and wait for response",
+      "displayName": "Send And Wait For Response"
     },
     {
-      "name": "Remove",
-      "action": "Remove a label from a message",
-      "value": "remove",
-      "displayName": "Remove"
+      "name": "Trash",
+      "action": "Trash a thread",
+      "value": "trash",
+      "displayName": "Trash"
+    },
+    {
+      "name": "Untrash",
+      "action": "Untrash a thread",
+      "value": "untrash",
+      "displayName": "Untrash"
     }
   ],
   "operations_by_resource": {
@@ -1462,7 +2023,7 @@
       },
       {
         "name": "Get",
-        "action": "Get a label",
+        "action": "Get a label info",
         "value": "get",
         "displayName": "Get"
       },
@@ -1474,6 +2035,12 @@
       }
     ],
     "message": [
+      {
+        "name": "Add Label",
+        "action": "Add label to message",
+        "value": "addLabels",
+        "displayName": "Add Label"
+      },
       {
         "name": "Delete",
         "action": "Delete a message",
@@ -1493,6 +2060,24 @@
         "displayName": "Get Many"
       },
       {
+        "name": "Mark as Read",
+        "action": "Mark a message as read",
+        "value": "markAsRead",
+        "displayName": "Mark As Read"
+      },
+      {
+        "name": "Mark as Unread",
+        "action": "Mark a message as unread",
+        "value": "markAsUnread",
+        "displayName": "Mark As Unread"
+      },
+      {
+        "name": "Remove Label",
+        "action": "Remove label from message",
+        "value": "removeLabels",
+        "displayName": "Remove Label"
+      },
+      {
         "name": "Reply",
         "action": "Reply to a message",
         "value": "reply",
@@ -1503,20 +2088,61 @@
         "action": "Send a message",
         "value": "send",
         "displayName": "Send"
-      }
-    ],
-    "messageLabel": [
-      {
-        "name": "Add",
-        "action": "Add a label to a message",
-        "value": "add",
-        "displayName": "Add"
       },
       {
-        "name": "Remove",
-        "action": "Remove a label from a message",
-        "value": "remove",
-        "displayName": "Remove"
+        "name": "Send and Wait for Response",
+        "action": "Send message and wait for response",
+        "displayName": "Send And Wait For Response"
+      }
+    ],
+    "thread": [
+      {
+        "name": "Add Label",
+        "action": "Add label to thread",
+        "value": "addLabels",
+        "displayName": "Add Label"
+      },
+      {
+        "name": "Delete",
+        "action": "Delete a thread",
+        "value": "delete",
+        "displayName": "Delete"
+      },
+      {
+        "name": "Get",
+        "action": "Get a thread",
+        "value": "get",
+        "displayName": "Get"
+      },
+      {
+        "name": "Get Many",
+        "action": "Get many threads",
+        "value": "getAll",
+        "displayName": "Get Many"
+      },
+      {
+        "name": "Remove Label",
+        "action": "Remove label from thread",
+        "value": "removeLabels",
+        "displayName": "Remove Label"
+      },
+      {
+        "name": "Reply",
+        "action": "Reply to a message",
+        "value": "reply",
+        "displayName": "Reply"
+      },
+      {
+        "name": "Trash",
+        "action": "Trash a thread",
+        "value": "trash",
+        "displayName": "Trash"
+      },
+      {
+        "name": "Untrash",
+        "action": "Untrash a thread",
+        "value": "untrash",
+        "displayName": "Untrash"
       }
     ]
   },
@@ -1549,25 +2175,36 @@
     "={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}"
   ],
   "validation_rules": {
+    "sendTo": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "message"
+          ],
+          "operation": [
+            "send"
+          ]
+        }
+      }
+    },
     "operation": {
       "displayOptions": {
         "show": {
           "resource": [
-            "messageLabel"
+            "thread"
           ]
         }
       }
     },
     "messageId": {
-      "required": true,
       "displayOptions": {
         "show": {
           "resource": [
-            "messageLabel"
+            "thread"
           ],
           "operation": [
-            "add",
-            "remove"
+            "reply"
           ]
         }
       }
@@ -1580,38 +2217,33 @@
             "message"
           ],
           "operation": [
-            "reply",
             "send"
           ]
         }
       }
     },
-    "includeHtml": {
+    "threadNotice": {
       "displayOptions": {
         "show": {
           "resource": [
-            "message"
+            "draft"
           ],
           "operation": [
-            "send",
-            "reply"
+            "create"
           ]
         }
       }
     },
-    "htmlMessage": {
+    "emailType": {
       "required": true,
+      "format": "email",
       "displayOptions": {
         "show": {
-          "includeHtml": [
-            true
-          ],
           "resource": [
-            "message"
+            "thread"
           ],
           "operation": [
-            "reply",
-            "send"
+            "reply"
           ]
         }
       }
@@ -1621,23 +2253,22 @@
       "displayOptions": {
         "show": {
           "resource": [
-            "message"
+            "thread"
           ],
           "operation": [
-            "reply",
-            "send"
+            "reply"
           ]
         }
       }
     },
-    "additionalFields": {
+    "options": {
       "displayOptions": {
         "show": {
-          "operation": [
-            "getAll"
-          ],
           "resource": [
-            "message"
+            "thread"
+          ],
+          "operation": [
+            "get"
           ]
         }
       }
@@ -1649,7 +2280,7 @@
             "getAll"
           ],
           "resource": [
-            "message"
+            "thread"
           ]
         }
       }
@@ -1661,7 +2292,7 @@
             "getAll"
           ],
           "resource": [
-            "message"
+            "thread"
           ],
           "returnAll": [
             false
@@ -1696,55 +2327,41 @@
         }
       }
     },
-    "labelListVisibility": {
-      "required": true,
+    "simple": {
       "displayOptions": {
         "show": {
-          "resource": [
-            "label"
-          ],
           "operation": [
-            "create"
+            "get"
+          ],
+          "resource": [
+            "thread"
           ]
         }
       }
     },
-    "messageListVisibility": {
-      "required": true,
+    "filtersNotice": {
       "displayOptions": {
         "show": {
-          "resource": [
-            "label"
-          ],
           "operation": [
-            "create"
+            "getAll"
+          ],
+          "resource": [
+            "thread"
+          ],
+          "returnAll": [
+            true
           ]
         }
       }
     },
-    "threadId": {
-      "required": true,
+    "filters": {
       "displayOptions": {
         "show": {
-          "resource": [
-            "message"
-          ],
           "operation": [
-            "reply"
-          ]
-        }
-      }
-    },
-    "toList": {
-      "required": true,
-      "displayOptions": {
-        "show": {
-          "resource": [
-            "message"
+            "getAll"
           ],
-          "operation": [
-            "reply",
-            "send"
+          "resource": [
+            "thread"
           ]
         }
       }
@@ -1754,11 +2371,25 @@
       "displayOptions": {
         "show": {
           "resource": [
-            "messageLabel"
+            "thread"
           ],
           "operation": [
-            "add",
-            "remove"
+            "addLabels",
+            "removeLabels"
+          ]
+        }
+      }
+    },
+    "threadId": {
+      "required": true,
+      "displayOptions": {
+        "show": {
+          "resource": [
+            "thread"
+          ],
+          "operation": [
+            "addLabels",
+            "removeLabels"
           ]
         }
       }
@@ -1788,8 +2419,8 @@
       "name": "resource",
       "possibleValues": [
         {
-          "value": "draft",
-          "name": "Draft",
+          "value": "message",
+          "name": "Message",
           "description": ""
         },
         {
@@ -1798,16 +2429,21 @@
           "description": ""
         },
         {
-          "value": "message",
-          "name": "Message",
+          "value": "draft",
+          "name": "Draft",
           "description": ""
         },
         {
-          "value": "messageLabel",
-          "name": "Message Label",
+          "value": "thread",
+          "name": "Thread",
           "description": ""
         }
       ]
+    },
+    "sendTo": {
+      "type": "string",
+      "displayName": "To",
+      "name": "sendTo"
     },
     "operation": {
       "type": "options",
@@ -1815,137 +2451,99 @@
       "name": "operation",
       "possibleValues": [
         {
-          "value": "add",
-          "name": "Add",
+          "value": "addLabels",
+          "name": "Add Label",
           "description": ""
         },
         {
-          "value": "remove",
-          "name": "Remove",
+          "value": "delete",
+          "name": "Delete",
+          "description": ""
+        },
+        {
+          "value": "get",
+          "name": "Get",
+          "description": ""
+        },
+        {
+          "value": "getAll",
+          "name": "Get Many",
+          "description": ""
+        },
+        {
+          "value": "removeLabels",
+          "name": "Remove Label",
+          "description": ""
+        },
+        {
+          "value": "reply",
+          "name": "Reply",
+          "description": ""
+        },
+        {
+          "value": "trash",
+          "name": "Trash",
+          "description": ""
+        },
+        {
+          "value": "untrash",
+          "name": "Untrash",
           "description": ""
         }
       ]
     },
     "messageId": {
-      "type": "string",
-      "displayName": "Message ID",
-      "name": "messageId"
+      "type": "options",
+      "displayName": "Message Snippet or ID",
+      "name": "messageId",
+      "typeOptions": {
+        "loadOptionsMethod": "getThreadMessages"
+      },
+      "possibleValues": []
     },
     "subject": {
       "type": "string",
       "displayName": "Subject",
       "name": "subject"
     },
-    "includeHtml": {
-      "type": "boolean",
-      "displayName": "HTML",
-      "name": "includeHtml"
+    "threadNotice": {
+      "type": "notice",
+      "displayName": "To reply to an existing thread, specify the exact subject title of that thread.",
+      "name": "threadNotice"
     },
-    "htmlMessage": {
-      "type": "string",
-      "displayName": "HTML Message",
-      "name": "htmlMessage"
+    "emailType": {
+      "type": "options",
+      "displayName": "Email Type",
+      "name": "emailType",
+      "possibleValues": [
+        {
+          "value": "text",
+          "name": "Text",
+          "description": ""
+        },
+        {
+          "value": "html",
+          "name": "HTML",
+          "description": ""
+        }
+      ]
     },
     "message": {
       "type": "string",
       "displayName": "Message",
       "name": "message"
     },
-    "additionalFields": {
+    "options": {
       "type": "collection",
-      "displayName": "Additional Fields",
-      "name": "additionalFields",
-      "typeOptions": {
-        "loadOptionsMethod": "getLabels"
-      },
+      "displayName": "Options",
+      "name": "options",
       "subProperties": [
         {
-          "displayName": "Attachment Prefix",
-          "name": "dataPropertyAttachmentsPrefixName",
-          "type": "string",
-          "description": "Prefix for name of the binary property to which to write the attachment. An index starting with 0 will be added. So if name is \"attachment_\" the first attachment is saved to \"attachment_0\".",
-          "default": "attachment_",
-          "displayOptions": {
-            "hide": {
-              "format": [
-                "full",
-                "ids",
-                "metadata",
-                "minimal",
-                "raw"
-              ]
-            }
-          }
-        },
-        {
-          "displayName": "Format",
-          "name": "format",
-          "type": "options",
-          "description": "Returns the full email message data with body content parsed in the payload field",
-          "value": "full",
-          "default": "resolved",
-          "options": [
-            {
-              "name": "Full",
-              "description": "Returns the full email message data with body content parsed in the payload field",
-              "value": "full",
-              "displayName": "Full"
-            },
-            {
-              "name": "IDs",
-              "description": "Returns only the IDs of the emails",
-              "value": "ids",
-              "displayName": "Ids"
-            },
-            {
-              "name": "Metadata",
-              "description": "Returns only email message ID, labels, and email headers",
-              "value": "metadata",
-              "displayName": "Metadata"
-            },
-            {
-              "name": "Minimal",
-              "description": "Returns only email message ID and labels; does not return the email headers, body, or payload",
-              "value": "minimal",
-              "displayName": "Minimal"
-            },
-            {
-              "name": "RAW",
-              "description": "Returns the full email message data with body content in the raw field as a base64url encoded string; the payload field is not used",
-              "value": "raw",
-              "displayName": "Raw"
-            },
-            {
-              "name": "Resolved",
-              "description": "Returns the full email with all data resolved and attachments saved as binary data",
-              "value": "resolved",
-              "displayName": "Resolved"
-            }
-          ]
-        },
-        {
-          "displayName": "Include Spam and Trash",
-          "name": "includeSpamTrash",
+          "displayName": "Return Only Messages",
+          "name": "returnOnlyMessages",
           "type": "boolean",
-          "description": "Whether to include messages from SPAM and TRASH in the results",
-          "default": false
-        },
-        {
-          "displayName": "Label Names or IDs",
-          "name": "labelIds",
-          "type": "multiOptions",
-          "description": "Only return messages with labels that match all of the specified label IDs. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
-          "default": [],
-          "typeOptions": {
-            "loadOptionsMethod": "getLabels"
-          }
-        },
-        {
-          "displayName": "Query",
-          "name": "q",
-          "type": "string",
-          "description": "Only return messages matching the specified query. Supports the same query format as the Gmail search box. For example, \"from:someuser@example.com rfc822msgid:&lt;somemsgid@example.com&gt; is:unread\". Parameter cannot be used when accessing the api using the gmail.metadata scope.",
-          "default": ""
+          "description": "Whether to return only thread messages",
+          "default": true
         }
       ]
     },
@@ -1973,57 +2571,90 @@
       "displayName": "Label ID",
       "name": "labelId"
     },
-    "labelListVisibility": {
-      "type": "options",
-      "displayName": "Label List Visibility",
-      "name": "labelListVisibility",
-      "possibleValues": [
-        {
-          "value": "labelHide",
-          "name": "Hide",
-          "description": ""
-        },
-        {
-          "value": "labelShow",
-          "name": "Show",
-          "description": ""
-        },
-        {
-          "value": "labelShowIfUnread",
-          "name": "Show If Unread",
-          "description": ""
-        }
-      ]
+    "simple": {
+      "type": "boolean",
+      "displayName": "Simplify",
+      "name": "simple"
     },
-    "messageListVisibility": {
-      "type": "options",
-      "displayName": "Message List Visibility",
-      "name": "messageListVisibility",
-      "possibleValues": [
-        {
-          "value": "hide",
-          "name": "Hide",
-          "description": ""
-        },
-        {
-          "value": "show",
-          "name": "Show",
-          "description": ""
-        }
-      ]
+    "filtersNotice": {
+      "type": "notice",
+      "displayName": "Fetching a lot of messages may take a long time. Consider using filters to speed things up",
+      "name": "filtersNotice"
     },
-    "threadId": {
-      "type": "string",
-      "displayName": "Thread ID",
-      "name": "threadId"
-    },
-    "toList": {
-      "type": "string",
-      "displayName": "To Email",
-      "name": "toList",
+    "filters": {
+      "type": "collection",
+      "displayName": "Filters",
+      "name": "filters",
       "typeOptions": {
-        "multipleValues": true
-      }
+        "loadOptionsMethod": "getLabels"
+      },
+      "subProperties": [
+        {
+          "displayName": "Include Spam and Trash",
+          "name": "includeSpamTrash",
+          "type": "boolean",
+          "description": "Whether to include threads from SPAM and TRASH in the results",
+          "default": false
+        },
+        {
+          "displayName": "Label ID Names or IDs",
+          "name": "labelIds",
+          "type": "multiOptions",
+          "description": "Only return threads with labels that match all of the specified label IDs. Choose from the list, or specify IDs using an <a href=\"https://docs.n8n.io/code/expressions/\">expression</a>.",
+          "default": [],
+          "typeOptions": {
+            "loadOptionsMethod": "getLabels"
+          }
+        },
+        {
+          "displayName": "Search",
+          "name": "q",
+          "type": "string",
+          "description": "Only return messages matching the specified query",
+          "placeholder": "has:attachment",
+          "hint": "Use the same format as in the Gmail search box. <a href=\"https://support.google.com/mail/answer/7190?hl=en\">More info</a>.",
+          "default": ""
+        },
+        {
+          "displayName": "Read Status",
+          "name": "readStatus",
+          "type": "options",
+          "hint": "Filter emails by whether they have been read or not",
+          "value": "both",
+          "default": "unread",
+          "options": [
+            {
+              "name": "Unread and read emails",
+              "value": "both",
+              "displayName": "Unread And Read Emails"
+            },
+            {
+              "name": "Unread emails only",
+              "value": "unread",
+              "displayName": "Unread Emails Only"
+            },
+            {
+              "name": "Read emails only",
+              "value": "read",
+              "displayName": "Read Emails Only"
+            }
+          ]
+        },
+        {
+          "displayName": "Received After",
+          "name": "receivedAfter",
+          "type": "dateTime",
+          "description": "Get all emails received after the specified date. In an expression you can set date using string in ISO format or a timestamp in miliseconds.",
+          "default": ""
+        },
+        {
+          "displayName": "Received Before",
+          "name": "receivedBefore",
+          "type": "dateTime",
+          "description": "Get all emails received before the specified date. In an expression you can set date using string in ISO format or a timestamp in miliseconds.",
+          "default": ""
+        }
+      ]
     },
     "labelIds": {
       "type": "multiOptions",
@@ -2033,13 +2664,81 @@
         "loadOptionsMethod": "getLabels"
       },
       "possibleValues": []
+    },
+    "appendAttribution": {
+      "type": "boolean",
+      "displayName": "Append n8n Attribution",
+      "name": "appendAttribution"
+    },
+    "threadId": {
+      "type": "string",
+      "displayName": "Thread ID",
+      "name": "threadId"
+    },
+    "default": {
+      "type": "unknown",
+      "displayName": "Default",
+      "name": "default"
     }
   },
   "api_patterns": {},
   "ui_elements": {
-    "notices": [],
+    "notices": [
+      {
+        "name": "threadNotice",
+        "text": "To reply to an existing thread, specify the exact subject title of that thread.",
+        "conditions": {
+          "show": {
+            "resource": [
+              "draft"
+            ],
+            "operation": [
+              "create"
+            ]
+          }
+        }
+      },
+      {
+        "name": "filtersNotice",
+        "text": "Fetching a lot of messages may take a long time. Consider using filters to speed things up",
+        "conditions": {
+          "show": {
+            "operation": [
+              "getAll"
+            ],
+            "resource": [
+              "message"
+            ],
+            "returnAll": [
+              true
+            ]
+          }
+        }
+      },
+      {
+        "name": "filtersNotice",
+        "text": "Fetching a lot of messages may take a long time. Consider using filters to speed things up",
+        "conditions": {
+          "show": {
+            "operation": [
+              "getAll"
+            ],
+            "resource": [
+              "thread"
+            ],
+            "returnAll": [
+              true
+            ]
+          }
+        }
+      }
+    ],
     "tooltips": [],
     "placeholders": [
+      {
+        "field": "sendTo",
+        "text": "e.g. info@example.com"
+      },
       {
         "field": "messageId",
         "text": "r-3254521568507167962"
@@ -2049,63 +2748,96 @@
         "text": "Hello World!"
       },
       {
-        "field": "message",
-        "text": "Hello World!"
+        "field": "options",
+        "text": "Add option"
       },
       {
-        "field": "additionalFields",
-        "text": "Add Field"
+        "field": "options",
+        "text": "Add option"
       },
       {
-        "field": "additionalFields",
-        "text": "Add Field"
-      },
-      {
-        "field": "additionalFields",
-        "text": "Add Field"
+        "field": "options",
+        "text": "Add option"
       },
       {
         "field": "name",
         "text": "invoices"
       },
       {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
         "field": "messageId",
         "text": "172ce2c4a72cc243"
       },
       {
-        "field": "threadId",
+        "field": "messageId",
         "text": "172ce2c4a72cc243"
       },
       {
-        "field": "messageId",
-        "text": "CAHNQoFsC6JMMbOBJgtjsqN0eEc+gDg2a=SQj-tWUebQeHMDgqQ@mail.gmail.com"
+        "field": "sendTo",
+        "text": "info@example.com"
       },
       {
         "field": "subject",
         "text": "Hello World!"
       },
       {
-        "field": "toList",
-        "text": "info@example.com"
+        "field": "options",
+        "text": "Add option"
       },
       {
-        "field": "additionalFields",
-        "text": "Add Field"
+        "field": "options",
+        "text": "Add option"
       },
       {
-        "field": "additionalFields",
-        "text": "Add Field"
+        "field": "filters",
+        "text": "Add Filter"
       },
       {
-        "field": "additionalFields",
-        "text": "Add Field"
+        "field": "options",
+        "text": "Add option"
       },
       {
         "field": "messageId",
         "text": "172ce2c4a72cc243"
+      },
+      {
+        "field": "options",
+        "text": "Add option"
+      },
+      {
+        "field": "options",
+        "text": "Add Field"
+      },
+      {
+        "field": "filters",
+        "text": "Add Filter"
+      },
+      {
+        "field": "threadId",
+        "text": "172ce2c4a72cc243"
       }
     ],
-    "hints": []
+    "hints": [
+      {
+        "field": "options",
+        "text": "The name of the field with the attachment in the node input"
+      },
+      {
+        "field": "filters",
+        "text": "Use the same format as in the Gmail search box. <a href=\"https://support.google.com/mail/answer/7190?hl=en\">More info</a>."
+      },
+      {
+        "field": "message",
+        "text": "Get better Text and Expressions writing experience by using the expression editor"
+      },
+      {
+        "field": "filters",
+        "text": "Use the same format as in the Gmail search box. <a href=\"https://support.google.com/mail/answer/7190?hl=en\">More info</a>."
+      }
+    ]
   },
   "settings": {
     "common": {

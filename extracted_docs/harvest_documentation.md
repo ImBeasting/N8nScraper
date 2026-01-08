@@ -52,7 +52,7 @@ group: "['input']"
 
 ## API Patterns
 
-**Headers Used:** Harvest-Account-Id, accountId
+**Headers Used:** accountId, Harvest-Account-Id
 
 ---
 
@@ -541,8 +541,8 @@ api_patterns:
   http_methods: []
   endpoints: []
   headers:
-  - Harvest-Account-Id
   - accountId
+  - Harvest-Account-Id
   query_params: []
 ui_elements:
   notices: []

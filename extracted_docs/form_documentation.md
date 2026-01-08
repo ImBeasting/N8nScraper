@@ -72,8 +72,8 @@ group: "['input']"
 
 These expression patterns are commonly used with this node:
 
-- `{{ $input.all() }}`
 - `{{ $execution.resumeFormUrl }}`
+- `{{ $input.all() }}`
 
 ---
 
@@ -250,8 +250,8 @@ params:
     displayName: Max Date and Time
     name: maxDateAndTime
 common_expressions:
-- '{{ $input.all() }}'
 - '{{ $execution.resumeFormUrl }}'
+- '{{ $input.all() }}'
 ui_elements:
   notices: []
   tooltips: []

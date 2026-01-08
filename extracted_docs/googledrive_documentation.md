@@ -1,7 +1,7 @@
 ---
 title: "Node: Google Drive"
 slug: "node-googledrive"
-version: "['1', '2']"
+version: "3"
 updated: "2026-01-08"
 summary: "Access data on Google Drive"
 node_type: "regular"
@@ -11,7 +11,7 @@ group: "['input']"
 # Node: Google Drive
 
 **Purpose.** Access data on Google Drive
-**Subtitle.** ={{$parameter[
+**Subtitle.** ={{$parameter["operation"] + ": " + $parameter["resource"]}}
 
 
 ---
@@ -50,43 +50,44 @@ group: "['input']"
 
 ---
 
-## API Patterns
-
-**Headers Used:** Content-Type
-
----
-
 ## Operations
+
+### Drive Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Create | `create` | Create a shared drive |
+| Delete | `deleteDrive` | Permanently delete a shared drive |
+| Get | `get` | Get a shared drive |
+| Get Many | `list` | Get the list of shared drives |
+| Update | `update` | Update a shared drive |
 
 ### File Resource Operations
 
 | Operation | ID | Description |
 | --------- | -- | ----------- |
-| Copy | `copy` | Copy a file |
-| Delete | `delete` | Delete a file |
+| Copy | `copy` | Create a copy of an existing file |
+| Create From Text | `createFromText` | Create a file from a provided text |
+| Delete | `deleteFile` | Permanently delete a file |
 | Download | `download` | Download a file |
-| List | `list` | List files and folders |
-| Share | `share` | Share a file |
+| Move | `move` | Move a file to another folder |
+| Share | `share` | Add sharing permissions to a file |
 | Update | `update` | Update a file |
-| Upload | `upload` | Upload a file |
+| Upload | `upload` | Upload an existing file to Google Drive |
+
+### Filefolder Resource Operations
+
+| Operation | ID | Description |
+| --------- | -- | ----------- |
+| Search | `search` | Search or list files and folders |
 
 ### Folder Resource Operations
 
 | Operation | ID | Description |
 | --------- | -- | ----------- |
 | Create | `create` | Create a folder |
-| Delete | `delete` | Delete a folder |
-| Share | `share` | Share a folder |
-
-### Drive Resource Operations
-
-| Operation | ID | Description |
-| --------- | -- | ----------- |
-| Create | `create` | Create a drive |
-| Delete | `delete` | Delete a drive |
-| Get | `get` | Get a drive |
-| List | `list` | List all drives |
-| Update | `update` | Update a drive |
+| Delete | `deleteFolder` | Permanently delete a folder |
+| Share | `share` | Add sharing permissions to a folder |
 
 ---
 
@@ -100,9 +101,10 @@ group: "['input']"
 
 **Resource options:**
 
-* **Drive** (`drive`)
 * **File** (`file`)
+* **File/Folder** (`fileFolder`)
 * **Folder** (`folder`)
+* **Shared Drive** (`drive`)
 
 ---
 
@@ -110,213 +112,17 @@ group: "['input']"
 
 | Name | Field ID | Type | Default | Required | Description | Validation |
 | ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Operation | `operation` | options | upload | ✗ | Copy a file |  |
+| Operation | `operation` | options | create | ✗ | Create a shared drive |  |
 
 **Operation options:**
 
-* **Copy** (`copy`) - Copy a file
-* **Delete** (`delete`) - Delete a file
-* **Download** (`download`) - Download a file
-* **List** (`list`) - List files and folders
-* **Share** (`share`) - Share a file
-* **Update** (`update`) - Update a file
-* **Upload** (`upload`) - Upload a file
+* **Create** (`create`) - Create a shared drive
+* **Delete** (`deleteDrive`) - Permanently delete a shared drive
+* **Get** (`get`) - Get a shared drive
+* **Get Many** (`list`) - Get the list of shared drives
+* **Update** (`update`) - Update a shared drive
 
 ---
-
-### Copy parameters (`copy`)
-
-| Name | Field ID | Type | Default | Required | Description | Validation |
-| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| File | `fileId` | resourceLocator |  | ✓ | The ID of the file | e.g. Select a file... |  |
-
-### Delete parameters (`delete`)
-
-| Name | Field ID | Type | Default | Required | Description | Validation |
-| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| File | `fileId` | resourceLocator |  | ✓ | The ID of the file | e.g. Select a file... |  |
-| Folder | `fileId` | resourceLocator |  | ✓ | The ID of the folder | e.g. Select a folder... |  |
-| Drive | `driveId` | resourceLocator |  | ✓ | The ID of the drive | e.g. Drive |  |
-
-### Download parameters (`download`)
-
-| Name | Field ID | Type | Default | Required | Description | Validation |
-| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| File | `fileId` | resourceLocator |  | ✓ | The ID of the file | e.g. Select a file... |  |
-| Put Output File in Field | `binaryPropertyName` | string | data | ✓ | e.g. The name of the output binary field to put the file in |  |
-| Options | `options` | collection | {} | ✗ | Format used to export when downloading Google Docs files | e.g. Add option |  |
-
-<details>
-<summary><strong>Options sub-options</strong></summary>
-
-| Sub-Option | Field ID | Type | Default | Description |
-| ---------- | -------- | ---- | ------- | ----------- |
-| Google File Conversion | `googleFileConversion` | fixedCollection | {} | Format used to export when downloading Google Docs files |
-| File Name | `fileName` | string |  | File name. Ex: data.pdf. |
-
-</details>
-
-
-### List parameters (`list`)
-
-| Name | Field ID | Type | Default | Required | Description | Validation |
-| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Use Query String | `useQueryString` | boolean | False | ✗ | Whether a query string should be used to filter results |  |
-| Query String | `queryString` | string |  | ✗ | Query to use to return only specific files | e.g. name contains 'invoice' |  |
-| Limit | `limit` | number | 50 | ✗ | Max number of results to return | min:1, max:1000 |
-| Filters | `queryFilters` | fixedCollection | {} | ✗ | Filters to use to return only specific files | e.g. Add Filter |  |
-
-<details>
-<summary><strong>Filters sub-options</strong></summary>
-
-| Sub-Option | Field ID | Type | Default | Description |
-| ---------- | -------- | ---- | ------- | ----------- |
-| Name | `name` |  |  |  |
-| Mime Type | `mimeType` |  |  |  |
-
-</details>
-
-| Return All | `returnAll` | boolean | False | ✗ | Whether to return all results or only up to a given limit |  |
-| Limit | `limit` | number | 100 | ✗ | Max number of results to return | min:1, max:200 |
-| Options | `options` | collection | {} | ✗ | Query string for searching shared drives. See the <a href="https://developers.google.com/drive/api/v3/search-shareddrives">"Search for shared drives"</a> guide for supported syntax. | e.g. Add option |  |
-
-<details>
-<summary><strong>Options sub-options</strong></summary>
-
-| Sub-Option | Field ID | Type | Default | Description |
-| ---------- | -------- | ---- | ------- | ----------- |
-| Query | `q` | string |  | Query string for searching shared drives. See the <a href="https://developers.google.com/drive/api/v3/search-shareddrives">"Search for shared drives"</a> guide for supported syntax. |
-| Use Domain Admin Access | `useDomainAdminAccess` | boolean | False | Whether to issue the request as a domain administrator; if set to true, then the requester will be granted access if they are an administrator of the domain to which the shared drive belongs. (Default: false). |
-
-</details>
-
-
-### Share parameters (`share`)
-
-| Name | Field ID | Type | Default | Required | Description | Validation |
-| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| File | `fileId` | resourceLocator |  | ✓ | The ID of the file | e.g. Select a file... |  |
-| Folder | `fileId` | resourceLocator |  | ✓ | The ID of the folder | e.g. Select a folder... |  |
-| Permissions | `permissionsUi` | fixedCollection | {} | ✗ | Information about the different types can be found <a href="https://developers.google.com/drive/api/v3/ref-roles">here</a> | e.g. Add Permission |  |
-
-<details>
-<summary><strong>Permissions sub-options</strong></summary>
-
-| Sub-Option | Field ID | Type | Default | Description |
-| ---------- | -------- | ---- | ------- | ----------- |
-| Permission | `permissionsValues` |  |  |  |
-
-</details>
-
-
-### Update parameters (`update`)
-
-| Name | Field ID | Type | Default | Required | Description | Validation |
-| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| File | `fileId` | resourceLocator |  | ✓ | The ID of the file | e.g. Select a file... |  |
-| Update Fields | `updateFields` | collection | {} | ✗ | The name of the file | e.g. Add option |  |
-
-<details>
-<summary><strong>Update Fields sub-options</strong></summary>
-
-| Sub-Option | Field ID | Type | Default | Description |
-| ---------- | -------- | ---- | ------- | ----------- |
-| File Name | `fileName` | string |  | The name of the file |
-| Keep Revision Forever | `keepRevisionForever` | boolean | False | Whether to set the 'keepForever' field in the new head revision. This is only applicable to files with binary content in Google Drive. Only 200 revisions for the file can be kept forever. If the limit is reached, try deleting pinned revisions. |
-| Move to Trash | `trashed` | boolean | False | Whether to move a file to the trash. Only the owner may trash a file. |
-| OCR Language | `ocrLanguage` | string |  | A language hint for OCR processing during image import (ISO 639-1 code) |
-| Parent ID | `parentId` | string |  | The ID of the parent to set |
-| Use Content As Indexable Text | `useContentAsIndexableText` | boolean | False | Whether to use the uploaded content as indexable text |
-
-</details>
-
-| Options | `options` | collection | {} | ✗ | All fields | e.g. Add option |  |
-
-<details>
-<summary><strong>Options sub-options</strong></summary>
-
-| Sub-Option | Field ID | Type | Default | Description |
-| ---------- | -------- | ---- | ------- | ----------- |
-| Fields | `fields` | multiOptions | [] | All fields |
-
-</details>
-
-| Drive | `driveId` | resourceLocator |  | ✓ | The ID of the drive | e.g. Drive |  |
-| Update Fields | `options` | collection | {} | ✗ | The color of this shared drive as an RGB hex string | e.g. Add option |  |
-
-<details>
-<summary><strong>Update Fields sub-options</strong></summary>
-
-| Sub-Option | Field ID | Type | Default | Description |
-| ---------- | -------- | ---- | ------- | ----------- |
-| Color RGB | `colorRgb` | color |  | The color of this shared drive as an RGB hex string |
-| Name | `name` | string |  | The name of this shared drive |
-| Restrictions | `restrictions` | collection | {} | Whether the options to copy, print, or download files inside this shared drive, should be disabled for readers and commenters. When this restriction is set to true, it will override the similarly named field to true for any file inside this shared drive. |
-
-</details>
-
-
-### Upload parameters (`upload`)
-
-| Name | Field ID | Type | Default | Required | Description | Validation |
-| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Binary File | `binaryData` | boolean | False | ✗ | Whether the data to upload should be taken from binary field |  |
-| File Content | `fileContent` | string |  | ✗ | The text content of the file to upload |  |
-| Input Binary Field | `binaryPropertyName` | string | data | ✓ | e.g. The name of the input binary field containing the file to be uploaded |  |
-| File Name | `name` | string |  | ✓ | The name the file should be saved as | e.g. invoice_1.pdf |  |
-| Resolve Data | `resolveData` | boolean | False | ✗ | By default the response only contain the ID of the file. If this option gets activated, it will resolve the data automatically. |  |
-| Parents | `parents` | string | [] | ✗ | The IDs of the parent folders which contain the file |  |
-| Options | `options` | collection | {} | ✗ | A collection of arbitrary key-value pairs which are private to the requesting app | e.g. Add option |  |
-
-<details>
-<summary><strong>Options sub-options</strong></summary>
-
-| Sub-Option | Field ID | Type | Default | Description |
-| ---------- | -------- | ---- | ------- | ----------- |
-| APP Properties | `appPropertiesUi` | fixedCollection | {} | A collection of arbitrary key-value pairs which are private to the requesting app |
-| Properties | `propertiesUi` | fixedCollection | {} | A collection of arbitrary key-value pairs which are visible to all apps |
-
-</details>
-
-
-### Create parameters (`create`)
-
-| Name | Field ID | Type | Default | Required | Description | Validation |
-| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Folder | `name` | string |  | ✓ | The name of folder to create | e.g. invoices |  |
-| Name | `name` | string |  | ✗ | The name of this shared drive |  |
-| Options | `options` | collection | {} | ✗ | Whether the current user can add children to folders in this shared drive | e.g. Add option |  |
-
-<details>
-<summary><strong>Options sub-options</strong></summary>
-
-| Sub-Option | Field ID | Type | Default | Description |
-| ---------- | -------- | ---- | ------- | ----------- |
-| Capabilities | `capabilities` | collection | {} | Whether the current user can add children to folders in this shared drive |
-| Color RGB | `colorRgb` | color |  | The color of this shared drive as an RGB hex string |
-| Created Time | `createdTime` | dateTime |  | The time at which the shared drive was created (RFC 3339 date-time) |
-| Hidden | `hidden` | boolean | False | Whether the shared drive is hidden from default view |
-| Restrictions | `restrictions` | collection | {} | Whether the options to copy, print, or download files inside this shared drive, should be disabled for readers and commenters. When this restriction is set to true, it will override the similarly named field to true for any file inside this shared drive. |
-
-</details>
-
-
-### Get parameters (`get`)
-
-| Name | Field ID | Type | Default | Required | Description | Validation |
-| ---- | -------- | ---- | ------- | :------: | ----------- | ---------- |
-| Drive | `driveId` | resourceLocator |  | ✓ | The ID of the drive | e.g. Drive |  |
-| Options | `options` | collection | {} | ✗ | Whether to issue the request as a domain administrator; if set to true, then the requester will be granted access if they are an administrator of the domain to which the shared drive belongs. (Default: false). | e.g. Add option |  |
-
-<details>
-<summary><strong>Options sub-options</strong></summary>
-
-| Sub-Option | Field ID | Type | Default | Description |
-| ---------- | -------- | ---- | ------- | ----------- |
-| Use Domain Admin Access | `useDomainAdminAccess` | boolean | False | Whether to issue the request as a domain administrator; if set to true, then the requester will be granted access if they are an administrator of the domain to which the shared drive belongs. (Default: false). |
-
-</details>
-
 
 ---
 
@@ -363,9 +169,7 @@ These expression patterns are commonly used with this node:
 node: googleDrive
 displayName: Google Drive
 description: Access data on Google Drive
-version:
-- '1'
-- '2'
+version: '3'
 nodeType: regular
 group:
 - input
@@ -375,648 +179,55 @@ credentials:
 - name: googleDriveOAuth2Api
   required: true
 operations:
+- id: create
+  name: Create
+  description: Create a shared drive
+- id: deleteDrive
+  name: Delete
+  description: Permanently delete a shared drive
+- id: get
+  name: Get
+  description: Get a shared drive
+- id: list
+  name: Get Many
+  description: Get the list of shared drives
+- id: update
+  name: Update
+  description: Update a shared drive
 - id: copy
   name: Copy
-  description: Copy a file
-  params:
-  - id: fileId
-    name: File
-    type: resourceLocator
-    default: ''
-    required: true
-    description: The ID of the file
-    placeholder: Select a file...
-    validation: &id001
-      required: true
-      displayOptions:
-        show:
-          operation:
-          - delete
-          - share
-          resource:
-          - folder
-    typeInfo: &id002
-      type: resourceLocator
-      displayName: Folder
-      name: fileId
-- id: delete
+  description: Create a copy of an existing file
+- id: createFromText
+  name: Create From Text
+  description: Create a file from a provided text
+- id: deleteFile
   name: Delete
-  description: Delete a file
-  params:
-  - id: fileId
-    name: File
-    type: resourceLocator
-    default: ''
-    required: true
-    description: The ID of the file
-    placeholder: Select a file...
-    validation: *id001
-    typeInfo: *id002
-  - id: fileId
-    name: Folder
-    type: resourceLocator
-    default: ''
-    required: true
-    description: The ID of the folder
-    placeholder: Select a folder...
-    validation: *id001
-    typeInfo: *id002
-  - id: driveId
-    name: Drive
-    type: resourceLocator
-    default: ''
-    required: true
-    description: The ID of the drive
-    hint: The Google Drive drive to operate on
-    placeholder: Drive
-    validation: &id005
-      required: true
-      displayOptions:
-        show:
-          operation:
-          - delete
-          - get
-          - update
-          resource:
-          - drive
-    typeInfo: &id006
-      type: resourceLocator
-      displayName: Drive
-      name: driveId
+  description: Permanently delete a file
 - id: download
   name: Download
   description: Download a file
-  params:
-  - id: fileId
-    name: File
-    type: resourceLocator
-    default: ''
-    required: true
-    description: The ID of the file
-    placeholder: Select a file...
-    validation: *id001
-    typeInfo: *id002
-  - id: binaryPropertyName
-    name: Put Output File in Field
-    type: string
-    default: data
-    required: true
-    description: ''
-    hint: The name of the output binary field to put the file in
-    validation: &id007
-      required: true
-      displayOptions:
-        show:
-          operation:
-          - upload
-          resource:
-          - file
-          binaryData:
-          - true
-    typeInfo: &id008
-      type: string
-      displayName: Input Binary Field
-      name: binaryPropertyName
-- id: list
-  name: List
-  description: List files and folders
-  params:
-  - id: useQueryString
-    name: Use Query String
-    type: boolean
-    default: false
-    required: false
-    description: Whether a query string should be used to filter results
-    validation:
-      displayOptions:
-        show:
-          operation:
-          - list
-          resource:
-          - file
-    typeInfo:
-      type: boolean
-      displayName: Use Query String
-      name: useQueryString
-  - id: queryString
-    name: Query String
-    type: string
-    default: ''
-    required: false
-    description: Query to use to return only specific files
-    placeholder: name contains 'invoice'
-    validation:
-      displayOptions:
-        show:
-          operation:
-          - list
-          useQueryString:
-          - true
-          resource:
-          - file
-    typeInfo:
-      type: string
-      displayName: Query String
-      name: queryString
-  - id: limit
-    name: Limit
-    type: number
-    default: 50
-    required: false
-    description: Max number of results to return
-    validation: &id003
-      displayOptions:
-        show:
-          operation:
-          - list
-          resource:
-          - drive
-          returnAll:
-          - false
-    typeInfo: &id004
-      type: number
-      displayName: Limit
-      name: limit
-      typeOptions:
-        minValue: 1
-        maxValue: 200
-  - id: queryFilters
-    name: Filters
-    type: fixedCollection
-    default: {}
-    required: false
-    description: Filters to use to return only specific files
-    placeholder: Add Filter
-    validation:
-      displayOptions:
-        show:
-          operation:
-          - list
-          useQueryString:
-          - false
-          resource:
-          - file
-    typeInfo:
-      type: fixedCollection
-      displayName: Filters
-      name: queryFilters
-      typeOptions:
-        multipleValues: true
-      subProperties:
-      - name: name
-        displayName: Name
-        values:
-        - displayName: Operation
-          name: operation
-          type: options
-          value: contains
-          default: contains
-          noDataExpression: true
-          options:
-          - name: Contains
-            value: contains
-            displayName: Contains
-          - name: Is
-            value: is
-            displayName: Is
-          - name: Is Not
-            value: isNot
-            displayName: Is Not
-        - displayName: Value
-          name: value
-          type: string
-          description: The value for operation
-          default: ''
-      - name: mimeType
-        displayName: Mime Type
-        values:
-        - displayName: Mime Type
-          name: mimeType
-          type: options
-          description: The Mime-Type of the files to return
-          value: application/vnd.google-apps.drive-sdk
-          default: application/vnd.google-apps.file
-          options:
-          - name: 3rd Party Shortcut
-            value: application/vnd.google-apps.drive-sdk
-            displayName: 3rd Party Shortcut
-          - name: Audio
-            value: application/vnd.google-apps.audio
-            displayName: Audio
-          - name: Custom Mime Type
-            value: custom
-            displayName: Custom Mime Type
-          - name: Google Apps Scripts
-            value: application/vnd.google-apps.script
-            displayName: Google Apps Scripts
-          - name: Google Docs
-            value: application/vnd.google-apps.document
-            displayName: Google Docs
-          - name: Google Drawing
-            value: application/vnd.google-apps.drawing
-            displayName: Google Drawing
-          - name: Google Drive File
-            value: application/vnd.google-apps.file
-            displayName: Google Drive File
-          - name: Google Drive Folder
-            value: application/vnd.google-apps.folder
-            displayName: Google Drive Folder
-          - name: Google Forms
-            value: application/vnd.google-apps.form
-            displayName: Google Forms
-          - name: Google Fusion Tables
-            value: application/vnd.google-apps.fusiontable
-            displayName: Google Fusion Tables
-          - name: Google My Maps
-            value: application/vnd.google-apps.map
-            displayName: Google My Maps
-          - name: Google Sheets
-            value: application/vnd.google-apps.spreadsheet
-            displayName: Google Sheets
-          - name: Google Sites
-            value: application/vnd.google-apps.site
-            displayName: Google Sites
-          - name: Google Slides
-            value: application/vnd.google-apps.presentation
-            displayName: Google Slides
-          - name: Photo
-            value: application/vnd.google-apps.photo
-            displayName: Photo
-          - name: Unknown
-            value: application/vnd.google-apps.unknown
-            displayName: Unknown
-          - name: Video
-            value: application/vnd.google-apps.video
-            displayName: Video
-        - displayName: Custom Mime Type
-          name: customMimeType
-          type: string
-          default: ''
-          displayOptions:
-            show:
-              mimeType:
-              - custom
-  - id: returnAll
-    name: Return All
-    type: boolean
-    default: false
-    required: false
-    description: Whether to return all results or only up to a given limit
-    validation:
-      displayOptions:
-        show:
-          operation:
-          - list
-          resource:
-          - drive
-    typeInfo:
-      type: boolean
-      displayName: Return All
-      name: returnAll
-  - id: limit
-    name: Limit
-    type: number
-    default: 100
-    required: false
-    description: Max number of results to return
-    validation: *id003
-    typeInfo: *id004
+- id: move
+  name: Move
+  description: Move a file to another folder
 - id: share
   name: Share
-  description: Share a file
-  params:
-  - id: fileId
-    name: File
-    type: resourceLocator
-    default: ''
-    required: true
-    description: The ID of the file
-    placeholder: Select a file...
-    validation: *id001
-    typeInfo: *id002
-  - id: fileId
-    name: Folder
-    type: resourceLocator
-    default: ''
-    required: true
-    description: The ID of the folder
-    placeholder: Select a folder...
-    validation: *id001
-    typeInfo: *id002
-  - id: permissionsUi
-    name: Permissions
-    type: fixedCollection
-    default: {}
-    required: false
-    description: Information about the different types can be found <a href="https://developers.google.com/drive/api/v3/ref-roles">here</a>
-    placeholder: Add Permission
-    validation:
-      displayOptions:
-        show:
-          resource:
-          - file
-          - folder
-          operation:
-          - share
-    typeInfo:
-      type: fixedCollection
-      displayName: Permissions
-      name: permissionsUi
-      typeOptions:
-        multipleValues: false
-      subProperties:
-      - name: permissionsValues
-        displayName: Permission
-        values:
-        - displayName: Role
-          name: role
-          type: options
-          value: commenter
-          default: ''
-          options:
-          - name: Commenter
-            value: commenter
-            displayName: Commenter
-          - name: File Organizer
-            value: fileOrganizer
-            displayName: File Organizer
-          - name: Organizer
-            value: organizer
-            displayName: Organizer
-          - name: Owner
-            value: owner
-            displayName: Owner
-          - name: Reader
-            value: reader
-            displayName: Reader
-          - name: Writer
-            value: writer
-            displayName: Writer
-        - displayName: Type
-          name: type
-          type: options
-          description: Information about the different types can be found <a href="https://developers.google.com/drive/api/v3/ref-roles">here</a>
-          value: user
-          default: ''
-          options:
-          - name: User
-            value: user
-            displayName: User
-          - name: Group
-            value: group
-            displayName: Group
-          - name: Domain
-            value: domain
-            displayName: Domain
-          - name: Anyone
-            value: anyone
-            displayName: Anyone
-        - displayName: Email Address
-          name: emailAddress
-          type: string
-          description: The email address of the user or group to which this permission
-            refers
-          default: ''
-          displayOptions:
-            show:
-              type:
-              - user
-              - group
-        - displayName: Domain
-          name: domain
-          type: string
-          description: The domain to which this permission refers
-          default: ''
-          displayOptions:
-            show:
-              type:
-              - domain
-        - displayName: Allow File Discovery
-          name: allowFileDiscovery
-          type: boolean
-          description: Whether the permission allows the file to be discovered through
-            search
-          default: false
-          displayOptions:
-            show:
-              type:
-              - domain
-              - anyone
-- id: update
-  name: Update
-  description: Update a file
-  params:
-  - id: fileId
-    name: File
-    type: resourceLocator
-    default: ''
-    required: true
-    description: The ID of the file
-    placeholder: Select a file...
-    validation: *id001
-    typeInfo: *id002
-  - id: driveId
-    name: Drive
-    type: resourceLocator
-    default: ''
-    required: true
-    description: The ID of the drive
-    hint: The Google Drive drive to operate on
-    placeholder: Drive
-    validation: *id005
-    typeInfo: *id006
+  description: Add sharing permissions to a file
 - id: upload
   name: Upload
-  description: Upload a file
-  params:
-  - id: binaryData
-    name: Binary File
-    type: boolean
-    default: false
-    required: false
-    description: Whether the data to upload should be taken from binary field
-    validation:
-      displayOptions:
-        show:
-          operation:
-          - upload
-          resource:
-          - file
-    typeInfo:
-      type: boolean
-      displayName: Binary File
-      name: binaryData
-  - id: fileContent
-    name: File Content
-    type: string
-    default: ''
-    required: false
-    description: The text content of the file to upload
-    validation:
-      displayOptions:
-        show:
-          operation:
-          - upload
-          resource:
-          - file
-          binaryData:
-          - false
-    typeInfo:
-      type: string
-      displayName: File Content
-      name: fileContent
-  - id: binaryPropertyName
-    name: Input Binary Field
-    type: string
-    default: data
-    required: true
-    description: ''
-    hint: The name of the input binary field containing the file to be uploaded
-    validation: *id007
-    typeInfo: *id008
-  - id: name
-    name: File Name
-    type: string
-    default: ''
-    required: true
-    description: The name the file should be saved as
-    placeholder: invoice_1.pdf
-    validation: &id009
-      displayOptions:
-        show:
-          operation:
-          - create
-          resource:
-          - drive
-    typeInfo: &id010
-      type: string
-      displayName: Name
-      name: name
-  - id: resolveData
-    name: Resolve Data
-    type: boolean
-    default: false
-    required: false
-    description: By default the response only contain the ID of the file. If this
-      option gets activated, it will resolve the data automatically.
-    validation:
-      displayOptions:
-        show:
-          operation:
-          - upload
-          resource:
-          - file
-    typeInfo:
-      type: boolean
-      displayName: Resolve Data
-      name: resolveData
-  - id: parents
-    name: Parents
-    type: string
-    default: []
-    required: false
-    description: The IDs of the parent folders which contain the file
-    validation:
-      displayOptions:
-        show:
-          operation:
-          - upload
-          resource:
-          - file
-    typeInfo:
-      type: string
-      displayName: Parents
-      name: parents
-      typeOptions:
-        multipleValues: true
-- id: create
-  name: Create
-  description: Create a folder
-  params:
-  - id: name
-    name: Folder
-    type: string
-    default: ''
-    required: true
-    description: The name of folder to create
-    placeholder: invoices
-    validation: *id009
-    typeInfo: *id010
-  - id: name
-    name: Name
-    type: string
-    default: ''
-    required: false
-    description: The name of this shared drive
-    validation: *id009
-    typeInfo: *id010
-- id: get
-  name: Get
-  description: Get a drive
-  params:
-  - id: driveId
-    name: Drive
-    type: resourceLocator
-    default: ''
-    required: true
-    description: The ID of the drive
-    hint: The Google Drive drive to operate on
-    placeholder: Drive
-    validation: *id005
-    typeInfo: *id006
+  description: Upload an existing file to Google Drive
+- id: search
+  name: Search
+  description: Search or list files and folders
+- id: deleteFolder
+  name: Delete
+  description: Permanently delete a folder
 common_expressions:
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
-api_patterns:
-  http_methods: []
-  endpoints: []
-  headers:
-  - Content-Type
-  query_params: []
 ui_elements:
   notices: []
   tooltips: []
-  placeholders:
-  - field: fileId
-    text: Select a file...
-  - field: fileId
-    text: Select a folder...
-  - field: options
-    text: Add option
-  - field: queryString
-    text: name contains 'invoice'
-  - field: queryFilters
-    text: Add Filter
-  - field: permissionsUi
-    text: Add Permission
-  - field: updateFields
-    text: Add option
-  - field: options
-    text: Add option
-  - field: name
-    text: invoice_1.pdf
-  - field: name
-    text: invoices
-  - field: options
-    text: Add option
-  - field: driveId
-    text: Drive
-  - field: options
-    text: Add option
-  - field: options
-    text: Add option
-  - field: options
-    text: Add option
-  - field: options
-    text: Add option
-  - field: options
-    text: Add option
-  hints:
-  - field: binaryPropertyName
-    text: The name of the output binary field to put the file in
-  - field: binaryPropertyName
-    text: The name of the input binary field containing the file to be uploaded
-  - field: driveId
-    text: The Google Drive drive to operate on
+  placeholders: []
+  hints: []
 settings:
   common:
     notes:
@@ -1110,15 +321,20 @@ settings:
     "operation": {
       "type": "string",
       "enum": [
-        "copy",
-        "delete",
-        "download",
-        "list",
-        "share",
-        "update",
-        "upload",
         "create",
-        "get"
+        "deleteDrive",
+        "get",
+        "list",
+        "update",
+        "copy",
+        "createFromText",
+        "deleteFile",
+        "download",
+        "move",
+        "share",
+        "upload",
+        "search",
+        "deleteFolder"
       ],
       "description": "Operation to perform"
     },
@@ -1130,131 +346,31 @@ settings:
           "description": "",
           "type": "string",
           "enum": [
-            "serviceAccount",
-            "oAuth2"
+            "oAuth2",
+            "serviceAccount"
           ],
-          "default": "serviceAccount"
+          "default": "oAuth2"
         },
         "resource": {
           "description": "",
           "type": "string",
           "enum": [
-            "drive",
             "file",
-            "folder"
+            "fileFolder",
+            "folder",
+            "drive"
           ],
           "default": "file"
         },
         "operation": {
-          "description": "Create a drive",
+          "description": "Create a folder",
           "type": "string",
           "enum": [
             "create",
-            "delete",
-            "get",
-            "list",
-            "update"
+            "deleteFolder",
+            "share"
           ],
           "default": "create"
-        },
-        "fileId": {
-          "description": "The ID of the folder",
-          "type": "string",
-          "examples": [
-            "Select a folder..."
-          ]
-        },
-        "binaryPropertyName": {
-          "description": "",
-          "type": "string",
-          "default": "data"
-        },
-        "options": {
-          "description": "A collection of arbitrary key-value pairs which are private to the requesting app",
-          "type": "string",
-          "default": {},
-          "examples": [
-            "Add option"
-          ]
-        },
-        "useQueryString": {
-          "description": "Whether a query string should be used to filter results",
-          "type": "boolean",
-          "default": false
-        },
-        "queryString": {
-          "description": "Query to use to return only specific files",
-          "type": "string",
-          "default": "",
-          "examples": [
-            "name contains 'invoice'"
-          ]
-        },
-        "limit": {
-          "description": "Max number of results to return",
-          "type": "number",
-          "default": 100
-        },
-        "queryFilters": {
-          "description": "Filters to use to return only specific files",
-          "type": "string",
-          "default": {},
-          "examples": [
-            "Add Filter"
-          ]
-        },
-        "permissionsUi": {
-          "description": "Information about the different types can be found <a href=\"https://developers.google.com/drive/api/v3/ref-roles\">here</a>",
-          "type": "string",
-          "default": {},
-          "examples": [
-            "Add Permission"
-          ]
-        },
-        "binaryData": {
-          "description": "Whether the data to upload should be taken from binary field",
-          "type": "boolean",
-          "default": false
-        },
-        "fileContent": {
-          "description": "The text content of the file to upload",
-          "type": "string",
-          "default": ""
-        },
-        "updateFields": {
-          "description": "The name of the file",
-          "type": "string",
-          "default": {},
-          "examples": [
-            "Add option"
-          ]
-        },
-        "name": {
-          "description": "The name of this shared drive",
-          "type": "string",
-          "default": ""
-        },
-        "resolveData": {
-          "description": "By default the response only contain the ID of the file. If this option gets activated, it will resolve the data automatically.",
-          "type": "boolean",
-          "default": false
-        },
-        "parents": {
-          "description": "The IDs of the parent folders which contain the file",
-          "type": "string",
-          "default": []
-        },
-        "driveId": {
-          "description": "The ID of the drive",
-          "type": "string",
-          "examples": [
-            "Drive"
-          ]
-        },
-        "returnAll": {
-          "description": "Whether to return all results or only up to a given limit",
-          "type": "boolean",
-          "default": false
         }
       }
     },
@@ -1316,10 +432,7 @@ settings:
   },
   "metadata": {
     "nodeType": "regular",
-    "version": [
-      "1",
-      "2"
-    ]
+    "version": "3"
   },
   "credentials": [
     {
@@ -1340,4 +453,4 @@ settings:
 
 | Version | Date | Changes |
 | ------- | ---- | ------- |
-| ['1', '2'] | 2026-01-08 | Ultimate extraction with maximum detail for AI training |
+| 3 | 2026-01-08 | Ultimate extraction with maximum detail for AI training |

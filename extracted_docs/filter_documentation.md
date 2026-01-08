@@ -59,8 +59,8 @@ group: "['transform']"
 
 These expression patterns are commonly used with this node:
 
-- `={{ $nodeVersion >= 2.3 ? 3 : $nodeVersion >= 2.2 ? 2 : 1 }}`
 - `={{!$parameter.options.ignoreCase}}`
+- `={{ $nodeVersion >= 2.3 ? 3 : $nodeVersion >= 2.2 ? 2 : 1 }}`
 
 ---
 
@@ -152,8 +152,8 @@ params:
     displayName: Convert types where required
     name: looseTypeValidation
 common_expressions:
-- '={{ $nodeVersion >= 2.3 ? 3 : $nodeVersion >= 2.2 ? 2 : 1 }}'
 - ={{!$parameter.options.ignoreCase}}
+- '={{ $nodeVersion >= 2.3 ? 3 : $nodeVersion >= 2.2 ? 2 : 1 }}'
 ui_elements:
   notices: []
   tooltips: []

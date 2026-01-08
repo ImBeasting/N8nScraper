@@ -77,9 +77,9 @@ group: "['trigger']"
 
 These expression patterns are commonly used with this node:
 
+- `={{$parameter["responseMode"] === "lastNode" ? "noData" : undefined}}`
 - `={{$parameter["path"]}}`
 - `={{$parameter["responseMode"]}}`
-- `={{$parameter["responseMode"] === "lastNode" ? "noData" : undefined}}`
 
 ---
 
@@ -210,9 +210,9 @@ params:
       name: Using 'Respond to Webhook' Node
       description: When the 'Respond to Webhook' node is executed
 common_expressions:
+- '={{$parameter["responseMode"] === "lastNode" ? "noData" : undefined}}'
 - ={{$parameter["path"]}}
 - ={{$parameter["responseMode"]}}
-- '={{$parameter["responseMode"] === "lastNode" ? "noData" : undefined}}'
 ui_elements:
   notices: []
   tooltips: []

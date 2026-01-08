@@ -116,8 +116,8 @@ group: "['trigger']"
 These expression patterns are commonly used with this node:
 
 - `={{ $parameter["path"] || $parameter["options"]?.path || $webhookId }}`
-- `={{$parameter["responseMode"]}}`
 - `={{$parameter["responseMode"] === "lastNode" ? "noData" : undefined}}`
+- `={{$parameter["responseMode"]}}`
 
 ---
 
@@ -346,8 +346,8 @@ params:
             - redirect
 common_expressions:
 - ={{ $parameter["path"] || $parameter["options"]?.path || $webhookId }}
-- ={{$parameter["responseMode"]}}
 - '={{$parameter["responseMode"] === "lastNode" ? "noData" : undefined}}'
+- ={{$parameter["responseMode"]}}
 ui_elements:
   notices:
   - name: formNotice

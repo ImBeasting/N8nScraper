@@ -49,7 +49,7 @@ group: "['input']"
 
 ## API Patterns
 
-**HTTP Methods:** DELETE, GET, POST
+**HTTP Methods:** POST, DELETE, GET
 
 ---
 
@@ -775,9 +775,9 @@ params:
     name: scriptParam
 api_patterns:
   http_methods:
+  - POST
   - DELETE
   - GET
-  - POST
   endpoints: []
   headers: []
   query_params: []

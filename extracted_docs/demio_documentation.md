@@ -50,7 +50,7 @@ group: "['output']"
 
 ## API Patterns
 
-**Headers Used:** Api-Key, Api-Secret
+**Headers Used:** Api-Secret, Api-Key
 
 ---
 
@@ -389,8 +389,8 @@ api_patterns:
   http_methods: []
   endpoints: []
   headers:
-  - Api-Key
   - Api-Secret
+  - Api-Key
   query_params: []
 ui_elements:
   notices: []

@@ -106,10 +106,10 @@ These examples are extracted from actual n8n workflows:
 
 These expression patterns are commonly used with this node:
 
-- `={{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}`
-- `{{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}`
 - `={{ $parameter.dataToSave.values.some((x) => x.value.length > 512) }}`
 - `{{ $parameter.dataToSave.values.some((x) => x.value.length > 512) }}`
+- `={{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}`
+- `{{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}`
 
 ---
 
@@ -202,10 +202,10 @@ examples:
         value: ={{ $json.id }}
   workflow: '[TEST] Execution Data'
 common_expressions:
-- ={{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}
-- '{{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}'
 - ={{ $parameter.dataToSave.values.some((x) => x.value.length > 512) }}
 - '{{ $parameter.dataToSave.values.some((x) => x.value.length > 512) }}'
+- ={{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}
+- '{{ $parameter.dataToSave.values.some((x) => x.key.length > 50) }}'
 ui_elements:
   notices:
   - name: notice

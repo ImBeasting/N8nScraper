@@ -18,7 +18,7 @@ group: "['input', 'output']"
 
 ## Node Details
 
-- **Icon:** `bot`
+- **Icon:** `file:googleSheets.svg`
 - **Group:** `['input', 'output']`
 - **Inputs:** `['Main']`
 - **Outputs:** `['Main']`
@@ -336,11 +336,11 @@ group: "['input', 'output']"
 
 These expression patterns are commonly used with this node:
 
-- `={{ $rawParameter.sheetName?.startsWith("=") && $input.all().length > 1 }}`
 - `={{$parameter["operation"] + ": " + $parameter["resource"]}}`
-- `={{$parameter["operation"] === "append" && !$parameter["options"]["useAppend"]}}`
 - `={{ ["appendOrUpdate", "append"].includes($parameter["operation"]) && $parameter?.columns?.mappingMode === "defineBelow" && !$parameter?.columns?.schema?.length }}`
 - `={{ $rawParameter.documentId?.startsWith("=") && $input.all().length > 1 }}`
+- `={{$parameter["operation"] === "append" && !$parameter["options"]["useAppend"]}}`
+- `={{ $rawParameter.sheetName?.startsWith("=") && $input.all().length > 1 }}`
 
 ---
 
@@ -1012,12 +1012,12 @@ operations:
       displayName: Document
       name: documentId
 common_expressions:
-- ={{ $rawParameter.sheetName?.startsWith("=") && $input.all().length > 1 }}
 - '={{$parameter["operation"] + ": " + $parameter["resource"]}}'
-- ={{$parameter["operation"] === "append" && !$parameter["options"]["useAppend"]}}
 - ={{ ["appendOrUpdate", "append"].includes($parameter["operation"]) && $parameter?.columns?.mappingMode
   === "defineBelow" && !$parameter?.columns?.schema?.length }}
 - ={{ $rawParameter.documentId?.startsWith("=") && $input.all().length > 1 }}
+- ={{$parameter["operation"] === "append" && !$parameter["options"]["useAppend"]}}
+- ={{ $rawParameter.sheetName?.startsWith("=") && $input.all().length > 1 }}
 ui_elements:
   notices:
   - name: autoMapNotice

@@ -240,8 +240,8 @@ group: "['output']"
 
 These expression patterns are commonly used with this node:
 
-- `={{$parameter["method"] + ": " + $parameter["url"]}}`
 - `={{false}}`
+- `={{$parameter["method"] + ": " + $parameter["url"]}}`
 - `={{ Array.isArray($response.body) ? $response.body.length : !!$response.body }}`
 
 ---
@@ -1434,8 +1434,8 @@ params:
     typeOptions:
       minValue: 1
 common_expressions:
-- '={{$parameter["method"] + ": " + $parameter["url"]}}'
 - ={{false}}
+- '={{$parameter["method"] + ": " + $parameter["url"]}}'
 - '={{ Array.isArray($response.body) ? $response.body.length : !!$response.body }}'
 ui_elements:
   notices:

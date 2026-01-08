@@ -52,7 +52,7 @@ group: "['output']"
 
 ## API Patterns
 
-**Headers Used:** Accept-Charset, Content-Type
+**Headers Used:** Content-Type, Accept-Charset
 
 ---
 
@@ -355,8 +355,8 @@ api_patterns:
   http_methods: []
   endpoints: []
   headers:
-  - Accept-Charset
   - Content-Type
+  - Accept-Charset
   query_params: []
 ui_elements:
   notices: []
