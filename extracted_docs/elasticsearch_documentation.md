@@ -56,10 +56,6 @@ group: "['transform']"
 
 **HTTP Methods:** POST
 
-**Common Endpoints:**
-- `${baseUrl.replace(/\/$/, `
-- `${baseUrl.replace(/\/$/, `
-
 **Headers Used:** Content-Type
 
 ---
@@ -703,9 +699,7 @@ common_expressions:
 api_patterns:
   http_methods:
   - POST
-  endpoints:
-  - '${baseUrl.replace(/\/$/, '
-  - '${baseUrl.replace(/\/$/, '
+  endpoints: []
   headers:
   - Content-Type
   query_params: []

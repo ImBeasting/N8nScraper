@@ -379,14 +379,35 @@ class APIPatternExtractor:
         methods = re.findall(r'method:\s*[\'"]([A-Z]+)[\'"]', content)
         patterns['http_methods'].update(methods)
 
-        # Find URL patterns
-        urls = re.findall(r'url:\s*[\'"`]([^\'"`]+)[\'"`]', content)
+        # Find URL patterns - handle template literals with backticks
+        # First try to find template literal URLs (backtick-delimited)
+        template_urls = re.findall(r'url:\s*`([^`]+)`', content)
+        # Then find regular string URLs
+        string_urls = re.findall(r'url:\s*[\'"]([^\'"]+)[\'"]', content)
+        urls = template_urls + string_urls
+
         # Clean template variables from URLs: ${var} -> {var}
         clean_urls = []
         for url in urls:
+            # Skip malformed/incomplete URLs that are clearly internal code patterns
+            # These typically result from regex patterns or function calls being truncated
+            if url.startswith('${') and '.replace' in url:
+                # This is an internal URL builder pattern, not an endpoint
+                continue
+            if '(' in url and ')' not in url:
+                # Incomplete function call
+                continue
+            if url.count('${') != url.count('}'):
+                # Unbalanced template variables
+                continue
+
             # Replace ${variable} with {variable} to show it's a parameter
             clean_url = re.sub(r'\$\{([^}]+)\}', r'{\1}', url)
-            clean_urls.append(clean_url)
+
+            # Only include if it looks like a valid endpoint pattern
+            # (starts with /, http, or is a simple template variable replacement)
+            if clean_url.startswith('/') or clean_url.startswith('http') or clean_url.startswith('{'):
+                clean_urls.append(clean_url)
         patterns['endpoints'].extend(clean_urls)
 
         # Find headers
