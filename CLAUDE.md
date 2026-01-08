@@ -1,6 +1,7 @@
 # CLAUDE.md
 
 **Project:** n8n Node Documentation Extractor for AI Training
+**Repository:** https://github.com/ImBeasting/N8nScraper
 **Status:** ✅ Production Ready (96%+ quality)
 **Last Updated:** 2026-01-08
 **n8n Version:** 2.3.0 (January 8, 2026)
@@ -16,6 +17,22 @@ Python-based tool that extracts comprehensive documentation from n8n TypeScript 
 ---
 
 ## Quick Start
+
+### First-Time Setup
+
+The `n8n/` directory is **gitignored** (external dependency). Clone it after checking out the repo:
+
+```bash
+git clone https://github.com/ImBeasting/N8nScraper.git
+cd N8nScraper
+git clone --depth 1 https://github.com/n8n-io/n8n.git n8n
+```
+
+### Update n8n Source
+
+```bash
+rm -rf n8n && git clone --depth 1 https://github.com/n8n-io/n8n.git n8n
+```
 
 ### Essential Commands
 
@@ -45,32 +62,45 @@ python3 generate_reports.py
 ## Repository Structure
 
 ```
-/home/tyler/Projects/N8nScraper/
-├── n8n/                              # n8n source (531 node definitions, v2.3.0)
+N8nScraper/
+├── n8n/                              # n8n source (GITIGNORED - clone separately)
 ├── extracted_docs/                   # Output (902 files: 451 JSON + 451 MD)
 ├── n8n_node_extractor.py             # Main extractor (2700+ lines)
 ├── validate_extraction.py            # Quality validation
-├── ai_review_prompt.md               # AI audit protocol (use this!)
+├── coordination_lib.py               # Multi-agent library
+├── agent_start.py                    # Start agent session
+├── claim_issue.py                    # Claim an issue
+├── propose_fix.py                    # Propose a fix
+├── apply_fix.py                      # Apply approved fix
+│
+├── docs/                             # Documentation
+│   ├── ai_review_prompt.md           # AI audit protocol (START HERE)
+│   └── MULTI_AGENT_SYSTEM_README.md  # Multi-agent workflow guide
+│
 ├── collaboration/                    # Multi-agent coordination
 │   ├── coordination.json             # Agent registry
 │   ├── agent_heartbeats.json         # Status tracking
 │   └── audit_log.jsonl               # Action history
-├── issues/                           # Issue tracking by severity
-│   ├── critical/, high/, medium/, low/
+│
+├── issues/                           # Issue tracking
+│   ├── resolved/                     # Completed issues
+│   ├── corrupted_json/               # Issues with bad JSON (need cleanup)
 │   └── index.json
+│
 ├── fixes/                            # Fix tracking
-│   ├── applied/, proposed/
+│   ├── applied/
+│   ├── proposed/
 │   └── index.json
-├── reports/                          # Auto-generated reports
-│   ├── EXTRACTION_ERRORS_REPORT.md
-│   ├── FIXES_APPLIED_REPORT.md
-│   └── AGENT_ACTIVITY_REPORT.md
-├── validation_summaries/             # Agent validation reports
-│   ├── VALIDATION_SUMMARY_<date>_<agent>.md
-│   └── VERSIONED_NODE_FIXES_SUMMARY.md
-├── coordination_lib.py               # Multi-agent library
-├── agent_start.py, claim_issue.py, propose_fix.py, apply_fix.py
-└── Documentation (see below)
+│
+└── _archive/                         # Historical files (reference only)
+    ├── reports/                      # Old auto-generated reports
+    ├── scripts/                      # Deprecated scripts
+    └── validation_summaries/         # Old validation reports
+```
+
+**Note:** The `n8n/` directory is gitignored. After cloning, run:
+```bash
+git clone --depth 1 https://github.com/n8n-io/n8n.git n8n
 ```
 
 ---
@@ -214,16 +244,15 @@ OUTPUT_DIR = CURRENT_DIR / "extracted_docs"
 ### Empty Properties Extracted
 **Rare** - Only 1 node affected (NoOp, correct by design)
 - Run: `python3 validate_extraction.py`
-- Check: `validation_report.json`
 
 ### Node Not Found
 ```bash
 python3 n8n_node_extractor.py list  # See available nodes (case-sensitive)
 ```
 
-### Duplicate Files
+### n8n Directory Missing
 ```bash
-python3 cleanup_duplicates.py  # Remove duplicates, keep best version
+git clone --depth 1 https://github.com/n8n-io/n8n.git n8n
 ```
 
 ---
@@ -231,22 +260,14 @@ python3 cleanup_duplicates.py  # Remove duplicates, keep best version
 ## Essential Documentation
 
 ### Current System Docs
-- **ai_review_prompt.md** - ⭐ AI quality audit protocol (START HERE for validation)
-- **FIXES_APPLIED_2025-11-11_COMPREHENSIVE.md** - Latest fixes and improvements
+- **docs/ai_review_prompt.md** - ⭐ AI quality audit protocol (START HERE for validation)
+- **docs/MULTI_AGENT_SYSTEM_README.md** - Complete multi-agent workflow
 - **QUICK_START.md** - Quick reference for all agents
-- **AGENT_COLLABORATION_GUIDE.md** - Complete multi-agent workflow
-- **validation_report.json** - Latest quality metrics
-- **validation_summaries/** - All agent validation reports organized here
 
-### Reports (Auto-Generated - DO NOT EDIT)
-- `reports/EXTRACTION_ERRORS_REPORT.md` - Current issues
-- `reports/FIXES_APPLIED_REPORT.md` - Applied fixes
-- `reports/AGENT_ACTIVITY_REPORT.md` - Audit log
-
-### Obsolete Docs (Historical Reference Only)
-- VALIDATION_SUMMARY_2025-11-06_*.md (superseded by 2025-11-11)
-- FIXES_APPLIED_2025-11-06.md (superseded by 2025-11-11)
-- PHASE_4_*.md, FINAL_SESSION_SUMMARY.md (completed phases)
+### Archived Documentation (in `_archive/`)
+- `_archive/FIXES_APPLIED_2025-11-11_COMPREHENSIVE.md` - Historical fixes
+- `_archive/validation_summaries/` - Old validation reports
+- `_archive/reports/` - Old auto-generated reports
 
 ---
 
@@ -283,7 +304,6 @@ python3 --version   # Needs 3.6+
 ```bash
 ./health_check.sh        # Check for stale locks, validate heartbeats
 ./cleanup.sh             # Remove stale locks, archive old logs
-python3 generate_reports.py  # Regenerate all reports
 ```
 
 ---
@@ -331,9 +351,9 @@ python3 generate_reports.py  # Regenerate all reports
 
 ### View Status
 ```bash
-cat validation_report.json | jq '.stats'
-ls -1 issues/*/*.json | wc -l
-ls -1 fixes/applied/*.json | wc -l
+ls -1 issues/resolved/*.json | wc -l   # Resolved issues
+ls -1 fixes/applied/*.json | wc -l     # Applied fixes
+python3 validate_extraction.py          # Run validation
 ```
 
 ### Common Patterns
@@ -354,7 +374,8 @@ python3 agent_start.py --agent claude_code
 
 ---
 
-**Version:** 3.1 (Production Ready)
+**Version:** 3.2 (Production Ready)
+**Repository:** https://github.com/ImBeasting/N8nScraper
 **n8n Version:** 2.3.0 (January 8, 2026)
 **Quality:** 96%+ across 451 nodes
 **Status:** ✅ Active development
@@ -363,3 +384,4 @@ python3 agent_start.py --agent claude_code
 For detailed technical documentation, see:
 - QUICK_START.md (quick reference)
 - docs/MULTI_AGENT_SYSTEM_README.md (multi-agent workflow)
+- docs/ai_review_prompt.md (AI audit protocol)
