@@ -40,6 +40,39 @@ All agent outputs must comply with the quality contract at `docs/quality_contrac
 
 Agent definitions: `.claude/agents/`
 
+### Agent Invocation Protocol
+
+**CRITICAL:** Custom agents in `.claude/agents/` are NOT auto-discovered by Claude Code's Task tool. When a task matches an agent's trigger conditions, you MUST:
+
+1. **Identify the matching agent** from the Subagent Roster above
+2. **Read the agent file:** `Read .claude/agents/{agent-name}.md`
+3. **Follow the agent's instructions:**
+   - Purpose: What the agent does
+   - Tool Restrictions: What tools/files it can access
+   - Must Never: Hard constraints to obey
+   - Definition of Done: Checklist for completion
+4. **Report completion** using the agent's output format
+
+**Trigger Examples:**
+| User Request | Agent to Invoke |
+|--------------|-----------------|
+| "Why does X have zero properties?" | `typescript-parser` |
+| "Audit extraction quality" | `extraction-validator` |
+| "Prioritize the issue backlog" | `issue-triage` |
+| "Spot check properties for Slack" | `property-auditor` |
+| "Check for new patterns after n8n update" | `edge-case-hunter` |
+| "Update documentation after extraction" | `documentation-sync` |
+| "Check for stale locks" | `coordination-enforcer` |
+
+**Example invocation flow:**
+```
+User: "Audit extraction quality"
+→ Match: extraction-validator agent
+→ Read: .claude/agents/extraction-validator.md
+→ Execute: Follow agent's purpose, inputs, outputs
+→ Report: Use agent's Definition of Done format
+```
+
 ### Validation Gates
 
 Run before committing:
