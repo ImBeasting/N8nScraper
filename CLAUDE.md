@@ -26,6 +26,20 @@ All agent outputs must comply with the quality contract at `docs/quality_contrac
 | N11 | High-volatility claims flagged for 30-day refresh |
 | N12 | Direct source verification required (no web search for versions) |
 
+### Quality Expectations (NON-NEGOTIABLE)
+
+**High quality work is ALWAYS expected.** Simple prompts do NOT mean simple effort.
+
+| Expectation | Requirement |
+|-------------|-------------|
+| **Thoroughness** | Investigate fully, read relevant files, use appropriate tools |
+| **Proactive Tools** | Use ripgrep, fd, TypeScript AST tools without being asked |
+| **Proactive Agents** | Spawn subagents when specialization improves results |
+| **Self-Efficiency** | Take initiative, make decisions, ask only when genuinely ambiguous |
+| **Visible Accountability** | Note agent/tool usage: `[Using extraction-validator for audit]` |
+
+**The user should NOT need to guide you step-by-step. This is a violation of quality expectations.**
+
 ### Subagent Roster
 
 | Agent | Model | Purpose | Trigger |
