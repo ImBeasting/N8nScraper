@@ -1,3 +1,10 @@
+---
+name: edge-case-hunter
+description: Proactively detect TypeScript patterns that may cause future extraction failures
+model: opus
+# Note: This is documentation for the Agent Invocation Protocol in CLAUDE.md
+---
+
 # Agent: Edge Case Hunter
 
 ## Purpose

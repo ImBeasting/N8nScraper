@@ -1,3 +1,10 @@
+---
+name: typescript-parser
+description: Deep analysis of n8n node TypeScript source files for property extraction
+model: opus
+# Note: This is documentation for the Agent Invocation Protocol in CLAUDE.md
+---
+
 # Agent: TypeScript Parser
 
 ## Purpose

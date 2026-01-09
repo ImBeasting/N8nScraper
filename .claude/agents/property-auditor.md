@@ -1,3 +1,10 @@
+---
+name: property-auditor
+description: Audit specific node extractions for property completeness and accuracy
+model: sonnet
+# Note: This is documentation for the Agent Invocation Protocol in CLAUDE.md
+---
+
 # Agent: Property Auditor
 
 ## Purpose

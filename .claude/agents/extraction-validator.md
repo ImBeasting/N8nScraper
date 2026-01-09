@@ -1,3 +1,10 @@
+---
+name: extraction-validator
+description: Verify extraction quality, audit accuracy against source TypeScript
+model: sonnet
+# Note: This is documentation for the Agent Invocation Protocol in CLAUDE.md
+---
+
 # Agent: Extraction Validator
 
 ## Purpose

@@ -1,3 +1,10 @@
+---
+name: coordination-enforcer
+description: Enforce multi-agent locking protocol, audit log hygiene, and prevent coordination violations
+model: haiku
+# Note: This is documentation for the Agent Invocation Protocol in CLAUDE.md
+---
+
 # Agent: Coordination Enforcer
 
 ## Purpose

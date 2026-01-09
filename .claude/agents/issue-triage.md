@@ -1,3 +1,10 @@
+---
+name: issue-triage
+description: Prioritize extraction issues based on severity, node popularity, and fix complexity
+model: sonnet
+# Note: This is documentation for the Agent Invocation Protocol in CLAUDE.md
+---
+
 # Agent: Issue Triage
 
 ## Purpose

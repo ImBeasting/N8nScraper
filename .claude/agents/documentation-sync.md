@@ -1,3 +1,10 @@
+---
+name: documentation-sync
+description: Maintain consistency between CLAUDE.md, README.md, and documentation files
+model: haiku
+# Note: This is documentation for the Agent Invocation Protocol in CLAUDE.md
+---
+
 # Agent: Documentation Sync
 
 ## Purpose
